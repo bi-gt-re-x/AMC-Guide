@@ -2,16 +2,22 @@
  * One contest. A Step Mock shows its format, your past sittings, and the
  * button that starts the clock. An imported official paper is shown whole, in
  * problem order like its AoPS wiki page, each problem with its choices, topic,
- * 1-10 rating and links to answer it here or read the AoPS solutions.
+ * 1-10 rating and links to answer it here.
+ *
+ * An official paper also shows where you stand on it (a tile per problem:
+ * right first time, put right later, still open, untouched) and, closed until
+ * asked for, its answer key and Summit's own solutions. Those come from a
+ * separate call (`amc.contestKey`) so the timed sitting, which loads this
+ * page's data, never carries the answers.
  */
-import { useState } from 'react';
+import { useState, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
-import { CategoryDot, DiagramNote, Difficulty, PageHeader, StatusPill } from '@/components/Amc/bits';
+import { CategoryDot, DiagramNote, Difficulty, PageHeader, Solution, StatusPill } from '@/components/Amc/bits';
 import { MathText } from '@/components/Amc/MathText';
 import { Importer } from '@/components/Amc/Importer';
 import { useApi, useDocumentTitle } from '@/hooks';
-import { amc, announceAmcChanged, shortDate, type MockBrief } from '@/services/amc';
+import { amc, announceAmcChanged, shortDate, type ContestProgress, type KeyRow, type MockBrief } from '@/services/amc';
 import '@/styles/amc.css';
 
 function History({ rows, onDelete }: { rows: MockBrief[]; onDelete: (id: string) => void }) {
@@ -36,6 +42,55 @@ function History({ rows, onDelete }: { rows: MockBrief[]; onDelete: (id: string)
   );
 }
 
+const PROGRESS: Record<ContestProgress, { mark: string; label: string }> = {
+  first: { mark: '✓', label: 'right first time' },
+  fixed: { mark: '✓', label: 'put right later' },
+  open: { mark: '✕', label: 'still to put right' },
+  new: { mark: '', label: 'not tried yet' },
+};
+
+/** A tile per problem showing how it stands, each a link down to the problem. */
+function Standing({ problems }: { problems: { number: number; progress: ContestProgress }[] }) {
+  const count = (k: ContestProgress) => problems.filter((p) => p.progress === k).length;
+  const solved = count('first') + count('fixed');
+  const open = count('open');
+  const fresh = count('new');
+  return (
+    <section className="am-card am-standing">
+      <div className="am-card-head">
+        <h2>Where you stand</h2>
+        <span className="am-muted" style={{ fontSize: 13 }}>
+          {solved} solved{open ? ` · ${open} to put right` : ''}{fresh ? ` · ${fresh} untouched` : ''}
+        </span>
+      </div>
+      <ol className="am-standing-tiles">
+        {problems.map((p) => (
+          <li key={p.number}>
+            <a href={`#problem-${p.number}`} className={`am-standing-tile is-${p.progress}`}
+               aria-label={`Problem ${p.number}: ${PROGRESS[p.progress].label}`}>
+              <b>{p.number}</b><i aria-hidden="true">{PROGRESS[p.progress].mark}</i>
+            </a>
+          </li>
+        ))}
+      </ol>
+      <p className="am-standing-legend">
+        {(['first', 'fixed', 'open', 'new'] as ContestProgress[]).map((k) => (
+          <span key={k}><i className={`am-standing-swatch is-${k}`} aria-hidden="true">{PROGRESS[k].mark}</i>{PROGRESS[k].label}</span>
+        ))}
+      </p>
+    </section>
+  );
+}
+
+/** The answer key as a compact table, ten to a row. */
+function KeyTable({ rows }: { rows: KeyRow[] }) {
+  return (
+    <ol className="am-keytable" aria-label="Answer key">
+      {rows.map((r) => <li key={r.number}><small>{r.number}</small><b>{r.answer}</b></li>)}
+    </ol>
+  );
+}
+
 export default function Contest() {
   const { contestId = '' } = useParams();
   const { data, error, loading, reload } = useApi(() => amc.contest(contestId), [contestId]);
@@ -43,6 +98,32 @@ export default function Contest() {
   const [score, setScore] = useState('');
   const [note, setNote] = useState('');
   const [message, setMessage] = useState('');
+  // The answer key and write-ups: fetched the first time anything asks for them.
+  const [key, setKey] = useState<KeyRow[] | null>(null);
+  const [keyError, setKeyError] = useState('');
+  const [keyOpen, setKeyOpen] = useState(false);
+  const [shown, setShown] = useState<number[]>([]);
+
+  async function loadKey(): Promise<boolean> {
+    if (key) return true;
+    setKeyError('');
+    try {
+      const reply = await amc.contestKey(contestId);
+      if (reply.success) { setKey(reply.key); return true; }
+      setKeyError(reply.message);
+    } catch (cause) {
+      setKeyError(cause instanceof Error ? cause.message : 'Could not load the answer key.');
+    }
+    return false;
+  }
+  async function toggleKey() {
+    if (keyOpen) { setKeyOpen(false); return; }
+    if (await loadKey()) setKeyOpen(true);
+  }
+  async function toggleSolution(n: number) {
+    if (shown.includes(n)) { setShown(shown.filter((x) => x !== n)); return; }
+    if (await loadKey()) setShown([...shown, n]);
+  }
 
   if (loading && !data) return <Loading label="Loading contest" />;
   if (error || !data) return <ErrorState message={error ?? 'Could not load this contest.'} onRetry={reload} />;
@@ -147,6 +228,22 @@ export default function Contest() {
   const problems = data.problems;
   const official = c.kind === 'past';
   const firstOpen = problems.find((p) => p.status === 'new') ?? problems[0];
+  const sat = data.history.some((h) => h.kind === 'mock');
+  const written = problems.filter((p) => p.has_solution).length;
+  const keyCard: ReactNode = official && (
+    <section className="am-card">
+      <div className="am-card-head">
+        <h2>Answer key</h2>
+        <button type="button" className="am-btn am-btn-sm" aria-expanded={keyOpen} onClick={() => void toggleKey()}>
+          {keyOpen ? 'Fold it away' : 'Unfold'}
+        </button>
+      </div>
+      {keyOpen && key
+        ? <KeyTable rows={key} />
+        : <p className="am-muted" style={{ margin: 0, fontSize: 13 }}>Closed so it can't catch your eye. Opening it doesn't count against you.</p>}
+      {keyError && <p className="am-error" style={{ fontSize: 13 }}>{keyError}</p>}
+    </section>
+  );
   return (
     <div className="amc-page">
       {back}
@@ -159,15 +256,18 @@ export default function Contest() {
               <Link className="am-btn" to={`/problems/${firstOpen.id}`}>Practice one by one</Link>
             )}
             <Link className="am-btn am-btn-primary" to={`/contests/${c.id}/take`}>
-              {official ? 'Start timed contest' : 'Start timed mock'}
+              {official ? (sat ? `Sit it again (${c.minutes} min)` : 'Start timed contest') : 'Start timed mock'}
             </Link>
           </>
         }
       >
         <p>
-          {official ? `${c.count} problems in ${c.minutes} minutes.` : c.blurb}
+          {official
+            ? `${c.count} problems in ${c.minutes} minutes${c.level === 'AIME' ? ', one point each' : ', 6 for a right answer, 1.5 for a blank, 0 for a wrong one'}.${written ? ` Summit's own worked solution${written === 1 ? ' is' : 's are'} folded under ${written === c.count ? 'every problem' : `${written} of the problems`}, and the answer key has a card of its own. Both stay closed until you open them.` : ''}`
+            : c.blurb}
         </p>
       </PageHeader>
+      {official && <Standing problems={problems} />}
       <div className="am-grid am-grid-main">
         <section className="am-card">
           <div className="am-card-head">
@@ -206,10 +306,26 @@ export default function Contest() {
                   )}
                   <p className="am-booklet-links">
                     <Link className="am-link" to={`/problems/${p.id}`}>Answer it here</Link>
+                    {p.has_solution && (
+                      <button type="button" className="am-link am-link-button" aria-expanded={shown.includes(p.number)}
+                              onClick={() => void toggleSolution(p.number)}>
+                        {shown.includes(p.number) ? 'Hide the solution' : 'Our solution'}
+                      </button>
+                    )}
                     {p.aops_url && (
-                      <a className="am-link" href={p.aops_url} target="_blank" rel="noreferrer">Solutions on AoPS ↗</a>
+                      <a className="am-link" href={p.aops_url} target="_blank" rel="noreferrer">AoPS discussion ↗</a>
                     )}
                   </p>
+                  {shown.includes(p.number) && (() => {
+                    const row = key?.[p.number - 1];
+                    if (!row) return null;
+                    return (
+                      <div className="am-booklet-solution">
+                        <p className="am-booklet-answer">Answer: <b>{c.level === 'AIME' ? row.answer.padStart(3, '0') : `(${row.answer})`}</b></p>
+                        <Solution solution={row.solution} insight={row.insight} trap={row.trap} />
+                      </div>
+                    );
+                  })()}
                 </li>
               ))}
             </ol>
@@ -232,7 +348,9 @@ export default function Contest() {
           )}
           {official && (
             <p className="am-muted" style={{ fontSize: 12, margin: '12px 0 0' }}>
-              Topics are guessed from the wording. Problems © MAA.{' '}
+              {written === c.count
+                ? "Problems © MAA, figures redrawn. The topics and solutions are Summit's own."
+                : `Topics are guessed from the wording${written ? ' where Summit has no write-up' : ''}. Problems © MAA${written ? "; the solutions are Summit's own" : ''}.`}{' '}
               {data.can_import && (
                 <button type="button" className="am-link am-link-button" onClick={() => void unimport()}>Remove import</button>
               )}
@@ -240,6 +358,7 @@ export default function Contest() {
           )}
         </section>
         <aside className="am-stack">
+          {keyCard}
           <section className="am-card">
             <div className="am-card-head"><h2>Before you start</h2></div>
             <ul className="am-list" style={{ display: 'grid', gap: 8 }}>

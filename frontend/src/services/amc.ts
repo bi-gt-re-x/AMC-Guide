@@ -51,16 +51,19 @@ export interface Problem {
   choices: string[] | null;
   format: 'choice' | 'integer';
   sources: Source[];
-  /** An imported official problem: no write-up, maybe a diagram not drawn here. */
+  /** An imported official problem (backend/amc/official.py). */
   official?: boolean;
-  /** Asymptote source, 'image', or '' when there is no diagram. */
+  /** Whether a worked solution exists, said before it is revealed. Official
+   *  problems have one when Summit has written it (backend/amc/official_solutions.py). */
+  has_solution?: boolean;
+  /** A drawn figure (`<svg ...>`), Asymptote source, 'image', or '' when there is no diagram. */
   diagram?: string;
   /** The problem's page on the AoPS wiki (official problems only). */
   aops_url?: string | null;
   /** Written by the AI and kept after an independent second solve agreed. */
   ai?: boolean;
   answer?: string | number;
-  /** Numbered steps; null for official problems. */
+  /** Numbered steps; null for an official problem Summit has not written up. */
   solution?: string[] | null;
   insight?: string | null;
   trap?: string | null;
@@ -462,6 +465,11 @@ export interface PastContest extends Format {
   logged?: MockBrief | null;
   /** How many of its problems have been imported (count = all of them). */
   imported?: number;
+  /** How many of its problems have a Summit write-up. */
+  written?: number;
+  /** Scores logged or sittings taken on it, and the best of them. */
+  sittings?: number;
+  best?: number | null;
 }
 
 export interface ContestList {
@@ -474,9 +482,22 @@ export interface ContestList {
   can_import: boolean;
 }
 
+/** How a problem of a paper stands: right first time, right after a miss, missed and still open, or untouched. */
+export type ContestProgress = 'first' | 'fixed' | 'open' | 'new';
+
+/** One line of an official paper's answer key, with Summit's write-up when there is one. */
+export interface KeyRow {
+  number: number;
+  id: string;
+  answer: string;
+  solution: string[] | null;
+  insight: string | null;
+  trap: string | null;
+}
+
 export interface ContestDetail {
   contest: (MockContest & { kind: 'mock' }) | (Omit<PastContest, 'imported'> & { kind: 'past'; imported: boolean });
-  problems: (Problem & { number: number; status: Status })[];
+  problems: (Problem & { number: number; status: Status; progress: ContestProgress })[];
   history: MockBrief[];
   /** Whether this account may import or remove the paper (only `temu`). */
   can_import: boolean;
@@ -733,6 +754,7 @@ export const amc = {
   strategies: () => get<{ families: StrategyFamily[]; untagged: number }>('/api/amc/strategies'),
   contests: () => get<ContestList>('/api/amc/contests'),
   contest: (id: string) => get<ContestDetail>(`/api/amc/contests/${encodeURIComponent(id)}`),
+  contestKey: (id: string) => get<{ key: KeyRow[]; written: number }>(`/api/amc/contests/${encodeURIComponent(id)}/key`),
   submit: (id: string, answers: Record<string, string>, seconds: number) =>
     post<{ id: string }>(`/api/amc/contests/${encodeURIComponent(id)}/submit`, { answers, seconds }),
   mock: (id: string) => get<MockResult>(`/api/amc/mocks/${encodeURIComponent(id)}`),

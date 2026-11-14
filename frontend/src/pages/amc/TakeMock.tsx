@@ -1,7 +1,9 @@
 /**
  * A timed contest, laid out like the real one: an instructions page first (the
  * clock starts only on Begin), then one problem at a time with a bubble answer
- * sheet beside it, a countdown, and Hand in. Time running out hands it in.
+ * sheet beside it, a countdown, and Hand in. Time running out hands it in. A
+ * strip under the clock has a segment per problem (filled when answered,
+ * amber when flagged) to see the whole paper at a glance and jump around.
  *
  * Answers, flags and the start time are kept in this browser's storage, so a
  * reload or an accidental back resumes the same sitting with the same clock.
@@ -196,11 +198,27 @@ export default function TakeMock() {
           </button>
         </div>
       </div>
+      <ol className="am-exam-strip" aria-label="Problems">
+        {problems.map((q) => {
+          const done = Boolean(sitting.answers[String(q.number)]);
+          const cls = ['am-exam-seg', done ? 'is-done' : '', q.number === at ? 'is-current' : '',
+            sitting.flags.includes(q.number) ? 'is-flagged' : ''].filter(Boolean).join(' ');
+          return (
+            <li key={q.number}>
+              <button type="button" className={cls} onClick={() => setAt(q.number)}
+                      aria-label={`Problem ${q.number}${done ? ', answered' : ', blank'}`} aria-current={q.number === at} />
+            </li>
+          );
+        })}
+      </ol>
       {message && <p className="am-error">{message}</p>}
 
       <div className="am-exam">
         <article className="am-card am-exam-paper">
-          <p className="am-qnum">Problem {at} of {problems.length}</p>
+          <p className="am-qnum">
+            Problem {at} of {problems.length}
+            <span className="am-muted"> · {answered} answered, {problems.length - answered} blank</span>
+          </p>
           {p && (
             <>
               <MathText text={p.statement} as="p" className="am-statement" />
@@ -210,9 +228,14 @@ export default function TakeMock() {
           )}
           <div className="am-nav-row">
             <button type="button" className="am-btn" disabled={at === 1} onClick={() => setAt(at - 1)}>← Previous</button>
-            <button type="button" className={`am-btn${flagged ? ' am-btn-sage' : ''}`} onClick={toggleFlag}>
-              {flagged ? 'Flagged' : 'Flag for later'}
-            </button>
+            <span style={{ display: 'flex', gap: 8, flexWrap: 'wrap', justifyContent: 'center' }}>
+              <button type="button" className={`am-btn${flagged ? ' am-btn-sage' : ''}`} onClick={toggleFlag}>
+                {flagged ? 'Flagged' : 'Flag for later'}
+              </button>
+              {sitting.answers[String(at)] && (
+                <button type="button" className="am-btn am-btn-ghost" onClick={() => setAnswerFor(at, '')}>Clear answer</button>
+              )}
+            </span>
             {at < problems.length ? (
               <button type="button" className="am-btn" onClick={() => setAt(at + 1)}>Next →</button>
             ) : (

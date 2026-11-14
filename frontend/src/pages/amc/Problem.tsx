@@ -177,7 +177,7 @@ export default function Problem() {
                 <span className="am-timer" aria-label="Time on this problem">{clock(seconds)}</span>
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button type="button" className="am-btn am-btn-ghost" disabled={busy} onClick={() => void reveal()}>
-                    {p.official ? 'Show answer' : 'Show solution'}
+                    {p.official && !p.has_solution ? 'Show answer' : 'Show solution'}
                   </button>
                   <button type="button" className="am-btn am-btn-primary" disabled={!answer || busy}
                           onClick={() => void submit()}>
@@ -222,9 +222,10 @@ export default function Problem() {
                     wrong={Boolean((result && !result.correct) || (seenBefore && last && !last.correct))} />
 
             {(result || revealed || seenBefore) && (
-              p.official ? (
+              p.official && !p.solution?.length ? (
                 <p className="am-muted" style={{ margin: '16px 0 0', fontSize: 13, lineHeight: 1.6 }}>
-                  Official problem: answer only, no write-up.
+                  Official problem: no Summit write-up yet.{' '}
+                  {p.aops_url && <a className="am-link" href={p.aops_url} target="_blank" rel="noreferrer">Solutions on AoPS ↗</a>}
                 </p>
               ) : (
                 <Solution solution={p.solution} insight={p.insight} trap={p.trap} />

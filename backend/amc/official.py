@@ -19,7 +19,9 @@ it, and is not part of the repository.
   or `<cmath>`, choices as `\textbf{(A)}` (or `\mathrm`, `\text`, `\qquad`
   separated), `[[...|Solution]]` links, and `<asy>` diagrams.
 * **Plain text** copied from a PDF or a page — `1.` / `Problem 1` headings and
-  `(A) ... (E)` choices.
+  `(A) ... (E)` choices. Text copied from the rendered AoPS page works too: its
+  `[asy]` diagrams are kept like `<asy>` ones and its "Solution" link lines are
+  dropped.
 
 Answer keys: AoPS's `# B` list, `1. B` lines, `1B 2C ...`, or the bare letters
 (`BCDAE...`). AIME keys are integers.
@@ -32,7 +34,7 @@ import re
 import time
 from datetime import datetime
 
-from backend.amc import catalog
+from backend.amc import catalog, official_solutions
 from backend.config.settings import database_url
 from backend.database.connection import connect
 
@@ -54,7 +56,8 @@ def _math_to_dollars(text):
     text = re.sub(r'<cmath>(.*?)</cmath>', lambda m: '$$' + m.group(1).strip() + '$$', text, flags=re.S)
     text = re.sub(r'<math>(.*?)</math>', lambda m: '$' + m.group(1).strip() + '$', text, flags=re.S)
     text = re.sub(r'\\\[(.*?)\\\]', lambda m: '$$' + m.group(1).strip() + '$$', text, flags=re.S)
-    return text
+    # `\[a\]\[b\]` makes two display blocks touching; keep them apart.
+    return text.replace('$$$$', '$$\n$$')
 
 
 def _clean_wiki(text):
@@ -99,8 +102,11 @@ def _choice_text(raw):
     """One choice as display text: math if it looks like math, words if not."""
     if re.fullmatch(r'[A-Za-z][A-Za-z ,.\'-]*', raw) and ' ' in raw:
         return raw
-    if raw.startswith('\\text{') and raw.endswith('}'):
-        return raw[6:-1]
+    # Only a choice that is one \text{...} and nothing else is plain words;
+    # `\text{The node } \dfrac{20}{27} \text{ does not ...}` is still math.
+    words = re.fullmatch(r'\\text\{([^{}]*)\}', raw)
+    if words:
+        return words.group(1).strip()
     return '$' + raw + '$'
 
 
@@ -162,8 +168,11 @@ def parse_contest(source, level):
     for number, body in sorted(_split_problems(source).items()):
         if not 1 <= number <= count:
             continue
-        diagrams = re.findall(r'<asy>(.*?)</asy>', body, flags=re.S)
-        body = re.sub(r'<asy>.*?</asy>', '', body, flags=re.S)
+        # <asy> in wiki source; [asy] in text copied from the rendered page.
+        diagrams = [a or b for a, b in re.findall(r'<asy>(.*?)</asy>|\[asy\](.*?)\[/asy\]', body, flags=re.S)]
+        body = re.sub(r'<asy>.*?</asy>|\[asy\].*?\[/asy\]', '\n\n', body, flags=re.S)
+        # A page copied as text keeps its "Solution" links as lines of their own.
+        body = re.sub(r'^\s*Solutions?(?:\s+\d+)?\s*$', '', body, flags=re.M | re.I)
         has_image = bool(re.search(r'\[\[(?:Image|File):', body, flags=re.I))
         body = _math_to_dollars(_clean_wiki(body))
         choices = None
@@ -501,11 +510,14 @@ def _shape(row):
     if contest['level'] == 'AIME':
         answer = int(answer)
     choices = json.loads(row['choices']) if row.get('choices') else None
-    # Tagged from the text each time it is read, so better rules reach
-    # contests imported before them.
-    tags = guess_topics(row['statement'])
+    pid = problem_id(row['contest_id'], number)
+    # Summit's own write-up, when one has been written for this answer.
+    ours = official_solutions.for_problem(pid, answer) or {}
+    # Its topics are a person's reading. Without one, tagged from the text each
+    # time it is read, so better rules reach contests imported before them.
+    tags = list(ours.get('topics') or guess_topics(row['statement']))
     return {
-        'id': problem_id(row['contest_id'], number),
+        'id': pid,
         'level': contest['level'],
         'topic': tags[0],
         'also': tags[1:],
@@ -515,7 +527,7 @@ def _shape(row):
         'statement': row['statement'],
         'choices': choices,
         'answer': answer,
-        'solution': None, 'insight': None, 'trap': None,
+        'solution': ours.get('steps'), 'insight': ours.get('insight'), 'trap': ours.get('trap'),
         'official': True,
         'contest': row['contest_id'],
         'number': number,

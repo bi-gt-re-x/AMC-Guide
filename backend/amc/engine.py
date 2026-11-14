@@ -53,6 +53,8 @@ _SYMBOLS = {
     'infty': '∞', 'circ': '°', 'sum': 'Σ', 'displaystyle': '', 'left': '', 'right': '', 'lfloor': '⌊', 'rfloor': '⌋', 'pm': '±', 'equiv': '≡', 'angle': '∠', 'triangle': '△',
 }
 _SUPERSCRIPT = str.maketrans('0123456789+-n', '⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻ⁿ')
+_SUBSCRIPT = str.maketrans('0123456789+-nk', '₀₁₂₃₄₅₆₇₈₉₊₋ₙₖ')
+_DIGITS = str.maketrans('⁰¹²³⁴⁵⁶⁷⁸⁹⁺⁻ⁿ₀₁₂₃₄₅₆₇₈₉₊₋ₙₖ', '0123456789+-n0123456789+-nk')
 
 
 _OPERATORS = {'sin', 'cos', 'tan', 'log', 'ln', 'gcd', 'lcm', 'max', 'min', 'operatorname', 'mathrm', 'bmod', 'pmod'}
@@ -60,10 +62,13 @@ _OPERATORS = {'sin', 'cos', 'tan', 'log', 'ln', 'gcd', 'lcm', 'max', 'min', 'ope
 
 def plain(text):
     """Statement text with the TeX turned into readable plain text, for search
-    and one-line previews: `$n \\le 100$` reads "n ≤ 100", `x^2` reads "x²"."""
+    and one-line previews: `$n \\le 100$` reads "n ≤ 100", `x^2` reads "x²",
+    `a_{10}` reads "a₁₀" and `150^{\\circ}` reads "150°"."""
     text = text.replace('\\$', '\x00').replace('\\%', '%').replace('\\{', '\x01').replace('\\}', '\x02')
     text = re.sub(r'\\[,;:! ]', '', text)
-    text = re.sub(r'\^\\circ', '°', text)
+    text = re.sub(r'\^\{?\\circ\}?', '°', text)
+    text = re.sub(r'_\{([0-9nk+-]{1,4})\}', lambda m: m.group(1).translate(_SUBSCRIPT), text)
+    text = re.sub(r'_([0-9nk])', lambda m: m.group(1).translate(_SUBSCRIPT), text)
     text = re.sub(r'\^\{(-?[0-9n]{1,4})\}', lambda m: m.group(1).translate(_SUPERSCRIPT), text)
     text = re.sub(r'\^([0-9n])', lambda m: m.group(1).translate(_SUPERSCRIPT), text)
     for _ in range(2):  # a fraction inside a fraction
@@ -104,6 +109,7 @@ def public(problem, reveal=False):
         'diagram': problem.get('diagram') or '',
         'aops_url': problem.get('aops_url'),
         'ai': bool(problem.get('ai')),
+        'has_solution': bool(problem.get('solution')),
     }
     if reveal:
         out.update(answer=problem['answer'], solution=problem['solution'],
@@ -470,7 +476,9 @@ def search(query, limit=20):
     for p in bank_of.all_problems():
         topic = catalog.TOPIC_BY_ID[p['topic']]
         sources = catalog.sources(p['id'])
-        hay = ' '.join([p['id'], p['level'], plain(p['statement']), topic['name'], p['topic'],
+        text = plain(p['statement'])
+        # The subscripts and superscripts as plain digits too, so "a1" finds "a₁".
+        hay = ' '.join([p['id'], p['level'], text, text.translate(_DIGITS), topic['name'], p['topic'],
                         catalog.technique_name(p['technique']),
                         ' '.join(catalog.TOPIC_BY_ID[t]['name'] for t in p['also']),
                         ' '.join('{} {}'.format(s['name'], s['number']) for s in sources)])

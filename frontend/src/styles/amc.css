@@ -1371,3 +1371,62 @@ html[data-theme="dark"] .am-predict-tag { color: #0d1117; }
 .am-post-paste[open] > summary { margin-bottom: var(--space-3); }
 .am-post .am-post-actions { margin-top: var(--space-3); flex-wrap: wrap; }
 .am-post-test { margin-top: var(--space-4); display: grid; gap: var(--space-5); }
+
+/* A problem's figure, redrawn as SVG (DiagramNote). Drawn in black on white,
+   so it sits on a white card of its own in both themes. */
+.am-figure { margin: 0 0 var(--space-4); display: flex; justify-content: center; }
+.am-figure img { display: block; max-width: min(100%, 360px); height: auto; padding: 10px; border-radius: 12px;
+    background: #ffffff; border: 1px solid var(--am-line); }
+
+/* An official paper's page (pages/amc/Contest.tsx): a tile per problem showing
+   how it stands, the answer key folded away, and Summit's solution unfolded
+   under a problem on request. */
+.am-standing { margin-bottom: var(--space-4); }
+.am-standing-tiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 6px; }
+.am-standing-tile { display: flex; align-items: baseline; justify-content: center; gap: 4px; padding: 9px 0 8px; border-radius: 10px;
+    border: 1px solid var(--am-line); background: var(--am-card); color: var(--am-muted); text-decoration: none;
+    font-variant-numeric: tabular-nums; transition: transform .12s ease; }
+.am-standing-tile:hover { transform: translateY(-1px); }
+.am-standing-tile b { font-size: 15px; font-weight: 600; color: var(--am-ink); }
+.am-standing-tile i { font-style: normal; font-size: 12px; font-weight: 700; }
+.am-standing-tile.is-first { background: var(--am-good-soft); border-color: transparent; color: var(--am-good); }
+.am-standing-tile.is-fixed { border: 1.5px dashed var(--am-good); color: var(--am-good); }
+.am-standing-tile.is-open { background: var(--am-bad-soft); border-color: transparent; color: var(--am-bad); }
+.am-standing-legend { display: flex; flex-wrap: wrap; gap: 6px 18px; margin: var(--space-3) 0 0; font-size: 12px; color: var(--am-muted); }
+.am-standing-legend > span { display: inline-flex; align-items: center; gap: 6px; }
+.am-standing-swatch { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 5px; font-style: normal;
+    font-size: 10px; font-weight: 700; border: 1px solid var(--am-line); }
+.am-standing-swatch.is-first { background: var(--am-good-soft); border-color: transparent; color: var(--am-good); }
+.am-standing-swatch.is-fixed { border: 1.5px dashed var(--am-good); color: var(--am-good); }
+.am-standing-swatch.is-open { background: var(--am-bad-soft); border-color: transparent; color: var(--am-bad); }
+.am-keytable { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 4px; }
+.am-keytable li { display: flex; align-items: baseline; justify-content: space-between; padding: 5px 8px; border-radius: 8px; background: var(--am-hover);
+    font-variant-numeric: tabular-nums; }
+.am-keytable small { font-size: 11px; color: var(--am-muted); }
+.am-keytable b { font-size: 14px; color: var(--am-ink); }
+.am-booklet-solution { margin-top: var(--space-3); padding-top: var(--space-3); border-top: 1px dashed var(--am-line); }
+.am-booklet-answer { margin: 0 0 var(--space-3); font-size: 14px; color: var(--am-muted); }
+.am-booklet-answer b { color: var(--am-good); }
+
+/* The timed sitting's strip (pages/amc/TakeMock.tsx): a segment per problem,
+   filled once answered, amber when flagged, ringed where you are. */
+.am-exam-strip { list-style: none; display: flex; gap: 3px; margin: calc(-1 * var(--space-2)) 0 var(--space-4); padding: 0; }
+.am-exam-strip li { flex: 1 1 0; min-width: 0; }
+.am-exam-seg { display: block; width: 100%; height: 8px; padding: 0; border: 0; border-radius: 4px; background: var(--am-line); cursor: pointer; }
+.am-exam-seg.is-done { background: var(--am-sage); }
+.am-exam-seg.is-flagged { background: var(--am-warn); }
+.am-exam-seg.is-current { outline: 2px solid var(--am-ink); outline-offset: 1px; }
+.am-qnum .am-muted { font-family: inherit; font-size: 13px; }
+
+/* Past Contests (pages/amc/Contests.tsx): the papers in Summit, as cards above
+   the year grid, and picked out in the grid itself. */
+.am-ready { margin-bottom: var(--space-6); }
+.am-ready .am-h2 { margin: 0 0 var(--space-3); }
+.am-ready-cards { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: var(--space-3); }
+.am-ready-card { display: grid; gap: 6px; align-content: start; }
+.am-ready-card p { margin: 0; font-size: 13px; }
+.am-ready-name { font-family: var(--am-serif); font-size: 22px; color: var(--am-ink); text-decoration: none; }
+.am-ready-name:hover { text-decoration: underline; }
+.am-ready-score b { color: var(--am-good); }
+.am-ready-actions { display: flex; gap: var(--space-2); margin-top: 6px; }
+.am-paper.is-in { border-color: var(--am-sage); background: var(--am-sage-soft); }

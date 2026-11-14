@@ -258,11 +258,19 @@ export function Solution({
 }
 
 /**
- * An official problem's figure. Asymptote can't be drawn in the browser, so the
- * page says so plainly and keeps the source a click away for anyone who reads
- * Asymptote.
+ * An official problem's figure. A figure redrawn as SVG is shown as an image
+ * (an <img>, so nothing in it can run). Asymptote can't be drawn in the
+ * browser, so for one of those the page says so plainly and keeps the source a
+ * click away for anyone who reads Asymptote.
  */
 export function DiagramNote({ diagram, href }: { diagram: string; href?: string | null }) {
+  if (diagram.trimStart().startsWith('<svg')) {
+    return (
+      <figure className="am-figure">
+        <img src={`data:image/svg+xml;charset=utf-8,${encodeURIComponent(diagram)}`} alt="The figure for this problem" />
+      </figure>
+    );
+  }
   return (
     <div className="am-callout am-callout-trap am-diagram">
       <span>Figure</span>

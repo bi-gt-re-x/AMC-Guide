@@ -551,11 +551,18 @@ def contests(username: str = Depends(current_username)):
         mock_rows.append({**{k: v for k, v in m.items() if k != 'problems'}, **catalog.FORMATS[m['level']],
                           'attempts': len(mine), 'best': max((x['score'] for x in mine), default=None)})
     imported = official.imported_contests()
+    written = {}
+    for p in official.all_problems():
+        if p['solution']:
+            written[p['contest']] = written.get(p['contest'], 0) + 1
     years = {}
     for c in catalog.PAST:
         mine = by_contest.get(c['id'], [])
         years.setdefault(c['year'], []).append({**c, 'logged': mine[0] if mine else None,
-                                                'imported': imported.get(c['id'], 0)})
+                                                'imported': imported.get(c['id'], 0),
+                                                'written': written.get(c['id'], 0),
+                                                'sittings': len(mine),
+                                                'best': max((m['score'] for m in mine), default=None)})
     return ok(mocks=mock_rows,
               years=[{'year': y, 'contests': rows} for y, rows in sorted(years.items(), reverse=True)],
               history=[_mock_brief(m) for m in mocks][:20],
@@ -578,11 +585,40 @@ def contest(contest_id: str, username: str = Depends(current_username)):
     problems = []
     for number, pid in enumerate(gradable['problems'], start=1):
         p = engine.public(pb.get(pid))
-        problems.append({'number': number, **p, 'status': engine.status_of(pid, hist, review_by_id)})
+        problems.append({'number': number, **p, 'status': engine.status_of(pid, hist, review_by_id),
+                         'progress': _progress(hist.get(pid))})
     info = {k: v for k, v in c.items() if k != 'problems'}
     if c['kind'] == 'past':
         info['imported'] = True
     return ok(contest=info, problems=problems, history=mine, can_import=can_import(username))
+
+
+def _progress(h):
+    """How a problem stands for the contest page's grid: 'first' (right first
+    time), 'fixed' (right after a miss), 'open' (missed and not yet put right)
+    or 'new'."""
+    if not h:
+        return 'new'
+    if h['solved']:
+        return 'first' if h['first_correct'] else 'fixed'
+    return 'open'
+
+
+@router.get('/api/amc/contests/{contest_id}/key')
+def contest_key(contest_id: str, username: str = Depends(current_username)):
+    """An official paper's answer key and Summit's write-ups, for the contest
+    page to unfold on request. Kept out of `contest` because the timed sitting
+    loads that one."""
+    past = catalog.PAST_BY_ID.get(contest_id)
+    gradable = _gradable(contest_id) if past else None
+    if not gradable:
+        return fail('That paper is not in Summit.')
+    rows = []
+    for number, pid in enumerate(gradable['problems'], start=1):
+        p = pb.get(pid)
+        rows.append({'number': number, 'id': pid, 'answer': str(p['answer']), 'solution': p['solution'],
+                     'insight': p['insight'], 'trap': p['trap']})
+    return ok(key=rows, written=sum(1 for r in rows if r['solution']))
 
 
 class ImportBody(BaseModel):
