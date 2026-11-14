@@ -257,6 +257,14 @@ ADDED_COLUMNS = (
     # reads as a problem marked from its answer alone. See
     # backend/tracking/answer_match.py.
     ('skill_problems', 'grading', 'TEXT'),
+
+    # A post can be one problem or a whole test. `kind` is 'test' for a test,
+    # and NULL on every post written before tests existed, which reads as one
+    # problem, which is what each of them was. A test's problems (each with
+    # its statement, choices, answer and solution) are a JSON list in
+    # `problems`. See backend/amc/posts.py.
+    ('amc_posts', 'kind', 'TEXT'),
+    ('amc_posts', 'problems', 'TEXT'),
 )
 
 # Indexes on columns that ADDED_COLUMNS supplies. Their own list, applied after
@@ -1037,7 +1045,9 @@ ADDED_TABLES = ('''
         answer      TEXT NOT NULL,
         solution    TEXT DEFAULT '',
         created_at  TEXT NOT NULL,
-        updated_at  TEXT NOT NULL
+        updated_at  TEXT NOT NULL,
+        kind        TEXT,
+        problems    TEXT
     )
 ''', '''
     CREATE INDEX IF NOT EXISTS amc_posts_created_idx ON amc_posts (created_at)

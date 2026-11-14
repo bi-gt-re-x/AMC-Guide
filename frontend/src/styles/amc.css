@@ -1350,3 +1350,24 @@ html[data-theme="dark"] .am-predict-tag { color: #0d1117; }
     .am-post-compose { grid-template-columns: minmax(0, 1fr); }
     .am-post-preview { position: static; max-height: none; }
 }
+
+/* A whole test posted at once: its answer key as a grid of numbered cells
+   (gaps marked), the problem being checked, and the problems on the card. */
+.am-post-filters { display: flex; gap: var(--space-2); flex-wrap: wrap; }
+.am-post-key { list-style: none; margin: var(--space-2) 0 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(46px, 1fr)); gap: 4px; }
+.am-post-key li > button, .am-post-key li > span { display: flex; flex-direction: column; align-items: center; width: 100%; padding: 4px 0 5px;
+    border: 1px solid var(--am-line); border-radius: 8px; background: var(--am-card); color: var(--am-ink);
+    font: inherit; font-weight: 700; font-size: 14px; line-height: 1.2; font-variant-numeric: tabular-nums; }
+.am-post-key li > button { cursor: pointer; }
+.am-post-key li > button:hover { background: var(--am-hover); }
+.am-post-key small { font-size: 10px; font-weight: 500; color: var(--am-muted); }
+.am-post-key li.is-gap > button, .am-post-key li.is-gap > span { background: var(--am-warn-soft); border-color: var(--am-warn); }
+.am-post-key li.is-on > button { border-color: var(--am-ink); box-shadow: 0 0 0 1px var(--am-ink); }
+.am-post-problemhead { display: flex; align-items: center; gap: var(--space-2); flex-wrap: wrap; padding-top: var(--space-3); border-top: 1px solid var(--am-line); }
+.am-post-problemhead h3 { margin: 0; font-family: var(--am-serif); font-weight: 400; font-size: 20px; }
+.am-post-problemhead .am-post-tools { margin-left: auto; }
+.am-post-gap { font-size: 12px; padding: 2px 8px; border-radius: 999px; background: var(--am-warn-soft); color: var(--am-warn); }
+.am-post-paste > summary { cursor: pointer; font-size: 13px; color: var(--am-muted); }
+.am-post-paste[open] > summary { margin-bottom: var(--space-3); }
+.am-post .am-post-actions { margin-top: var(--space-3); flex-wrap: wrap; }
+.am-post-test { margin-top: var(--space-4); display: grid; gap: var(--space-5); }

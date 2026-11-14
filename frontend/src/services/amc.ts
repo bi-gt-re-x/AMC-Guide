@@ -152,30 +152,41 @@ export interface TopicRow extends Pill {
   statement: string;
 }
 
-/** A problem and solution someone posted by hand (backend/amc/posts.py). */
-export interface Post {
-  id: string;
-  author: string;
-  level: Level;
-  title: string;
+/** One problem of a posted test: its text, choices, answer and solution. */
+export interface PostProblem {
   statement: string;
   /** Five choices for the AMC; null for an AIME problem. */
   choices: string[] | null;
   /** A letter A-E, or the AIME integer. */
   answer: string;
   solution: string;
+}
+
+/**
+ * Something posted by hand (backend/amc/posts.py): one problem with its answer
+ * and solution, or a whole test whose `problems` carry theirs and whose `key`
+ * is the answer key.
+ */
+export interface Post extends PostProblem {
+  id: string;
+  kind: 'problem' | 'test';
+  author: string;
+  level: Level;
+  title: string;
+  /** A test's problems, in order; null for a single problem. */
+  problems: PostProblem[] | null;
+  /** A test's answers, in order; null for a single problem. */
+  key: string[] | null;
   created_at: string;
   updated_at: string;
   can_edit: boolean;
 }
 
-export interface PostDraft {
+export interface PostDraft extends PostProblem {
+  kind?: 'problem' | 'test';
   level: Level;
   title: string;
-  statement: string;
-  choices: string[] | null;
-  answer: string;
-  solution: string;
+  problems?: PostProblem[] | null;
 }
 
 /** One of the up-to-three problems a topic page suggests doing next. */
@@ -689,7 +700,10 @@ export const amc = {
   hint: (id: string, level: number) =>
     post<{ hint: string; level: number }>(`/api/amc/ai/hint/${encodeURIComponent(id)}`, { level }),
   explain: (id: string) => post<Explanation>(`/api/amc/ai/explain/${encodeURIComponent(id)}`, {}),
-  posts: (level = '') => get<{ posts: Post[]; levels: Level[] }>('/api/amc/posts', level ? { level } : {}),
+  posts: (level = '', kind = '') =>
+    get<{ posts: Post[]; levels: Level[] }>('/api/amc/posts', { ...(level ? { level } : {}), ...(kind ? { kind } : {}) }),
+  parseTest: (level: Level, problems: string, key: string) =>
+    post<{ problems: PostProblem[]; issues: string[] }>('/api/amc/posts/parse', { level, problems, key }),
   createPost: (draft: PostDraft) => post<{ post: Post }>('/api/amc/posts', draft),
   editPost: (id: string, draft: PostDraft) => put<{ post: Post }>(`/api/amc/posts/${encodeURIComponent(id)}`, draft),
   deletePost: (id: string) => del<object>(`/api/amc/posts/${encodeURIComponent(id)}`),
