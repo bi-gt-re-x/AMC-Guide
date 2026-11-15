@@ -52,8 +52,9 @@ _CHOICE_MARK = re.compile(
 
 
 def _outside_math(text, at):
-    """True when position `at` is not inside `$...$` (escaped `\\$` aside)."""
-    return len(re.findall(r'(?<!\\)\$', text[:at])) % 2 == 0
+    """True when position `at` is not inside `$...$` or `$$...$$` (escaped `\\$` aside)."""
+    # `$$` opens or closes one display block, so it counts once, not twice.
+    return len(re.findall(r'(?<!\\)\$\$|(?<!\\)\$', text[:at])) % 2 == 0
 
 
 def _math_to_dollars(text):
@@ -160,7 +161,12 @@ def _find_choices(body):
     choices = _split_choices(body)
     if choices:
         first = _CHOICE_MARK.search(body)
-        return [_choice_text(c) if re.search(r'[\\^_{}]', c) else c for c in choices], body[:first.start()].strip()
+        statement = body[:first.start()]
+        # Choices one to a line (`<math>\\textbf{(A) }</math> All schools ...`)
+        # are found here, and the first one's opening `$` is left behind.
+        if not _outside_math(body, first.start()):
+            statement = re.sub(r'(?<!\\)\$+\s*$', '', statement.rstrip())
+        return [_choice_text(c) if re.search(r'[\\^_{}]', c) else c for c in choices], statement.strip()
     return None, body
 
 

@@ -165,6 +165,7 @@ def test_wiki_source_with_imath_bullets_and_wrapped_lines():
     ('2024-amc-10a', 'ABBBDDBABCDECDEDEDECCBDBC', {12, 16, 22}),
     ('2023-amc-10a', 'EAADEDBDEDCBCBEBADEDDDCCA', set()),
     ('2023-amc-10b', 'CBDCAEBABCBCBCCEDEBAEBBEB', set()),
+    ('2022-amc-10b', 'ADDABABBDDBCEBDDCBCDEECBA', set()),
 ])
 def test_the_2024_and_2023_10a_are_written_up_against_their_keys(contest, key, unwritten):
     for n in range(1, 26):
@@ -186,3 +187,19 @@ def test_dollar_sign_choices_and_parenthesis_math():
     assert one['choices'] == ['$\\$46$', '$\\$50$', '$\\$48$', '$\\$47$', '$\\$49$']
     assert two['statement'] == 'Which are true?'
     assert two['choices'] == ['I only', 'II only', 'III only', 'I and II', 'II and III only']
+
+
+def test_choices_one_to_a_line_and_align_inside_cmath():
+    # 2022 AMC 10B #4 and #11 put each choice on its own line (#11 with only the
+    # letter in math); #8 and #18 write `align*` inside a `<cmath>` block.
+    source = (
+        '==Problem 1==\nWhen?\n\n' + ''.join(
+            '<math>\\textbf{(%s) }%d \\text{ seconds}</math>\n\n' % (c, 5 * i) for i, c in enumerate('ABCDE')) +
+        '==Problem 2==\nWhich?\n\n' + ''.join(
+            '<math>\\textbf{(%s) }</math> Choice %s.\n\n' % (c, c) for c in 'ABCDE') +
+        '==Problem 3==\nThe sets\n<cmath>\\begin{align*}\n&\\{1\\},\\\\\n&\\{2\\}\n\\end{align*}</cmath>\nHow many?\n\n'
+        '<math>\\textbf{(A) }1\\qquad\\textbf{(B) }2\\qquad\\textbf{(C) }3\\qquad\\textbf{(D) }4\\qquad\\textbf{(E) }5</math>\n')
+    one, two, three = official.parse_contest(source, 'AMC 10')
+    assert one['statement'] == 'When?' and one['choices'][4] == '$20 \\text{ seconds}$'
+    assert two['statement'] == 'Which?' and two['choices'] == ['Choice %s.' % c for c in 'ABCDE']
+    assert three['statement'] == 'The sets\n$$\\begin{aligned}&\\{1\\},\\\\ &\\{2\\}\\end{aligned}$$\nHow many?'

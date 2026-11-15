@@ -12,7 +12,7 @@ key the solution is left off rather than shown beside the wrong answer
 on its answer.
 
 Written so far: the 2026 AMC 10A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
-10B, and the 2023 AMC 10A and 10B. A problem whose numbers are only in a picture the
+10B, the 2023 AMC 10A and 10B, and the 2022 AMC 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -1951,6 +1951,272 @@ SOLUTIONS = {
             r"New area $= (1 + \sqrt5) \cdot \frac{2}{3 + \sqrt5} = \frac{2(1 + \sqrt5)(3 - \sqrt5)}{4} = \sqrt5 - 1$. The answer is $\textbf{(B)}~\sqrt{5}-1$.",
         ],
         'trap': r"Assuming the new pentagon has half the side length, which gives a quarter of the area.",
+    },
+    # ------------------------------------------------------------------ 2022 AMC 10B
+    '2022-amc-10b-1': {
+        'topics': ['absolute-value', 'functions'],
+        'answer': 'A',
+        'insight': r"Work from the inside out; the operation is not associative, so the two groupings differ.",
+        'steps': [
+            r"$2 \diamond 3 = 1$, so $1 \diamond (2 \diamond 3) = 1 \diamond 1 = 0$.",
+            r"$1 \diamond 2 = 1$, so $(1 \diamond 2) \diamond 3 = 1 \diamond 3 = 2$.",
+            r"$0 - 2 = -2$. The answer is $\textbf{(A)}\ {-}2$.",
+        ],
+        'trap': r"Assuming the grouping does not matter and answering $0$.",
+    },
+    '2022-amc-10b-2': {
+        'topics': ['quadrilaterals', 'right-triangles', 'area'],
+        'answer': 'D',
+        'insight': r"All four sides of a rhombus are equal, so $AB = AD = 3 + 2 = 5$, and $BP$ is the height.",
+        'steps': [
+            r"In right triangle $ABP$, $AB = 5$ and $AP = 3$, so $BP = 4$.",
+            r"The area is base times height: $AD \cdot BP = 5 \cdot 4 = 20$. The answer is $\textbf{(D) }20$.",
+        ],
+        'trap': r"Using $AP = 3$ as the base, or trusting the picture, which is not drawn to scale.",
+    },
+    '2022-amc-10b-3': {
+        'topics': ['basic-counting', 'parity'],
+        'answer': 'D',
+        'insight': r"Fix the first two digits. Five choices of the last digit are even and five are odd, and exactly one of those two groups makes the count of even digits odd.",
+        'steps': [
+            r"So exactly half of the three-digit numbers qualify, for every choice of the first two digits.",
+            r"$900 \div 2 = 450$. The answer is $\textbf{(D) }450$.",
+        ],
+        'trap': r"Counting only the numbers with exactly one even digit and forgetting those with three.",
+    },
+    '2022-amc-10b-4': {
+        'topics': ['clocks-calendars', 'arithmetic'],
+        'answer': 'A',
+        'insight': r"The $700$th hiccup comes $699$ gaps after the first, not $700$.",
+        'steps': [
+            r"$699 \cdot 5 = 3495$ seconds, which is $58$ minutes and $15$ seconds.",
+            r"That is $15$ seconds after $4{:}58$. The answer is $\textbf{(A) }15 \text{ seconds after } 4:58$.",
+        ],
+        'trap': r"Using $700$ gaps, which gives $20$ seconds after $4{:}58$.",
+    },
+    '2022-amc-10b-5': {
+        'topics': ['decimals-fractions', 'arithmetic'],
+        'answer': 'B',
+        'insight': r"$1 - \frac{1}{k^2} = \left(1 - \frac1k\right)\left(1 + \frac1k\right)$, so the square root shares half its factors with the numerator.",
+        'steps': [
+            r"The fraction is $\sqrt{\dfrac{(1 + \frac13)(1 + \frac15)(1 + \frac17)}{(1 - \frac13)(1 - \frac15)(1 - \frac17)}}$.",
+            r"That is $\sqrt{\dfrac{\frac43 \cdot \frac65 \cdot \frac87}{\frac23 \cdot \frac45 \cdot \frac67}} = \sqrt{\dfrac{4 \cdot 6 \cdot 8}{2 \cdot 4 \cdot 6}} = \sqrt4 = 2$.",
+            r"The answer is $\textbf{(B)}\ 2$.",
+        ],
+        'trap': r"Multiplying everything out with large denominators and slipping on the arithmetic.",
+    },
+    '2022-amc-10b-6': {
+        'topics': ['factors-divisors', 'digits-bases'],
+        'answer': 'A',
+        'insight': r"Each term factors: $121 = 11 \cdot 11$, $11211 = 111 \cdot 101$, $1112111 = 1111 \cdot 1001$.",
+        'steps': [
+            r"In general the term with $k$ ones on each side of the $2$ is $\underbrace{11\cdots1}_{k+1} \cdot (10^k + 1)$, and both factors are greater than $1$.",
+            r"So none of the terms is prime. The answer is $\textbf{(A) } 0$.",
+        ],
+        'trap': r"Testing only small primes like $2$, $3$ and $5$ and concluding some terms are prime.",
+    },
+    '2022-amc-10b-7': {
+        'topics': ['quadratics', 'factors-divisors'],
+        'answer': 'B',
+        'insight': r"The roots $r$ and $s$ are integers with $rs = 36$, and $k = -(r + s)$.",
+        'steps': [
+            r"Distinct factor pairs of $36$: $\{1, 36\}$, $\{2, 18\}$, $\{3, 12\}$, $\{4, 9\}$, and their negatives. ($\{6, 6\}$ and $\{-6, -6\}$ are not distinct.)",
+            r"Each pair gives a different $k$: $\pm 37, \pm 20, \pm 15, \pm 13$. That is $8$ values. The answer is $\textbf{(B)}\ 8$.",
+        ],
+        'trap': r"Forgetting the negative roots, which gives $4$, or counting $6 \cdot 6$.",
+    },
+    '2022-amc-10b-8': {
+        'topics': ['divisibility', 'basic-counting'],
+        'answer': 'B',
+        'insight': r"Ten consecutive numbers hold one or two multiples of $7$, never zero or three.",
+        'steps': [
+            r"There are $\lfloor 1000 / 7 \rfloor = 142$ multiples of $7$ in all, spread over $100$ sets.",
+            r"If $x$ sets hold two, then $100 + x = 142$, so $x = 42$. The answer is $\textbf{(B)}\ 42$.",
+        ],
+        'trap': r"Trying to track the pattern of residues set by set, which is long and easy to miscount.",
+    },
+    '2022-amc-10b-9': {
+        'topics': ['sequences-series', 'factorials'],
+        'answer': 'D',
+        'insight': r"$\frac{k}{(k+1)!} = \frac{(k+1) - 1}{(k+1)!} = \frac{1}{k!} - \frac{1}{(k+1)!}$, so the sum telescopes.",
+        'steps': [
+            r"The sum is $\left(\frac{1}{1!} - \frac{1}{2!}\right) + \left(\frac{1}{2!} - \frac{1}{3!}\right) + \cdots + \left(\frac{1}{2021!} - \frac{1}{2022!}\right) = 1 - \frac{1}{2022!}$.",
+            r"So $a = 1$ and $b = 2022$, and $a + b = 2023$. The answer is $\textbf{(D)}\ 2023$.",
+        ],
+        'trap': r"Ending the telescope at $\frac{1}{2021!}$ and answering $2022$.",
+    },
+    '2022-amc-10b-10': {
+        'topics': ['statistics', 'inequalities'],
+        'answer': 'D',
+        'insight': r"With mean $m$, the median is $m + 2$ and the mode $m + 4$. A mode above the median must be the two largest numbers.",
+        'steps': [
+            r"The list is $a, b, m + 2, m + 4, m + 4$ with $a < b < m + 2$ (distinct, so the mode is unique).",
+            r"The sum is $5m$, so $a + b = 2m - 10$. The smallest possible $a + b$ is $1 + 2 = 3$, so $2m - 10 \ge 3$ and $m \ge 7$.",
+            r"$m = 7$ works: $1, 3, 9, 11, 11$ has mean $7$, median $9$ and mode $11$. The answer is $\textbf{(D)}\ 11$.",
+        ],
+        'trap': r"Letting the mode appear three times, which would make it the median as well.",
+    },
+    '2022-amc-10b-11': {
+        'topics': ['logic'],
+        'answer': 'B',
+        'insight': r"The statement says: if a school is bigger than Euclid, it did not sell more. Its contrapositive says the same thing.",
+        'steps': [
+            r"The contrapositive is: if a school sold more than Euclid, it is not bigger than Euclid.",
+            r"That is choice (B). The answer is $\textbf{(B) }$ No school that sold more T-shirts than Euclid HS is bigger than Euclid HS.",
+        ],
+        'trap': r"Picking (C): \"did not sell more\" allows selling the same number, which (C) rules out.",
+    },
+    '2022-amc-10b-12': {
+        'topics': ['probability'],
+        'answer': 'C',
+        'insight': r"Use the complement: no $7$ in $n$ rolls has probability $\left(\frac56\right)^n$.",
+        'steps': [
+            r"A sum of $7$ has probability $\frac{6}{36} = \frac16$, so we need $\left(\frac56\right)^n < \frac12$.",
+            r"$\left(\frac56\right)^3 = \frac{125}{216} > \frac12$ but $\left(\frac56\right)^4 = \frac{625}{1296} < \frac12$. The answer is $\textbf{(C) } 4$.",
+        ],
+        'trap': r"Adding $\frac16$ per roll, which gives $n = 3$.",
+    },
+    '2022-amc-10b-13': {
+        'topics': ['perfect-powers', 'quadratics'],
+        'answer': 'E',
+        'insight': r"$(p + 2)^3 - p^3 = 6p^2 + 12p + 8 = 6(p + 1)^2 + 2$.",
+        'steps': [
+            r"$6(p + 1)^2 + 2 = 31106$ gives $(p + 1)^2 = 5184 = 72^2$, so the primes are $71$ and $73$.",
+            r"$74$ through $78$ are composite and $79$ is prime, with digit sum $16$. The answer is $\textbf{(E)}\ 16$.",
+        ],
+        'trap': r"Stopping at $73$, the larger of the two primes, instead of going on to the next prime.",
+    },
+    '2022-amc-10b-14': {
+        'topics': ['inequalities', 'pigeonhole'],
+        'answer': 'B',
+        'insight': r"Let $m$ be the largest element. For each $x$ in $S$ below $m$, $m - x$ cannot be in $S$, so the numbers below $m$ pair up as $\{x, m - x\}$.",
+        'steps': [
+            r"$S$ takes at most one number from each pair, and none of $\frac m2$ when $m$ is even. That allows at most $\frac{m-1}{2}$ numbers below $m$, so $|S| \le \frac{m+1}{2} \le 13$.",
+            r"The $13$ odd numbers $1, 3, \dots, 25$ work: the sum of two odd numbers is even.",
+            r"The answer is $\textbf{(B)}\ 13$.",
+        ],
+        'trap': r"Taking $12, 13, \dots, 25$ for $14$ elements, forgetting that \"not necessarily distinct\" forbids $12 + 12 = 24$.",
+    },
+    '2022-amc-10b-15': {
+        'topics': ['sequences-series'],
+        'answer': 'D',
+        'insight': r"With first term $a$, $S_n = na + n(n - 1) = n(n + a - 1)$, so the ratio is $\frac{3(3n + a - 1)}{n + a - 1}$.",
+        'steps': [
+            r"That is constant only when $a - 1 = 0$, so $a = 1$ and the ratio is $9$.",
+            r"The sequence is the odd numbers and $S_{20} = 20^2 = 400$. The answer is $\textbf{(D) } 400$.",
+        ],
+        'trap': r"Starting the sequence at $2$ (the even numbers), whose ratio does depend on $n$.",
+    },
+    '2022-amc-10b-16': {
+        'topics': ['area', 'coordinate-geometry', 'polygons'],
+        'answer': 'D',
+        'insight': r"Put the rectangle at $(0,0)$ to $(8,4)$. The square's side from the bottom to the top has vertical rise $4$ and length $5$, so it runs $3$ across.",
+        'steps': [
+            r"The square's vertices are $(4, 0)$ on the bottom, $(1, 4)$ on the top and $(8, 3)$ on the right (the side $(4,0) \to (1,4)$ is $(-3, 4)$, and turning it a right angle gives $(4, 3)$); the fourth is $(5, 7)$.",
+            r"The part outside the rectangle is the triangle above $y = 4$: its base runs from $(1, 4)$ to $\left(\frac{29}{4}, 4\right)$, which is $\frac{25}{4}$, and its height is $3$, so its area is $\frac{75}{8}$.",
+            r"$25 - \frac{75}{8} = \frac{125}{8} = 15\frac58$. The answer is $\textbf{(D) }15\dfrac{5}{8}$.",
+        ],
+        'trap': r"Treating the part above the rectangle as a right triangle with legs $3$ and $4$, which gives $25 - 6 = 19$.",
+    },
+    '2022-amc-10b-17': {
+        'topics': ['modular-arithmetic', 'divisibility'],
+        'answer': 'C',
+        'insight': r"Rule out four choices by a small prime each, using $a + b \mid a^n + b^n$ for odd $n$ and the cycles of $2^n$.",
+        'steps': [
+            r"$3 \mid 2^{606} - 1$ (even exponent) and $3 \mid 2^{607} + 1$ (odd exponent). $5 \mid 2^{606} + 1$, since $2^{606} \equiv 2^2 = 4 \pmod 5$. $5 \mid 2^{607} + 3^{607}$, since $2 + 3 \mid 2^{607} + 3^{607}$.",
+            r"$2^{607} - 1$ is odd, is $\equiv 1 \pmod 3$, $\equiv 2^3 - 1 = 2 \pmod 5$ and $\equiv 2^1 - 1 = 1 \pmod 7$, so no prime below $10$ divides it.",
+            r"The answer is $\textbf{(C) } 2^{607}-1$.",
+        ],
+        'trap': r"Forgetting to check $7$; $2^n$ cycles mod $7$ with period $3$.",
+    },
+    '2022-amc-10b-18': {
+        'topics': ['combinations', 'casework'],
+        'answer': 'B',
+        'insight': r"A nonzero solution exists exactly when the three rows are linearly dependent. Count the independent ordered triples of rows and subtract from $2^9 = 512$.",
+        'steps': [
+            r"Independent rows are distinct and nonzero: $7$ choices for the first and $6$ for the second. The third must avoid the span of the first two.",
+            r"That span holds a third $0$-$1$ vector when the two rows have disjoint supports (their sum) or nested supports (their difference): $12 + 24 = 36$ ordered pairs, each leaving $7 - 3 = 4$ choices. The other $6$ pairs, like $(1,1,0)$ and $(0,1,1)$, leave $7 - 2 = 5$.",
+            r"$36 \cdot 4 + 6 \cdot 5 = 174$ independent systems, so $512 - 174 = 338$ have a nonzero solution. The answer is $\textbf{(B)}\ 338$.",
+        ],
+        'trap': r"Excluding only the two chosen rows from the third choice, which misses rows like $r_1 + r_2$ and $r_2 - r_1$ that are also $0$-$1$ vectors.",
+    },
+    '2022-amc-10b-19': {
+        'topics': ['casework', 'basic-counting'],
+        'answer': 'C',
+        'insight': r"The center ends filled in two ways: it was filled with $2$ or $3$ filled neighbors, or it was empty with exactly $3$. In each case nothing else may survive or be born.",
+        'steps': [
+            r"Center filled with $2$ neighbors: those two must not touch (or each keeps $2$ neighbors), and no other square may see $3$ filled squares. Two adjacent corners, a corner and a far edge square, or two opposite edge squares all give some edge square $3$ filled neighbors. Only the $2$ pairs of opposite corners work.",
+            r"Center filled with $3$ neighbors: if two of them touch they both survive, and three corners give the edge square between two of them $3$ filled neighbors. None work.",
+            r"Center empty with exactly $3$ filled around it: three corners work ($4$ ways); two corners and one edge square work when the corners are opposite ($2 \cdot 4 = 8$) or adjacent with the edge square on the far side ($4$); one corner works only with the two edge squares away from it ($4$); three edge squares never work. That is $20$.",
+            r"$2 + 20 = 22$. The answer is $\textbf{(C)}\ 22$.",
+        ],
+        'trap': r"Counting all $\binom83 = 56$ ways to give an empty center three neighbors without checking that every other square ends empty.",
+    },
+    '2022-amc-10b-20': {
+        'topics': ['quadrilaterals', 'circles', 'angle-chasing'],
+        'answer': 'D',
+        'insight': r"Extend $BE$ to meet line $AD$ at $G$. Since $E$ is the midpoint of $CD$, $DG = BC = AD$, so $D$ is the midpoint of the hypotenuse $AG$ of right triangle $AFG$.",
+        'steps': [
+            r"Then $DF = DA = DG$, and $DC = DA$ too, so $A$, $C$, $F$, $G$ all lie on the circle centered at $D$ with radius $AD$.",
+            r"$\angle CDG = 180^\circ - 46^\circ = 134^\circ$, so the inscribed angle $\angle CFG = 67^\circ$.",
+            r"$B$, $F$, $G$ are collinear, so $\angle BFC = 180^\circ - 67^\circ = 113^\circ$. The answer is $\textbf{(D)}\ 113$.",
+        ],
+        'trap': r"Taking $\angle CFG$ as the full central angle $134^\circ$ instead of half of it.",
+    },
+    '2022-amc-10b-21': {
+        'topics': ['polynomials'],
+        'answer': 'E',
+        'insight': r"Two quadratic divisors fix the remainder mod a quartic, so the least-degree $P$ has degree at most $3$: $P(x) = (x^2 + x + 1)(ax + b) + x + 2$.",
+        'steps': [
+            r"Mod $x^2 + 1$, $x^2 + x + 1 \equiv x$, so $P \equiv x(ax + b) + x + 2 \equiv (b + 1)x + (2 - a)$.",
+            r"This must be $2x + 1$, so $b = 1$ and $a = 1$: $P(x) = (x^2 + x + 1)(x + 1) + x + 2 = x^3 + 2x^2 + 3x + 3$.",
+            r"$1 + 4 + 9 + 9 = 23$. The answer is $\textbf{(E) } 23$.",
+        ],
+        'trap': r"Reducing $x^2$ to $1$ instead of $-1$ modulo $x^2 + 1$.",
+    },
+    '2022-amc-10b-22': {
+        'topics': ['circles', 'coordinate-geometry'],
+        'answer': 'E',
+        'insight': r"A circle tangent to both $x^2 + y^2 = 4$ and $x^2 + y^2 = 64$ has radius $3$ with center $5$ from the origin, or radius $5$ with center $3$ from the origin.",
+        'steps': [
+            r"The third circle has center $(5, 0)$ and radius $\sqrt3$. A radius-$3$ circle is tangent to it when its center is $3 \pm \sqrt3$ from $(5,0)$; each distance meets the circle of radius $5$ about the origin in $2$ points, giving $4$ circles.",
+            r"A radius-$5$ circle needs its center $5 \pm \sqrt3$ from $(5,0)$; both distances lie between $2$ and $8$, so the circle of radius $3$ about the origin meets each in $2$ points, giving $4$ more.",
+            r"$4 \cdot 9\pi + 4 \cdot 25\pi = 136\pi$. The answer is $\textbf{(E)}~136\pi$.",
+        ],
+        'trap': r"Missing the radius-$5$ circles that wrap around the small circle, which leaves $36\pi$.",
+    },
+    '2022-amc-10b-23': {
+        'topics': ['geometric-probability', 'conditional-probability'],
+        'answer': 'C',
+        'insight': r"The times only decide whether she takes $2$ or $3$ steps; each $t_n < 1$, so she never stops after $1$.",
+        'steps': [
+            r"She stops after $2$ steps when $t_1 + t_2 > 1$, probability $\frac12$, and otherwise takes $3$.",
+            r"$P(x_1 + x_2 > 1) = \frac12$ and $P(x_1 + x_2 + x_3 > 1) = 1 - \frac16 = \frac56$, since the corner of the unit cube with sum below $1$ has volume $\frac16$.",
+            r"$\frac12 \cdot \frac12 + \frac12 \cdot \frac56 = \frac23$. The answer is $\textbf{(C) }\frac{2}{3}$.",
+        ],
+        'trap': r"Allowing a stop after one step, which cannot happen because $t_1 < 1$.",
+    },
+    '2022-amc-10b-24': {
+        'topics': ['functions', 'inequalities'],
+        'answer': 'B',
+        'insight': r"$f$ shrinks distances by at least half. Route from $800$ to $400$ through $900$ and $300$, where $f$ agrees.",
+        'steps': [
+            r"$|f(800) - f(900)| \le 50$ and $|f(400) - f(300)| \le 50$, and $f(900) = f(300)$, so $|f(800) - f(400)| \le 100$. Applying $f$ once more, $|f(f(800)) - f(f(400))| \le 50$.",
+            r"$50$ is reached: let $f$ fall with slope $-\frac12$ from $(300, 450)$ to $(400, 400)$, rise with slope $\frac12$ to $(600, 500)$, stay level to $(800, 500)$, and fall with slope $-\frac12$ to $(900, 450)$. Then $f(f(800)) - f(f(400)) = f(500) - f(400) = 450 - 400 = 50$.",
+            r"The answer is $\textbf{(B)}\ 50$.",
+        ],
+        'trap': r"Stopping at the bound $100$ for $f(800) - f(400)$ and forgetting the second application of $f$ halves it again.",
+    },
+    '2022-amc-10b-25': {
+        'topics': ['modular-arithmetic', 'digits-bases'],
+        'answer': 'A',
+        'insight': r"$S_n$ is the inverse of $7$ mod $2^n$, so the $x_k$ are the binary digits of a single number $\frac17$ read $2$-adically, and they repeat with period $3$.",
+        'steps': [
+            r"$(1 - 8)(1 + 8 + 8^2 + \cdots + 8^j) = 1 - 8^{j+1}$, so $7 \cdot \left(-(1 + 8 + 8^2 + \cdots)\right) \equiv 1$ to any power of $2$.",
+            r"$1 + 8 + 64 + \cdots$ is $\dots 001001001$ in binary, and its negative (flip every bit, add $1$) is $\dots 110110111$. So $x_0 = x_1 = x_2 = 1$, and after that $x_k = 0$ exactly when $3 \mid k$. (Check: $7 \cdot 439 = 3073 \equiv 1 \pmod{512}$, and $439 = 110110111_2$.)",
+            r"$2019$ and $2022$ are multiples of $3$, so the sum is $0 + 2 + 4 + 0 = 6$. The answer is $\textbf{(A) } 6$.",
+        ],
+        'trap': r"Taking the digits of $\frac17 = 0.\overline{001}_2$ as an ordinary fraction, which gives the pattern backwards.",
     },
 }
 
