@@ -1,9 +1,11 @@
 r"""The Summit Mock sets: five AMC 10s, five AMC 12s and five AIMEs, written for
 this site in the shape of the real papers.
 
-Each set is a full paper in real problem order: problem n is written to sit
-where problem n sits on a real contest, and is rated from its number on the
-AoPS scale (backend/amc/scale.py). As on the real A and B papers, each AMC 12
+Each set is a full paper in real problem order: problem n is written for the
+place problem n takes on a real contest. Its rating is its own, from a review
+against real papers (backend/amc/sets/ratings.py), on Summit's 1-10 scale
+(backend/amc/scale.py); `slot` keeps the AoPS rating of the place it was
+written for, so a mock can say how it compares with a real paper. As on the real A and B papers, each AMC 12
 set shares eight problems with the AMC 10 set of the same number, moved up
 the paper the way the real shared problems move.
 
@@ -23,7 +25,8 @@ An AMC 12 set lists a problem it shares with its AMC 10 as `S(number, amc10_numb
 """
 import re
 
-from backend.amc.scale import rating_at
+from backend.amc.scale import aops_at, to_scale
+from backend.amc.sets.ratings import AOPS
 
 LETTERS = 'ABCDE'
 
@@ -52,9 +55,9 @@ def _tier(rating):
     return tier(rating)
 
 
-def _finish(row, level, pid):
-    """A bank-shaped problem from a P(...) row."""
-    rating = rating_at(level, row['number'])
+def _finish(row, level, pid, aops):
+    """A bank-shaped problem from a P(...) row, rated `aops` on the AoPS scale."""
+    rating = to_scale(aops)
     steps = list(row['steps'])
     if row['choices'] is None:
         answer = int(row['correct'])
@@ -71,7 +74,8 @@ def _finish(row, level, pid):
         'id': pid, 'level': level, 'topic': row['topic'], 'also': row['also'],
         'technique': row['technique'], 'statement': row['statement'], 'choices': row['choices'],
         'answer': answer, 'insight': row['insight'], 'trap': row['trap'],
-        'rating': rating, 'difficulty': _tier(rating), 'solution': steps,
+        'rating': rating, 'aops': aops, 'slot': aops_at(level, row['number']),
+        'difficulty': _tier(rating), 'solution': steps,
     }
 
 
@@ -89,15 +93,17 @@ def _load():
                     raise
                 continue
             ids = []
+            own = iter(AOPS['{}-{}'.format(prefix, n)])
             for row in sorted(module.PROBLEMS, key=lambda r: r['number']):
                 if 'shared' in row:
                     pid = built[('AMC 10', n, row['shared'])]['id']
                 else:
                     pid = '{}-{}-{:02d}'.format(prefix, n, row['number'])
-                    p = _finish(row, level, pid)
+                    p = _finish(row, level, pid, next(own))
                     problems.append(p)
                     built[(level, n, row['number'])] = p
                 ids.append(pid)
+            assert next(own, None) is None, ('more ratings than problems', prefix, n)
             assert [r['number'] for r in sorted(module.PROBLEMS, key=lambda r: r['number'])] == \
                 list(range(1, len(ids) + 1)), (cid, n)
             mocks.append({'id': '{}-{}'.format(cid, n), 'name': '{} · Set {}'.format(name, n), 'level': level,

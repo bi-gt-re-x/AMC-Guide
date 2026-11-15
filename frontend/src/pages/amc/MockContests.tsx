@@ -12,15 +12,15 @@ import { Link } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
 import { PageHeader } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
-import { amc, shortDate, type Level, type MockContest } from '@/services/amc';
+import { amc, versusReal, shortDate, type Level, type MockContest } from '@/services/amc';
 import '@/styles/amc.css';
 
 const LEVELS: Level[] = ['AMC 10', 'AMC 12', 'AIME'];
 
 const RANGE: Record<Level, string> = {
-  'AMC 10': 'Rated 1 to 4 out of 10, easiest first',
-  'AMC 12': 'Rated 1 to 4.5 out of 10, easiest first',
-  AIME: 'Rated 2.5 to 6.5 out of 10, easiest first',
+  'AMC 10': 'A real AMC 10 runs from 1 to 6 out of 10, easiest first',
+  'AMC 12': 'A real AMC 12 runs from 1 to 6.5 out of 10, easiest first',
+  AIME: 'A real AIME runs from 3.5 to 10 out of 10, easiest first',
 };
 
 function MockCard({ m }: { m: MockContest }) {
@@ -36,6 +36,11 @@ function MockCard({ m }: { m: MockContest }) {
         <span>{m.minutes} min</span>
         <span>{m.level === 'AIME' ? 'Answers 000–999' : '6 / 1.5 / 0 scoring'}</span>
       </p>
+      {m.difficulty && (
+        <p className="am-mock-vs" title={`Average problem ${m.difficulty.average}/10; a real ${m.level} averages ${m.difficulty.real}/10`}>
+          {versusReal(m.difficulty, m.level)}
+        </p>
+      )}
       <div className="am-mock-foot">
         <span className="am-muted" style={{ fontSize: 13 }}>
           {m.attempts ? `Best ${m.best} / ${m.max} · ${m.attempts} sitting${m.attempts === 1 ? '' : 's'}` : 'Not taken yet'}

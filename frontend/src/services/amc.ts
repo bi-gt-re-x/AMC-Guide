@@ -46,7 +46,10 @@ export interface Problem {
   technique: string;
   technique_name: string;
   difficulty: number;
+  /** Summit's 1-10 rating: 1 is an AMC 10 #1, 10 the hardest AIME problem. */
   rating?: number | null;
+  /** The AoPS competition rating it comes from. */
+  aops?: number | null;
   statement: string;
   choices: string[] | null;
   format: 'choice' | 'integer';
@@ -451,6 +454,26 @@ export interface MockContest extends Format {
   set: number | null;
   attempts: number;
   best: number | null;
+  /** Mean rating of its problems against a real paper's, on the 1-10 scale. */
+  difficulty?: MockDifficulty | null;
+}
+
+export interface MockDifficulty {
+  average: number;
+  real: number;
+  /** Negative: plays easier than a real paper. */
+  vs_real: number;
+}
+
+/** How a mock compares with a real paper, in words. */
+export function versusReal(d: MockDifficulty | null | undefined, level: Level): string {
+  if (!d) return '';
+  if (Math.abs(d.vs_real) < 0.3) return `About as hard as a real ${level}`;
+  const step = Math.abs(d.vs_real).toFixed(1);
+  const points = step === '1.0' ? 'point' : 'points';
+  return d.vs_real < 0
+    ? `Plays about ${step} ${points} easier than a real ${level}`
+    : `Plays about ${step} ${points} harder than a real ${level}`;
 }
 
 export interface PastContest extends Format {
@@ -603,6 +626,12 @@ export interface ContestForecast {
   chance: number | null;
   reach: number;
   count: number;
+  /** Expected score working through the paper at the student's own pace, in the time limit. */
+  timed: number;
+  /** The last problem reached in the time limit at that pace. */
+  reached: number;
+  /** Points the clock costs: untimed minus timed. */
+  speed_cost: number;
 }
 
 export interface TopicAbility {
@@ -616,10 +645,12 @@ export interface TopicAbility {
   se: number | null;
   relevant: boolean;
   priority: number;
+  /** Points on the student's contest from bringing this topic up to their level. */
+  points: number;
 }
 
 export interface PatternRow {
-  kind: 'careless' | 'slow' | 'rushed' | 'revealed';
+  kind: 'careless' | 'slow' | 'rushed' | 'revealed' | 'pressure';
   count: number;
   text: string;
   problems: { id: string; short: string; topic: string; rating: number }[];
@@ -643,6 +674,10 @@ export interface SmartStats {
   mocks: null | { taken: number; scores: { contest: string; score: number; at: string }[]; blank_rate: number | null; by_fifth: (number | null)[] };
   next_problems: { id: string; short: string; topic: string; topic_name: string; rating: number; chance: number }[];
   review_due: number;
+  /** Seconds the student takes on a first try: at their level, two points easier, two harder; contest pace. */
+  pace: { timed_answers: number; at_level: number; easy: number; hard: number; contest: number };
+  /** Timed mocks against what the model expects for those exact papers. */
+  mock_check: null | { taken: number; gap: number; recent: { contest: string; score: number; expected: number }[] };
 }
 
 export interface Diagnosis {

@@ -539,6 +539,18 @@ def _gradable(contest_id):
     return {'id': contest_id, 'name': past['name'], 'level': past['level'], 'problems': ids}
 
 
+def _mock_difficulty(mock):
+    """How hard a mock plays against a real paper of its level: the mean of its
+    problems' own ratings and of a real paper's, on Summit's 1-10 scale."""
+    from backend.amc.scale import SCALE_BY_NUMBER
+    ratings = [pb.get(pid)['rating'] for pid in mock['problems'] if pb.get(pid)]
+    real = SCALE_BY_NUMBER[mock['level']]
+    if not ratings:
+        return None
+    average, typical = sum(ratings) / len(ratings), sum(real) / len(real)
+    return {'average': round(average, 1), 'real': round(typical, 1), 'vs_real': round(average - typical, 1)}
+
+
 @router.get('/api/amc/contests')
 def contests(username: str = Depends(current_username)):
     mocks = store.mocks(username)
@@ -549,7 +561,8 @@ def contests(username: str = Depends(current_username)):
     for m in catalog.MOCKS:
         mine = by_contest.get(m['id'], [])
         mock_rows.append({**{k: v for k, v in m.items() if k != 'problems'}, **catalog.FORMATS[m['level']],
-                          'attempts': len(mine), 'best': max((x['score'] for x in mine), default=None)})
+                          'attempts': len(mine), 'best': max((x['score'] for x in mine), default=None),
+                          'difficulty': _mock_difficulty(m)})
     imported = official.imported_contests()
     written = {}
     for p in official.all_problems():
@@ -590,6 +603,8 @@ def contest(contest_id: str, username: str = Depends(current_username)):
     info = {k: v for k, v in c.items() if k != 'problems'}
     if c['kind'] == 'past':
         info['imported'] = True
+    else:
+        info['difficulty'] = _mock_difficulty(gradable)
     return ok(contest=info, problems=problems, history=mine, can_import=can_import(username))
 
 

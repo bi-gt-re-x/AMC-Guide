@@ -888,8 +888,11 @@ def test_sets_are_real_papers():
     for mock in MOCKS:
         ps = [BY_ID[pid] for pid in mock['problems']]
         assert len(ps) == catalog.FORMATS[mock['level']]['count'], mock['id']
-        ratings = [p['rating'] for p in ps]
-        assert ratings == sorted(ratings), mock['id']
+        # The paper is in real order (slots never get easier); each problem's own
+        # rating is from the review and is never above its slot by more than half a point.
+        own = [p for p in ps if p['level'] == mock['level']]
+        assert [p['slot'] for p in own] == sorted(p['slot'] for p in own), mock['id']
+        assert all(p['aops'] <= p['slot'] + 0.5 for p in own), mock['id']
         # Answers spread over the letters like a real key: no letter more than 8 times.
         if mock['level'] != 'AIME':
             letters = [p['answer'] for p in ps]

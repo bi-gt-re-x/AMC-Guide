@@ -98,7 +98,7 @@ function Projection({ data }: { data: DashboardData }) {
       <p className="am-muted" style={{ margin: 0, fontSize: 13, lineHeight: 1.5 }}>
         {score == null
           ? `Answer ${data.projection_min} problems to see this.`
-          : 'Based on your first-try accuracy at each difficulty.'}
+          : 'From your level (recent answers count most) and a real paper’s difficulty, skipping where a guess would cost points.'}
       </p>
     </section>
   );

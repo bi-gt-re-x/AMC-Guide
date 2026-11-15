@@ -48,7 +48,7 @@ const FLOATERS = [
 const STEPS = [
   {
     n: '01', title: 'Practice',
-    body: 'Hundreds of problems, each rated 1–10 on the AoPS scale and tagged by topic and technique. Pick by problem number, year, topic or method.',
+    body: 'Hundreds of problems, each rated from 1 (an AMC 10 #1) to 10 (the hardest AIME problem) and tagged by topic and technique. Pick by problem number, year, topic or method.',
   },
   {
     n: '02', title: 'Review',
@@ -505,7 +505,7 @@ export default function Landing() {
           <div className="lp-bento">
             <Reveal className="lp-tile lp-tile-wide" delay={0}>
               <h3>Every problem on one scale</h3>
-              <p>Ratings from 1 to 10, set by problem number the way AoPS rates the real papers.</p>
+              <p>Ratings from 1 to 10, where 10 is the hardest AIME problem: the AoPS scale stretched over the contests you are preparing for.</p>
               <ScaleDemo />
             </Reveal>
             <Reveal className="lp-tile" delay={100}>

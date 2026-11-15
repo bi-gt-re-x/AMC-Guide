@@ -1,10 +1,12 @@
 /**
  * Insights: the smart analytics (backend/amc/smart.py) and the AI coach on top.
  *
- * The numbers need no key: an ability estimate on the problems' own 1-10
- * scale, a predicted score with a range and the chance of reaching the goal,
- * topic strengths shrunk toward that estimate, mistake patterns, a weekly
- * trend and specific problems to do next. With a model key (Grok first, Groq
+ * The numbers need no key: an ability estimate on Summit's 1-10 scale (10 is
+ * the hardest AIME problem), weighted toward recent answers; a predicted score
+ * with a range, the chance of reaching the goal, and what the clock costs at
+ * the student's own pace; topics ranked by the points they would add; mistake
+ * patterns, including timed mocks that fall short of the model; a weekly trend
+ * and problems to do next that they can win. With a model key (Grok first, Groq
  * otherwise) the coach reads them and writes the week's plan, and "Write me a
  * problem" makes a new, checked problem aimed at the weakest topic.
  */
@@ -26,6 +28,9 @@ const lv = (v: number | null) => (v == null ? '–' : v.toFixed(1));
 /** AMC scores move in steps of 1.5, so a whole number reads truer than 73.6. */
 const score = (v: number, level: Level) => (level === 'AIME' ? String(Math.round(v * 10) / 10) : String(Math.round(v)));
 
+/** Seconds as m:ss. */
+const mmss = (secs: number) => `${Math.floor(secs / 60)}:${String(Math.round(secs % 60)).padStart(2, '0')}`;
+
 function Forecast({ stats, level }: { stats: SmartStats; level: Level }) {
   const c = stats.contests[level];
   const mine = level === stats.level;
@@ -45,6 +50,11 @@ function Forecast({ stats, level }: { stats: SmartStats; level: Level }) {
       )}
       <p className="am-predict-line">
         {c.reach ? `Usually right through #${c.reach} of ${c.count}` : 'Not yet usually right on #1'}
+      </p>
+      <p className="am-predict-line am-predict-timed">
+        At your pace <strong>{score(c.timed, level)}</strong>
+        {c.reached < c.count ? `, reaching #${c.reached}` : ', finishing the paper'}
+        {c.speed_cost >= (level === 'AIME' ? 0.5 : 3) && <span className="am-muted"> · the clock costs about {score(c.speed_cost, level)}</span>}
       </p>
     </div>
   );
@@ -170,7 +180,7 @@ export function Insights() {
         <div className="am-stat">
           <dt>Your level</dt>
           <dd className="am-stat-value">{lv(s.theta)}<small style={{ fontSize: 14 }}> / 10</small></dd>
-          <dd className="am-stat-hint">likely {s.band} · the rating you solve half the time</dd>
+          <dd className="am-stat-hint">likely {s.band} · the rating you solve half the time, where 10 is the hardest AIME problem</dd>
         </div>
         <div className="am-stat">
           <dt>First-try answers</dt>
@@ -215,9 +225,13 @@ export function Insights() {
           {s.focus.map((t) => (
             <div key={t.id} className="am-ability">
               <Link className="am-link" to={`/topics/${t.id}`}><CategoryDot category={t.category} /> {t.name}</Link>
-              <span className="am-muted">{t.theta == null ? 'not tried yet' : `level ${lv(t.theta)} · ${t.right}/${t.answered} right`}</span>
+              <span className="am-muted">
+                {t.theta == null ? 'not tried yet' : `level ${lv(t.theta)} · ${t.right}/${t.answered} right`}
+                {t.points > 0 && <strong className="am-points"> +{t.points} pts</strong>}
+              </span>
             </div>
           ))}
+          <p className="am-muted am-card-note">Points your predicted score gains by bringing the topic up to your level.</p>
           {s.strong.length > 0 && (
             <>
               <h3 className="am-h3" style={{ marginTop: 16 }}>Strongest</h3>
@@ -233,7 +247,7 @@ export function Insights() {
         <section className="am-card">
           <div className="am-card-head"><h2>Level by week</h2></div>
           {trend.length ? (
-            <Bars max={7} format={(v) => v.toFixed(1)} rows={trend.map((w) => ({
+            <Bars max={10} format={(v) => v.toFixed(1)} rows={trend.map((w) => ({
               key: w.week_end, label: `to ${w.week_end.slice(5)}`, value: w.theta, hint: `${w.answered} answers so far`,
             }))} />
           ) : (
@@ -252,6 +266,27 @@ export function Insights() {
           )}
         </section>
       </div>
+
+      <section className="am-card">
+        <div className="am-card-head"><h2>Your pace</h2><span className="am-muted" style={{ fontSize: 12 }}>first tries, by how hard a problem is for you</span></div>
+        {s.pace.timed_answers >= 3 ? (
+          <dl className="am-pace">
+            <div><dt>Easier than your level</dt><dd>{mmss(s.pace.easy)}</dd></div>
+            <div><dt>At your level</dt><dd>{mmss(s.pace.at_level)}</dd></div>
+            <div><dt>Harder than your level</dt><dd>{mmss(s.pace.hard)}</dd></div>
+            <div><dt>Contest pace</dt><dd>{mmss(s.pace.contest)}</dd></div>
+          </dl>
+        ) : (
+          <p className="am-muted" style={{ margin: 0, fontSize: 13 }}>Answer a few problems with the timer running to see your pace.</p>
+        )}
+        {s.mock_check && (
+          <p className="am-card-note">
+            Your {s.mock_check.taken === 1 ? 'timed mock came' : `${s.mock_check.taken} timed mocks came`} in{' '}
+            <strong>{s.mock_check.gap >= 0 ? `${s.mock_check.gap} points above` : `${-s.mock_check.gap} points below`}</strong>{' '}
+            what your practice predicts for {s.mock_check.taken === 1 ? 'that paper' : 'those papers'}.
+          </p>
+        )}
+      </section>
 
       <section className="am-card">
         <div className="am-card-head"><h2>Patterns in your mistakes</h2></div>

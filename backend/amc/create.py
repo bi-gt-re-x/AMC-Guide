@@ -23,6 +23,7 @@ import uuid
 from datetime import datetime
 
 from backend.amc import ai, catalog
+from backend.amc.scale import to_aops, to_scale
 from backend.amc.solutions import tier
 from backend.database.connection import connect
 
@@ -147,9 +148,11 @@ def create(user, level, topic, technique='', rating=None, like=None):
         raise CreateFailed('No such topic.')
     if technique not in catalog.TECHNIQUE_FAMILY:
         technique = 'direct-computation'
+    # `rating` is on Summit's 1-10 scale; the writer is told the AoPS rating,
+    # which is the scale it knows, and that is what is stored.
     lo, hi = {'AMC 10': (1, 4), 'AMC 12': (1, 4.5), 'AIME': (2.5, 6.5)}[level]
-    rating = rating if isinstance(rating, (int, float)) else (lo + hi) / 2
-    rating = min(hi, max(lo, round(float(rating) * 2) / 2))
+    aops = to_aops(rating) if isinstance(rating, (int, float)) else (lo + hi) / 2
+    rating = min(hi, max(lo, round(float(aops) * 2) / 2))
 
     brief = _brief(level, topic, technique, rating, like)
     for attempt in range(2):
@@ -225,12 +228,14 @@ def all_problems():
 
 
 def _shape(row):
-    rating = float(row['rating'])
+    # Stored on the AoPS scale (what the writer was asked for); served on Summit's.
+    aops = float(row['rating'])
+    rating = to_scale(aops)
     answer = int(row['answer']) if row['level'] == 'AIME' else row['answer']
     return {
         'id': row['id'], 'level': row['level'], 'topic': row['topic'], 'also': [],
         'technique': row['technique'] if row['technique'] in catalog.TECHNIQUE_FAMILY else 'direct-computation',
-        'rating': rating, 'difficulty': tier(rating),
+        'rating': rating, 'aops': aops, 'difficulty': tier(rating),
         'statement': row['statement'], 'choices': json.loads(row['choices']) if row['choices'] else None,
         'answer': answer, 'solution': json.loads(row['solution']), 'insight': row['insight'] or '',
         'trap': row['trap'] or '', 'ai': True, 'based_on': row.get('based_on') or '',

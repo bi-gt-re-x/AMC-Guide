@@ -53,7 +53,7 @@ const TITLES: Record<AuthStep, string> = {
 };
 
 const POINTS: [IconName, string][] = [
-  ['target', 'Problems tagged by topic, strategy and AoPS difficulty'],
+  ['target', 'Problems tagged by topic, strategy and difficulty from 1 to 10'],
   ['timer', 'Timed mock contests, scored like the real thing'],
   ['sparkles', 'A study plan built around your goal'],
 ];

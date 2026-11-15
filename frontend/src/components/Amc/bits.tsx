@@ -13,13 +13,15 @@ export function ratingText(rating: number) {
 }
 
 /**
- * Difficulty on the 1-10 AoPS competition scale: a ten-step meter (half a step
- * for .5) and, with `label`, the number. An AMC 10 runs 1 to 4, an AMC 12 1 to
- * 4.5 and an AIME 2.5 to 6.5; 7 and up is olympiad level.
+ * Difficulty on Summit's 1-10 scale (backend/amc/scale.py): a ten-step meter
+ * (half a step for .5) and, with `label`, the number. 1 is the first problem of
+ * an AMC 10 and 10 the hardest AIME problem; an AMC 10 runs from 1 to about 6,
+ * an AMC 12 to 6.5 and an AIME from 3.5 to 10. It is the AoPS competition
+ * rating stretched over the whole range.
  */
 export function Difficulty({ value, rating, label = true }: { value: number; rating?: number | null; label?: boolean }) {
   const r = rating ?? value;
-  const text = `Rated ${r} out of 10 on the AoPS competition scale`;
+  const text = `Rated ${r} out of 10, where 10 is the hardest AIME problem`;
   return (
     <span className="am-diff" title={text} aria-label={text}>
       {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (

@@ -20,8 +20,10 @@ sit in?" — not by where it happens to sit in a Step Mock. That is why some
 Step Mock problems rate below their position: the mocks are a little gentler
 than real papers at the top end, and the ratings say so.
 
-`difficulty` (1-5) is derived from the rating (`tier`) so the filters and the
-score projection keep working: 1 is a real AMC 10 #1-5 and 5 is #21-25 and up.
+`RATINGS` below are on the AoPS scale, the way they were judged. The bank
+converts each to Summit's 1-10 scale (backend/amc/scale.py, where 10 is the
+hardest AIME problem) as it loads, and `difficulty` (1-5) is derived from that
+(`tier`) so the filters and the score projection keep working.
 
 ## Solutions
 
@@ -50,16 +52,10 @@ RATINGS = {
 
 
 def tier(rating):
-    """The 1-5 difficulty the rest of the site uses, from an AoPS rating."""
-    if rating <= 1:
-        return 1
-    if rating <= 1.5:
-        return 2
-    if rating <= 2:
-        return 3
-    if rating <= 3:
-        return 4
-    return 5
+    """The 1-5 difficulty the rest of the site uses, from a Summit 1-10 rating
+    (backend/amc/scale.py)."""
+    from backend.amc.scale import tier as scale_tier
+    return scale_tier(rating)
 
 
 SOLUTIONS = {

@@ -19,10 +19,6 @@ INTERVALS = [3, 10, 21]
 #: year with the score distribution), and a solid AIME score.
 DEFAULT_GOALS = {'AMC 10': 100, 'AMC 12': 85, 'AIME': 7}
 
-#: Chance of solving a problem of each difficulty with no history yet.
-PRIOR = {1: 0.9, 2: 0.75, 3: 0.55, 4: 0.35, 5: 0.15}
-PRIOR_WEIGHT = 3
-
 #: Problems answered before a projected score is shown at all.
 PROJECTION_MIN = 5
 
@@ -101,6 +97,7 @@ def public(problem, reveal=False):
         'technique_name': catalog.technique_name(problem['technique']),
         'difficulty': problem['difficulty'],
         'rating': problem.get('rating'),
+        'aops': problem.get('aops'),
         'statement': problem['statement'],
         'choices': problem['choices'],
         'format': 'choice' if problem['choices'] else 'integer',
@@ -126,6 +123,8 @@ def history(attempts):
     for row in attempts:
         pid = row['problem_id']
         h = out.setdefault(pid, {'attempts': 0, 'first_correct': bool(row['correct']),
+                                 'first_at': row['at'], 'first_seconds': int(row.get('seconds') or 0),
+                                 'first_source': row.get('source') or '',
                                  'solved': False, 'last_correct': False, 'last_at': '',
                                  'seconds': 0})
         h['attempts'] += 1
@@ -158,46 +157,15 @@ def streak(attempts, today):
     return count
 
 
-def accuracy_by_difficulty(hist):
-    """Smoothed chance of solving each difficulty, from first attempts only:
-    an answer after seeing the solution says nothing about contest day."""
-    seen = {d: [0, 0] for d in PRIOR}
-    for pid, h in hist.items():
-        p = bank_of.get(pid)
-        if not p:
-            continue
-        bucket = seen[p['difficulty']]
-        bucket[0] += 1 if h['first_correct'] else 0
-        bucket[1] += 1
-    return {d: (c + PRIOR[d] * PRIOR_WEIGHT) / (n + PRIOR_WEIGHT) for d, (c, n) in seen.items()}
+def projected(hist, level, today=None):
+    """Expected score on a contest at `level`, from the ability model in
+    backend/amc/smart.py, with the best answer-or-skip choice on each problem.
 
-
-def _chance(acc, difficulty):
-    """Interpolate between integer difficulties."""
-    lo = max(1, min(5, int(difficulty)))
-    hi = min(5, lo + 1)
-    frac = difficulty - lo
-    return acc[lo] * (1 - frac) + acc[hi] * frac
-
-
-def projected(hist, level):
-    """Expected score on a contest at `level` with an answer-or-skip strategy.
-
-    Difficulty rises along the paper (about 1.0 at #1 to 4.6 at #25 on the AMC
-    10; the AMC 12 runs half a step harder; the AIME from 2 to 5). On the AMC
-    a problem is worth answering when the chance of being right beats the 1.5
-    points for a blank (p > 0.25).
+    The same number the Analytics page predicts: there is one model of the
+    student, not one per page.
     """
-    acc = accuracy_by_difficulty(hist)
-    if level == 'AIME':
-        total = sum(_chance(acc, 2 + 3 * i / 14) for i in range(15))
-        return round(total, 1)
-    shift = 0.5 if level == 'AMC 12' else 0
-    total = 0
-    for i in range(25):
-        p = _chance(acc, min(5, 1 + 3.6 * i / 24 + shift))
-        total += 6 * p if p > 0.25 else 1.5
-    return round(total * 2) / 2
+    from backend.amc import smart
+    return smart.projected(hist, level, today)
 
 
 def topic_stats(hist, review_by_id):

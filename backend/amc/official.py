@@ -490,13 +490,14 @@ def guess_topic(statement):
     return guess_topics(statement)[0]
 
 
-from backend.amc.scale import RATING_BY_NUMBER  # noqa: E402  (the per-number curve)
+from backend.amc.scale import RATING_BY_NUMBER, SCALE_BY_NUMBER, aops_at  # noqa: E402
+from backend.amc.scale import rating_at as _scale_rating_at, tier as _tier  # noqa: E402
 
 
 def _bands(level):
-    """[(last problem number, rating)] runs, for the contest guide."""
+    """[(last problem number, rating)] runs on Summit's scale, for the contest guide."""
     out = []
-    for number, rating in enumerate(RATING_BY_NUMBER[level], start=1):
+    for number, rating in enumerate(SCALE_BY_NUMBER[level], start=1):
         if out and out[-1][1] == rating:
             out[-1] = (number, rating)
         else:
@@ -508,15 +509,13 @@ RATING_BANDS = {level: _bands(level) for level in RATING_BY_NUMBER}
 
 
 def rating_at(level, number):
-    """The AoPS-scale rating (1-10) for problem `number` of a `level` paper."""
-    table = RATING_BY_NUMBER[level]
-    return table[min(max(number, 1), len(table)) - 1]
+    """Summit's 1-10 rating for problem `number` of a `level` paper (backend/amc/scale.py)."""
+    return _scale_rating_at(level, number)
 
 
 def difficulty_at(level, number):
-    """The 1-5 difficulty, from the position's AoPS rating."""
-    from backend.amc.solutions import tier
-    return tier(rating_at(level, number))
+    """The 1-5 difficulty, from the position's rating."""
+    return _tier(rating_at(level, number))
 
 
 # ---------------------------------------------------------------------------
@@ -554,6 +553,7 @@ def _shape(row):
         'also': tags[1:],
         'technique': 'official',
         'rating': rating_at(contest['level'], number),
+        'aops': aops_at(contest['level'], number),
         'difficulty': difficulty_at(contest['level'], number),
         'statement': row['statement'],
         'choices': choices,

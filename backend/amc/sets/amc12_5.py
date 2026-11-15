@@ -56,7 +56,7 @@ PROBLEMS = [
       r'What is the largest value of $3\sin x + 4\cos x$ over all real $x$?',
       ['$5$', '$6$', '$7$', '$8$', '$12$'], '$5$',
       [r'$3\sin x + 4\cos x = 5\sin(x + \varphi)$ where $\cos\varphi = \frac35$, $\sin\varphi = \frac45$.',
-       r'Its maximum is $5$.'],
+       r'A sine is at most $1$, and $\sin(x + \varphi) = 1$ for some $x$, so the maximum is exactly $5$.'],
       r'$a\sin x + b\cos x$ has amplitude $\sqrt{a^2 + b^2}$.',
       r'Adding the maxima of the two terms to get $7$.'),
     S(9, 11),

@@ -35,9 +35,11 @@ def status(username: str = Depends(current_username)):
 # ---------------------------------------------------------------------------
 DIAGNOSE_SYSTEM = """\
 You are an experienced AMC 10, AMC 12 and AIME coach reading one student's
-results. You get a model of their ability on the AoPS 1-10 rating scale (the
-rating they solve half the time), their predicted score, topic and technique
-strengths, patterns in their mistakes, and their trend. Explain what the
+results. You get a model of their ability on Summit's 1-10 rating scale (1 is
+an AMC 10 #1, 10 the hardest AIME problem; the rating they solve half the
+time), their predicted score untimed and at their own pace, the topics worth
+the most points, patterns in their mistakes, and their trend. Quote ratings on
+this 1-10 scale, never as AoPS ratings. Explain what the
 numbers mean for them and what to do this week. Be specific and honest: if
 there is little data, say so and keep advice general. Use only topic ids from
 the list given.
@@ -83,11 +85,17 @@ def _clean_diagnosis(found):
             'contest_strategy': ai.text(found.get('contest_strategy'), 1000)}
 
 
+def _diagnosis_key():
+    """Today's reading, for the current version of the model: a reading of
+    numbers the model no longer produces is not shown."""
+    return '{}:{}'.format(ai._today(), smart.MODEL_VERSION)
+
+
 @router.get('/api/amc/insights')
 def insights(username: str = Depends(current_username)):
     attempts, hist, review_by_id = _context(username)
     stats = smart.analyze(attempts, hist, review_by_id, store.mocks(username), store.plan(username))
-    today = ai.cached('diagnosis', ai._today(), username)
+    today = ai.cached('diagnosis', _diagnosis_key(), username)
     return ok(stats=stats, ai=ai.status(username), diagnosis=today['data'] if today else None,
               diagnosis_at=today['at'] if today else None)
 
@@ -100,7 +108,7 @@ class DiagnoseBody(BaseModel):
 def diagnose(body: DiagnoseBody, username: str = Depends(current_username)):
     """The AI coach's reading of the numbers, once a day unless refreshed."""
     if not body.refresh:
-        today = ai.cached('diagnosis', ai._today(), username)
+        today = ai.cached('diagnosis', _diagnosis_key(), username)
         if today:
             return ok(diagnosis=today['data'], at=today['at'], cached=True)
     attempts, hist, review_by_id = _context(username)
@@ -112,7 +120,7 @@ def diagnose(body: DiagnoseBody, username: str = Depends(current_username)):
     except ai.AIUnavailable as exc:
         return fail(str(exc))
     diagnosis = _clean_diagnosis(found)
-    ai.remember('diagnosis', ai._today(), username, diagnosis)
+    ai.remember('diagnosis', _diagnosis_key(), username, diagnosis)
     return ok(diagnosis=diagnosis, at=ai._today(), cached=False, provider=ai.label())
 
 

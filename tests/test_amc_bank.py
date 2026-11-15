@@ -194,11 +194,21 @@ def test_every_solution_is_steps_ending_on_the_answer():
             assert s.count('$') % 2 == 0 or '\\$' in s, (p['id'], s)
 
 
+def test_summit_scale_puts_the_hardest_aime_problem_at_ten():
+    from backend.amc.scale import to_aops, to_scale
+    aops = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5]
+    assert [to_scale(a) for a in aops] == [1, 2, 2.5, 3.5, 4.5, 5, 6, 6.5, 7.5, 8.5, 9, 10]
+    assert to_scale(0) == 1 and to_scale(9) == 10                   # clamped to the scale
+    assert all(abs(to_scale(to_aops(r)) - r) < 1e-9 for r in [to_scale(a) for a in aops])
+
+
 def test_official_positions_follow_the_aops_bands():
     from backend.amc import official
-    assert [official.rating_at('AMC 10', n) for n in (1, 6, 11, 16, 21, 25)] == [1, 1.5, 2, 2.5, 3, 4]
-    assert [official.rating_at('AMC 12', n) for n in (1, 10, 20, 25)] == [1, 2, 3.5, 4.5]
-    assert [official.rating_at('AIME', n) for n in (1, 4, 7, 11, 15)] == [2.5, 3.5, 4, 5, 6.5]
+    from backend.amc.scale import aops_at
+    assert [aops_at('AMC 10', n) for n in (1, 6, 11, 16, 21, 25)] == [1, 1.5, 2, 2.5, 3, 4]
+    assert [official.rating_at('AMC 10', n) for n in (1, 6, 11, 16, 21, 25)] == [1, 2, 2.5, 3.5, 4.5, 6]
+    assert [official.rating_at('AMC 12', n) for n in (1, 10, 20, 25)] == [1, 2.5, 5, 6.5]
+    assert [official.rating_at('AIME', n) for n in (1, 4, 7, 11, 15)] == [3.5, 5, 6, 7.5, 10]
     for level, table in official.RATING_BY_NUMBER.items():
         assert len(table) == {'AIME': 15}.get(level, 25)
         assert table == sorted(table), level            # never easier further in
@@ -212,5 +222,14 @@ def test_every_rating_is_on_the_one_to_ten_scale():
 
 def test_mocks_run_in_rating_order():
     for mock in catalog.MOCKS:
-        ratings = [BY_ID[pid]['rating'] for pid in mock['problems']]
-        assert ratings == sorted(ratings), mock['id']
+        ps = [BY_ID[pid] for pid in mock['problems']]
+        if mock['family'] == 'step':
+            ratings = [p['rating'] for p in ps]
+            assert ratings == sorted(ratings), mock['id']
+        else:
+            # A Summit set keeps real paper order: its slots never get easier, and its
+            # problems' own ratings rise from the first third to the last.
+            slots = [p['slot'] for p in ps if p['level'] == mock['level']]
+            assert slots == sorted(slots), mock['id']
+            third = len(ps) // 3
+            assert sum(p['rating'] for p in ps[:third]) < sum(p['rating'] for p in ps[-third:]), mock['id']

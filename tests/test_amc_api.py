@@ -118,8 +118,10 @@ def test_contest_pages(client, today):
     assert [m['id'] for m in listing['mocks'] if m['family'] == 'summit'][:2] == ['mock-10-1', 'mock-10-2']
     summit = client.get('/api/amc/contests/mock-12-3').json()
     assert [p['number'] for p in summit['problems']] == list(range(1, 26))
+    # Each problem carries its own rating on Summit's 1-10 scale (from the review in
+    # backend/amc/sets/ratings.py), not its slot's: this set's #25 is an AoPS 3.5.
     ratings = [p['rating'] for p in summit['problems']]
-    assert ratings == sorted(ratings) and ratings[0] == 1 and ratings[-1] == 4.5
+    assert all(1 <= r <= 10 for r in ratings) and ratings[0] == 1 and ratings[-1] == 5
 
 
 def test_logging_a_past_contest(client, today):
@@ -165,11 +167,11 @@ def test_accounts_are_separate(client, stranger, today):
 
 
 def test_projection_rises_with_results():
-    empty = engine.projected({}, 'AMC 10')
-    strong = engine.history([{'problem_id': p, 'correct': 1, 'at': '2026-11-12T10:00:00', 'seconds': 60}
-                             for p in BY_ID])
-    assert engine.projected(strong, 'AMC 10') > empty
-    assert 0 < empty < 150
+    assert engine.projected({}, 'AMC 10') is None                 # nothing to go on yet
+    ids = sorted(BY_ID)[:40]
+    weak = engine.history([{'problem_id': p, 'correct': 0, 'at': '2026-11-12T10:00:00', 'seconds': 60} for p in ids])
+    strong = engine.history([{'problem_id': p, 'correct': 1, 'at': '2026-11-12T10:00:00', 'seconds': 60} for p in ids])
+    assert 0 < engine.projected(weak, 'AMC 10') < engine.projected(strong, 'AMC 10') <= 150
 
 
 def test_resetting_amc_progress_clears_only_amc_rows(client, today):
@@ -219,7 +221,10 @@ def test_a_topic_groups_its_problems_by_strategy(client, today):
     body = client.get('/api/amc/topics/probability').json()
     groups = {g['id']: g for g in body['by_strategy']}
     assert 'complementary-counting' in groups
-    assert groups['complementary-counting']['pills'][0]['id'] == 'step-10-10'
+    pills = groups['complementary-counting']['pills']
+    assert 'step-10-10' in [p['id'] for p in pills]
+    ratings = [p['rating'] for p in pills]
+    assert ratings == sorted(ratings)                              # easiest first
 
 
 def test_problem_filters_by_mock_number_and_kind(client, today):

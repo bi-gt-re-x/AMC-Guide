@@ -11,7 +11,7 @@ paper, a study plan to contest day, and search across all of it.
 | --- | --- | --- |
 | Dashboard | `/dashboard` | Today's plan, the next problem, projected score vs goal, progress by category |
 | Review | `/review` | The error log: misses return after 3, 10 and 21 days until mastered |
-| Problems | `/problems`, `/problems/:id` | Every problem in contest order (mock #1 to #25), with a chooser down the left for source (Summit Mock sets, Step problems, official papers), contest, mock set, year, problem number, rating 1-10 (the AoPS competition scale), topic, technique and status; answer to unlock the solution, key insight and trap |
+| Problems | `/problems`, `/problems/:id` | Every problem in contest order (mock #1 to #25), with a chooser down the left for source (Summit Mock sets, Step problems, official papers), contest, mock set, year, problem number, rating 1-10 (1 is an AMC 10 #1, 10 the hardest AIME problem), topic, technique and status; answer to unlock the solution, key insight and trap |
 | Topics | `/topics`, `/topics/:id` | 63 topics in 5 categories and 92 techniques in 5 strategy families, each with key ideas and its problems |
 | Mock Contests | `/mock-contests` | Five Summit Mock sets each for the AMC 10, AMC 12 and AIME (plus the original Step Mocks), in real problem order at real difficulty, sat on an exam screen with a cover page and bubble answer sheet, graded 6 / 1.5 / 0 with a report |
 | Past Contests | `/contests`, `/contests/:id` | Every official AMC 10/12 and AIME from 2000 to 2026, which can be imported one at a time (paste the AoPS page source and answer key) or many at once ("Import many papers": open a batch link, copy the page, paste) and then read whole like the AoPS problems page, practiced, graded and timed in-site. Text copied from the rendered AoPS page works too. A paper's page shows where you stand on each problem and, folded away, its answer key and Summit's own worked solutions (`backend/amc/official_solutions.py`, written so far for the 2026 AMC 10A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and 10B, and the 2023 AMC 10A); figures can be stored as SVG and are drawn in place of the Asymptote note. Before the first sitting a paper's problems, key and solutions are locked behind a card that offers the timed contest or a confirmed unlock, so it can still be sat cold. Papers in Summit head the list as cards |
@@ -20,7 +20,9 @@ paper, a study plan to contest day, and search across all of it.
 | Search | `/search`, top bar / ⌘K | Problems, topics, contests and pages |
 
 The content lives in `backend/amc/` (`bank.py` is the problem bank, `sets/` the
-fifteen Summit Mock papers, `scale.py` the 1-10 rating by problem number,
+fifteen Summit Mock papers with `sets/ratings.py` each problem's own reviewed
+rating, `scale.py` Summit's 1-10 scale (the AoPS rating stretched so 10 is the
+hardest AIME problem) and the rating by problem number on a real paper,
 `catalog.py` the topics and contests, `engine.py` the rules), the API in
 `backend/api/amc.py`, the tables in `data/sql/amc.sql`, and the pages in
 `frontend/src/pages/amc/`. The Step Mock and Summit Mock problems are original. Only the `temu` account (or the
@@ -31,11 +33,16 @@ answer that can be brute-forced, and `tests/test_amc_sets.py` recomputes every
 Summit Mock answer.
 
 Analytics opens on **Insights** (`backend/amc/smart.py`), which needs no key:
-your level on the problems' own 1-10 scale (fitted from first tries, harder
-problems counting for more), predicted scores for all three contests with an
-80% range and your chance of reaching the goal or cutoff, how far into a paper
-you are usually right, topic and technique strengths, careless misses, time
-sinks and rushed answers, a weekly trend, and the exact problems to do next.
+your level on the 1-10 scale (fitted from first tries, recent answers weighted
+more), predicted scores for all three contests with an 80% range and your
+chance of reaching the goal or cutoff, the same prediction at your own pace
+against the clock (and the points the clock costs), how far into a paper you
+are usually right, topics ranked by the points they would add, technique
+strengths, careless misses, time sinks, rushed answers and timed mocks that
+fall short of the model, a weekly trend, and problems to do next that you get
+right half to three-quarters of the time. The dashboard's projected score is
+the same model. Each Summit Mock says how it plays against a real paper; the
+review in `sets/ratings.py` found them easier, most of all the AIME sets.
 
 The AI layer (`backend/amc/ai.py`, endpoints in `backend/api/amc_ai.py`) uses
 **Grok** whenever `XAI_API_KEY` is set (model `GROK_MODEL`, default

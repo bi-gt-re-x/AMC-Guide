@@ -259,7 +259,11 @@ export default function Problem() {
               <dt>Contest</dt><dd>{p.level}</dd>
               <dt>Category</dt><dd>{p.category_name}</dd>
               <dt>Technique</dt><dd><Link className="am-link" to={`/problems?technique=${p.technique}`}>{p.technique_name}</Link></dd>
-              <dt>Rating</dt><dd>{p.rating != null ? `${p.rating}/10` : '—'} <span className="am-muted">AoPS scale</span></dd>
+              <dt>Rating</dt>
+              <dd title="1 is an AMC 10 #1 and 10 the hardest AIME problem">
+                {p.rating != null ? `${p.rating}/10` : '—'}
+                {p.aops != null && <span className="am-muted"> · AoPS {p.aops}</span>}
+              </dd>
               {p.aops_url && (
                 <><dt>Solutions</dt><dd><a className="am-link" href={p.aops_url} target="_blank" rel="noreferrer">AoPS wiki ↗</a></dd></>
               )}
