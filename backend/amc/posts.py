@@ -35,9 +35,10 @@ class Invalid(ValueError):
 
 def to_dollars(text):
     """AoPS math markup into `$...$` and `$$...$$`."""
-    text = (text or '').replace('\r\n', '\n').strip()
-    text = official._math_to_dollars(text)
-    return re.sub(r'\\\((.*?)\\\)', lambda m: '$' + m.group(1).strip() + '$', text, flags=re.S)
+    text = official._math_to_dollars((text or '').replace('\r\n', '\n'))
+    text = re.sub(r'\\\((.*?)\\\)', lambda m: '$' + m.group(1).strip() + '$', text, flags=re.S)
+    # Display math is put on its own line; three or more newlines are one break.
+    return re.sub(r'\n{3,}', '\n\n', text).strip()
 
 
 def _choice(text):

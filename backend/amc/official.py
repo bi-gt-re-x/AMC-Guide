@@ -51,13 +51,29 @@ _CHOICE_MARK = re.compile(
     r'|\(\s*([A-E])\s*\))')                                                                 # (A)
 
 
+def _outside_math(text, at):
+    """True when position `at` is not inside `$...$` (escaped `\\$` aside)."""
+    return len(re.findall(r'(?<!\\)\$', text[:at])) % 2 == 0
+
+
 def _math_to_dollars(text):
-    """<math>, <cmath> and \\[ \\] into $...$ / $$...$$."""
+    """<math>, <cmath> and \\[ \\] into $...$ / $$...$$, and the LaTeX
+    environments KaTeX cannot draw into ones it can."""
     text = re.sub(r'<cmath>(.*?)</cmath>', lambda m: '$$' + m.group(1).strip() + '$$', text, flags=re.S)
     text = re.sub(r'<math>(.*?)</math>', lambda m: '$' + m.group(1).strip() + '$', text, flags=re.S)
-    text = re.sub(r'\\\[(.*?)\\\]', lambda m: '$$' + m.group(1).strip() + '$$', text, flags=re.S)
-    # `\[a\]\[b\]` makes two display blocks touching; keep them apart.
-    return text.replace('$$$$', '$$\n$$')
+    # A display block on its own line, so one that runs straight into the next
+    # math (`\[a\]\[b\]`, or `...?\]$\textbf{(A)}`) stays apart from it.
+    text = re.sub(r'\\\[(.*?)\\\]', lambda m: '\n$$' + m.group(1).strip() + '$$\n', text, flags=re.S)
+    text = text.replace('$$$$', '$$\n$$')
+    # KaTeX has `array` but no `tabular`; `aligned` but no `align*` or `eqnarray`.
+    text = re.sub(r'\\(begin|end)\{tabular\}', r'\\\1{array}', text)
+    out, last = [], 0
+    for m in re.finditer(r'\\begin\{(align|eqnarray)\*?\}(.*?)\\end\{\1\*?\}', text, flags=re.S):
+        block = '\\begin{aligned}' + m.group(2).strip() + '\\end{aligned}'
+        # Written bare in the text (as the AoPS wiki does), it needs its own `$$`.
+        out.append(text[last:m.start()] + ('\n$$' + block + '$$\n' if _outside_math(text, m.start()) else block))
+        last = m.end()
+    return ''.join(out) + text[last:]
 
 
 def _clean_wiki(text):
@@ -113,7 +129,8 @@ def _choice_text(raw):
 def _find_choices(body):
     """The choices in a problem body, and the body without them."""
     # Math blocks first: AoPS writes the choices as one (sometimes two) of them.
-    blocks = list(re.finditer(r'\$\$(.+?)\$\$|\$(.+?)\$', body, flags=re.S))
+    # `\$` is a dollar sign, not a delimiter.
+    blocks = list(re.finditer(r'(?<!\\)\$\$(.+?)(?<!\\)\$\$|(?<!\\)\$(.+?)(?<!\\)\$', body, flags=re.S))
     for i, m in enumerate(blocks):
         inner = m.group(1) or m.group(2)
         if not _CHOICE_MARK.search(inner):

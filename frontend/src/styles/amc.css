@@ -1430,3 +1430,16 @@ html[data-theme="dark"] .am-predict-tag { color: #0d1117; }
 .am-ready-score b { color: var(--am-good); }
 .am-ready-actions { display: flex; gap: var(--space-2); margin-top: 6px; }
 .am-paper.is-in { border-color: var(--am-sage); background: var(--am-sage-soft); }
+
+/* An official paper before its first sitting (Contest.tsx `Locked`): the
+   booklet's place, offering the timed contest or a deliberate unlock. */
+.am-locked { display: grid; justify-items: center; gap: var(--space-3); padding: var(--space-6) var(--space-4); text-align: center;
+    border: 1px dashed var(--am-line); border-radius: 14px; background: var(--am-hover); }
+.am-locked h3 { margin: 0; font-family: var(--am-serif); font-weight: 400; font-size: 24px; color: var(--am-ink); }
+.am-locked > p { margin: 0; max-width: 46ch; font-size: 14px; line-height: 1.6; }
+.am-locked-icon { display: grid; place-items: center; width: 46px; height: 46px; border-radius: 50%; background: var(--am-card);
+    border: 1px solid var(--am-line); color: var(--am-ink); }
+.am-locked-verify { display: grid; justify-items: center; gap: var(--space-2); margin-top: var(--space-3); padding-top: var(--space-4);
+    border-top: 1px solid var(--am-line); width: min(100%, 46ch); }
+.am-locked-verify label { display: flex; gap: 8px; align-items: flex-start; text-align: left; font-size: 13px; color: var(--am-body); cursor: pointer; }
+.am-locked-verify input { margin-top: 2px; flex: none; }

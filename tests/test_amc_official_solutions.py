@@ -25,7 +25,8 @@ def test_each_solution_ends_on_its_answer_and_is_clean_tex(pid):
     assert official.split_id(pid), pid
     assert len(entry['steps']) >= 2 and entry['insight'] and entry['trap']
     assert entry['topics'] and all(t in catalog.TOPIC_BY_ID for t in entry['topics'])
-    assert r'\textbf{(' + entry['answer'] + ')}' in entry['steps'][-1]
+    # As the paper writes it: `\textbf{(B)}` or `\textbf{(B) }`.
+    assert re.search(r'\\textbf\{\(' + entry['answer'] + r'\)\s*\}', entry['steps'][-1]), entry['steps'][-1]
     for text in _texts(entry):
         # A '' inside r'...' silently ends the raw string; a \f or \b then
         # turns into a control character instead of \frac or \binom.
@@ -91,4 +92,32 @@ def test_text_copied_from_the_rendered_page_is_read():
     assert 'Solution' not in one['statement'] and 'Solution' not in two['statement']
     assert one['choices'][4] == r'$\text{The node } \dfrac{1}{2} \text{ is not shown.}$'
     assert two['choices'][4] == 'none'
-    assert '$$x=1$$\n$$y=2$$' in two['statement']
+    assert '$$x=1$$\n\n$$y=2$$' in two['statement']
+
+
+def test_latex_that_katex_cannot_draw_is_converted():
+    source = (
+        'Problem 1\nThe rows:\n\n$\\begin{tabular}{cc} 1&2\\\\ 3&4 \\end{tabular}$\n\nThe sum is?\n\n'
+        '$\\textbf{(A) } 1 \\qquad\\textbf{(B) } 2 \\qquad\\textbf{(C) } 3 \\qquad\\textbf{(D) } 4 \\qquad\\textbf{(E) } 5$\n\n'
+        'Problem 2\nSolve\n\n\\begin{align*} x+y&\\le 2\\\\ x-y&\\le 0 \\end{align*}\n\n'
+        '$\\textbf{(A) } 1 \\qquad\\textbf{(B) } 2 \\qquad\\textbf{(C) } 3 \\qquad\\textbf{(D) } 4 \\qquad\\textbf{(E) } 5$\n\n'
+        'Problem 3\nThe cost was $\\$ \\underline A.\\underline B$ in all.\n\n'
+        '$\\textbf{(A)}~7 \\qquad \\textbf{(B)}~8 \\qquad \\textbf{(C)}~11 \\qquad \\textbf{(D)}~14 \\qquad \\textbf{(E)}~15$\n\n'
+        'Problem 4\nA product\n\n\\[\\prod_{k=1}^{3} k ?\\]$\\textbf{(A) } 1 \\qquad\\textbf{(B) } 2 \\qquad'
+        '\\textbf{(C) } 3 \\qquad\\textbf{(D) } 6 \\qquad\\textbf{(E) } 9$\n')
+    one, two, three, four = official.parse_contest(source, 'AMC 10')
+    assert '\\begin{array}{cc}' in one['statement'] and 'tabular' not in one['statement']
+    assert '$$\\begin{aligned}x+y&\\le 2' in two['statement'] and 'align*' not in two['statement']
+    assert three['choices'] == ['$7$', '$8$', '$11$', '$14$', '$15$']
+    assert three['statement'].startswith('The cost was $\\$')
+    assert four['statement'].endswith('$$\\prod_{k=1}^{3} k ?$$') and four['choices'][3] == '$6$'
+    for p in (one, two, three, four):
+        assert len(re.findall(r'(?<!\\)\$', p['statement'])) % 2 == 0, p['statement']
+
+
+@pytest.mark.parametrize('contest, key', [
+    ('2025-amc-10a', 'EBDAECEBCCEDDBADEBAACBDCA'),
+    ('2025-amc-10b', 'BDDACCCCCABCACDDBDDACACEB'),
+])
+def test_the_2025_papers_are_written_up_against_their_keys(contest, key):
+    assert [SOLUTIONS['%s-%d' % (contest, n)]['answer'] for n in range(1, 26)] == list(key)

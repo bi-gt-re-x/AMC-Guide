@@ -9,6 +9,13 @@
  * asked for, its answer key and Summit's own solutions. Those come from a
  * separate call (`amc.contestKey`) so the timed sitting, which loads this
  * page's data, never carries the answers.
+ *
+ * Before the first sitting the problems are locked, so a paper can still be
+ * sat cold: the booklet, the key and "Practice one by one" wait behind a card
+ * that offers the timed contest or, once the reader ticks that they understand
+ * it spoils a fresh sitting, unlocks them. Sitting it, logging a score or
+ * answering any of its problems unlocks it for good; an unlock by hand is
+ * remembered in this browser and can be undone.
  */
 import { useState, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
@@ -50,7 +57,7 @@ const PROGRESS: Record<ContestProgress, { mark: string; label: string }> = {
 };
 
 /** A tile per problem showing how it stands, each a link down to the problem. */
-function Standing({ problems }: { problems: { number: number; progress: ContestProgress }[] }) {
+function Standing({ problems, linked = true }: { problems: { number: number; progress: ContestProgress }[]; linked?: boolean }) {
   const count = (k: ContestProgress) => problems.filter((p) => p.progress === k).length;
   const solved = count('first') + count('fixed');
   const open = count('open');
@@ -66,10 +73,16 @@ function Standing({ problems }: { problems: { number: number; progress: ContestP
       <ol className="am-standing-tiles">
         {problems.map((p) => (
           <li key={p.number}>
-            <a href={`#problem-${p.number}`} className={`am-standing-tile is-${p.progress}`}
-               aria-label={`Problem ${p.number}: ${PROGRESS[p.progress].label}`}>
-              <b>{p.number}</b><i aria-hidden="true">{PROGRESS[p.progress].mark}</i>
-            </a>
+            {linked ? (
+              <a href={`#problem-${p.number}`} className={`am-standing-tile is-${p.progress}`}
+                 aria-label={`Problem ${p.number}: ${PROGRESS[p.progress].label}`}>
+                <b>{p.number}</b><i aria-hidden="true">{PROGRESS[p.progress].mark}</i>
+              </a>
+            ) : (
+              <span className={`am-standing-tile is-${p.progress}`} aria-label={`Problem ${p.number}: ${PROGRESS[p.progress].label}`}>
+                <b>{p.number}</b><i aria-hidden="true">{PROGRESS[p.progress].mark}</i>
+              </span>
+            )}
           </li>
         ))}
       </ol>
@@ -91,6 +104,60 @@ function KeyTable({ rows }: { rows: KeyRow[] }) {
   );
 }
 
+const UNLOCK_KEY = (id: string) => `amc-unlocked:${id}`;
+
+function readUnlocked(id: string): boolean {
+  try {
+    return localStorage.getItem(UNLOCK_KEY(id)) === '1';
+  } catch {
+    return false;
+  }
+}
+
+function writeUnlocked(id: string, on: boolean) {
+  try {
+    if (on) localStorage.setItem(UNLOCK_KEY(id), '1');
+    else localStorage.removeItem(UNLOCK_KEY(id));
+  } catch {
+    /* storage blocked: the unlock lasts until the page is left */
+  }
+}
+
+function LockIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor"
+         strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <rect x="4.5" y="10.5" width="15" height="10" rx="2.5" />
+      <path d="M8 10.5V7.5a4 4 0 0 1 8 0v3" />
+    </svg>
+  );
+}
+
+/** The booklet's place before a first sitting: sit it cold, or confirm and read it now. */
+function Locked({ count, minutes, takeTo, onUnlock }: {
+  count: number; minutes: number; takeTo: string; onUnlock: () => void;
+}) {
+  const [sure, setSure] = useState(false);
+  return (
+    <div className="am-locked">
+      <span className="am-locked-icon"><LockIcon /></span>
+      <h3>Locked until you sit it</h3>
+      <p className="am-muted">
+        You haven't sat this paper yet. All {count} problems, the answer key and the worked solutions stay closed so you
+        can take it cold and get a score that means something. They open here as soon as you hand it in.
+      </p>
+      <Link className="am-btn am-btn-primary" to={takeTo}>Start the timed contest ({minutes} min)</Link>
+      <div className="am-locked-verify">
+        <label>
+          <input type="checkbox" checked={sure} onChange={(e) => setSure(e.target.checked)} />
+          <span>I understand that reading the problems now spoils a fresh timed sitting of this paper.</span>
+        </label>
+        <button type="button" className="am-btn am-btn-sm" disabled={!sure} onClick={onUnlock}>Unlock the problems</button>
+      </div>
+    </div>
+  );
+}
+
 export default function Contest() {
   const { contestId = '' } = useParams();
   const { data, error, loading, reload } = useApi(() => amc.contest(contestId), [contestId]);
@@ -103,6 +170,8 @@ export default function Contest() {
   const [keyError, setKeyError] = useState('');
   const [keyOpen, setKeyOpen] = useState(false);
   const [shown, setShown] = useState<number[]>([]);
+  // Bumped when the reader unlocks or relocks by hand, so the page re-reads it.
+  const [, setUnlockTick] = useState(0);
 
   async function loadKey(): Promise<boolean> {
     if (key) return true;
@@ -121,8 +190,9 @@ export default function Contest() {
     if (await loadKey()) setKeyOpen(true);
   }
   async function toggleSolution(n: number) {
-    if (shown.includes(n)) { setShown(shown.filter((x) => x !== n)); return; }
-    if (await loadKey()) setShown([...shown, n]);
+    // Functional updates: several can be in flight while the key loads.
+    if (shown.includes(n)) { setShown((s) => s.filter((x) => x !== n)); return; }
+    if (await loadKey()) setShown((s) => (s.includes(n) ? s : [...s, n]));
   }
 
   if (loading && !data) return <Loading label="Loading contest" />;
@@ -230,7 +300,12 @@ export default function Contest() {
   const firstOpen = problems.find((p) => p.status === 'new') ?? problems[0];
   const sat = data.history.some((h) => h.kind === 'mock');
   const written = problems.filter((p) => p.has_solution).length;
-  const keyCard: ReactNode = official && (
+  // Sat it, logged a score or answered one of its problems: nothing left to protect.
+  const tried = data.history.length > 0 || problems.some((p) => p.progress !== 'new');
+  const unlockedByHand = official && !tried && readUnlocked(c.id);
+  const locked = official && !tried && !unlockedByHand;
+  const setUnlocked = (on: boolean) => { writeUnlocked(c.id, on); setUnlockTick((n) => n + 1); };
+  const keyCard: ReactNode = official && !locked && (
     <section className="am-card">
       <div className="am-card-head">
         <h2>Answer key</h2>
@@ -252,7 +327,7 @@ export default function Contest() {
         title={c.name}
         actions={
           <>
-            {firstOpen && (
+            {firstOpen && !locked && (
               <Link className="am-btn" to={`/problems/${firstOpen.id}`}>Practice one by one</Link>
             )}
             <Link className="am-btn am-btn-primary" to={`/contests/${c.id}/take`}>
@@ -263,26 +338,28 @@ export default function Contest() {
       >
         <p>
           {official
-            ? `${c.count} problems in ${c.minutes} minutes${c.level === 'AIME' ? ', one point each' : ', 6 for a right answer, 1.5 for a blank, 0 for a wrong one'}.${written ? ` Summit's own worked solution${written === 1 ? ' is' : 's are'} folded under ${written === c.count ? 'every problem' : `${written} of the problems`}, and the answer key has a card of its own. Both stay closed until you open them.` : ''}`
+            ? `${c.count} problems in ${c.minutes} minutes${c.level === 'AIME' ? ', one point each' : ', 6 for a right answer, 1.5 for a blank, 0 for a wrong one'}.${locked ? ' The problems stay locked until you sit it.' : written ? ` Summit's own worked solution${written === 1 ? ' is' : 's are'} folded under ${written === c.count ? 'every problem' : `${written} of the problems`}, and the answer key has a card of its own. Both stay closed until you open them.` : ''}`
             : c.blurb}
         </p>
       </PageHeader>
-      {official && <Standing problems={problems} />}
+      {official && <Standing problems={problems} linked={!locked} />}
       <div className="am-grid am-grid-main">
         <section className="am-card">
           <div className="am-card-head">
-            <h2>{official ? 'Problems' : "What's on it"}</h2>
+            <h2>{official ? (locked ? 'Problems · locked' : 'Problems') : "What's on it"}</h2>
             <span className="am-muted" style={{ fontSize: 13 }}>
-              {official ? (
+              {official ? (locked ? null : (
                 <>
                   <a className="am-link" href={c.problems_url} target="_blank" rel="noreferrer">AoPS page ↗</a>
                   {' · '}
                   <a className="am-link" href={c.answers_url} target="_blank" rel="noreferrer">Answer key ↗</a>
                 </>
-              ) : 'Hidden until you start'}
+              )) : 'Hidden until you start'}
             </span>
           </div>
-          {official ? (
+          {locked ? (
+            <Locked count={c.count} minutes={c.minutes} takeTo={`/contests/${c.id}/take`} onUnlock={() => setUnlocked(true)} />
+          ) : official ? (
             <ol className="am-booklet">
               {problems.map((p) => (
                 <li key={p.number} id={`problem-${p.number}`} className="am-booklet-item">
@@ -346,7 +423,13 @@ export default function Contest() {
               </table>
             </div>
           )}
-          {official && (
+          {unlockedByHand && (
+            <p className="am-muted" style={{ fontSize: 12, margin: '12px 0 0' }}>
+              Unlocked before a sitting.{' '}
+              <button type="button" className="am-link am-link-button" onClick={() => setUnlocked(false)}>Lock them again</button>
+            </p>
+          )}
+          {official && !locked && (
             <p className="am-muted" style={{ fontSize: 12, margin: '12px 0 0' }}>
               {written === c.count
                 ? "Problems © MAA, figures redrawn. The topics and solutions are Summit's own."
