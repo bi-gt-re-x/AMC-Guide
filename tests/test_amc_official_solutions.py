@@ -164,6 +164,7 @@ def test_wiki_source_with_imath_bullets_and_wrapped_lines():
 @pytest.mark.parametrize('contest, key, unwritten', [
     ('2024-amc-10a', 'ABBBDDBABCDECDEDEDECCBDBC', {12, 16, 22}),
     ('2023-amc-10a', 'EAADEDBDEDCBCBEBADEDDDCCA', set()),
+    ('2023-amc-10b', 'CBDCAEBABCBCBCCEDEBAEBBEB', set()),
 ])
 def test_the_2024_and_2023_10a_are_written_up_against_their_keys(contest, key, unwritten):
     for n in range(1, 26):
@@ -172,3 +173,16 @@ def test_the_2024_and_2023_10a_are_written_up_against_their_keys(contest, key, u
             assert pid not in SOLUTIONS
         else:
             assert SOLUTIONS[pid]['answer'] == key[n - 1], pid
+
+
+def test_dollar_sign_choices_and_parenthesis_math():
+    # 2023 AMC 10B #2 prices its choices `\$46`; #18 writes its choices in `\( \)`.
+    source = (
+        '==Problem 1==\nHow much?\n\n<math>\\textbf{(A) }\\$46\\qquad\\textbf{(B) }\\$50\\qquad\\textbf{(C) }\\$48'
+        '\\qquad\\textbf{(D) }\\$47\\qquad\\textbf{(E) }\\$49 </math>\n\n'
+        '==Problem 2==\nWhich are true?\n\n\\(\\textbf{(A)}~\\text{I only}\\qquad\\textbf{(B)}~\\text{II only}\\qquad'
+        '\\textbf{(C)}~\\text{III only}\\qquad\\textbf{(D)}~\\text{I and II}\\qquad\\textbf{(E)}~\\text{II and III only}\\)\n')
+    one, two = official.parse_contest(source, 'AMC 10')
+    assert one['choices'] == ['$\\$46$', '$\\$50$', '$\\$48$', '$\\$47$', '$\\$49$']
+    assert two['statement'] == 'Which are true?'
+    assert two['choices'] == ['I only', 'II only', 'III only', 'I and II', 'II and III only']

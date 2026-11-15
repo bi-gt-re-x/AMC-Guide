@@ -68,6 +68,9 @@ def _math_to_dollars(text):
     # math (`\[a\]\[b\]`, or `...?\]$\textbf{(A)}`) stays apart from it.
     text = re.sub(r'\\\[(.*?)\\\]', lambda m: '\n$$' + m.group(1).strip() + '$$\n', text, flags=re.S)
     text = text.replace('$$$$', '$$\n$$')
+    # `\( ... \)` is inline math too (2023 AMC 10B #18 writes its choices so).
+    text = re.sub(r'\\\((.*?)\\\)', lambda m: m.group(0) if not _outside_math(text, m.start())
+                  else '$' + m.group(1).strip() + '$', text, flags=re.S)
     # KaTeX has `array` but no `tabular`; `aligned` but no `align*` or `eqnarray`.
     text = re.sub(r'\\(begin|end)\{tabular\}', r'\\\1{array}', text)
     out, last = [], 0
@@ -111,7 +114,8 @@ def _split_choices(block):
         part = block[m.end():end]
         part = re.sub(r'\\(?:qquad|quad|hspace\{[^}]*\}|hfill|\\|newline|;|,|:)|~|&', ' ', part)
         part = re.sub(r'\\ ', ' ', part)
-        part = part.replace('$$', ' ').replace('$', ' ')
+        # Math delimiters go; an escaped `\$` is a dollar sign and stays (`\textbf{(A) }\$46`).
+        part = re.sub(r'(?<!\\)\$', ' ', part)
         part = re.sub(r'\s+', ' ', part).strip().rstrip(',;').strip()
         if not part:
             return None

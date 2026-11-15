@@ -12,7 +12,7 @@ key the solution is left off rather than shown beside the wrong answer
 on its answer.
 
 Written so far: the 2026 AMC 10A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
-10B, and the 2023 AMC 10A. A problem whose numbers are only in a picture the
+10B, and the 2023 AMC 10A and 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -1683,6 +1683,274 @@ SOLUTIONS = {
             r"$\frac{1 - 4/11}{2} = \frac{7}{22}$. The answer is $\textbf{(A) }\frac{7}{22}$.",
         ],
         'trap': r"Forgetting the single vertex at distance $3$ when counting the vertices around $R$.",
+    },
+    # ------------------------------------------------------------------ 2023 AMC 10B
+    '2023-amc-10b-1': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'C',
+        'insight': r"Find the fair share first: the juice is $3 + \frac13 = \frac{10}{3}$ glasses, split four ways.",
+        'steps': [
+            r"Each glass should hold $\frac{10}{3} \div 4 = \frac56$ of a glass.",
+            r"Each full glass gives up $1 - \frac56 = \frac16$. (Check: the fourth gets $3 \cdot \frac16 = \frac12$ and reaches $\frac13 + \frac12 = \frac56$.) The answer is $\textbf{(C) }\frac{1}{6}$.",
+        ],
+        'trap': r"Pouring $\frac29$ from each glass, the amount that splits the fourth glass's missing $\frac23$ three ways but leaves the full glasses at $\frac79$.",
+    },
+    '2023-amc-10b-2': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'B',
+        'insight': r"The discount and the tax multiply: he pays $0.8 \cdot 1.075 = 0.86$ of the original price.",
+        'steps': [
+            r"He can afford a price $p$ with $0.86p \le 43$.",
+            r"$p \le 43 \div 0.86 = 50$. The answer is $\textbf{(B) }\$50$.",
+        ],
+        'trap': r"Adding the percentages ($-20\% + 7.5\% = -12.5\%$) instead of multiplying the factors.",
+    },
+    '2023-amc-10b-3': {
+        'topics': ['circles', 'right-triangles'],
+        'answer': 'D',
+        'insight': r"The hypotenuse of a right triangle inscribed in a circle is a diameter.",
+        'steps': [
+            r"Circle $A$ has diameter $5$ and circle $B$ has diameter $13$.",
+            r"Areas scale with the square of the diameter: $\frac{25}{169}$. The answer is $\textbf{(D) }\frac{25}{169}$.",
+        ],
+        'trap': r"Taking the ratio of the diameters, $\frac{5}{13}$, or of the shorter legs, $\frac{9}{25}$.",
+    },
+    '2023-amc-10b-4': {
+        'topics': ['arithmetic', 'area'],
+        'answer': 'C',
+        'insight': r"Change both lengths to centimeters before multiplying.",
+        'steps': [
+            r"$6.5$ mm is $0.65$ cm and $25$ m is $2500$ cm.",
+            r"$0.65 \cdot 2500 = 1625$ square centimeters. The answer is $\textbf{(C) }1{,}625$.",
+        ],
+        'trap': r"Converting only one length: $6.5 \cdot 2500 = 16{,}250$ mixes millimeters and centimeters.",
+    },
+    '2023-amc-10b-5': {
+        'topics': ['linear-equations'],
+        'answer': 'A',
+        'insight': r"Let the list have $n$ numbers with sum $S$. Then Maddy's sum is $S + 3n$ and Lara's is $3S$.",
+        'steps': [
+            r"$3S = 45$ gives $S = 15$.",
+            r"$15 + 3n = 45$ gives $n = 10$. The answer is $\textbf{(A) }10$.",
+        ],
+        'trap': r"Writing Maddy's sum as $S + 3$, adding $3$ once instead of once per number.",
+    },
+    '2023-amc-10b-6': {
+        'topics': ['sequences-series', 'parity'],
+        'answer': 'E',
+        'insight': r"Only parity matters: the terms go odd, odd, even, and then the pattern repeats.",
+        'steps': [
+            r"$L_1, L_2$ are odd, so $L_3$ is even, $L_4$ is odd, $L_5$ is odd, $L_6$ is even, and so on: $L_n$ is even exactly when $3 \mid n$.",
+            r"There are $\lfloor 2023 / 3 \rfloor = 674$ multiples of $3$ up to $2023$. The answer is $\textbf{(E) }674$.",
+        ],
+        'trap': r"Rounding up to $675$, or assuming half the terms are even.",
+    },
+    '2023-amc-10b-7': {
+        'topics': ['angle-chasing', 'transformations'],
+        'answer': 'B',
+        'insight': r"Rotation about the center $O$ keeps distances from $O$, so $OA = OE$ and triangle $AOE$ is isosceles with apex angle $20^\circ$.",
+        'steps': [
+            r"The base angles of triangle $AOE$ are $\frac{180^\circ - 20^\circ}{2} = 80^\circ$, so $\angle OAE = 80^\circ$.",
+            r"The diagonal $AO$ makes $\angle OAB = 45^\circ$ with side $AB$, and $E$ lies on the far side of $AO$ from $B$.",
+            r"$\angle EAB = 80^\circ - 45^\circ = 35^\circ$. The answer is $\textbf{(B) }35^{\circ}$.",
+        ],
+        'trap': r"Answering $20^\circ$, the rotation angle, which is the angle at the center $O$, not at $A$.",
+    },
+    '2023-amc-10b-8': {
+        'topics': ['modular-arithmetic', 'exponents'],
+        'answer': 'A',
+        'insight': r"Units digits of powers repeat with period $4$, so reduce each exponent mod $4$.",
+        'steps': [
+            r"Powers of $2$ end in $2, 4, 8, 6$. $2023 \equiv 3 \pmod 4$, so $2022^{2023}$ ends in $8$.",
+            r"Powers of $3$ end in $3, 9, 7, 1$. $2022 \equiv 2 \pmod 4$, so $2023^{2022}$ ends in $9$.",
+            r"$8 + 9 = 17$ ends in $7$. The answer is $\textbf{(A)}\ 7$.",
+        ],
+        'trap': r"Reading the exponent mod $4$ as an index off by one, for example taking the third power of $3$ for $2023^{2022}$.",
+    },
+    '2023-amc-10b-9': {
+        'topics': ['perfect-powers', 'inequalities'],
+        'answer': 'B',
+        'insight': r"$(n+1)^2 - n^2 = 2n + 1$: the gaps between consecutive squares are the odd numbers.",
+        'steps': [
+            r"We need $2n + 1 \le 2023$ with $n \ge 1$, so $1 \le n \le 1011$.",
+            r"That is $1011$ pairs. The answer is $\textbf{(B)}\ 1011$.",
+        ],
+        'trap': r"Starting at $0^2$ and $1^2$, but $0$ is not a positive square.",
+    },
+    '2023-amc-10b-10': {
+        'topics': ['games-strategy', 'parity'],
+        'answer': 'C',
+        'insight': r"Checkerboard the grid: the four edge-middle squares are one color, the corners and center the other, and every domino covers one square of each color.",
+        'steps': [
+            r"Four guesses are enough: guess the four edge-middle squares. Every domino placement covers one of them.",
+            r"Three are not enough: four placements can be laid in a pinwheel around the center (top-left horizontal, top-right vertical, bottom-right horizontal, bottom-left vertical) with no square in common, and each needs its own guess.",
+            r"The answer is $\textbf{(C)}\ 4$.",
+        ],
+        'trap': r"Stopping at $3$: any three squares miss one of the four pinwheel placements, which share no square.",
+    },
+    '2023-amc-10b-11': {
+        'topics': ['diophantine', 'basic-counting'],
+        'answer': 'B',
+        'insight': r"With $a, b, c$ bills of $\$20, \$50, \$100$: $2a + 5b + 10c = 80$ forces $b$ to be even.",
+        'steps': [
+            r"Write $b = 2k$. Then $a + 5k + 5c = 40$, so $a = 40 - 5(k + c)$.",
+            r"$a \ge 1$ means $k + c \le 7$, with $k, c \ge 1$. For $k + c = s$ there are $s - 1$ choices, for $s = 2, \dots, 7$.",
+            r"$1 + 2 + 3 + 4 + 5 + 6 = 21$. The answer is $\textbf{(B) }21$.",
+        ],
+        'trap': r"Allowing $k + c = 8$, which leaves no $\$20$ bills.",
+    },
+    '2023-amc-10b-12': {
+        'topics': ['polynomials', 'inequalities'],
+        'answer': 'C',
+        'insight': r"$P$ changes sign only at roots of odd multiplicity: $1, 3, 5, 7, 9$.",
+        'steps': [
+            r"$P(x) > 0$ for $x > 10$. Moving left, the sign stays at $10$, flips at $9$, stays at $8$, flips at $7$, and so on.",
+            r"Positive: $(10, \infty)$, $(9, 10)$, $(5, 6)$, $(6, 7)$, $(1, 2)$, $(2, 3)$. Negative: $(7, 8)$, $(8, 9)$, $(3, 4)$, $(4, 5)$, $(-\infty, 1)$.",
+            r"That is $6$ intervals. The answer is $\textbf{(C)}~6$.",
+        ],
+        'trap': r"Flipping the sign at every root, as if each root were simple; the even powers do not change the sign.",
+    },
+    '2023-amc-10b-13': {
+        'topics': ['absolute-value', 'coordinate-geometry', 'area'],
+        'answer': 'B',
+        'insight': r"The region is symmetric in both axes, so work in the first quadrant, where it is $|x - 1| + |y - 1| \le 1$.",
+        'steps': [
+            r"In the first quadrant that is a square (a diamond) centered at $(1, 1)$ with diagonals of length $2$, so its area is $\frac12 \cdot 2 \cdot 2 = 2$. It touches the axes but does not cross them.",
+            r"Four quadrants give $4 \cdot 2 = 8$. The answer is $\textbf{(B)}\ 8$.",
+        ],
+        'trap': r"Stopping at the first quadrant's $2$.",
+    },
+    '2023-amc-10b-14': {
+        'topics': ['diophantine', 'perfect-powers'],
+        'answer': 'C',
+        'insight': r"Add $mn$ to both sides: $(m + n)^2 = mn(mn + 1)$, a square equal to a product of consecutive integers.",
+        'steps': [
+            r"For $k = mn$, $k(k + 1)$ lies strictly between $k^2$ and $(k + 1)^2$ when $k \ge 1$, and between $(k+1)^2$ and $k^2$ when $k \le -2$, so it is a square only for $k = 0$ or $k = -1$, where it is $0$.",
+            r"Then $m + n = 0$ too. $mn = 0$ gives $(0, 0)$; $mn = -1$ gives $(1, -1)$ and $(-1, 1)$.",
+            r"That is $3$ pairs. The answer is $\textbf{(C) }3$.",
+        ],
+        'trap': r"Dividing by $m^2 n^2$ or by $mn$, which throws away $(0, 0)$.",
+    },
+    '2023-amc-10b-15': {
+        'topics': ['factorials', 'perfect-powers'],
+        'answer': 'C',
+        'insight': r"$2! \cdot 3! \cdots 16! = 2^{15} \cdot 3^{14} \cdot 4^{13} \cdots 16^{1}$: the number $k$ appears $17 - k$ times, an odd number of times exactly when $k$ is even.",
+        'steps': [
+            r"Up to squares, the product is $2 \cdot 4 \cdot 6 \cdots 16 = 2^8 \cdot 8!$.",
+            r"$8! = 2^7 \cdot 3^2 \cdot 5 \cdot 7$, so $2^8 \cdot 8! = 2^{15} \cdot 3^2 \cdot 5 \cdot 7$. The primes with odd exponent are $2, 5, 7$.",
+            r"$m = 2 \cdot 5 \cdot 7 = 70$. The answer is $\textbf{(C) }70$.",
+        ],
+        'trap': r"Multiplying by every prime up to $16$ ($30030$) without checking which exponents are already even.",
+    },
+    '2023-amc-10b-16': {
+        'topics': ['combinations', 'digits-bases'],
+        'answer': 'E',
+        'insight': r"A set of digits can be written in increasing order in exactly one way, and in decreasing order in exactly one way. The only difference is $0$, which can end a downno but never start an upno.",
+        'steps': [
+            r"Upnos are the subsets of $\{1, \dots, 9\}$ with at least $2$ digits, and downnos without a $0$ match them one for one.",
+            r"The extra downnos end in $0$: any nonempty set of nonzero digits followed by $0$, which is $2^9 - 1 = 511$.",
+            r"$|U - D| = 511$. The answer is $\textbf{(E)}~511$.",
+        ],
+        'trap': r"Answering $512$ by counting the empty set of nonzero digits, which gives the one-digit number $0$.",
+    },
+    '2023-amc-10b-17': {
+        'topics': ['solid-geometry', 'polynomials'],
+        'answer': 'D',
+        'insight': r"The diagonal squared is $a^2 + b^2 + c^2 = (a + b + c)^2 - 2(ab + bc + ca)$. The volume is not needed.",
+        'steps': [
+            r"$4(a + b + c) = 13$ and $2(ab + bc + ca) = \frac{11}{2}$, so $a + b + c = \frac{13}{4}$ and $ab + bc + ca = \frac{11}{4}$.",
+            r"$a^2 + b^2 + c^2 = \frac{169}{16} - \frac{88}{16} = \frac{81}{16}$, so the diagonal is $\frac94$.",
+            r"The answer is $\textbf{(D)}~\frac{9}{4}$.",
+        ],
+        'trap': r"Forgetting that $12$ edges means $4(a + b + c)$ and $6$ faces means $2(ab + bc + ca)$.",
+    },
+    '2023-amc-10b-18': {
+        'topics': ['gcd-lcm', 'logic'],
+        'answer': 'E',
+        'insight': r"Clear denominators: $c = 15a + 14b$. Then check each prime of $210 = 2 \cdot 3 \cdot 5 \cdot 7$ separately.",
+        'steps': [
+            r"Mod $2$ and mod $7$, $c \equiv 15a$, so $2 \nmid c$ and $7 \nmid c$ exactly when $\gcd(a, 14) = 1$. Mod $3$ and mod $5$, $c \equiv 14b$, so $3 \nmid c$ and $5 \nmid c$ exactly when $\gcd(b, 15) = 1$.",
+            r"So $\gcd(c, 210) = 1$ if and only if both $\gcd(a, 14) = 1$ and $\gcd(b, 15) = 1$: III is true, and II follows from it.",
+            r"I is false: $a = 1$, $b = 3$ gives $c = 57$, which shares $3$ with $210$.",
+            r"The answer is $\textbf{(E)}~\text{II and III only}$.",
+        ],
+        'trap': r"Reading I and II as the same statement; I needs only one of the two conditions, which is not enough.",
+    },
+    '2023-amc-10b-19': {
+        'topics': ['geometric-probability'],
+        'answer': 'B',
+        'insight': r"By symmetry every direction gives the same chance, so take east: she leaves the square when $x > 6 - d$.",
+        'steps': [
+            r"For a fixed distance $d$, the chance that $x$ lies in the last strip of width $d$ is $\frac{d}{6}$.",
+            r"Averaging over $d$ uniform on $[0, 1]$ gives $\frac{1}{6} \cdot \frac12 = \frac{1}{12}$.",
+            r"The answer is $\textbf{(B) } \frac{1}{12}$.",
+        ],
+        'trap': r"Using the full hop $d = 1$ every time, which gives $\frac16$.",
+    },
+    '2023-amc-10b-20': {
+        'topics': ['solid-geometry', 'circles'],
+        'answer': 'A',
+        'insight': r"The four semicircles join at four points spaced evenly around the equator, like the seam of a tennis ball, and each one's diameter is the chord between neighboring points.",
+        'steps': [
+            r"Neighboring points are $90^\circ$ apart on a great circle of radius $2$, so the chord between them is $2\sqrt2$.",
+            r"Each semicircle has radius $\sqrt2$ and length $\pi\sqrt2$, so the curve has length $4\pi\sqrt2 = \pi\sqrt{32}$.",
+            r"The answer is $\textbf{(A) } 32$.",
+        ],
+        'trap': r"Taking the semicircles as halves of great circles (radius $2$), which would make the curve $8\pi$.",
+    },
+    '2023-amc-10b-21': {
+        'topics': ['probability', 'parity'],
+        'answer': 'E',
+        'insight': r"With $2023$ balls the three counts have an odd sum, so the parity pattern is odd-odd-odd or exactly one odd: four patterns, and they are almost equally likely.",
+        'steps': [
+            r"Exactly: write $[\text{count odd}] = \frac{1 - (-1)^{\text{count}}}{2}$ for each bin and average over all $3^{2023}$ placements. Each term $(-1)^{\text{balls in a set of bins}}$ averages to $\left(\frac{3 - 2s}{3}\right)^{2023}$ for a set of $s$ bins.",
+            r"That gives $\frac18\left(1 - 3 \cdot 3^{-2023} - 3 \cdot 3^{-2023} + 1\right) = \frac14 - \frac{3}{4 \cdot 3^{2023}}$, which is extremely close to $\frac14$.",
+            r"The answer is $\textbf{(E) } \frac{1}{4}$.",
+        ],
+        'trap': r"Treating the three parities as independent fair coins ($\frac18$), forgetting that the $2023$ balls force an odd total.",
+    },
+    '2023-amc-10b-22': {
+        'topics': ['floor-ceiling', 'quadratics'],
+        'answer': 'B',
+        'insight': r"Let $n = \lfloor x \rfloor$. Then $x = \frac{n^2 + 2}{3}$, and it only remains to check that $\lfloor x \rfloor$ really is $n$.",
+        'steps': [
+            r"We need $n \le \frac{n^2 + 2}{3} < n + 1$. The left side is $(n - 1)(n - 2) \ge 0$, true for every integer.",
+            r"The right side is $n^2 - 3n - 1 < 0$, which holds for the integers $n = 0, 1, 2, 3$.",
+            r"They give $x = \frac23, 1, 2, \frac{11}{3}$, four values. The answer is $\textbf{(B) } 4$.",
+        ],
+        'trap': r"Solving $x^2 - 3x + 2 = 0$ as if the floor were not there, which finds only $1$ and $2$.",
+    },
+    '2023-amc-10b-23': {
+        'topics': ['sequences-series', 'factors-divisors'],
+        'answer': 'B',
+        'insight': r"The true sum is $221$ or $223$, and it equals $\frac{n(2a + (n - 1)d)}{2}$, so factor $442$ or $446$.",
+        'steps': [
+            r"Since $a \ge 1$ and $d \ge 2$, the second factor $2a + (n - 1)d$ is at least $2n$, so $n^2 \le 221$ or $223$, and $n \le 14$.",
+            r"$446 = 2 \cdot 223$ has no divisor from $3$ to $14$. $442 = 2 \cdot 13 \cdot 17$ has $n = 13$, with $2a + 12d = 34$.",
+            r"$a + 6d = 17$ with $d \ge 2$ gives $d = 2$, $a = 5$. So $a + d + n = 5 + 2 + 13 = 20$. The answer is $\textbf{(B) } 20$.",
+        ],
+        'trap': r"Allowing $d = 1$, which gives $a = 11$ and the wrong total; the problem says $d > 1$.",
+    },
+    '2023-amc-10b-24': {
+        'topics': ['coordinate-geometry', 'polygons'],
+        'answer': 'E',
+        'insight': r"The region is the sum of three segments: $u(2, 0)$, $v(0, 1)$ and $w(-3, 4)$, of lengths $2$, $1$ and $5$.",
+        'steps': [
+            r"Sliding a parallelogram along a third, non-parallel segment sweeps out a hexagon whose sides are the three segments, each used twice (on opposite sides).",
+            r"Perimeter $= 2(2 + 1 + 5) = 16$. The answer is $\textbf{(E) } 16$.",
+        ],
+        'trap': r"Using the length of $(-3, 4)$ as $7$ (adding the coordinates) instead of $5$.",
+    },
+    '2023-amc-10b-25': {
+        'topics': ['polygons', 'area', 'trigonometry'],
+        'answer': 'B',
+        'insight': r"Folding a vertex to the center creases along the perpendicular bisector of that vertex and the center, so the new pentagon has apothem $\frac{R}{2}$, half the circumradius.",
+        'steps': [
+            r"The old pentagon has apothem $R\cos 36^\circ$. Both pentagons are regular, so the area ratio is $\left(\frac{1}{2\cos 36^\circ}\right)^2 = \frac{1}{4\cos^2 36^\circ}$.",
+            r"$\cos 36^\circ = \frac{1 + \sqrt5}{4}$, so $4\cos^2 36^\circ = \frac{3 + \sqrt5}{2}$.",
+            r"New area $= (1 + \sqrt5) \cdot \frac{2}{3 + \sqrt5} = \frac{2(1 + \sqrt5)(3 - \sqrt5)}{4} = \sqrt5 - 1$. The answer is $\textbf{(B)}~\sqrt{5}-1$.",
+        ],
+        'trap': r"Assuming the new pentagon has half the side length, which gives a quarter of the area.",
     },
 }
 
