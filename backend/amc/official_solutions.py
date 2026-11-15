@@ -12,7 +12,7 @@ key the solution is left off rather than shown beside the wrong answer
 on its answer.
 
 Written so far: the 2026 AMC 10A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
-10B, the 2023 AMC 10A and 10B, and the 2022 AMC 10B. A problem whose numbers are only in a picture the
+10B, the 2023 AMC 10A and 10B, and the 2022 AMC 10A and 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -2217,6 +2217,272 @@ SOLUTIONS = {
             r"$2019$ and $2022$ are multiples of $3$, so the sum is $0 + 2 + 4 + 0 = 6$. The answer is $\textbf{(A) } 6$.",
         ],
         'trap': r"Taking the digits of $\frac17 = 0.\overline{001}_2$ as an ordinary fraction, which gives the pattern backwards.",
+    },
+    # ------------------------------------------------------------------ 2022 AMC 10A
+    '2022-amc-10a-1': {
+        'topics': ['decimals-fractions', 'arithmetic'],
+        'answer': 'D',
+        'insight': r"Simplify the continued fraction from the bottom up.",
+        'steps': [
+            r"$3 + \frac13 = \frac{10}{3}$, so the next level is $3 + \frac{3}{10} = \frac{33}{10}$.",
+            r"Then $3 + \frac{10}{33} = \frac{109}{33}$. The answer is $\textbf{(D)}\ \frac{109}{33}$.",
+        ],
+        'trap': r"Stopping one level early at $\frac{33}{10}$.",
+    },
+    '2022-amc-10a-2': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'B',
+        'insight': r"At a constant speed the laps are proportional to the time.",
+        'steps': [
+            r"$15 \cdot \frac{27}{57} = \frac{135}{19} \approx 7.1$.",
+            r"The answer is $\textbf{(B) } 7$.",
+        ],
+        'trap': r"Turning the rate upside down: $27 \cdot \frac{57}{15} \approx 103$ is minutes times minutes per lap, not laps.",
+    },
+    '2022-amc-10a-3': {
+        'topics': ['linear-equations', 'word-problems'],
+        'answer': 'E',
+        'insight': r"Write everything in terms of the third number $c$: the first is $6c$ and the second is $c + 40$.",
+        'steps': [
+            r"$6c + (c + 40) + c = 96$ gives $8c = 56$, so $c = 7$.",
+            r"The first is $42$ and the second is $47$, a difference of $5$. The answer is $\textbf{(E) } 5$.",
+        ],
+        'trap': r"Writing the second number as $c - 40$ instead of $c + 40$.",
+    },
+    '2022-amc-10a-4': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'E',
+        'insight': r"Follow the units: $100$ kilometers is $100m$ miles, and the car needs $\frac{100m}{x}$ gallons for that.",
+        'steps': [
+            r"$\frac{100m}{x}$ gallons is $\frac{100m}{x} \cdot l = \frac{100lm}{x}$ liters.",
+            r"The answer is $\textbf{(E) } \frac{100lm}{x}$.",
+        ],
+        'trap': r"Multiplying by $x$ instead of dividing: more miles per gallon means fewer liters per $100$ km.",
+    },
+    '2022-amc-10a-5': {
+        'topics': ['polygons', 'right-triangles'],
+        'answer': 'C',
+        'insight': r"$AP = s$ and $QC = s$ leave $PB = QB = 1 - s$, so $PQ$ is the hypotenuse of an isosceles right triangle.",
+        'steps': [
+            r"$PQ = \sqrt2(1 - s) = s$.",
+            r"$s = \frac{\sqrt2}{1 + \sqrt2} = \sqrt2(\sqrt2 - 1) = 2 - \sqrt2$. The answer is $\textbf{(C) } 2 - \sqrt{2}$.",
+        ],
+        'trap': r"Assuming each side of the square is cut into equal thirds or halves.",
+    },
+    '2022-amc-10a-6': {
+        'topics': ['absolute-value'],
+        'answer': 'A',
+        'insight': r"$\sqrt{(a - 1)^2} = |a - 1|$, which is $1 - a$ when $a < 0$.",
+        'steps': [
+            r"Inside the bars: $a - 2 - (1 - a) = 2a - 3$, which is negative for $a < 0$.",
+            r"So the value is $3 - 2a$. The answer is $\textbf{(A) } 3-2a$.",
+        ],
+        'trap': r"Writing $\sqrt{(a - 1)^2} = a - 1$, which gives $|{-1}| = 1$.",
+    },
+    '2022-amc-10a-7': {
+        'topics': ['gcd-lcm', 'factors-divisors'],
+        'answer': 'B',
+        'insight': r"Read off each prime: $180 = 2^2 \cdot 3^2 \cdot 5$, $18 = 2 \cdot 3^2$, $45 = 3^2 \cdot 5$.",
+        'steps': [
+            r"The lcm has $2^2$ and $5$ but $18$ has neither, so $n$ has exactly $2^2$ and $5$.",
+            r"$\gcd(n, 45) = 15$ means $n$ has exactly one $3$. So $n = 4 \cdot 3 \cdot 5 = 60$.",
+            r"Its digits sum to $6$. The answer is $\textbf{(B) } 6$.",
+        ],
+        'trap': r"Giving $n$ the factor $3^2$ from the lcm, which makes $\gcd(n, 45) = 45$.",
+    },
+    '2022-amc-10a-8': {
+        'topics': ['statistics', 'casework'],
+        'answer': 'D',
+        'insight': r"The mean is $\frac{20 + X}{6}$; set it equal to each value in the list, $X$ included.",
+        'steps': [
+            r"Mean $1$ or $2$ needs $X < 0$. Mean $5$ gives $X = 10$, mean $7$ gives $X = 22$, and mean $X$ gives $20 + X = 6X$, so $X = 4$.",
+            r"$10 + 22 + 4 = 36$. The answer is $\textbf{(D) } 36$.",
+        ],
+        'trap': r"Forgetting that $X$ itself is a value in the data set, which gives $32$.",
+    },
+    '2022-amc-10a-9': {
+        'topics': ['basic-counting', 'graph-theory'],
+        'answer': 'D',
+        'insight': r"The long bottom-middle region touches all four others, so color it first.",
+        'steps': [
+            r"Bottom middle: $5$ choices. Top left: $4$ (not the middle). Top right: $3$ (not the middle or top left).",
+            r"Bottom left touches the middle and top left: $3$ choices. Bottom right touches the middle and top right: $3$ choices.",
+            r"$5 \cdot 4 \cdot 3 \cdot 3 \cdot 3 = 540$. The answer is $\textbf{(D) }540$.",
+        ],
+        'trap': r"Missing that the bottom-middle region also touches the top-right region, which gives $720$.",
+    },
+    '2022-amc-10a-10': {
+        'topics': ['right-triangles', 'area'],
+        'answer': 'E',
+        'insight': r"With sides $a$ and $b$, the inner vertices are $a - 2$ and $b - 2$ apart in the two directions.",
+        'steps': [
+            r"$a^2 + b^2 = 64$ and $(a - 2)^2 + (b - 2)^2 = 32$. Subtracting, $4(a + b) - 8 = 32$, so $a + b = 10$.",
+            r"$2ab = (a + b)^2 - (a^2 + b^2) = 100 - 64 = 36$, so $ab = 18$.",
+            r"The answer is $\textbf{(E) } 18$.",
+        ],
+        'trap': r"Using $a - 1$ and $b - 1$: each direction loses $1$ at both ends.",
+    },
+    '2022-amc-10a-11': {
+        'topics': ['exponents', 'quadratics'],
+        'answer': 'C',
+        'insight': r"Write both sides as powers of $2$: $4096 = 2^{12}$.",
+        'steps': [
+            r"$2^m \cdot 2^{-6} = 2 \cdot 2^{-12/m}$, so $m - 6 = 1 - \frac{12}{m}$.",
+            r"$m^2 - 7m + 12 = 0$, with roots $3$ and $4$, which sum to $7$. The answer is $\textbf{(C) } 7$.",
+        ],
+        'trap': r"Reading $\sqrt{\frac{1}{4096}}$ as $2^{-12}$ instead of $2^{-6}$.",
+    },
+    '2022-amc-10a-12': {
+        'topics': ['logic', 'linear-equations'],
+        'answer': 'A',
+        'insight': r"Split the alternaters by their first answer: $A_1$ start truthful, $A_2$ start by lying. Then track who says yes to each question.",
+        'steps': [
+            r"\"Truth-teller?\": yes from truth-tellers $T$, liars $L$ and $A_2$, so $T + L + A_2 = 22$.",
+            r"\"Alternater?\": yes from liars and from $A_2$ (now truthful), so $L + A_2 = 15$. \"Liar?\": yes only from $A_2$ (lying again), so $A_2 = 9$.",
+            r"Then $L = 6$ and $T = 7$. Truth-tellers say yes only to the first question, so they get $7$ pieces. The answer is $\textbf{(A) } 7$.",
+        ],
+        'trap': r"Thinking liars answer yes to \"Are you a liar?\"; a liar must say no.",
+    },
+    '2022-amc-10a-13': {
+        'topics': ['similar-triangles', 'triangles'],
+        'answer': 'C',
+        'insight': r"The perpendicular from $B$ to the bisector $AP$ reflects $B$ across $AP$ onto line $AC$, at the point $X$ with $AX = AB$.",
+        'steps': [
+            r"By the angle bisector theorem, $AB : AC = 2 : 3$. Say $AB = 2k$ and $AC = 3k$, so $AX = 2k$ and $XC = k$.",
+            r"$AD \parallel BC$, so triangles $XAD$ and $XCB$ are similar with ratio $AX : XC = 2$.",
+            r"$AD = 2 \cdot BC = 2 \cdot 5 = 10$. The answer is $\textbf{(C) } 10$.",
+        ],
+        'trap': r"Using $BP = 2$ instead of the whole $BC = 5$ in the similar triangles.",
+    },
+    '2022-amc-10a-14': {
+        'topics': ['basic-counting', 'casework'],
+        'answer': 'E',
+        'insight': r"$8$ through $14$ can never be the smaller number ($2 \cdot 8 > 14$), so no two of them share a pair. With seven of them and seven pairs, each pair is one of $1$ to $7$ with one of $8$ to $14$.",
+        'steps': [
+            r"Choose partners starting from $7$: $7$ needs $14$ ($1$ way); $6$ needs $12$ or $13$ ($2$); $5$ needs one of $10$ to $14$ not yet used ($3$); $4$ one of $8$ to $14$ not used ($4$).",
+            r"Then $3$, $2$ and $1$ take any of the remaining $3$, $2$ and $1$ numbers.",
+            r"$1 \cdot 2 \cdot 3 \cdot 4 \cdot 3 \cdot 2 \cdot 1 = 144$. The answer is $\textbf{(E) } 144$.",
+        ],
+        'trap': r"Starting from $1$, where the choices depend on what the larger numbers take later.",
+    },
+    '2022-amc-10a-15': {
+        'topics': ['cyclic-quadrilaterals', 'circles', 'right-triangles'],
+        'answer': 'D',
+        'insight': r"$7^2 + 24^2 = 25^2 = 15^2 + 20^2$, so diagonal $AC = 25$ is a diameter and the angles at $B$ and $D$ are right.",
+        'steps': [
+            r"The circle has radius $\frac{25}{2}$ and area $\frac{625\pi}{4}$. The quadrilateral is two right triangles: $84 + 150 = 234$.",
+            r"The area outside is $\frac{625\pi - 936}{4}$, so $a + b + c = 625 + 936 + 4 = 1565$. The answer is $\textbf{(D) } 1565$.",
+        ],
+        'trap': r"Using Brahmagupta's formula without spotting the right angles, then missing the diameter.",
+    },
+    '2022-amc-10a-16': {
+        'topics': ['polynomials'],
+        'answer': 'D',
+        'insight': r"With $P(x) = 10(x - h)(x - l)(x - w)$, the new volume $(h + 2)(l + 2)(w + 2)$ is $-\frac{P(-2)}{10}$.",
+        'steps': [
+            r"$P(-2) = -80 - 156 - 58 - 6 = -300$.",
+            r"$(h + 2)(l + 2)(w + 2) = \frac{300}{10} = 30$. The answer is $\textbf{(D) } 30$.",
+        ],
+        'trap': r"Forgetting the leading coefficient $10$, which gives $300$, or evaluating at $+2$.",
+    },
+    '2022-amc-10a-17': {
+        'topics': ['decimals-fractions', 'diophantine'],
+        'answer': 'D',
+        'insight': r"$0.\overline{abc} = \frac{\underline{abc}}{999}$ and $0.\overline{a} = \frac{a}{9}$, so the condition is $100a + 10b + c = 37(a + b + c)$, that is, $7a = 3b + 4c$.",
+        'steps': [
+            r"Mod $4$, $3a \equiv 3b$, so $b = a + 4t$, and then $c = a - 3t$.",
+            r"$t = 0$ gives $9$ (all digits equal). $t = 1$ needs $4 \le a \le 5$ ($2$), and $t = -1$ needs $5 \le a \le 6$ ($2$). Larger $|t|$ pushes a digit outside $1$ to $9$.",
+            r"$9 + 2 + 2 = 13$. The answer is $\textbf{(D) } 13$.",
+        ],
+        'trap': r"Counting only the $9$ numbers with equal digits.",
+    },
+    '2022-amc-10a-18': {
+        'topics': ['transformations', 'modular-arithmetic'],
+        'answer': 'A',
+        'insight': r"Track the point's angle $\theta$. $T_k$ sends $\theta$ to $180^\circ - (\theta + k)$, so two steps in a row lower it by $1^\circ$.",
+        'steps': [
+            r"After $2m$ steps the angle is $-m$, which is $0$ again only at $m = 360$, so $n = 720$.",
+            r"After $2m + 1$ steps the angle is $180 - (-m) - (2m + 1) = 179 - m$, which is $0$ at $m = 179$, so $n = 359$.",
+            r"The least is $359$. The answer is $\textbf{(A) } 359$.",
+        ],
+        'trap': r"Checking only even numbers of steps and answering $720$.",
+    },
+    '2022-amc-10a-19': {
+        'topics': ['modular-arithmetic', 'gcd-lcm'],
+        'answer': 'C',
+        'insight': r"$h = \sum \frac{L_{17}}{k}$, and $L_{17} = 17 L_{16}$, so every term with $k < 17$ is a multiple of $17$.",
+        'steps': [
+            r"$h \equiv \frac{L_{17}}{17} = L_{16} = 2^4 \cdot 3^2 \cdot 5 \cdot 7 \cdot 11 \cdot 13 = 720720 \pmod{17}$.",
+            r"$720720 = 17 \cdot 42395 + 5$. The answer is $\textbf{(C) } 5$.",
+        ],
+        'trap': r"Taking $L_{16}$ as $16!$, which has far too many factors of $2$ and $3$.",
+    },
+    '2022-amc-10a-20': {
+        'topics': ['sequences-series'],
+        'answer': 'E',
+        'insight': r"Second differences kill the arithmetic part: for $s_n = a + nd + br^n$, $s_{n+2} - 2s_{n+1} + s_n = br^n(r - 1)^2$.",
+        'steps': [
+            r"$91 - 2 \cdot 60 + 57 = 28 = b(r - 1)^2$, so $r = 2, b = 28$ or $r = 3, b = 7$.",
+            r"$r = 2$: $a = 29$ and $d = -25$, which makes a term negative. $r = 3$: $a = 50$ and $d = -11$, giving $50, 39, 28, 17$ and $7, 21, 63, 189$.",
+            r"The fourth term is $17 + 189 = 206$. (Check: the next second difference is $28 \cdot 3 = 84$, and $s_4 = 84 + 2 \cdot 91 - 60 = 206$.) The answer is $\textbf{(E) } 206$.",
+        ],
+        'trap': r"Assuming the arithmetic sequence is increasing; here it goes down by $11$.",
+    },
+    '2022-amc-10a-21': {
+        'topics': ['solid-geometry', 'polygons', 'area'],
+        'answer': 'B',
+        'insight': r"Seen from above, the rim is a $3 \times 3$ square with its four corners cut off by unit right triangles.",
+        'steps': [
+            r"Put the square base at $(0,0)$ to $(1,1)$. Each hexagon's top edge lies $\sqrt3$ from its base edge, at height $\sqrt2$ and $1$ unit outward ($1^2 + (\sqrt2)^2 = 3$), so the hexagon on the bottom side has top edge from $(0,-1)$ to $(1,-1)$.",
+            r"The eight rim vertices are $(0,-1), (1,-1), (2,0), (2,1), (1,2), (0,2), (-1,1), (-1,0)$, all at the same height, so the octagon is flat and its area is the area of this outline.",
+            r"$9 - 4 \cdot \frac12 = 7$. The answer is $\textbf{(B) } 7$.",
+        ],
+        'trap': r"Taking the sides between neighboring hexagons as $1$ (a regular octagon), which gives about $4.83$.",
+    },
+    '2022-amc-10a-22': {
+        'topics': ['permutations', 'combinations'],
+        'answer': 'D',
+        'insight': r"Two passes means the cards split into $1, \dots, k$ and $k + 1, \dots, 13$, each in increasing order: an interleaving of the two blocks.",
+        'steps': [
+            r"For a fixed $k$ from $1$ to $12$, an ordering is fixed by which $k$ of the $13$ positions hold the first block: $\binom{13}{k}$ ways, one of which is $1, 2, \dots, 13$ in order (a single pass).",
+            r"Every two-pass ordering arises from exactly one $k$, the last card of the first pass. So the count is $\sum_{k=1}^{12} \left(\binom{13}{k} - 1\right) = (2^{13} - 2) - 12 = 8178$.",
+            r"The answer is $\textbf{(D) } 8178$.",
+        ],
+        'trap': r"Answering $2^{13} - 1$ or $2^{13} - 2$ without removing every way the identity is counted.",
+    },
+    '2022-amc-10a-23': {
+        'topics': ['cyclic-quadrilaterals', 'transformations'],
+        'answer': 'B',
+        'insight': r"Reflect $P$ across the trapezoid's axis to $P'$. Then $P, P', A, D$ form an isosceles trapezoid, and so do $P, P', B, C$, and Ptolemy applies to each.",
+        'steps': [
+            r"In an isosceles trapezoid, (diagonal)$^2$ = (leg)$^2$ + (product of the bases). For $P, P', A, D$ the legs are $PA = P'D = 1$ and the diagonals $PD = P'A = 4$: $16 = 1 + PP' \cdot AD$.",
+            r"For $P, P', B, C$: legs $2$, diagonals $3$, so $9 = 4 + PP' \cdot BC$.",
+            r"$\frac{BC}{AD} = \frac{5}{15} = \frac13$. The answer is $\textbf{(B) }\frac{1}{3}$.",
+        ],
+        'trap': r"Setting up coordinates for $P$ and the trapezoid, which leaves too many unknowns.",
+    },
+    '2022-amc-10a-24': {
+        'topics': ['combinations', 'symmetry-counting'],
+        'answer': 'E',
+        'insight': r"The condition says the digits, sorted, sit at or below $0, 1, 2, 3, 4$. Add a sixth spot to make the count symmetric: read the digits mod $6$.",
+        'steps': [
+            r"Take any string of $5$ digits from $0$ to $5$; $6^5$ of them. The six cyclic shifts (add $c$ to every digit mod $6$) group them into classes of $6$.",
+            r"Picture $6$ spots in a circle and each digit as a car's preferred spot; each car parks at the first free spot from there on. One spot stays empty, and a string meets the condition exactly when that spot is $5$. Shifting the digits rotates the empty spot, so exactly one string in each class works.",
+            r"$\frac{6^5}{6} = 6^4 = 1296$. The answer is $\textbf{(E) }1296$.",
+        ],
+        'trap': r"Counting only the strings that use each digit once, or answering $5^4 = 625$.",
+    },
+    '2022-amc-10a-25': {
+        'topics': ['diophantine', 'perfect-powers'],
+        'answer': 'B',
+        'insight': r"Count lattice points by side plus one. With $n = s + 1$ for $S$, $R$ has $r + 1 = \frac32 n$, and $T$'s count forces $16(t + 1)^2 = n(13n - 4)$.",
+        'steps': [
+            r"$R \cup S$ has $\frac94 n^2 + n^2 - n$ points ($n$ on the shared edge), so $(t + 1)^2 = \frac{n(13n - 4)}{16}$. $n$ must be even; $n = 4k + 2$ makes the right side not an integer, so $n = 4k$ and $(t + 1)^2 = k(13k - 1)$.",
+            r"$k$ and $13k - 1$ are coprime, so both are squares: $k = u^2$ and $13u^2 - 1 = v^2$. The first $u$ that works is $5$ ($324 = 18^2$), so $n = 100$, $t + 1 = 90$.",
+            r"If $T$ reaches $a$ units left of the $y$-axis, the $27$ condition becomes $a + 1 = 12(t - a + 1)$, so $13a = 12t + 11 = 1079$ and $a = 83$, which fits. Then $s = 99$, $r = 149$, $t = 89$.",
+            r"$149 + 99 + 89 = 337$. The answer is $\textbf{(B) }337$.",
+        ],
+        'trap': r"Comparing areas instead of lattice points, which drops every \"$+1$\".",
     },
 }
 

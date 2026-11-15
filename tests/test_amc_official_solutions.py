@@ -166,6 +166,7 @@ def test_wiki_source_with_imath_bullets_and_wrapped_lines():
     ('2023-amc-10a', 'EAADEDBDEDCBCBEBADEDDDCCA', set()),
     ('2023-amc-10b', 'CBDCAEBABCBCBCCEDEBAEBBEB', set()),
     ('2022-amc-10b', 'ADDABABBDDBCEBDDCBCDEECBA', set()),
+    ('2022-amc-10a', 'DBEECABDDECACEDDDACEBDBEB', set()),
 ])
 def test_the_2024_and_2023_10a_are_written_up_against_their_keys(contest, key, unwritten):
     for n in range(1, 26):
