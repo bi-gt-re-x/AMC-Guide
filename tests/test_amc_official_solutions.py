@@ -144,3 +144,31 @@ def test_a_picture_the_wiki_failed_to_render_is_a_missing_figure():
     assert one['statement'] == 'How many entries are possible?' and one['choices'][2] == '$6$'
     assert two['statement'] == 'What is length $x$?'
     assert 'Solution' not in one['statement'] and 'thumbnail' not in two['statement']
+
+
+def test_wiki_source_with_imath_bullets_and_wrapped_lines():
+    source = (
+        '==Problem 1==\nConsider these\nfour moves of the plane:\n\n* a translation <imath>2</imath> units,\n\n'
+        '*a rotation by <imath>90^{\\circ}</imath>.\n\nHow many commute? <imath>\\newline</imath>\n'
+        '<imath>\\textbf{(A)}~1\\qquad\\textbf{(B)}~2\\qquad\\textbf{(C)}~3\\qquad\\textbf{(D)}~4\\qquad\\textbf{(E)}~5</imath>\n\n'
+        '[[2024 AMC 10A Problems/Problem 1|Solution]]\n'
+        '==Problem 2==\nWhat is\n<cmath>1+1</cmath>\nin all?\n\n'
+        '<imath>\\textbf{(A) }1\\qquad\\textbf{(B) }2\\qquad\\textbf{(C) }3\\qquad\\textbf{(D) }4\\qquad\\textbf{(E) }5</imath>\n')
+    one, two = official.parse_contest(source, 'AMC 10')
+    assert one['statement'].startswith('Consider these four moves of the plane:\n')
+    assert '\n• a translation $2$ units,\n• a rotation by $90^{\\circ}$.' in one['statement']
+    assert 'newline' not in one['statement'] and one['choices'] == ['$1$', '$2$', '$3$', '$4$', '$5$']
+    assert two['statement'] == 'What is\n$$1+1$$\nin all?'
+
+
+@pytest.mark.parametrize('contest, key, unwritten', [
+    ('2024-amc-10a', 'ABBBDDBABCDECDEDEDECCBDBC', {12, 16, 22}),
+    ('2023-amc-10a', 'EAADEDBDEDCBCBEBADEDDDCCA', set()),
+])
+def test_the_2024_and_2023_10a_are_written_up_against_their_keys(contest, key, unwritten):
+    for n in range(1, 26):
+        pid = '%s-%d' % (contest, n)
+        if n in unwritten:
+            assert pid not in SOLUTIONS
+        else:
+            assert SOLUTIONS[pid]['answer'] == key[n - 1], pid

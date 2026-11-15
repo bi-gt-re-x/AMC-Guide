@@ -11,8 +11,9 @@ key the solution is left off rather than shown beside the wrong answer
 (`for_problem`). tests/test_amc_official_solutions.py checks that each one ends
 on its answer.
 
-Written so far: the 2026 AMC 10A, the 2025 AMC 10A and 10B, and the 2024 AMC 10B
-(all but problem 19, whose table is missing). Strings with an
+Written so far: the 2026 AMC 10A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
+10B, and the 2023 AMC 10A. A problem whose numbers are only in a picture the
+paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
 Steps are written in the site's one math convention, `$...$` inline.
@@ -1160,6 +1161,528 @@ SOLUTIONS = {
             r"$a + b + c = 92$. The answer is $\textbf{(E) } 92$.",
         ],
         'trap': r"Comparing volumes alone. $28abc = (3a+1)(3b+1)(3c+1)$ has many near-solutions; matching edge by edge is what decides it.",
+    },
+    # ------------------------------------------------------------------ 2024 AMC 10A
+    # Problems 12, 16 and 22 depend on pictures (a bar chart, a tiling of
+    # rectangles and a polygon of kites) whose numbers are only in the images,
+    # so they have no write-up yet.
+    '2024-amc-10a-1': {
+        'topics': ['arithmetic', 'factors-divisors'],
+        'answer': 'A',
+        'insight': r"Both products are one away from $10^6$.",
+        'steps': [
+            r"$9901 \cdot 101 = 990100 + 9901 = 1000001$.",
+            r"$99 \cdot 10101 = 1010100 - 10101 = 999999$.",
+            r"The difference is $2$. The answer is $\textbf{(A)}~2$.",
+        ],
+        'trap': r"Multiplying out the big numbers digit by digit and dropping a carry.",
+    },
+    '2024-amc-10a-2': {
+        'topics': ['linear-equations', 'word-problems'],
+        'answer': 'B',
+        'insight': r"Both trails take $69$ minutes, so subtracting the two equations finds the ratio of $a$ to $b$ at once.",
+        'steps': [
+            r"$1.5a + 800b = 69$ and $1.2a + 1100b = 69$. Subtracting, $0.3a = 300b$, so $a = 1000b$.",
+            r"Then $1500b + 800b = 69$, so $b = 0.03$ and $a = 30$.",
+            r"$T = 30 \cdot 4.2 + 0.03 \cdot 4000 = 126 + 120 = 246$. The answer is $\textbf{(B) }246$.",
+        ],
+        'trap': r"Mixing up which coefficient goes with miles and which with feet.",
+    },
+    '2024-amc-10a-3': {
+        'topics': ['divisibility', 'parity'],
+        'answer': 'B',
+        'insight': r"The prime $2$ cannot be used: with four odd primes it makes an even sum bigger than $2$.",
+        'steps': [
+            r"So all five primes are odd. The smallest choice, $3 + 5 + 7 + 11 + 13 = 39 = 3 \cdot 13$, is not prime.",
+            r"Any other set of five odd primes adds to at least $3 + 5 + 7 + 11 + 17 = 43$, and $43$ is prime.",
+            r"So $n = 43$, with digit sum $7$. The answer is $\textbf{(B) }7$.",
+        ],
+        'trap': r"Using $2$ in the sum, which always gives an even total.",
+    },
+    '2024-amc-10a-4': {
+        'topics': ['arithmetic', 'inequalities'],
+        'answer': 'B',
+        'insight': r"Each number is at most $99$, so count how many $99$s it takes to pass $2024$.",
+        'steps': [
+            r"$20 \cdot 99 = 1980 < 2024$, so $20$ two-digit numbers are not enough.",
+            r"$21$ work: twenty $99$s and one $44$ make $2024$.",
+            r"The answer is $\textbf{(B) }21$.",
+        ],
+        'trap': r"Dividing $2024 \div 99 \approx 20.4$ and rounding down to $20$.",
+    },
+    '2024-amc-10a-5': {
+        'topics': ['factorials', 'factors-divisors'],
+        'answer': 'D',
+        'insight': r"$2024 = 2^3 \cdot 11 \cdot 23$, and the prime $23$ first appears in $23!$.",
+        'steps': [
+            r"$n!$ contains the prime $23$ only when $n \ge 23$.",
+            r"$23!$ also has plenty of $2$s and an $11$, so it is a multiple of $2024$.",
+            r"The answer is $\textbf{(D) } 23$.",
+        ],
+        'trap': r"Stopping at $11$ or $22$ without factoring $2024$ completely.",
+    },
+    '2024-amc-10a-6': {
+        'topics': ['permutations', 'invariants'],
+        'answer': 'D',
+        'insight': r"One adjacent swap changes the order of exactly one pair of letters, and reversing the string has to flip every pair.",
+        'steps': [
+            r"In $FEDCBA$ every one of the $\binom62 = 15$ pairs of letters is in the opposite order from $ABCDEF$.",
+            r"Each swap of neighbors fixes at most one pair, so at least $15$ swaps are needed.",
+            r"$15$ is enough: move $F$ to the front ($5$ swaps), then $E$ ($4$), and so on: $5 + 4 + 3 + 2 + 1 = 15$. The answer is $\textbf{(D)}~15$.",
+        ],
+        'trap': r"Assuming $6$ swaps suffice because each letter only moves once.",
+    },
+    '2024-amc-10a-7': {
+        'topics': ['factors-divisors', 'casework'],
+        'answer': 'B',
+        'insight': r"A small positive sum needs two negative numbers, cancelling most of a large positive one.",
+        'steps': [
+            r"All three positive: the sum is at least $3 + 4 + 5 = 12$. Otherwise the numbers are $-a, -b, c$ with $abc = 60$ and sum $c - a - b$.",
+            r"Trying the factor pairs: $(a, b) = (1, 6)$ gives $10 - 7 = 3$, and $(2, 3)$ gives $10 - 5 = 5$. The other choices give a negative sum or one bigger than $3$.",
+            r"The least positive sum is $3$, from $-1, -6, 10$. The answer is $\textbf{(B) }3$.",
+        ],
+        'trap': r"Only considering positive integers and answering $12$, which is not even a choice.",
+    },
+    '2024-amc-10a-8': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'A',
+        'insight': r"Work out what the first three pack by themselves; Daria packs the rest.",
+        'steps': [
+            r"Together Amy, Bomani and Charlie pack $\frac{4 + 3 + 3}{3} = \frac{10}{3}$ packages a minute. From $1{:}00$ to $2{:}45$ is $105$ minutes, so they pack $350$.",
+            r"Daria packs the other $100$, at $\frac54$ a minute, which takes $80$ minutes.",
+            r"$80$ minutes before $2{:}45$ is $1{:}25$ PM. The answer is $\textbf{(A) }1{:}25$ PM.",
+        ],
+        'trap': r"Giving Daria the whole $105$ minutes, or adding her rate to the others' from the start.",
+    },
+    '2024-amc-10a-9': {
+        'topics': ['combinations', 'permutations'],
+        'answer': 'B',
+        'insight': r"Pair up the juniors, pair up the seniors, then match the pairs.",
+        'steps': [
+            r"Six people split into three unordered pairs in $\frac{6!}{2^3 \cdot 3!} = 15$ ways. That is $15$ for the juniors and $15$ for the seniors.",
+            r"Matching the three junior pairs with the three senior pairs: $3! = 6$ ways.",
+            r"$15 \cdot 15 \cdot 6 = 1350$. The answer is $\textbf{(B) }1350$.",
+        ],
+        'trap': r"Treating the teams as labeled, which multiplies by $3!$ again and gives $8100$.",
+    },
+    '2024-amc-10a-10': {
+        'topics': ['sequences-series', 'modular-arithmetic'],
+        'answer': 'C',
+        'insight': r"Write out the first few steps: the numbers soon fall into a loop of length $3$.",
+        'steps': [
+            r"$100 \to 110 \to 120 \to 40 \to 50 \to 60 \to 20 \to 30 \to 10 \to 20 \to \cdots$",
+            r"From step $6$ on, the value cycles $20, 30, 10$. Step $6$ gives $20$, and $100 - 6 = 94 = 3 \cdot 31 + 1$, so step $100$ is one place into the cycle.",
+            r"That value is $30$. The answer is $\textbf{(C) }30$.",
+        ],
+        'trap': r"Starting the count of the cycle at the wrong step and landing on $20$ or $10$.",
+    },
+    '2024-amc-10a-11': {
+        'topics': ['diophantine', 'factors-divisors'],
+        'answer': 'D',
+        'insight': r"Square both sides: $n^2 - m^2 = 49$, with $m \ge 0$ because it is a square root.",
+        'steps': [
+            r"$(|n| - m)(|n| + m) = 49$ with both factors positive and the second at least the first: $1 \cdot 49$ or $7 \cdot 7$.",
+            r"$1 \cdot 49$ gives $|n| = 25$, $m = 24$. $7 \cdot 7$ gives $|n| = 7$, $m = 0$.",
+            r"With $n$ positive or negative that is $(24, \pm 25)$ and $(0, \pm 7)$: $4$ pairs. The answer is $\textbf{(D)}~4$.",
+        ],
+        'trap': r"Allowing negative $m$, or forgetting that $n$ can be negative.",
+    },
+    '2024-amc-10a-13': {
+        'topics': ['transformations', 'casework'],
+        'answer': 'C',
+        'insight': r"Check each pair on one well-chosen point. One point is enough to show that a pair does not commute.",
+        'steps': [
+            r"Translation and reflection in the $x$-axis commute: one changes only $x$, the other only $y$. Rotation and dilation commute, and so do reflection and dilation, since dilation about the origin just scales.",
+            r"Translation and rotation: $(0,0)$ goes to $(0,2)$ one way and to $(2,0)$ the other. Translation and dilation: $(0,0)$ goes to $(4,0)$ or $(2,0)$. Rotation and reflection: $(1,0)$ goes to $(0,-1)$ or $(0,1)$.",
+            r"So $3$ pairs commute. The answer is $\textbf{(C)}~3$.",
+        ],
+        'trap': r"Assuming all transformations about the origin commute; rotation and reflection do not.",
+    },
+    '2024-amc-10a-14': {
+        'topics': ['circles', 'area', 'triangles'],
+        'answer': 'D',
+        'insight': r"The circle sits in the $120^\circ$ angle outside the triangle at a base corner, so its center is on that angle's bisector.",
+        'steps': [
+            r"At a base corner $V$, the line $\ell$ and the triangle's side make a $120^\circ$ outside angle. The circle touches both, so its center is on the bisector, which is at $60^\circ$ to each.",
+            r"From $V$ to each touching point is $\frac{12}{\tan 60^\circ} = 4\sqrt3$. The kite made of $V$, the two touching points and the center has area $2 \cdot \frac12 \cdot 12 \cdot 4\sqrt3 = 48\sqrt3$.",
+            r"The radii to the two touching points meet at $180^\circ - 120^\circ = 60^\circ$, so the sector inside the kite is $\frac16 \cdot 144\pi = 24\pi$.",
+            r"The region is $48\sqrt3 - 24\pi$, and $48 + 3 + 24 = 75$. The answer is $\textbf{(D)}~75$.",
+        ],
+        'trap': r"Using the $60^\circ$ interior angle instead of the $120^\circ$ outside angle the circle actually sits in.",
+    },
+    '2024-amc-10a-15': {
+        'topics': ['perfect-powers', 'factors-divisors'],
+        'answer': 'E',
+        'insight': r"The two squares differ by $3773 - 1213 = 2560$, and a large $M$ means the two squares are as close as possible.",
+        'steps': [
+            r"$b^2 - a^2 = 2560$, so $(b - a)(b + a) = 2560$, with both factors even (they have the same parity, and the product is even).",
+            r"The largest $a$ comes from $b - a = 2$ and $b + a = 1280$, so $a = 639$ and $b = 641$.",
+            r"$M = 639^2 - 1213 = 408321 - 1213 = 407108$, whose units digit is $8$. The answer is $\textbf{(E) }8$.",
+        ],
+        'trap': r"Taking $b - a = 1$, which needs $b + a = 2560$ with $b - a$ odd, so the parities do not match.",
+    },
+    '2024-amc-10a-17': {
+        'topics': ['probability', 'quadratics'],
+        'answer': 'E',
+        'insight': r"Team A wins in one of three ways: WW, WLW or LWW. Add their chances.",
+        'steps': [
+            r"$\frac23 p + \frac23(1 - p)p + \frac13 p \cdot p = \frac12$.",
+            r"That simplifies to $\frac43 p - \frac13 p^2 = \frac12$, or $2p^2 - 8p + 3 = 0$.",
+            r"$p = \frac{8 - \sqrt{40}}{4} = \frac12(4 - \sqrt{10})$ (the other root is bigger than $1$). So $m + n = 14$. The answer is $\textbf{(E)}~14$.",
+        ],
+        'trap': r"Leaving out the WLW case, where the third game is played away.",
+    },
+    '2024-amc-10a-18': {
+        'topics': ['digits-bases', 'modular-arithmetic'],
+        'answer': 'D',
+        'insight': r"$2024_b = 2b^3 + 2b + 4$, so the condition is $b^3 + b + 2 \equiv 0 \pmod 8$, which depends only on $b$ mod $8$.",
+        'steps': [
+            r"Even $b$: $b^3 \equiv 0$, so we need $b + 2 \equiv 0$, which is $b \equiv 6 \pmod 8$.",
+            r"Odd $b$: $b^2 \equiv 1$, so $b^3 \equiv b$ and we need $2b + 2 \equiv 0$, which is $b \equiv 3$ or $7 \pmod 8$.",
+            r"From $1$ to $2024 = 8 \cdot 253$ there are $3 \cdot 253 = 759$ such $b$. Only $b = 3$ is below $5$, so $K = 758$.",
+            r"$7 + 5 + 8 = 20$. The answer is $\textbf{(D)}~20$.",
+        ],
+        'trap': r"Forgetting the lower limit $b \ge 5$ and counting $b = 3$.",
+    },
+    '2024-amc-10a-19': {
+        'topics': ['sequences-series', 'factors-divisors'],
+        'answer': 'E',
+        'insight': r"$b = \frac{720^2}{a}$, so the smallest $b$ comes from the largest divisor $a$ of $720^2$ that is still below $720$.",
+        'steps': [
+            r"$a \cdot b = 720^2 = 2^8 \cdot 3^4 \cdot 5^2$, so $a$ is a divisor of that, and $a < 720$.",
+            r"Checking just below $720$: $675 = 3^3 \cdot 5^2$ works, and nothing from $676$ to $719$ uses only the primes $2$, $3$ and $5$ within those powers.",
+            r"$b = \frac{518400}{675} = 768$, with digit sum $21$. The answer is $\textbf{(E) } 21$.",
+        ],
+        'trap': r"Requiring the common ratio to be a whole number. It only has to make all three terms integers.",
+    },
+    '2024-amc-10a-20': {
+        'topics': ['inequalities', 'parity'],
+        'answer': 'C',
+        'insight': r"Any four consecutive members of $S$ span at least $10$, because gaps of $3, 3, 3$ would put two odd numbers $6$ apart.",
+        'steps': [
+            r"Consecutive members are at least $3$ apart. Three gaps of exactly $3$ give $x, x + 3, x + 6, x + 9$, and either $x$ and $x + 6$ or $x + 3$ and $x + 9$ are two odd numbers $6$ apart. So every $4$ consecutive members span at least $10$.",
+            r"If $S = \{s_1 < s_2 < \dots\}$, then $s_{3k+1} \ge 1 + 10k$, so $s_{607} \ge 2021$, $s_{608} \ge 2024$ and $s_{609} \ge 2027$. At most $608$ fit.",
+            r"$608$ is reached by the numbers $\equiv 1, 4, 8 \pmod{10}$ up to $2024$: odd ones are $10$ apart and all gaps are $3$ or $4$.",
+            r"The answer is $\textbf{(C) }608$.",
+        ],
+        'trap': r"Using only the gap-$3$ rule, which allows $675$, and missing how the odd rule spoils three gaps of $3$ in a row.",
+    },
+    '2024-amc-10a-21': {
+        'topics': ['sequences-series', 'linear-equations'],
+        'answer': 'C',
+        'insight': r"When every row and every column is arithmetic, the entry in row $i$, column $j$ has the form $p + qi + rj + sij$.",
+        'steps': [
+            r"Row $i$ is $A_i + jD_i$. The columns are arithmetic, so $A_i$ and $D_i$ change steadily with $i$, which gives $p + qi + rj + sij$.",
+            r"The four given entries: $p + 5q + 5r + 25s = 0$, $p + 2q + 4r + 8s = 48$, $p + 4q + 3r + 12s = 16$, $p + 3q + r + 3s = 12$.",
+            r"Solving: $p = -10$, $q = 5$, $r = 22$, $s = -5$. Position $(1, 2)$ holds $-10 + 5 + 44 - 10 = 29$.",
+            r"The answer is $\textbf{(C)}~29$.",
+        ],
+        'trap': r"Assuming every row has the same common difference, which the problem does not say.",
+    },
+    '2024-amc-10a-23': {
+        'topics': ['nonlinear-systems', 'factors-divisors'],
+        'answer': 'D',
+        'insight': r"Subtracting pairs of equations factors nicely, for example $(ab + c) - (bc + a) = (a - c)(b - 1)$.",
+        'steps': [
+            r"$(a - c)(b - 1) = 13$, $(b - a)(c - 1) = 27$, $(b - c)(a - 1) = 40$.",
+            r"Since $13$ is prime, $b - 1 \in \{\pm1, \pm13\}$. Trying each, only $b = -12$, $a - c = -1$ fits the other two: $a = -9$, $c = -8$. (Check: $108 - 8 = 100$, $96 - 9 = 87$, $72 - 12 = 60$.)",
+            r"Adding the three original equations, $ab + bc + ca = 247 - (a + b + c) = 247 + 29 = 276$.",
+            r"The answer is $\textbf{(D) }276$.",
+        ],
+        'trap': r"Assuming $a$, $b$, $c$ are positive and searching only small positive values.",
+    },
+    '2024-amc-10a-24': {
+        'topics': ['probability', 'solid-geometry'],
+        'answer': 'B',
+        'insight': r"Count the walks move by move: at each step, only a few moves keep the path on new edges of a single unit cube.",
+        'steps': [
+            r"Move $1$: any of $6$. Move $2$ must be along a new axis (going on would leave the cube, and going back repeats an edge): $4$ choices.",
+            r"Move $3$: back along the first axis, which turns a corner of a square ($1$ choice), or along the third axis ($2$ choices).",
+            r"Move $4$: after the square turn there are $3$ ways (close the square, or step off it either way along the third axis). After a third-axis step there are $2$.",
+            r"$6 \cdot 4 \cdot (1 \cdot 3 + 2 \cdot 2) = 168$ of the $6^4 = 1296$ rolls, which is $\frac{7}{54}$. The answer is $\textbf{(B) }\frac{7}{54}$.",
+        ],
+        'trap': r"Requiring the four edges to form a closed square, which misses the open paths.",
+    },
+    '2024-amc-10a-25': {
+        'topics': ['casework', 'lattice-paths'],
+        'answer': 'C',
+        'insight': r"A vertical toothpick in the middle row counts for both cells beside it, so the loop crosses that row only near the two ends.",
+        'steps': [
+            r"If the loop never crosses the middle row, it takes the top side of all $8$ middle cells and circles the top row, or takes all the bottom sides and circles the bottom row: $2$ loops.",
+            r"Otherwise it crosses exactly twice: on the left at the line $x = 0$ or $x = 1$, and on the right at $x = 7$ or $x = 8$. A crossing further in would leave end cells that the loop cannot reach without trapping itself.",
+            r"Between the crossings, each remaining middle cell gets either its top side (from the upper half of the loop) or its bottom side (from the lower half), never both, and every such choice gives one loop. Crossings at $0$ and $8$ leave $6$ free cells, $0$ and $7$ or $1$ and $8$ leave $5$, and $1$ and $7$ leave $4$.",
+            r"$2 + 2^6 + 2 \cdot 2^5 + 2^4 = 2 + 64 + 64 + 16 = 146$. The answer is $\textbf{(C) }146$.",
+        ],
+        'trap': r"Forgetting the two loops that stay entirely in the top or bottom row.",
+    },
+    # ------------------------------------------------------------------ 2023 AMC 10A
+    '2023-amc-10a-1': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'E',
+        'insight': r"They close the gap at $18 + 12 = 30$ miles per hour.",
+        'steps': [
+            r"$45 \div 30 = 1.5$ hours until they meet.",
+            r"Alicia has gone $18 \cdot 1.5 = 27$ miles from $A$. The answer is $\textbf{(E) }27$.",
+        ],
+        'trap': r"Giving Beth's distance, $18$ miles, measured from $B$.",
+    },
+    '2023-amc-10a-2': {
+        'topics': ['linear-equations', 'decimals-fractions'],
+        'answer': 'A',
+        'insight': r"Write the oranges in pounds and solve one linear equation.",
+        'steps': [
+            r"$3\frac12$ cups weigh $\frac78$ pound and $\frac12$ cup weighs $\frac18$ pound. So $\frac13 P + \frac78 = \frac34 P + \frac18$.",
+            r"$\frac34 = \frac{5}{12} P$, so $P = \frac95 = 1\frac45$. The answer is $\textbf{(A) }1\frac{4}{5}$.",
+        ],
+        'trap': r"Leaving the oranges in cups instead of converting to pounds.",
+    },
+    '2023-amc-10a-3': {
+        'topics': ['perfect-powers', 'divisibility'],
+        'answer': 'A',
+        'insight': r"A square divisible by $5$ is a square of a multiple of $5$.",
+        'steps': [
+            r"$(5k)^2 = 25k^2 < 2023$ means $k^2 < 80.92$, so $k \le 8$.",
+            r"That is $8$ squares: $25, 100, \dots, 1600$. The answer is $\textbf{(A) }8$.",
+        ],
+        'trap': r"Counting squares up to $2023$ and dividing by $5$, as if every fifth square counted.",
+    },
+    '2023-amc-10a-4': {
+        'topics': ['quadrilaterals', 'inequalities'],
+        'answer': 'D',
+        'insight': r"In any quadrilateral, each side is shorter than the other three put together.",
+        'steps': [
+            r"A side $s$ needs $s < 26 - s$, so $s \le 12$.",
+            r"$12, 4, 5, 5$ has perimeter $26$ and works, since $12 < 14$. The answer is $\textbf{(D) }12$.",
+        ],
+        'trap': r"Allowing $13$, which makes a flat quadrilateral.",
+    },
+    '2023-amc-10a-5': {
+        'topics': ['exponents', 'digits-bases'],
+        'answer': 'E',
+        'insight': r"Pair every $2$ with a $5$ to make tens.",
+        'steps': [
+            r"$8^5 \cdot 5^{10} \cdot 15^5 = 2^{15} \cdot 5^{15} \cdot 3^5 = 243 \cdot 10^{15}$.",
+            r"That is $243$ followed by $15$ zeros: $18$ digits. The answer is $\textbf{(E) } 18$.",
+        ],
+        'trap': r"Forgetting that $3^5 = 243$ has three digits of its own.",
+    },
+    '2023-amc-10a-6': {
+        'topics': ['solid-geometry', 'basic-counting'],
+        'answer': 'D',
+        'insight': r"Count how many times each vertex is added in.",
+        'steps': [
+            r"Each vertex is on $3$ edges, and each edge is on $2$ faces, so each vertex value is counted $6$ times.",
+            r"The cube's value is $6 \cdot 21 = 126$. The answer is $\textbf{(D) } 126$.",
+        ],
+        'trap': r"Counting each vertex only $3$ times, for the faces it touches, and answering $63$.",
+    },
+    '2023-amc-10a-7': {
+        'topics': ['probability', 'casework'],
+        'answer': 'B',
+        'insight': r"The total first reaches $3$ in one of four ways: $3$; $1, 2$; $2, 1$; or $1, 1, 1$.",
+        'steps': [
+            r"These four starts are separate events, with probabilities $\frac16$, $\frac1{36}$, $\frac1{36}$ and $\frac1{216}$.",
+            r"$\frac{36 + 6 + 6 + 1}{216} = \frac{49}{216}$. The answer is $\textbf{(B) }\frac{49}{216}$.",
+        ],
+        'trap': r"Counting only the first roll being $3$, which is $\frac16$.",
+    },
+    '2023-amc-10a-8': {
+        'topics': ['linear-equations', 'functions'],
+        'answer': 'D',
+        'insight': r"$240$ Fahrenheit degrees span $100$ Breadus degrees.",
+        'steps': [
+            r"$200^\circ$ F is $90$ degrees above $110^\circ$ F, which is $\frac{90}{240}$ of the way to $350^\circ$ F.",
+            r"$\frac{90}{240} \cdot 100 = 37.5$. The answer is $\textbf{(D) }37.5$.",
+        ],
+        'trap': r"Forgetting to subtract $110$ before scaling.",
+    },
+    '2023-amc-10a-9': {
+        'topics': ['digits-bases', 'casework'],
+        'answer': 'E',
+        'insight': r"$2023$ already has an odd number of $0$s and of $3$s, so $MMDD$ must supply one more $0$ and one more $3$ and pair up everything else.",
+        'steps': [
+            r"$MMDD$ needs an odd number of $0$s, an odd number of $3$s, and an even number of each other digit. With $4$ digits that means $0$, $3$ and a pair $xx$, or three $0$s and a $3$ (no valid date), or $0$ and three $3$s (none either).",
+            r"Months $01$ and $10$ take day $13$ or $31$. Month $11$ takes day $03$ or $30$. Month $03$ takes day $11$ or $22$. Month $02$ takes day $23$.",
+            r"That is $9$ dates. The answer is $\textbf{(E)}~9$.",
+        ],
+        'trap': r"Forgetting that the year itself already contributes an odd $0$ and an odd $3$.",
+    },
+    '2023-amc-10a-10': {
+        'topics': ['statistics', 'linear-equations'],
+        'answer': 'D',
+        'insight': r"Each scenario gives an equation in the number of quizzes $n$ and the mean $m$.",
+        'steps': [
+            r"$nm + 11 = (n + 1)(m + 1)$ gives $n + m = 10$.",
+            r"$nm + 33 = (n + 3)(m + 2)$ gives $2n + 3m = 27$.",
+            r"So $m = 7$ (and $n = 3$). The answer is $\textbf{(D) }7$.",
+        ],
+        'trap': r"Ignoring the change in the number of quizzes when the mean is recomputed.",
+    },
+    '2023-amc-10a-11': {
+        'topics': ['right-triangles', 'quadratics'],
+        'answer': 'C',
+        'insight': r"The legs $x$ and $y$ add to the big square's side $\sqrt3$, and the hypotenuse is the small square's side $\sqrt2$.",
+        'steps': [
+            r"$x + y = \sqrt3$ and $x^2 + y^2 = 2$, so $2xy = 3 - 2 = 1$.",
+            r"$x$ and $y$ are the roots of $t^2 - \sqrt3 t + \frac12 = 0$: $\frac{\sqrt3 \pm 1}{2}$.",
+            r"$\frac{\sqrt3 - 1}{\sqrt3 + 1} = \frac{(\sqrt3 - 1)^2}{2} = 2 - \sqrt3$. The answer is $\textbf{(C) }2-\sqrt3$.",
+        ],
+        'trap': r"Using the areas $2$ and $3$ as side lengths.",
+    },
+    '2023-amc-10a-12': {
+        'topics': ['divisibility', 'digits-bases'],
+        'answer': 'B',
+        'insight': r"The reversed number ends in $N$'s first digit, which cannot be $0$, so it must be $5$.",
+        'steps': [
+            r"$N$ lies between $500$ and $599$ and is a multiple of $7$.",
+            r"Those run from $504 = 7 \cdot 72$ to $595 = 7 \cdot 85$: $85 - 72 + 1 = 14$ numbers.",
+            r"The answer is $\textbf{(B) } 14$.",
+        ],
+        'trap': r"Letting the first digit be $0$ so that the reverse ends in $0$.",
+    },
+    '2023-amc-10a-13': {
+        'topics': ['triangles', 'trigonometry'],
+        'answer': 'C',
+        'insight': r"By the law of sines, $AB = \frac{48}{\sin 60^\circ} \cdot \sin C$, which is largest when the angle at Chiang is $90^\circ$.",
+        'steps': [
+            r"In the triangle of Abdul, Bharat and Chiang, $\frac{AB}{\sin C} = \frac{48}{\sin 60^\circ}$.",
+            r"The largest $AB$ has $\sin C = 1$: $AB = \frac{48}{\sqrt3/2} = 32\sqrt3$.",
+            r"$AB^2 = 3072$. The answer is $\textbf{(C) } 3072$.",
+        ],
+        'trap': r"Assuming the triangle is equilateral, which gives $48^2 = 2304$.",
+    },
+    '2023-amc-10a-14': {
+        'topics': ['probability', 'factors-divisors'],
+        'answer': 'B',
+        'insight': r"Only multiples of $11$ matter, and for those, exactly half the divisors are multiples of $11$.",
+        'steps': [
+            r"For $n = 11k$ with $k \le 9$, $11$ divides $n$ exactly once, so divisors pair up as $d$ and $11d$: half are multiples of $11$.",
+            r"There are $9$ such $n$ up to $100$. Probability $= \frac{1}{100} \cdot 9 \cdot \frac12 = \frac{9}{200}$.",
+            r"The answer is $\textbf{(B)}~\frac{9}{200}$.",
+        ],
+        'trap': r"Treating every divisor of every number from $1$ to $100$ as one big pool.",
+    },
+    '2023-amc-10a-15': {
+        'topics': ['area', 'sequences-series'],
+        'answer': 'E',
+        'insight': r"The shaded ring between radii $2k - 1$ and $2k$ has area $(4k - 1)\pi$, however the circles sit.",
+        'steps': [
+            r"$(2k)^2 - (2k - 1)^2 = 4k - 1$. With $2n$ circles the shaded area is $\pi\sum_{k=1}^{n} (4k - 1) = (2n^2 + n)\pi$.",
+            r"$n = 31$ gives $1953$ and $n = 32$ gives $2080 \ge 2023$.",
+            r"So $64$ circles. The answer is $\textbf{(E) } 64$.",
+        ],
+        'trap': r"Answering $32$, the number of shaded rings, instead of the number of circles.",
+    },
+    '2023-amc-10a-16': {
+        'topics': ['combinations', 'word-problems'],
+        'answer': 'B',
+        'insight': r"With $\ell$ lefties and $2\ell$ righties, the total $\binom{3\ell}{2}$ must split $7 : 5$ between left and right wins.",
+        'steps': [
+            r"Left wins are $1.4$ times right wins, so the total is $2.4$ times the right wins. That makes the total a multiple of $12$.",
+            r"$\ell = 1, 2$ give $3$ and $15$ games. $\ell = 3$ gives $\binom92 = 36$: right wins $15$ (exactly their games against each other) and left wins $21$.",
+            r"$36$ games. The answer is $\textbf{(B) }36$.",
+        ],
+        'trap': r"Taking $40\%$ of the left wins instead of the right wins.",
+    },
+    '2023-amc-10a-17': {
+        'topics': ['right-triangles', 'casework'],
+        'answer': 'A',
+        'insight': r"All three corner triangles are right triangles with integer sides, so look for Pythagorean triples with legs $30$ and $28$.",
+        'steps': [
+            r"$\triangle ABP$ has leg $30$ and $BP < 28$: only $16$ works ($16$-$30$-$34$). So $PC = 12$.",
+            r"$\triangle PCQ$ has leg $12$: $CQ$ is $5$, $9$ or $16$. Then $QD = 30 - CQ$ must pair with $28$; only $QD = 21$ ($21$-$28$-$35$) works, so $CQ = 9$ and $PQ = 15$.",
+            r"The perimeter is $34 + 15 + 35 = 84$. The answer is $\textbf{(A) } 84$.",
+        ],
+        'trap': r"Stopping at the first triple for $PCQ$ without checking that $QDA$ comes out integral.",
+    },
+    '2023-amc-10a-18': {
+        'topics': ['solid-geometry', 'graph-theory'],
+        'answer': 'D',
+        'insight': r"Euler's formula gives the number of vertices, and the edge count fixes the mix of degrees.",
+        'steps': [
+            r"$12$ rhombi have $48$ edge-sides, so there are $24$ edges. $V = 2 - F + E = 2 - 12 + 24 = 14$.",
+            r"The degrees add to $2E = 48$. With $x$ vertices of degree $3$: $3x + 4(14 - x) = 48$, so $x = 8$.",
+            r"The answer is $\textbf{(D) }8$.",
+        ],
+        'trap': r"Forgetting that each edge is shared by two faces, which doubles the edge count.",
+    },
+    '2023-amc-10a-19': {
+        'topics': ['transformations', 'coordinate-geometry'],
+        'answer': 'E',
+        'insight': r"The center of a rotation is the same distance from each point and its image, so it lies on both perpendicular bisectors.",
+        'steps': [
+            r"$A(1,2)$ and $A'(3,1)$: their perpendicular bisector passes through $(2, 1.5)$ and is $2x - y = 2.5$.",
+            r"$B(3,3)$ and $B'(4,3)$: their perpendicular bisector is $x = 3.5$.",
+            r"They meet at $P = (3.5, 4.5)$, so $|r - s| = 1$. The answer is $\textbf{(E) } 1$.",
+        ],
+        'trap': r"Bisecting $AB'$ and $BA'$, pairing each point with the wrong image.",
+    },
+    '2023-amc-10a-20': {
+        'topics': ['permutations', 'casework'],
+        'answer': 'D',
+        'insight': r"Color the top-left $2 \times 2$ block first; each neighboring block then has only two cells left, and they must take the two missing colors.",
+        'steps': [
+            r"The top-left block uses all four colors: $4! = 24$ ways. Call them $a$ (corner), $b$ (top middle), $c$ (middle left), $d$ (center).",
+            r"The top-right corner and middle-right cell take $a$ and $c$ in some order, and the bottom-left corner and bottom-middle cell take $a$ and $b$. That is $2 \cdot 2$ choices, and the bottom-right corner is then forced.",
+            r"It fails only when both the middle-right and bottom-middle cells are $a$, which leaves the bottom-right block with two $a$s. So $3$ of the $4$ choices work: $24 \cdot 3 = 72$.",
+            r"The answer is $\textbf{(D) }72$.",
+        ],
+        'trap': r"Counting $24 \cdot 2 \cdot 2 = 96$ without checking the last block.",
+    },
+    '2023-amc-10a-21': {
+        'topics': ['polynomials', 'functions'],
+        'answer': 'D',
+        'insight': r"Read each condition as a value of $P$: $P(1) = 1$, $P(0) = 0$, $P(9) = 0$, $P(4) = 0$.",
+        'steps': [
+            r"$2$ is a root of $P(x - 2)$, so $P(0) = 0$. $3$ is a root of $P(3x)$, so $P(9) = 0$. $4$ is a root of $4P(x)$, so $P(4) = 0$.",
+            r"$x(x - 4)(x - 9)$ gives $24$ at $x = 1$, not $1$, so the degree is $4$: $P(x) = x(x - 4)(x - 9)(x - r)$.",
+            r"$P(1) = 24(1 - r) = 1$ gives $r = \frac{23}{24}$, so $m + n = 47$. The answer is $\textbf{(D) }47$.",
+        ],
+        'trap': r"Reading $P(x - 2)$ having root $2$ as $P(2) = 0$ instead of $P(0) = 0$.",
+    },
+    '2023-amc-10a-22': {
+        'topics': ['circles', 'coordinate-geometry'],
+        'answer': 'D',
+        'insight': r"Center everything on the midpoint of the two centers: $C_3$ has radius $\frac34$, and $C_4$ sits on the perpendicular line.",
+        'steps': [
+            r"Put the centers of $C_1$ and $C_2$ at $\left(\pm\frac14, 0\right)$. The largest circle inside both is centered at $(0,0)$ with radius $1 - \frac14 = \frac34$.",
+            r"$C_4$ has center $(0, y)$ and radius $r$: $\frac1{16} + y^2 = (1 - r)^2$ (inside $C_1$) and $y = \frac34 + r$ (outside $C_3$).",
+            r"Then $\frac1{16} + \frac9{16} + \frac32 r + r^2 = 1 - 2r + r^2$, so $\frac72 r = \frac38$ and $r = \frac{3}{28}$. The answer is $\textbf{(D) } \frac{3}{28}$.",
+        ],
+        'trap': r"Taking $C_3$'s radius as $1 - \frac12$ instead of $1 - \frac14$.",
+    },
+    '2023-amc-10a-23': {
+        'topics': ['diophantine', 'factors-divisors'],
+        'answer': 'C',
+        'insight': r"Complete the square in both: $4N + 400$ and $4N + 529$ are both perfect squares.",
+        'steps': [
+            r"$N = a(a + 20) = b(b + 23)$ gives $4N + 400 = (2a + 20)^2$ and $4N + 529 = (2b + 23)^2$.",
+            r"$(2b + 23)^2 - (2a + 20)^2 = 129 = 3 \cdot 43$. The factor pair $1 \cdot 129$ gives $2b + 23 = 65$ and $2a + 20 = 64$, so $a = 22$, $b = 21$. ($3 \cdot 43$ gives $a = 0$.)",
+            r"$N = 22 \cdot 42 = 924$, with digit sum $15$. The answer is $\textbf{(C) } 15$.",
+        ],
+        'trap': r"Guessing and checking products near each other without using the difference of squares.",
+    },
+    '2023-amc-10a-24': {
+        'topics': ['polygons', 'area'],
+        'answer': 'C',
+        'insight': r"The empty area is the frame minus six blocks, so only the frame's side matters. The alignment fixes it, and the $\frac37$ only says where the blocks sit along their edges.",
+        'steps': [
+            r"Each block touches its frame edge along a whole side, so its center is $(L - 1)\frac{\sqrt3}{2}$ from the frame's center, where $L$ is the frame's side.",
+            r"Neighboring blocks line up along one straight line. Measuring both sides' distance from the center along that line's normal, the slide along the edges cancels, and the sides coincide exactly when $(L - 1)\frac{\sqrt3}{2} = \sqrt3$, that is, when $L = 3$.",
+            r"The empty region is $\frac{3\sqrt3}{2}(3^2 - 6 \cdot 1^2) = \frac{9\sqrt3}{2}$. The answer is $\textbf{(C)}~\frac{9 \sqrt{3}}{2}$.",
+        ],
+        'trap': r"Building the frame's side out of $\frac37$, which only says where along the edges the blocks sit.",
+    },
+    '2023-amc-10a-25': {
+        'topics': ['probability', 'solid-geometry'],
+        'answer': 'A',
+        'insight': r"Fix $R$. The other $11$ vertices are at distance $1$ ($5$ of them), $2$ ($5$) or $3$ ($1$), and the question is symmetric in $Q$ and $S$.",
+        'steps': [
+            r"By symmetry, $d(Q, R) > d(R, S)$ and $d(Q, R) < d(R, S)$ are equally likely, so the answer is $\frac{1 - P(\text{equal})}{2}$.",
+            r"Equal distances: both at distance $1$ ($5 \cdot 4$ ordered choices) or both at distance $2$ ($5 \cdot 4$), out of $11 \cdot 10$. So $P(\text{equal}) = \frac{40}{110} = \frac{4}{11}$.",
+            r"$\frac{1 - 4/11}{2} = \frac{7}{22}$. The answer is $\textbf{(A) }\frac{7}{22}$.",
+        ],
+        'trap': r"Forgetting the single vertex at distance $3$ when counting the vertices around $R$.",
     },
 }
 

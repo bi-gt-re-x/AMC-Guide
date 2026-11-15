@@ -15,8 +15,8 @@ it, and is not part of the repository.
 
 ## What the parser accepts
 
-* **AoPS wiki source** — `==Problem 1==` headings, math in `<math>`, `$...$`
-  or `<cmath>`, choices as `\textbf{(A)}` (or `\mathrm`, `\text`, `\qquad`
+* **AoPS wiki source** — `==Problem 1==` headings, math in `<math>`, `<imath>`,
+  `$...$` or `<cmath>`, choices as `\textbf{(A)}` (or `\mathrm`, `\text`, `\qquad`
   separated), `[[...|Solution]]` links, and `<asy>` diagrams.
 * **Plain text** copied from a PDF or a page — `1.` / `Problem 1` headings and
   `(A) ... (E)` choices. Text copied from the rendered AoPS page works too: its
@@ -57,10 +57,13 @@ def _outside_math(text, at):
 
 
 def _math_to_dollars(text):
-    """<math>, <cmath> and \\[ \\] into $...$ / $$...$$, and the LaTeX
+    """<math>, <imath>, <cmath> and \\[ \\] into $...$ / $$...$$, and the LaTeX
     environments KaTeX cannot draw into ones it can."""
     text = re.sub(r'<cmath>(.*?)</cmath>', lambda m: '$$' + m.group(1).strip() + '$$', text, flags=re.S)
-    text = re.sub(r'<math>(.*?)</math>', lambda m: '$' + m.group(1).strip() + '$', text, flags=re.S)
+    # The wiki writes inline math as <math> or, on newer pages, <imath>.
+    text = re.sub(r'<i?math>(.*?)</i?math>', lambda m: '$' + m.group(1).strip() + '$', text, flags=re.S)
+    # A math block that only breaks the line (`<imath>\newline</imath>`) is just a line break.
+    text = re.sub(r'\$\s*\\newline\s*\$', '\n', text)
     # A display block on its own line, so one that runs straight into the next
     # math (`\[a\]\[b\]`, or `...?\]$\textbf{(A)}`) stays apart from it.
     text = re.sub(r'\\\[(.*?)\\\]', lambda m: '\n$$' + m.group(1).strip() + '$$\n', text, flags=re.S)
@@ -86,6 +89,8 @@ def _clean_wiki(text):
     text = re.sub(r"'''?", '', text)
     text = re.sub(r'</?(?:center|div|span|p|br|small|big|sup|sub)[^>]*>', ' ', text, flags=re.I)
     text = re.sub(r'\{\{[^}]*\}\}', '', text)
+    # Wiki list items (`* item`, `*item`) as bullet lines.
+    text = re.sub(r'^\s*\*+\s*', '• ', text, flags=re.M)
     return text
 
 
@@ -198,6 +203,9 @@ def parse_contest(source, level):
         body = re.sub(thumbnail, '\n\n', body, flags=re.I)
         has_image = missing_image or bool(re.search(r'\[\[(?:Image|File):', body, flags=re.I))
         body = _math_to_dollars(_clean_wiki(body))
+        # As on the wiki, a single line break inside a paragraph is a space (the
+        # source wraps long lines). Blank lines, bullets and display math stay.
+        body = re.sub(r'[ \t]*(?<!\n)(?<!\$\$)\n(?!\n|\s*•|\s*\$\$)[ \t]*', ' ', body)
         choices = None
         if level != 'AIME':
             choices, body = _find_choices(body)
