@@ -188,9 +188,15 @@ def parse_contest(source, level):
         # <asy> in wiki source; [asy] in text copied from the rendered page.
         diagrams = [a or b for a, b in re.findall(r'<asy>(.*?)</asy>|\[asy\](.*?)\[/asy\]', body, flags=re.S)]
         body = re.sub(r'<asy>.*?</asy>|\[asy\].*?\[/asy\]', '\n\n', body, flags=re.S)
-        # A page copied as text keeps its "Solution" links as lines of their own.
-        body = re.sub(r'^\s*Solutions?(?:\s+\d+)?\s*$', '', body, flags=re.M | re.I)
-        has_image = bool(re.search(r'\[\[(?:Image|File):', body, flags=re.I))
+        # A page copied as text keeps its "Solution" links as lines of their own
+        # (as markdown, `[Solution](...)`, from some browsers' copy).
+        body = re.sub(r'^\s*\[?Solutions?(?:\s+\d+)?\]?(?:\([^)\n]*\))?\s*$', '', body, flags=re.M | re.I)
+        # A picture the wiki failed to render arrives as this message (sometimes
+        # as a markdown link). The problem has a figure we do not have.
+        thumbnail = r'\[?Error creating thumbnail:[^\]\n$]*?(?:destination|\])\]?(?:\([^)\n]*\))?'
+        missing_image = bool(re.search(thumbnail, body, flags=re.I))
+        body = re.sub(thumbnail, '\n\n', body, flags=re.I)
+        has_image = missing_image or bool(re.search(r'\[\[(?:Image|File):', body, flags=re.I))
         body = _math_to_dollars(_clean_wiki(body))
         choices = None
         if level != 'AIME':

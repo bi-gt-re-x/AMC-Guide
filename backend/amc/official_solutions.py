@@ -11,7 +11,8 @@ key the solution is left off rather than shown beside the wrong answer
 (`for_problem`). tests/test_amc_official_solutions.py checks that each one ends
 on its answer.
 
-Written so far: the 2026 AMC 10A and the 2025 AMC 10A and 10B. Strings with an
+Written so far: the 2026 AMC 10A, the 2025 AMC 10A and 10B, and the 2024 AMC 10B
+(all but problem 19, whose table is missing). Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
 Steps are written in the site's one math convention, `$...$` inline.
@@ -891,6 +892,274 @@ SOLUTIONS = {
             r"$20$ is an odd multiple of $4$, so it folds back to $x = 4$. $16$ is an even multiple, so it folds to $y = 0$. The corner is $(4, 0) = B$. The answer is $\textbf{(B) } B$.",
         ],
         'trap': r"Following the bounces one at a time and losing track. There are eight of them before the path reaches $B$.",
+    },
+    # ------------------------------------------------------------------ 2024 AMC 10B
+    # Problem 19 depends on a table that was missing from the pasted paper,
+    # so it has no write-up yet.
+    '2024-amc-10b-1': {
+        'topics': ['arithmetic', 'basic-counting'],
+        'answer': 'B',
+        'insight': r"Counting from both ends counts that one person twice.",
+        'steps': [
+            r"There are $1012$ people to the person's left and $1009$ to the right.",
+            r"$1012 + 1 + 1009 = 2022$. The answer is $\textbf{(B) } 2022$.",
+        ],
+        'trap': r"Adding $1013 + 1010 = 2023$ and counting the person twice.",
+    },
+    '2024-amc-10b-2': {
+        'topics': ['factorials', 'arithmetic'],
+        'answer': 'B',
+        'insight': r"$6! = 720 = 8 \cdot 9 \cdot 10$, which is exactly what takes $7!$ up to $10!$.",
+        'steps': [
+            r"$7! \cdot 6! = 7! \cdot 720 = 7! \cdot 8 \cdot 9 \cdot 10 = 10!$.",
+            r"So the difference is $0$. The answer is $\textbf{(B) } 0$.",
+        ],
+        'trap': r"Multiplying out the factorials in full and slipping somewhere.",
+    },
+    '2024-amc-10b-3': {
+        'topics': ['absolute-value', 'inequalities'],
+        'answer': 'E',
+        'insight': r"$|2x| \le 7\pi$ means $|x| \le \frac{7\pi}{2} \approx 10.996$.",
+        'steps': [
+            r"$\frac{7\pi}{2}$ is just under $11$, so the integers allowed are $-10, -9, \dots, 10$.",
+            r"That is $21$ integers. The answer is $\textbf{(E) } 21$.",
+        ],
+        'trap': r"Forgetting $0$ or the negative values and answering $10$ or $20$.",
+    },
+    '2024-amc-10b-4': {
+        'topics': ['sequences-series', 'modular-arithmetic'],
+        'answer': 'D',
+        'insight': r"After step $n$, exactly $1 + 2 + \dots + n = \frac{n(n+1)}{2}$ balls have been placed, and step $n$ uses bin number $n$ counted round the five bins.",
+        'steps': [
+            r"$\frac{63 \cdot 64}{2} = 2016$ and $\frac{64 \cdot 65}{2} = 2080$, so ball $2024$ goes in at step $64$.",
+            r"Steps $1, 2, 3, 4, 5$ use $A, B, C, D, E$, and the bins repeat every $5$ steps. $64 = 5 \cdot 12 + 4$, so step $64$ uses the fourth bin, $D$.",
+            r"The answer is $\textbf{(D) } D$.",
+        ],
+        'trap': r"Placing ball $2024$ at step $63$ by using $2016$ as the last ball of step $64$.",
+    },
+    '2024-amc-10b-5': {
+        'topics': ['inequalities', 'sequences-series'],
+        'answer': 'B',
+        'insight': r"Flipping a $+$ to a $-$ subtracts twice that number from $2500$, so flip the biggest numbers first.",
+        'steps': [
+            r"$1 + 3 + \dots + 99 = 50^2 = 2500$. Flipping numbers that add up to $S$ gives $2500 - 2S$, which is negative when $S > 1250$.",
+            r"The $k$ largest odd numbers add to $99 + 97 + \dots + (101 - 2k) = k(100 - k)$.",
+            r"$k = 14$ gives $1204$ (not enough) and $k = 15$ gives $1275$. So $15$ flips are needed. The answer is $\textbf{(B) } 15$.",
+        ],
+        'trap': r"Requiring $S > 2500$ and forgetting that a flip both removes the number and subtracts it.",
+    },
+    '2024-amc-10b-6': {
+        'topics': ['factors-divisors', 'area'],
+        'answer': 'B',
+        'insight': r"For a fixed area, the perimeter is smallest when the sides are as close as possible to $\sqrt{2024} \approx 45$.",
+        'steps': [
+            r"$2024 = 44 \cdot 46$, two sides right next to $45$.",
+            r"The perimeter is $2(44 + 46) = 180$. The answer is $\textbf{(B) } 180$.",
+        ],
+        'trap': r"Taking $8 \times 253$ or another pair of factors without checking the pair closest to the square root.",
+    },
+    '2024-amc-10b-7': {
+        'topics': ['modular-arithmetic', 'factors-divisors'],
+        'answer': 'A',
+        'insight': r"Factor out $7^{2024}$: what is left is $1 + 7 + 49 = 57 = 3 \cdot 19$.",
+        'steps': [
+            r"$7^{2024} + 7^{2025} + 7^{2026} = 7^{2024}(1 + 7 + 49) = 57 \cdot 7^{2024}$.",
+            r"$57 = 3 \cdot 19$, so the sum is a multiple of $19$ and the remainder is $0$. The answer is $\textbf{(A) } 0$.",
+        ],
+        'trap': r"Hunting for the cycle of powers of $7$ mod $19$, which works but takes far longer.",
+    },
+    '2024-amc-10b-8': {
+        'topics': ['factors-divisors', 'modular-arithmetic'],
+        'answer': 'D',
+        'insight': r"The divisors of $42$ pair off as $d$ and $\frac{42}{d}$, so their product is $42$ to the power of half the number of divisors.",
+        'steps': [
+            r"$42 = 2 \cdot 3 \cdot 7$ has $8$ divisors, forming $4$ pairs that each multiply to $42$. So $N = 42^4$.",
+            r"The units digit of $42^4$ is the units digit of $2^4 = 16$, which is $6$. The answer is $\textbf{(D) } 6$.",
+        ],
+        'trap': r"Thinking $N$ ends in $0$ because $2$ and $7$ are both divisors. There is no $5$ to make a $10$.",
+    },
+    '2024-amc-10b-9': {
+        'topics': ['quadratics', 'statistics'],
+        'answer': 'A',
+        'insight': r"Square the sum: $(a + b + c)^2 = a^2 + b^2 + c^2 + 2(ab + ac + bc)$.",
+        'steps': [
+            r"$a + b + c = 0$ and $a^2 + b^2 + c^2 = 30$.",
+            r"$0 = 30 + 2(ab + ac + bc)$, so $ab + ac + bc = -15$.",
+            r"The mean of the three products is $-5$. The answer is $\textbf{(A) } -5$.",
+        ],
+        'trap': r"Stopping at the sum $-15$, or dividing by $9$ instead of $3$.",
+    },
+    '2024-amc-10b-10': {
+        'topics': ['area-ratios', 'similar-triangles'],
+        'answer': 'A',
+        'insight': r"Triangles $FAE$ and $FCB$ are similar with ratio $AE : CB = 1 : 2$, so $F$ is a third of the way along both $AC$ and $EB$.",
+        'steps': [
+            r"Give the parallelogram area $12$. Each of the triangles $ABC$ and $ACD$ has area $6$.",
+            r"$CF$ is $\frac23$ of $CA$, so triangle $CFB$ has $\frac23$ of the area of $ABC$: $4$.",
+            r"Triangle $ABE$ has area $3$ (half of $ABD$), and $EF$ is $\frac13$ of $EB$, so triangle $AEF$ has area $1$. Then $CDEF = ACD - AEF = 6 - 1 = 5$.",
+            r"The ratio is $5 : 4$. The answer is $\textbf{(A) } 5:4$.",
+        ],
+        'trap': r"Taking $F$ as the middle of $AC$, which would be true only if $E$ were at $D$.",
+    },
+    '2024-amc-10b-11': {
+        'topics': ['coordinate-geometry', 'right-triangles', 'area'],
+        'answer': 'C',
+        'insight': r"Put $X$ at the origin. The right angle and the equal areas give two equations for where $M$ and $A$ are.",
+        'steps': [
+            r"Take $X = (0,0)$, $W = (0,4)$, $Y = (8,0)$, $Z = (8,4)$, $M = (m, 0)$, $A = (8, a)$.",
+            r"Equal areas: $\frac12 \cdot 4 \cdot m = \frac12 \cdot 8 \cdot (4 - a)$, so $2m = 16 - 4a$. Right angle at $M$: $(-m)(8 - m) + 4a = 0$, so $4a = m(8 - m)$.",
+            r"Then $2m = 16 - 8m + m^2$, so $m^2 - 10m + 16 = 0$ and $m = 2$ ($m = 8$ puts $M$ and $A$ both at $Y$). So $a = 3$.",
+            r"$\triangle WMA = 32 - 4 - 4 - \frac12 \cdot 6 \cdot 3 = 15$. The answer is $\textbf{(C) }15$.",
+        ],
+        'trap': r"Forgetting the third corner triangle, $MYA$, when subtracting from the rectangle.",
+    },
+    '2024-amc-10b-12': {
+        'topics': ['combinations', 'logic'],
+        'answer': 'A',
+        'insight': r"With everyone speaking $k$ languages, the condition just says no two students speak exactly the same set.",
+        'steps': [
+            r"Two sets of the same size with neither containing the other are simply two different sets. So we need $100$ different $k$-language sets.",
+            r"With $n$ languages the most sets of one size is the middle binomial coefficient. $\binom84 = 70 < 100$, but $\binom94 = 126 \ge 100$.",
+            r"So $9$ languages are enough, and $8$ are not. The answer is $\textbf{(A) } 9$.",
+        ],
+        'trap': r"Giving each student a language of their own ($100$), or reaching for $\log_2 100$.",
+    },
+    '2024-amc-10b-13': {
+        'topics': ['perfect-powers', 'inequalities'],
+        'answer': 'B',
+        'insight': r"$\sqrt{1183} = 13\sqrt7$, so both square roots must be whole-number multiples of $\sqrt7$.",
+        'steps': [
+            r"$\sqrt x = 13\sqrt7 - \sqrt y$. Squaring: $x = 1183 + y - 26\sqrt{7y}$, so $\sqrt{7y}$ is rational, and $y = 7b^2$. Likewise $x = 7a^2$, with $a + b = 13$.",
+            r"$x + y = 7(a^2 + b^2)$ is smallest when $a$ and $b$ are as close as possible: $6$ and $7$.",
+            r"$7(36 + 49) = 595$. The answer is $\textbf{(B) } 595$.",
+        ],
+        'trap': r"Taking $a = 1$, $b = 12$, which gives the largest sum.",
+    },
+    '2024-amc-10b-14': {
+        'topics': ['geometric-probability', 'circles', 'area'],
+        'answer': 'B',
+        'insight': r"The target is the ring $18 \le x^2 + y^2 \le 32$, and its outer circle exactly fits inside the diamond.",
+        'steps': [
+            r"$|x^2 + y^2 - 25| \le 7$ means $18 \le x^2 + y^2 \le 32$: a ring of area $\pi(32 - 18) = 14\pi$.",
+            r"The diamond $|x| + |y| \le 8$ has area $2 \cdot 8^2 = 128$. Its sides are $\frac{8}{\sqrt2} = \sqrt{32}$ from the center, so the whole ring is inside.",
+            r"The probability is $\frac{14\pi}{128} = \frac{7}{64}\pi$, so $m + n = 71$. The answer is $\textbf{(B) } 71$.",
+        ],
+        'trap': r"Reading the target as the disk of radius $5$, or forgetting to take square roots of $18$ and $32$ for the radii.",
+    },
+    '2024-amc-10b-15': {
+        'topics': ['statistics', 'casework'],
+        'answer': 'C',
+        'insight': r"The six given numbers add to $24.8$ and run from $1$ to $7$. A range of $7$ allows only three shapes for $x$ and $z$, and then the mean and median pin everything down.",
+        'steps': [
+            r"Range $7$: either $x = 0$ and $z \le 7$, or $0 < x < 1$ and $z = x + 7$, or $x \ge 1$ and $z = 8$. ($x < 0$ is impossible, since $7$ is in the list.)",
+            r"If $x < 1$, the four smallest are $x, 1, 2.2, 3.2$, so the median (the fifth number) is $3.2$, $y$ or $5.2$, and it is a whole number only when it is $y$, with $y = 4$ or $5$. With $x = 0$, the total $24.8 + y + z$ must be a multiple of $9$ with $y \le z \le 7$: only $y = 5$, $z = 6.2$. With $0 < x < 1$, the total $31.8 + 2x + y$ must be a multiple of $9$: only $y = 4$, $x = 0.1$, $z = 7.1$.",
+            r"If $z = 8$, the total $32.8 + x + y$ is $36$ or $45$. $x + y = 3.2$ leaves the median at $3.2$. $x + y = 12.2$ needs one of $x, y$ to be the whole-number median, and only $(x, y) = (6, 6.2)$ works (median $6$).",
+            r"That is $3$ triples. The answer is $\textbf{(C) } 3$.",
+        ],
+        'trap': r"Assuming the new numbers must sit at the ends, and missing $(0.1, 4, 7.1)$ where the range runs from $x$ to $z$.",
+    },
+    '2024-amc-10b-16': {
+        'topics': ['invariants', 'parity'],
+        'answer': 'A',
+        'insight': r"An odd result needs at least one odd number in the four, so one step clears at most three even numbers.",
+        'steps': [
+            r"A sum is odd only with an odd number of odd terms, and a product only with four. So every step that leaves an odd number uses at least one odd, and clears at most $3$ evens. A step with an even result clears none.",
+            r"There are $1012$ evens, so at least $\lceil 1012/3 \rceil = 338$ steps are needed, each removing $3$ numbers from the board: at most $2024 - 3 \cdot 338 = 1010$ remain.",
+            r"$1010$ is reachable: $337$ steps of three evens and one odd, then one step of the last even and three odds (both sums are odd).",
+            r"The answer is $\textbf{(A) } 1010$.",
+        ],
+        'trap': r"Thinking a single step can clear four evens. Their sum and product are both even.",
+    },
+    '2024-amc-10b-17': {
+        'topics': ['permutations', 'casework'],
+        'answer': 'D',
+        'insight': r"Treat a tied group as a single block, then line up the blocks.",
+        'steps': [
+            r"No tie: $5! = 120$ results.",
+            r"A tie among $k$ snails: choose them in $\binom5k$ ways, then order the block and the other $5 - k$ snails in $(6 - k)!$ ways. $k = 2$: $10 \cdot 24 = 240$. $k = 3$: $10 \cdot 6 = 60$. $k = 4$: $5 \cdot 2 = 10$. $k = 5$: $1$.",
+            r"$120 + 240 + 60 + 10 + 1 = 431$. The answer is $\textbf{(D) } 431$.",
+        ],
+        'trap': r"Leaving out the no-tie case or the five-way tie.",
+    },
+    '2024-amc-10b-18': {
+        'topics': ['modular-arithmetic', 'perfect-powers'],
+        'answer': 'B',
+        'insight': r"Euler's theorem: $\varphi(125) = 100$, so $n^{100} \equiv 1$ whenever $5 \nmid n$.",
+        'steps': [
+            r"If $5 \nmid n$, then $n^{100} \equiv 1 \pmod{125}$.",
+            r"If $5 \mid n$, then $n^{100}$ is divisible by $5^{100}$, so it leaves $0$.",
+            r"Only $0$ and $1$ occur. The answer is $\textbf{(B) } 2$.",
+        ],
+        'trap': r"Expecting many remainders because $125$ has many residues. The $100$th power flattens them.",
+    },
+    '2024-amc-10b-20': {
+        'topics': ['permutations', 'casework'],
+        'answer': 'A',
+        'insight': r"Neighbors must be the same hand, or a left and right from the same pair. So every switch between left and right happens inside one pair.",
+        'steps': [
+            r"Write the row as runs of lefts and rights. At each switch the two shoes are a matched pair. A run of length $1$ in the middle would have to match both its neighbors, which is impossible, so inner runs have length at least $2$.",
+            r"One switch (LLLRRR or RRRLLL): pick the pair at the switch, then order the rest, $3 \cdot 2 \cdot 2 = 12$ each, so $24$. Two switches (L RRR LL, LL RRR L and the mirror ones): the two switch pairs are chosen in $3 \cdot 2$ ways and the rest is fixed, $4 \cdot 6 = 24$.",
+            r"Three switches need the pattern L RR LL R or R LL RR L, with all three pairs at switches: $2 \cdot 3! = 12$. Four or more switches do not fit in six shoes.",
+            r"$24 + 24 + 12 = 60$. The answer is $\textbf{(A) } 60$.",
+        ],
+        'trap': r"Only counting rows where each pair stands together, and missing the arrangements that group by hand.",
+    },
+    '2024-amc-10b-21': {
+        'topics': ['circles', 'coordinate-geometry'],
+        'answer': 'C',
+        'insight': r"Two circles of radii $r$ and $s$ resting on the floor and touching have their contact points $2\sqrt{rs}$ apart.",
+        'steps': [
+            r"Measure along the floor from the big pipe's contact point. The small pipe touches the floor at $2\sqrt{1 \cdot \frac14} = 1$.",
+            r"A third pipe of radius $r$ touches at $t$ with $|t| = 2\sqrt r$ and $|t - 1| = 2\sqrt{\frac r4} = \sqrt r$.",
+            r"Between the two: $2\sqrt r + \sqrt r = 1$, so $r = \frac19$. Beyond the small pipe: $2\sqrt r - \sqrt r = 1$, so $r = 1$. Beyond the big pipe there is no solution.",
+            r"$\frac19 + 1 = \frac{10}{9}$. The answer is $\textbf{(C)}~\frac{10}{9}$.",
+        ],
+        'trap': r"Finding only the small pipe in the gap and missing the radius-$1$ pipe on the far side.",
+    },
+    '2024-amc-10b-22': {
+        'topics': ['combinations', 'factorials'],
+        'answer': 'A',
+        'insight': r"Count the committees, then the officers, and track only the factors of $3$.",
+        'steps': [
+            r"Splitting into $4$ unlabeled groups of $4$: $\frac{16!}{(4!)^4 \cdot 4!}$. Officers in each group: $4 \cdot 3 = 12$, so $12^4$ in all.",
+            r"Powers of $3$: $16!$ has $5 + 1 = 6$, $(4!)^4$ has $4$, $4!$ has $1$, and $12^4$ has $4$.",
+            r"$r = 6 - 4 - 1 + 4 = 5$. The answer is $\textbf{(A) } 5$.",
+        ],
+        'trap': r"Treating the committees as labeled and forgetting to divide by $4!$, which gives $6$.",
+    },
+    '2024-amc-10b-23': {
+        'topics': ['sequences-series', 'recursion'],
+        'answer': 'B',
+        'insight': r"$\frac{F_{2n}}{F_n}$ is the Lucas number $L_n$ ($1, 3, 4, 7, 11, \dots$), which follows the same rule as the Fibonacci numbers.",
+        'steps': [
+            r"$F_{2n} = F_n L_n$, where $L_1 = 1$, $L_2 = 3$, and each term is the sum of the two before. (Check: $\frac{F_4}{F_2} = 3$ and $\frac{F_6}{F_3} = 4$.)",
+            r"$L_1, \dots, L_{10}$: $1, 3, 4, 7, 11, 18, 29, 47, 76, 123$.",
+            r"They add to $319$. The answer is $\textbf{(B) } 319$.",
+        ],
+        'trap': r"Using $\frac{F_{2n}}{F_n} = F_n$ or similar guesses instead of checking the first few ratios.",
+    },
+    '2024-amc-10b-24': {
+        'topics': ['modular-arithmetic', 'parity'],
+        'answer': 'E',
+        'insight': r"$P(m)$ is an integer when $8$ divides $8P(m) = 4m + 2m^2 + m^4 + m^8$.",
+        'steps': [
+            r"For even $m = 2k$: $8k + 8k^2 + 16k^4 + 256k^8$ is a multiple of $8$.",
+            r"For odd $m$: $m^2 \equiv 1 \pmod 8$, so $m^4 \equiv m^8 \equiv 1$, and $4m + 2m^2 + m^4 + m^8 \equiv 4 + 2 + 1 + 1 = 8 \equiv 0$.",
+            r"So $P(m)$ is an integer for every integer $m$, including all four. The answer is $\textbf{(E) } 4$.",
+        ],
+        'trap': r"Assuming odd $m$ fails because $\frac m2$ is not an integer. The four fractions together are.",
+    },
+    '2024-amc-10b-25': {
+        'topics': ['solid-geometry', 'diophantine'],
+        'answer': 'E',
+        'insight': r"The old block measures $3a \times 3b \times 3c$ and the new one $2 \times 2 \times 7$ bricks, so each of $3a + 1$, $3b + 1$, $3c + 1$ is $2$ or $7$ times a brick edge.",
+        'steps': [
+            r"With every brick facing the same way, $\{3a + 1, 3b + 1, 3c + 1\} = \{2p, 2q, 7r\}$, where $p, q, r$ are $a, b, c$ in some order. No edge can pair with itself ($3a + 1 = 2a$ or $7a$ has no positive solution), so the pairing goes round in a cycle.",
+            r"Name them so that $3a + 1 = 2b$, $3b + 1 = 2c$ and $3c + 1 = 7a$. Then $b = \frac{3a + 1}{2}$, $c = \frac{9a + 5}{4}$, and $\frac{27a + 19}{4} = 7a$, so $a = 19$.",
+            r"That gives $b = 29$ and $c = 44$ (pairwise relatively prime). The blocks are $57 \times 87 \times 132$ and $58 \times 88 \times 133$.",
+            r"$a + b + c = 92$. The answer is $\textbf{(E) } 92$.",
+        ],
+        'trap': r"Comparing volumes alone. $28abc = (3a+1)(3b+1)(3c+1)$ has many near-solutions; matching edge by edge is what decides it.",
     },
 }
 

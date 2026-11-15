@@ -121,3 +121,26 @@ def test_latex_that_katex_cannot_draw_is_converted():
 ])
 def test_the_2025_papers_are_written_up_against_their_keys(contest, key):
     assert [SOLUTIONS['%s-%d' % (contest, n)]['answer'] for n in range(1, 26)] == list(key)
+
+
+def test_the_2024_amc_10b_is_written_up_except_the_missing_table():
+    key = 'BBEDBBADAACABBCADBCACABEE'
+    assert '2024-amc-10b-19' not in SOLUTIONS
+    assert [SOLUTIONS['2024-amc-10b-%d' % n]['answer'] for n in range(1, 26) if n != 19] \
+        == [k for n, k in enumerate(key, 1) if n != 19]
+
+
+def test_a_picture_the_wiki_failed_to_render_is_a_missing_figure():
+    source = (
+        'Problem 1\nHow many entries are possible?\n\n'
+        'Error creating thumbnail: Unable to save thumbnail to destination $\\textbf{(A) } 4 \\qquad '
+        '\\textbf{(B) } 5 \\qquad \\textbf{(C) } 6 \\qquad \\textbf{(D) } 7 \\qquad \\textbf{(E) } 9$\n\n'
+        '[Solution](https://example.org/Problem_1)\n'
+        'Problem 2\nWhat is length $x$? [Error creating thumbnail: Unable to save thumbnail to destination]'
+        '(https://example.org/File:shot.png)\n\n'
+        '$\\textbf{(A) } 1 \\qquad\\textbf{(B) } 2 \\qquad\\textbf{(C) } 3 \\qquad\\textbf{(D) } 4 \\qquad\\textbf{(E) } 5$\n')
+    one, two = official.parse_contest(source, 'AMC 10')
+    assert one['diagram'] == 'image' and two['diagram'] == 'image'
+    assert one['statement'] == 'How many entries are possible?' and one['choices'][2] == '$6$'
+    assert two['statement'] == 'What is length $x$?'
+    assert 'Solution' not in one['statement'] and 'thumbnail' not in two['statement']
