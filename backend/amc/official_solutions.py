@@ -13,7 +13,7 @@ on its answer.
 
 Written so far: the 2026 AMC 10A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
 10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
-Fall AMC 10A and 10B, and the 2020 AMC 10A. A problem whose numbers are only in a picture the
+Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, and the 2019 AMC 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -3795,6 +3795,524 @@ SOLUTIONS = {
             r"$\frac{42}{216} = \frac7{36}$. The answer is $\textbf{(A) } \frac{7}{36}$.",
         ],
         'trap': r"Forgetting the reroll-all option, which beats keeping a $4$ or more.",
+    },
+    # ------------------------------------------------------------------ 2020 AMC 10B
+    '2020-amc-10b-1': {
+        'topics': ['arithmetic'],
+        'answer': 'D',
+        'insight': r"Subtracting a negative is adding.",
+        'steps': [
+            r"$1 + 2 - 3 + 4 - 5 + 6 = 5$.",
+            r"The answer is $\textbf{(D) } 5$.",
+        ],
+        'trap': r"Treating every sign as subtraction, which gives $-3$.",
+    },
+    '2020-amc-10b-2': {
+        'topics': ['solid-geometry', 'arithmetic'],
+        'answer': 'E',
+        'insight': r"A cube of side $2$ has volume $8$, not $2$.",
+        'steps': [
+            r"$5 \cdot 1 + 5 \cdot 8 = 45$.",
+            r"The answer is $\textbf{(E) } 45$.",
+        ],
+        'trap': r"Using side lengths as volumes, which gives $15$, or squaring instead of cubing.",
+    },
+    '2020-amc-10b-3': {
+        'topics': ['decimals-fractions', 'linear-equations'],
+        'answer': 'E',
+        'insight': r"Pick a convenient value for the variable that links the others: $x = 6$.",
+        'steps': [
+            r"Then $w = 8$, $z = 1$ and $y = \frac32$.",
+            r"$w : y = 8 : \frac32 = 16 : 3$. The answer is $\textbf{(E) } 16:3$.",
+        ],
+        'trap': r"Multiplying the given ratios in the wrong direction, such as using $x : z = 1 : 6$.",
+    },
+    '2020-amc-10b-4': {
+        'topics': ['triangles', 'factors-divisors'],
+        'answer': 'D',
+        'insight': r"$a + b = 90$, so try the smallest primes for $b$ and check whether $90 - b$ is prime.",
+        'steps': [
+            r"$b = 2, 3, 5$ give $88$, $87 = 3 \cdot 29$ and $85$, none prime. $b = 7$ gives $83$, which is prime.",
+            r"The answer is $\textbf{(D) } 7$.",
+        ],
+        'trap': r"Accepting $87$ as prime; it is $3 \cdot 29$.",
+    },
+    '2020-amc-10b-5': {
+        'topics': ['permutations'],
+        'answer': 'B',
+        'insight': r"Arrange $7$ tiles, then divide out the swaps of identical tiles.",
+        'steps': [
+            r"$\frac{7!}{2!\,3!} = \frac{5040}{12} = 420$.",
+            r"The answer is $\textbf{(B) } 420$.",
+        ],
+        'trap': r"Dividing by $1!\,1!\,2!\,3!$ but forgetting the $2!$, which gives $840$.",
+    },
+    '2020-amc-10b-6': {
+        'topics': ['digits-bases', 'word-problems'],
+        'answer': 'B',
+        'insight': r"The next palindrome after $15951$ changes the middle digit, which here means carrying into the hundreds.",
+        'steps': [
+            r"$159$ can't go to a larger middle digit, so the next one is $16061$, $110$ miles later.",
+            r"$110 \div 2 = 55$ miles per hour. The answer is $\textbf{(B) } 55$.",
+        ],
+        'trap': r"Skipping to $16161$; the middle digit can be $0$.",
+    },
+    '2020-amc-10b-7': {
+        'topics': ['perfect-powers', 'divisibility'],
+        'answer': 'A',
+        'insight': r"A square divisible by $2$ and $3$ is the square of a multiple of $6$: $(6k)^2 = 36k^2$.",
+        'steps': [
+            r"$36k^2 < 2020$ means $k^2 < 56.1$, so $k = 1, \ldots, 7$.",
+            r"The answer is $\textbf{(A) } 7$.",
+        ],
+        'trap': r"Thinking a square that is a multiple of $6$ only needs to be $6k^2$; a square divisible by $2$ and $3$ is divisible by $36$.",
+    },
+    '2020-amc-10b-8': {
+        'topics': ['triangles', 'coordinate-geometry'],
+        'answer': 'D',
+        'insight': r"Area $12$ with base $PQ = 8$ puts $R$ at height $3$ from line $PQ$. Then sort by where the right angle is.",
+        'steps': [
+            r"Right angle at $P$ or at $Q$: $R$ is on the perpendicular there, above or below: $4$ points.",
+            r"Right angle at $R$: $R$ lies on the circle with diameter $PQ$ (radius $4$), at height $3$: $4$ points.",
+            r"$4 + 4 = 8$. The answer is $\textbf{(D) } 8$.",
+        ],
+        'trap': r"Forgetting the case with the right angle at $R$.",
+    },
+    '2020-amc-10b-9': {
+        'topics': ['diophantine', 'quadratics'],
+        'answer': 'D',
+        'insight': r"Complete the square: $x^{2020} + (y - 1)^2 = 1$.",
+        'steps': [
+            r"Either $x = 0$ and $y - 1 = \pm1$, or $x = \pm1$ and $y = 1$.",
+            r"That is $(0,0), (0,2), (1,1), (-1,1)$. The answer is $\textbf{(D) } 4$.",
+        ],
+        'trap': r"Missing $x = -1$; an even power makes it work too.",
+    },
+    '2020-amc-10b-10': {
+        'topics': ['solid-geometry', 'circles'],
+        'answer': 'C',
+        'insight': r"The radius $4$ becomes the slant height, and the arc becomes the base circumference.",
+        'steps': [
+            r"The arc is $\frac34 \cdot 8\pi = 6\pi$, so the base radius is $3$ and the height is $\sqrt{16 - 9} = \sqrt7$.",
+            r"$V = \frac13 \pi \cdot 9 \cdot \sqrt7 = 3\pi\sqrt7$. The answer is $\textbf{(C) } 3 \pi \sqrt7$.",
+        ],
+        'trap': r"Using $4$ as the cone's height instead of its slant height.",
+    },
+    '2020-amc-10b-11': {
+        'topics': ['probability', 'combinations'],
+        'answer': 'D',
+        'insight': r"Fix Harold's $5$ books. Betty must pick $2$ of his and $3$ of the other $5$.",
+        'steps': [
+            r"$\frac{\binom52\binom53}{\binom{10}5} = \frac{100}{252} = \frac{25}{63}$.",
+            r"The answer is $\textbf{(D) } \frac{25}{63}$.",
+        ],
+        'trap': r"Counting choices for both students in the numerator but only one in the denominator.",
+    },
+    '2020-amc-10b-12': {
+        'topics': ['exponents', 'decimals-fractions'],
+        'answer': 'D',
+        'insight': r"$20^{20} = 2^{20} \cdot 10^{20}$ and $2^{20} = 1{,}048{,}576 \approx 1.05 \times 10^6$.",
+        'steps': [
+            r"So $20^{20} \approx 1.05 \times 10^{26}$, and $\frac1{20^{20}} \approx 0.95 \times 10^{-26} = 9.5 \times 10^{-27}$.",
+            r"The first nonzero digit is in the $27$th place, after $26$ zeros. The answer is $\textbf{(D) } 26$.",
+        ],
+        'trap': r"Counting the exponent $27$ as the number of zeros.",
+    },
+    '2020-amc-10b-13': {
+        'topics': ['sequences-series', 'coordinate-geometry'],
+        'answer': 'B',
+        'insight': r"Every four moves (east $k$, north $k+1$, west $k+2$, south $k+3$) shift Andy by $(-2, -2)$.",
+        'steps': [
+            r"The $2020$th turn comes after $2020 = 4 \cdot 505$ moves, so $505$ full rounds.",
+            r"$(-20, 20) + 505(-2, -2) = (-1030, -990)$. The answer is $\textbf{(B) } (-1030, -990)$.",
+        ],
+        'trap': r"Counting $2020$ rounds instead of $2020$ moves.",
+    },
+    '2020-amc-10b-14': {
+        'topics': ['area', 'circles', 'polygons'],
+        'answer': 'D',
+        'insight': r"The shaded region sits inside the hexagon joining the six side midpoints, which has side $\sqrt3$.",
+        'steps': [
+            r"That hexagon has area $\frac{3\sqrt3}{2}(\sqrt3)^2 = \frac{9\sqrt3}{2}$. At each midpoint a $120^\circ$ sector of radius $1$ lies inside it, $\frac\pi3$ each.",
+            r"Neighbouring sectors (centres $\sqrt3$ apart) overlap in half a lens of area $\frac\pi6 - \frac{\sqrt3}4$, so the sectors cover $2\pi - 6\left(\frac\pi6 - \frac{\sqrt3}4\right) = \pi + \frac{3\sqrt3}2$.",
+            r"$\frac{9\sqrt3}2 - \pi - \frac{3\sqrt3}2 = 3\sqrt3 - \pi$. The answer is $\textbf{(D) } 3\sqrt{3} - \pi$.",
+        ],
+        'trap': r"Subtracting all six semicircles from the hexagon, $6\sqrt3 - 3\pi$; the semicircles overlap each other.",
+    },
+    '2020-amc-10b-15': {
+        'topics': ['sequences-series', 'modular-arithmetic'],
+        'answer': 'D',
+        'insight': r"The erasing is periodic: every $60$ original digits ($5$ and $3 \cdot 4 \cdot 5$ both divide $60$) become $40$, then $30$, then $24$.",
+        'steps': [
+            r"So the final list repeats every $24$, and positions $2019, 2020, 2021$ are positions $3, 4, 5$ of a block ($2019 = 24 \cdot 84 + 3$).",
+            r"The start goes $123451234\ldots \to 1245235134\ldots \to 124235341\ldots \to 12425\ldots$, so those digits are $4, 2, 5$.",
+            r"$4 + 2 + 5 = 11$. The answer is $\textbf{(D) } 11$.",
+        ],
+        'trap': r"Erasing every $3$rd, $4$th and $5$th digit of the original list instead of the list left after each pass.",
+    },
+    '2020-amc-10b-16': {
+        'topics': ['games-strategy', 'symmetry-counting'],
+        'answer': 'A',
+        'insight': r"Bela can play in the exact centre and then mirror Jenn.",
+        'steps': [
+            r"Bela picks $\frac n2$. Whenever Jenn picks $x$, Bela picks $n - x$, which is legal because Jenn's choice was legal and the position is symmetric.",
+            r"Bela always has a reply, so Jenn runs out first. The answer is $\textbf{(A) }$ Bela will always win.",
+        ],
+        'trap': r"Looking for a parity pattern in $n$; the mirror strategy works for every $n$.",
+    },
+    '2020-amc-10b-17': {
+        'topics': ['graph-theory', 'casework'],
+        'answer': 'C',
+        'insight': r"Sort by how many across-the-circle pairs are used. Between used diameters, the people left must pair off along the circle.",
+        'steps': [
+            r"No diameters: the two alternating matchings of the circle, $2$ ways. With diameters, the arcs between them need an even number of people, so the gaps between chosen diameters (out of $5$) must be odd.",
+            r"One diameter: $5$ ways. Three diameters with gaps $1, 1, 3$: $5$ ways. All five: $1$ way. Two or four diameters can't have all gaps odd.",
+            r"$2 + 5 + 5 + 1 = 13$. The answer is $\textbf{(C) } 13$.",
+        ],
+        'trap': r"Forgetting the all-diameters pairing or the pairings with no diameters.",
+    },
+    '2020-amc-10b-18': {
+        'topics': ['probability', 'combinations'],
+        'answer': 'B',
+        'insight': r"Every order of adding two reds and two blues has the same probability.",
+        'steps': [
+            r"For example red, red, blue, blue: $\frac12 \cdot \frac23 \cdot \frac14 \cdot \frac25 = \frac1{30}$; any order has the same numerators $1, 2, 1, 2$ over $2, 3, 4, 5$.",
+            r"$\binom42 = 6$ orders give $\frac6{30} = \frac15$. The answer is $\textbf{(B) }\frac15$.",
+        ],
+        'trap': r"Using $\binom42\left(\frac12\right)^4 = \frac38$, as if the draws were fair coin flips.",
+    },
+    '2020-amc-10b-19': {
+        'topics': ['divisibility', 'binomial-coefficients'],
+        'answer': 'A',
+        'insight': r"Find how many factors of $2$ and $3$ divide $\binom{52}{10} = \frac{52!}{10!\,42!}$.",
+        'steps': [
+            r"Factors of $2$: $49 - 8 - 39 = 2$, so it is a multiple of $4$ but not of $8$. The last two digits $\underline{A0}$ make $A$ even, and the last three $\underline{AA0}$ must not be a multiple of $8$, which rules out $A = 4$ ($440 = 8 \cdot 55$).",
+            r"Factors of $3$: $23 - 4 - 19 = 0$, so the digit sum $18 + 4A$ is not a multiple of $3$, which rules out $A = 6$.",
+            r"$A = 2$ is left. The answer is $\textbf{(A) } 2$.",
+        ],
+        'trap': r"Trying to compute $\binom{52}{10}$ in full.",
+    },
+    '2020-amc-10b-20': {
+        'topics': ['solid-geometry'],
+        'answer': 'B',
+        'insight': r"$S(r)$ is the box, plus slabs on the faces, quarter-cylinders along the edges and eighth-spheres at the corners.",
+        'steps': [
+            r"$d = 12$ (the box), $c = 2(3 + 4 + 12) = 38$ (faces), $b = \pi(1 + 3 + 4) = 8\pi$ (edges), $a = \frac43\pi$ (corners).",
+            r"$\frac{bc}{ad} = \frac{8\pi \cdot 38}{\frac43\pi \cdot 12} = 19$. The answer is $\textbf{(B) } 19$.",
+        ],
+        'trap': r"Counting each edge length once instead of four times: the $12$ edges give $\frac{\pi r^2}{4} \cdot 4(1 + 3 + 4)$.",
+    },
+    '2020-amc-10b-21': {
+        'topics': ['area', 'quadrilaterals', 'coordinate-geometry'],
+        'answer': 'B',
+        'insight': r"The square has area $4$, so side $2$, and $AE = AH = \sqrt2$. The figure is symmetric about diagonal $AC$, and $FI$ is parallel to it.",
+        'steps': [
+            r"Cut the pentagon along $AC$. Each half is a right trapezoid with parallel sides $FI = x$ and $CM = 2\sqrt2 - 1$, where $M$ is the midpoint of $EH$, and its height is $2\sqrt2 - 1 - x$.",
+            r"Its area is $\frac12$: $\frac12\left((2\sqrt2 - 1) + x\right)\left((2\sqrt2 - 1) - x\right) = \frac12$, so $x^2 = (2\sqrt2 - 1)^2 - 1$.",
+            r"$FI^2 = 9 - 4\sqrt2 - 1 = 8 - 4\sqrt2$. The answer is $\textbf{(B) } 8-4\sqrt2$.",
+        ],
+        'trap': r"Taking the square's side as $4$ from the figure; the four areas of $1$ make it $2$.",
+    },
+    '2020-amc-10b-22': {
+        'topics': ['polynomials', 'modular-arithmetic'],
+        'answer': 'D',
+        'insight': r"Sophie Germain: $4a^4 + 1 = (2a^2 + 2a + 1)(2a^2 - 2a + 1)$, with $a = 2^{50}$.",
+        'steps': [
+            r"$2^{202} + 1 = 4 \cdot (2^{50})^4 + 1 = (2^{101} + 2^{51} + 1)(2^{101} - 2^{51} + 1)$.",
+            r"So $2^{202} + 202 = (2^{202} + 1) + 201$ leaves remainder $201$. The answer is $\textbf{(D) } 201$.",
+        ],
+        'trap': r"Answering $202$; the $+1$ is already used up by the factorization.",
+    },
+    '2020-amc-10b-23': {
+        'topics': ['transformations', 'symmetry-counting'],
+        'answer': 'C',
+        'insight': r"The eight symmetries split into two halves, and each of $L, R, H, V$ moves you from one half to the other.",
+        'steps': [
+            r"Products of an even number of moves lie in $\{\text{identity}, 180^\circ, \text{the two diagonal reflections}\}$; odd ones lie in $\{L, R, H, V\}$.",
+            r"So after any $19$ moves the result is one of $L, R, H, V$, and exactly one last move undoes it.",
+            r"$4^{19} = 2^{38}$. The answer is $\textbf{(C) } 2^{38}$.",
+        ],
+        'trap': r"Dividing $4^{20}$ by $8$, as if every symmetry were equally likely to be the result.",
+    },
+    '2020-amc-10b-24': {
+        'topics': ['floor-ceiling', 'inequalities', 'quadratics'],
+        'answer': 'C',
+        'insight': r"Let $k = \lfloor\sqrt n\rfloor$. Then $n = 70k - 1000$, and $k^2 \le n < (k+1)^2$.",
+        'steps': [
+            r"$k^2 - 70k + 1000 \le 0$ gives $20 \le k \le 50$.",
+            r"$70k - 1000 < k^2 + 2k + 1$ gives $k < 34 - \sqrt{155} \approx 21.5$ or $k > 34 + \sqrt{155} \approx 46.5$.",
+            r"So $k = 20, 21, 47, 48, 49, 50$. The answer is $\textbf{(C) } 6$.",
+        ],
+        'trap': r"Checking only the first inequality and counting all $31$ values of $k$.",
+    },
+    '2020-amc-10b-25': {
+        'topics': ['combinations', 'factors-divisors'],
+        'answer': 'A',
+        'insight': r"$96 = 2^5 \cdot 3$. With $k$ factors, put the $3$ in one factor and make sure every other factor gets at least one $2$.",
+        'steps': [
+            r"Choose the factor with the $3$ ($k$ ways), give each other factor one $2$, and share the remaining $6 - k$ twos among all $k$: $\binom{5}{k-1}$ ways.",
+            r"$k = 1, \ldots, 6$: $1 + 10 + 30 + 40 + 25 + 6 = 112$.",
+            r"The answer is $\textbf{(A) } 112$.",
+        ],
+        'trap': r"Counting unordered factorizations; here $2 \cdot 48$ and $48 \cdot 2$ are different.",
+    },
+    # ------------------------------------------------------------------ 2019 AMC 10B
+    '2019-amc-10b-1': {
+        'topics': ['decimals-fractions'],
+        'answer': 'D',
+        'insight': r"The same water fills $\frac56$ of the first and $\frac34$ of the second.",
+        'steps': [
+            r"$\frac56 V_1 = \frac34 V_2$, so $\frac{V_1}{V_2} = \frac34 \cdot \frac65 = \frac9{10}$.",
+            r"The answer is $\textbf{(D) } \frac{9}{10}$.",
+        ],
+        'trap': r"Dividing the other way, $\frac{10}9$, and picking the nearest choice.",
+    },
+    '2019-amc-10b-2': {
+        'topics': ['logic', 'factors-divisors'],
+        'answer': 'E',
+        'insight': r"A counterexample has $n$ not prime and $n - 2$ not prime.",
+        'steps': [
+            r"$11$ and $19$ are prime, so they don't test the statement. $15 - 2 = 13$ and $21 - 2 = 19$ are prime.",
+            r"$27 - 2 = 25$ is not. The answer is $\textbf{(E) } 27$.",
+        ],
+        'trap': r"Picking a prime $n$; the statement says nothing about primes.",
+    },
+    '2019-amc-10b-3': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'B',
+        'insight': r"With $s$ seniors, $0.6s$ seniors and $0.3(500 - s)$ others don't play, and together that is $0.468 \cdot 500 = 234$.",
+        'steps': [
+            r"$0.6s + 150 - 0.3s = 234$, so $s = 280$ and there are $220$ non-seniors.",
+            r"$70\%$ of them play: $154$. The answer is $\textbf{(B) } 154$.",
+        ],
+        'trap': r"Answering $66$, the non-seniors who don't play.",
+    },
+    '2019-amc-10b-4': {
+        'topics': ['linear-equations', 'sequences-series'],
+        'answer': 'A',
+        'insight': r"Write the progression as $a$, $a + d$, $a + 2d$ and collect $a$ and $d$.",
+        'steps': [
+            r"$ax + (a + d)y = a + 2d$ becomes $a(x + y - 1) + d(y - 2) = 0$.",
+            r"For every $a$ and $d$ that needs $y = 2$ and $x = -1$. The answer is $\textbf{(A) } (-1,2)$.",
+        ],
+        'trap': r"Trying one line, such as $x + 2y = 3$, and picking any choice that fits it.",
+    },
+    '2019-amc-10b-5': {
+        'topics': ['transformations', 'coordinate-geometry'],
+        'answer': 'E',
+        'insight': r"Reflection over $y = x$ swaps coordinates. Test each statement.",
+        'steps': [
+            r"(A) holds since swapping keeps both coordinates positive; (B) holds for any reflection; (C) and (D) hold because $AA'$ is always perpendicular to $y = x$.",
+            r"(E): $AB$ and $A'B'$ have slopes $m$ and $\frac1m$, which are perpendicular only when $AB$ is horizontal or vertical. The answer is $\textbf{(E) }$ Lines $AB$ and $A'B'$ are perpendicular to each other.",
+        ],
+        'trap': r"Choosing (A) by imagining the image in another quadrant; swapping $x$ and $y$ keeps them positive.",
+    },
+    '2019-amc-10b-6': {
+        'topics': ['factorials', 'quadratics'],
+        'answer': 'C',
+        'insight': r"Factor out $n!$: $(n+1)! + (n+2)! = n!(n+1)(1 + (n+2))$.",
+        'steps': [
+            r"$(n+1)(n+3) = 440 = 20 \cdot 22$, so $n = 19$.",
+            r"$1 + 9 = 10$. The answer is $\textbf{(C) } 10$.",
+        ],
+        'trap': r"Giving $n = 19$ itself; the question asks for its digit sum.",
+    },
+    '2019-amc-10b-7': {
+        'topics': ['gcd-lcm'],
+        'answer': 'B',
+        'insight': r"Casper's money is a multiple of $12$, $14$ and $15$, so of $\operatorname{lcm} = 420$, and also of $20$.",
+        'steps': [
+            r"$420$ is already a multiple of $20$, so the least amount is $420$ cents.",
+            r"$420 \div 20 = 21$. The answer is $\textbf{(B) } 21$.",
+        ],
+        'trap': r"Multiplying $12 \cdot 14 \cdot 15$ instead of taking the least common multiple.",
+    },
+    '2019-amc-10b-8': {
+        'topics': ['area', 'triangles'],
+        'answer': 'B',
+        'insight': r"An equilateral triangle of side $2$ has height $\sqrt3$, and that is half the square's side.",
+        'steps': [
+            r"The square has side $2\sqrt3$ and area $12$. The four triangles have area $4\sqrt3$.",
+            r"$12 - 4\sqrt3$. The answer is $\textbf{(B) } 12 - 4\sqrt{3}$.",
+        ],
+        'trap': r"Taking the square's side as $2$ from the triangles' sides.",
+    },
+    '2019-amc-10b-9': {
+        'topics': ['floor-ceiling', 'absolute-value'],
+        'answer': 'A',
+        'insight': r"Check integers, positive non-integers and negative non-integers separately.",
+        'steps': [
+            r"For an integer or a positive $x$, both terms are equal, so $f(x) = 0$.",
+            r"For $x = -k - t$ with $0 < t < 1$: $\lfloor |x| \rfloor = k$ but $|\lfloor x \rfloor| = k + 1$, so $f(x) = -1$. The answer is $\textbf{(A) }$ $\{-1, 0\}$.",
+        ],
+        'trap': r"Testing only integers and answering $\{0\}$.",
+    },
+    '2019-amc-10b-10': {
+        'topics': ['triangles', 'inequalities'],
+        'answer': 'A',
+        'insight': r"Area $100$ with base $10$ puts $C$ at height $20$, and the perimeter needs $AC + BC = 40$.",
+        'steps': [
+            r"At height $20$, $AC + BC$ is smallest when $C$ is above the midpoint: $2\sqrt{5^2 + 20^2} = 2\sqrt{425} \approx 41.2$.",
+            r"That is already more than $40$, so no such $C$ exists. The answer is $\textbf{(A) }0$.",
+        ],
+        'trap': r"Assuming an ellipse and a pair of lines always meet, which gives $4$.",
+    },
+    '2019-amc-10b-11': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'A',
+        'insight': r"Each jar holds $T$ marbles: $\frac T{10}$ green in Jar $1$ and $\frac T9$ in Jar $2$.",
+        'steps': [
+            r"$\frac{T}{10} + \frac T9 = 95$ gives $T = 450$. Jar $1$ has $405$ blue and Jar $2$ has $400$.",
+            r"The difference is $5$. The answer is $\textbf{(A) } 5$.",
+        ],
+        'trap': r"Splitting the $95$ green marbles evenly between the jars.",
+    },
+    '2019-amc-10b-12': {
+        'topics': ['digits-bases'],
+        'answer': 'C',
+        'insight': r"$2019 = 5613_7$. Lower the leading digit by one and make every other digit $6$.",
+        'steps': [
+            r"$4666_7$ is less than $5613_7$ and has digit sum $4 + 18 = 22$. Keeping a $5$ in front allows at most $5 + 5 + 6 + 6 = 22$ as well.",
+            r"The answer is $\textbf{(C) } 22$.",
+        ],
+        'trap': r"Using $6666_7 = 2400$, which is more than $2019$.",
+    },
+    '2019-amc-10b-13': {
+        'topics': ['statistics', 'casework'],
+        'answer': 'A',
+        'insight': r"The mean is $\frac{35 + x}{5}$; the median is $6$, $x$ or $8$ depending on where $x$ falls.",
+        'steps': [
+            r"Median $6$ ($x \le 6$): $x = -5$, which works. Median $x$ ($6 < x < 8$): $x = \frac{35}{4}$, out of range. Median $8$ ($x \ge 8$): $x = 5$, out of range.",
+            r"Only $-5$. The answer is $\textbf{(A) } -5$.",
+        ],
+        'trap': r"Keeping $\frac{35}{4}$ or $5$ without checking that $x$ is where that case assumed.",
+    },
+    '2019-amc-10b-14': {
+        'topics': ['factorials', 'divisibility'],
+        'answer': 'C',
+        'insight': r"$19!$ ends in exactly three zeros, and it is divisible by $9$ and $11$.",
+        'steps': [
+            r"Three factors of $5$ mean three trailing zeros, so $H = 0$.",
+            r"Digit sum $33 + T + M$ divisible by $9$, and alternating sum $M - T + 7$ divisible by $11$, give $T = 4$, $M = 8$.",
+            r"$T + M + H = 12$. The answer is $\textbf{(C) }12$.",
+        ],
+        'trap': r"Forgetting that $19!$ has exactly three factors of $5$, so $H$ is not left free.",
+    },
+    '2019-amc-10b-15': {
+        'topics': ['right-triangles', 'area'],
+        'answer': 'A',
+        'insight': r"The triangles can't have the same two legs (their areas differ), so a leg of one is the hypotenuse of the other.",
+        'steps': [
+            r"Let $T_1$ have legs $a, b$ and hypotenuse $h$, and $T_2$ have legs $a, h$. Then $ab = 2$ and $ah = 4$, so $h = 2b$.",
+            r"$h^2 = a^2 + b^2$ gives $a^2 = 3b^2$, and $a^2b^2 = 4$ gives $b^4 = \frac43$.",
+            r"The third sides are $b$ and $\sqrt{a^2 + h^2} = \sqrt7\,b$: $(\sqrt7 b^2)^2 = 7 \cdot \frac43 = \frac{28}3$. The answer is $\textbf{(A) } \frac{28}{3}$.",
+        ],
+        'trap': r"Making $T_2$'s hypotenuse equal to $T_1$'s leg $b$; that needs $b > $ both legs of $T_2$ and leads to a contradiction.",
+    },
+    '2019-amc-10b-16': {
+        'topics': ['right-triangles', 'angle-chasing', 'similar-triangles'],
+        'answer': 'A',
+        'insight': r"The two isosceles triangles have base angles $A$ and $B$, which add to $90^\circ$, so $\angle CDE = 90^\circ$.",
+        'steps': [
+            r"With $AC = CD = 4$ and $DE = EB = 3$, triangle $CDE$ is $3$-$4$-$5$, so $BC = 5 + 3 = 8$ and $AB = 4\sqrt5$.",
+            r"$AD = 2 \cdot AC \cos A = 2 \cdot 4 \cdot \frac{4}{4\sqrt5} = \frac8{\sqrt5}$, so $DB = 4\sqrt5 - \frac8{\sqrt5} = \frac{12}{\sqrt5}$.",
+            r"$AD : DB = 8 : 12 = 2 : 3$. The answer is $\textbf{(A) } 2:3$.",
+        ],
+        'trap': r"Assuming $D$ is the midpoint of $AB$ because $CD = AC$.",
+    },
+    '2019-amc-10b-17': {
+        'topics': ['probability', 'sequences-series'],
+        'answer': 'C',
+        'insight': r"By symmetry, red is higher exactly as often as green is, so find the chance of a tie.",
+        'steps': [
+            r"$P(\text{same bin}) = \sum_k 4^{-k} = \frac13$.",
+            r"$\frac12\left(1 - \frac13\right) = \frac13$. The answer is $\textbf{(C) } \frac{1}{3}$.",
+        ],
+        'trap': r"Answering $\frac12$ and forgetting ties.",
+    },
+    '2019-amc-10b-18': {
+        'topics': ['sequences-series', 'linear-equations'],
+        'answer': 'C',
+        'insight': r"In the limit he turns at the same two points: walking $\frac34$ of the way from $B$ to the gym lands at $A$, and $\frac34$ of the way from $A$ home lands at $B$.",
+        'steps': [
+            r"$A = B + \frac34(2 - B)$ and $B = \frac14 A$.",
+            r"So $A = \frac32 + \frac{A}{16}$, giving $A = \frac85$ and $B = \frac25$; $|A - B| = \frac65 = 1\frac15$. The answer is $\textbf{(C) } 1\frac{1}{5}$.",
+        ],
+        'trap': r"Walking $\frac34$ of the total $2$ km each time instead of $\frac34$ of the remaining distance.",
+    },
+    '2019-amc-10b-19': {
+        'topics': ['factors-divisors', 'basic-counting'],
+        'answer': 'C',
+        'insight': r"$100{,}000 = 2^5 5^5$, so products of two divisors are $2^a5^b$ with $0 \le a, b \le 10$: $121$ candidates.",
+        'steps': [
+            r"A product needs two distinct divisors. $2^0 5^0$, $2^{10} 5^0$, $2^0 5^{10}$ and $2^{10} 5^{10}$ can only be a divisor times itself.",
+            r"Every other $2^a5^b$ can be split two different ways. $121 - 4 = 117$. The answer is $\textbf{(C) }117$.",
+        ],
+        'trap': r"Removing every perfect square; most squares, like $100 = 4 \cdot 25$, also come from distinct divisors.",
+    },
+    '2019-amc-10b-20': {
+        'topics': ['area', 'circles'],
+        'answer': 'E',
+        'insight': r"The shaded area is the big circle minus the parts of the three semicircles inside it. The middle one is entirely inside.",
+        'steps': [
+            r"An outer semicircle (centre $(2,-1)$) meets the big circle only at $G$ above $AD$. Its part outside the big circle is $\int_{-1}^0 \left(2 - \sqrt{4 - y^2}\right)dy = 2 - \frac{\sqrt3}2 - \frac\pi3$, so the part inside is $\frac\pi4 - 2 + \frac{\sqrt3}2 + \frac\pi3$.",
+            r"Shaded: $4\pi - \frac\pi2 - 2\left(\frac{7\pi}{12} - 2 + \frac{\sqrt3}2\right) = \frac{7\pi}3 - \sqrt3 + 4$.",
+            r"$7 + 3 + 3 + 4 = 17$. The answer is $\textbf{(E) } 17$.",
+        ],
+        'trap': r"Forgetting that the big circle dips below $AD$; that part is shaded too.",
+    },
+    '2019-amc-10b-21': {
+        'topics': ['probability', 'sequences-series'],
+        'answer': 'B',
+        'insight': r"The flips must alternate until the end. A second tail before a second head forces the start $T, H, T$.",
+        'steps': [
+            r"After $THT$, the flips keep alternating and end with $HH$: $THTHH$, $THTHTHH$, and so on.",
+            r"$\frac1{2^5} + \frac1{2^7} + \cdots = \frac{1/32}{1 - 1/4} = \frac1{24}$. The answer is $\textbf{(B) } \frac{1}{24}$.",
+        ],
+        'trap': r"Stopping at $THTHH$ alone, which gives $\frac1{32}$.",
+    },
+    '2019-amc-10b-22': {
+        'topics': ['probability', 'recursion'],
+        'answer': 'B',
+        'insight': r"There are only two kinds of position: everyone at $\$1$, or $\$2, \$1, \$0$. From either, the chance of being at $\$1, \$1, \$1$ next is $\frac14$.",
+        'steps': [
+            r"From $(1,1,1)$, all three must give in a cycle: $\frac28 = \frac14$.",
+            r"From $(2,1,0)$, the player with $\$2$ must give to the one with nothing and the player with $\$1$ to the one with $\$2$: $\frac12 \cdot \frac12 = \frac14$.",
+            r"So after any bell the chance is $\frac14$. The answer is $\textbf{(B) } \frac{1}{4}$.",
+        ],
+        'trap': r"Trying to follow $2019$ rounds; the chance is the same after every one.",
+    },
+    '2019-amc-10b-23': {
+        'topics': ['circles', 'right-triangles', 'coordinate-geometry'],
+        'answer': 'C',
+        'insight': r"Tangents from one point are equal, so the meeting point $P = (p, 0)$ has $PA = PB$.",
+        'steps': [
+            r"$(6 - p)^2 + 169 = (12 - p)^2 + 121$ gives $p = 5$. The centre $O$ lies on line $PM$, with $M = (9, 12)$ the midpoint of $AB$.",
+            r"$AM = \sqrt{10}$ and $PM = 4\sqrt{10}$. In right triangle $PAO$ the altitude gives $AM^2 = PM \cdot MO$, so $MO = \frac{\sqrt{10}}4$.",
+            r"$r^2 = 10 + \frac{10}{16} = \frac{85}8$. The answer is $\textbf{(C) }\frac{85\pi}{8}$.",
+        ],
+        'trap': r"Using $PA^2 = 170$ as $r^2$; $PA$ is the tangent length, not the radius.",
+    },
+    '2019-amc-10b-24': {
+        'topics': ['sequences-series', 'recursion', 'estimation'],
+        'answer': 'C',
+        'insight': r"Track $y_n = x_n - 4$: $y_{n+1} = y_n \cdot \frac{x_n + 5}{x_n + 6}$.",
+        'steps': [
+            r"Since $4 < x_n \le 5$, each step multiplies $y$ by between $\frac9{10}$ and $\frac{10}{11}$, starting from $y_0 = 1$.",
+            r"Reaching $2^{-20}$ takes between $\frac{20\ln 2}{\ln(10/9)} \approx 132$ and $\frac{20 \ln 2}{\ln(11/10)} \approx 145$ steps.",
+            r"So $m$ is in $[81, 242]$. The answer is $\textbf{(C) } [81,242]$.",
+        ],
+        'trap': r"Thinking the gap halves each step and answering about $20$.",
+    },
+    '2019-amc-10b-25': {
+        'topics': ['combinations', 'casework'],
+        'answer': 'C',
+        'insight': r"Between consecutive $0$s there is a block of one or two $1$s.",
+        'steps': [
+            r"With $z$ zeros there are $z - 1$ blocks adding to $19 - z$, so $20 - 2z$ of them are $11$: $\binom{z-1}{20 - 2z}$ ways, for $7 \le z \le 10$.",
+            r"$1 + 35 + 28 + 1 = 65$. The answer is $\textbf{(C) }65$.",
+        ],
+        'trap': r"Allowing blocks of zero $1$s, which would put two $0$s together.",
     },
 }
 

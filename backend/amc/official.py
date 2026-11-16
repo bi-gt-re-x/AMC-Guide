@@ -72,8 +72,10 @@ def _math_to_dollars(text):
     # `\( ... \)` is inline math too (2023 AMC 10B #18 writes its choices so).
     text = re.sub(r'\\\((.*?)\\\)', lambda m: m.group(0) if not _outside_math(text, m.start())
                   else '$' + m.group(1).strip() + '$', text, flags=re.S)
-    # KaTeX has `array` but no `tabular`; `aligned` but no `align*` or `eqnarray`.
+    # KaTeX has `array` but no `tabular`; `aligned` but no `align*` or `eqnarray`;
+    # `\overgroup` but no `\overarc` (2019 AMC 10B #20).
     text = re.sub(r'\\(begin|end)\{tabular\}', r'\\\1{array}', text)
+    text = re.sub(r'\\overarc(?![A-Za-z])', r'\\overgroup', text)
     out, last = [], 0
     for m in re.finditer(r'\\begin\{(align|eqnarray)\*?\}(.*?)\\end\{\1\*?\}', text, flags=re.S):
         block = '\\begin{aligned}' + m.group(2).strip() + '\\end{aligned}'
@@ -81,6 +83,24 @@ def _math_to_dollars(text):
         out.append(text[last:m.start()] + ('\n$$' + block + '$$\n' if _outside_math(text, m.start()) else block))
         last = m.end()
     return ''.join(out) + text[last:]
+
+
+_EMPHASIS = {'i': r'\textit', 'em': r'\textit', 'b': r'\textbf', 'strong': r'\textbf', 'u': r'\underline'}
+
+
+def _emphasis_to_math(text):
+    """HTML emphasis (`<i><u>not</u></i>`, 2019 AMC 10B #5) as KaTeX, since the
+    page escapes plain text: `$\\textit{\\underline{\\text{not}}}$`."""
+    open_, close = '\x00', '\x01'
+    def latex(inner):
+        # Words become \text{...}; spans already converted keep their LaTeX.
+        return ''.join(part[1:-1] if part.startswith(open_) else (r'\text{' + part + '}' if part else '')
+                       for part in re.split('(%s[^%s]*%s)' % (open_, close, close), inner))
+    innermost = r'<(i|em|b|strong|u)>([^<]*?)</\1>'
+    while re.search(innermost, text, flags=re.I):
+        text = re.sub(innermost, lambda m: open_ + _EMPHASIS[m.group(1).lower()] + '{' + latex(m.group(2)) + '}' + close,
+                      text, flags=re.I)
+    return re.sub('%s([^%s]*)%s' % (open_, close, close), r'$\1$', text)
 
 
 def _clean_wiki(text):
@@ -95,6 +115,7 @@ def _clean_wiki(text):
     parts = re.split(r'(<(?:i|c)?math>.*?</(?:i|c)?math>|(?<!\\)\$\$.*?(?<!\\)\$\$|(?<!\\)\$.*?(?<!\\)\$)',
                      text, flags=re.S)
     text = ''.join(part if i % 2 else re.sub(r"'''?", '', part) for i, part in enumerate(parts))
+    text = _emphasis_to_math(text)
     text = re.sub(r'</?(?:center|div|span|p|br|small|big|sup|sub)[^>]*>', ' ', text, flags=re.I)
     text = re.sub(r'\{\{[^}]*\}\}', '', text)
     # Wiki list items (`* item`, `*item`) as bullet lines.

@@ -172,6 +172,8 @@ def test_wiki_source_with_imath_bullets_and_wrapped_lines():
     ('2021-fall-amc-10b', 'EBECEBCCCABDBCDDDEACEBDAE', set()),
     ('2021-fall-amc-10a', 'CEDBEBDBEBADDDCDDCABEBDEA', set()),
     ('2020-amc-10a', 'ECAECBCBBBCCBDEBECEDCAACA', set()),
+    ('2020-amc-10b', 'DEEDBBADDCDDBDDACBABBDCCA', set()),
+    ('2019-amc-10b', 'DEBAECBBAAACACAACCCEBBCCC', set()),
 ])
 def test_the_2024_and_2023_10a_are_written_up_against_their_keys(contest, key, unwritten):
     for n in range(1, 26):
@@ -224,3 +226,17 @@ def test_double_prime_in_math_and_choices_mixing_math_and_words():
     assert one['statement'] == "A special point $P'$ goes to $P''$."
     assert two['statement'] == 'Which?'
     assert two['choices'] == ['$x>%d$ and $y=z$' % i for i in range(5)]
+
+
+def test_emphasis_tags_become_math_and_overarc_becomes_overgroup():
+    # 2019 AMC 10B #5: "Which ... is <i><u>not</u></i> always true?" The page
+    # escapes plain text, so the tags would show; they become KaTeX instead.
+    # #20 writes arcs as \overarc, which KaTeX lacks; \overgroup draws the same.
+    source = ('==Problem 1==\nWhich is <i><u>not</u></i> true, and <b>which</b> is?\n\n'
+              '<math>\\textbf{(A) }1\\qquad\\textbf{(B) }2\\qquad\\textbf{(C) }3\\qquad\\textbf{(D) }4\\qquad\\textbf{(E) }5</math>\n'
+              '==Problem 2==\nArc <math>\\overarc{AEB}</math>?\n\n'
+              '<math>\\textbf{(A) }1\\qquad\\textbf{(B) }2\\qquad\\textbf{(C) }3\\qquad\\textbf{(D) }4\\qquad\\textbf{(E) }5</math>\n')
+    one, two = official.parse_contest(source, 'AMC 10')
+    assert one['statement'] == ('Which is $\\textit{\\underline{\\text{not}}}$ true, '
+                                'and $\\textbf{\\text{which}}$ is?')
+    assert two['statement'] == 'Arc $\\overgroup{AEB}$?'
