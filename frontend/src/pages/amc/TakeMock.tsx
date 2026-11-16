@@ -15,7 +15,7 @@
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import { ErrorState, Loading } from '@/components';
+import { useNotice, ErrorState, Loading } from '@/components';
 import { MathText } from '@/components/Amc/MathText';
 import { AnswerInput, DiagramNote, clock, useWindowActive, windowActive } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
@@ -68,6 +68,7 @@ export default function TakeMock() {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   const submitted = useRef(false);
+  const { notify, confirm } = useNotice();
   const active = useWindowActive();
   const running = Boolean(sitting) && active;
 
@@ -105,18 +106,22 @@ export default function TakeMock() {
       if (reply.success) {
         writeSitting(contestId, null);
         announceAmcChanged();
+        notify('Handed in', { body: 'Your paper is graded. Misses and blanks are in Review.' });
         navigate(`/mocks/${reply.id}`, { replace: true });
       } else {
         submitted.current = false;
         setMessage(reply.message);
+        notify('Could not hand it in', { body: reply.message, tone: 'bad' });
       }
     } catch (cause) {
       submitted.current = false;
-      setMessage(cause instanceof Error ? cause.message : 'Could not hand it in. Try again.');
+      const why = cause instanceof Error ? cause.message : 'Could not hand it in. Try again.';
+      setMessage(why);
+      notify('Could not hand it in', { body: why, tone: 'bad' });
     } finally {
       setBusy(false);
     }
-  }, [contestId, elapsed, minutes, navigate, sitting]);
+  }, [contestId, elapsed, minutes, navigate, notify, sitting]);
 
   // Time is up: hand it in as it stands.
   useEffect(() => {
@@ -200,16 +205,29 @@ export default function TakeMock() {
   const toggleFlag = () =>
     setSitting((s) => (s ? { ...s, flags: flagged ? s.flags.filter((n) => n !== at) : [...s.flags, at] } : s));
 
-  const handIn = () => {
+  const handIn = async () => {
     const blank = problems.length - answered;
-    const ask = blank
-      ? `Hand in now? ${blank} problem${blank === 1 ? ' is' : 's are'} blank.`
-      : 'Hand in your answers?';
-    if (window.confirm(ask)) void submit();
+    const yes = await confirm({
+      title: 'Hand in your paper?',
+      body: blank
+        ? `${blank} problem${blank === 1 ? ' is' : 's are'} still blank. You can't change answers after this.`
+        : "Every problem is answered. You can't change answers after this.",
+      confirmLabel: 'Hand in',
+      cancelLabel: 'Keep working',
+    });
+    if (yes) void submit();
   };
-  const abandon = () => {
-    if (!window.confirm('Leave this contest? Your answers will be discarded and nothing is graded.')) return;
+  const abandon = async () => {
+    const yes = await confirm({
+      title: 'Leave this contest?',
+      body: 'Your answers are discarded and nothing is graded.',
+      confirmLabel: 'Leave and discard',
+      cancelLabel: 'Stay',
+      danger: true,
+    });
+    if (!yes) return;
     writeSitting(contestId, null);
+    notify('Contest discarded', { tone: 'info' });
     navigate(back);
   };
 
@@ -224,8 +242,8 @@ export default function TakeMock() {
         </span>
         <span className="am-muted" style={{ fontSize: 13 }}>{answered}/{problems.length} answered</span>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button type="button" className="am-btn am-btn-ghost am-btn-sm" onClick={abandon}>Leave</button>
-          <button type="button" className="am-btn am-btn-primary am-btn-sm" disabled={busy} onClick={handIn}>
+          <button type="button" className="am-btn am-btn-ghost am-btn-sm" onClick={() => void abandon()}>Leave</button>
+          <button type="button" className="am-btn am-btn-primary am-btn-sm" disabled={busy} onClick={() => void handIn()}>
             Hand in
           </button>
         </div>
@@ -255,7 +273,7 @@ export default function TakeMock() {
             {at < problems.length ? (
               <button type="button" className="am-btn" onClick={() => setAt(at + 1)}>Next →</button>
             ) : (
-              <button type="button" className="am-btn am-btn-primary" onClick={handIn}>Hand in</button>
+              <button type="button" className="am-btn am-btn-primary" onClick={() => void handIn()}>Hand in</button>
             )}
           </div>
         </article>

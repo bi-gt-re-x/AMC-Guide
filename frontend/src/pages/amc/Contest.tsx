@@ -19,7 +19,7 @@
  */
 import { useState, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
-import { ErrorState, Loading } from '@/components';
+import { useNotice, ErrorState, Loading } from '@/components';
 import { CategoryDot, DiagramNote, Difficulty, PageHeader, Solution, StatusPill } from '@/components/Amc/bits';
 import { MathText } from '@/components/Amc/MathText';
 import { Importer } from '@/components/Amc/Importer';
@@ -161,6 +161,7 @@ function Locked({ count, minutes, takeTo, onUnlock }: {
 export default function Contest() {
   const { contestId = '' } = useParams();
   const { data, error, loading, reload } = useApi(() => amc.contest(contestId), [contestId]);
+  const { notify, confirm } = useNotice();
   useDocumentTitle(data?.contest.name ?? 'Contest');
   const [score, setScore] = useState('');
   const [note, setNote] = useState('');
@@ -200,9 +201,15 @@ export default function Contest() {
   const c = data.contest;
 
   async function remove(id: string) {
-    if (!window.confirm('Delete this score? This cannot be undone.')) return;
-    await amc.deleteMock(id);
+    const yes = await confirm({ title: 'Delete this score?', body: 'This cannot be undone.', confirmLabel: 'Delete', danger: true });
+    if (!yes) return;
+    const reply = await amc.deleteMock(id);
+    if (!reply.success) {
+      notify('Could not delete the score', { body: reply.message, tone: 'bad' });
+      return;
+    }
     announceAmcChanged();
+    notify('Score deleted', { tone: 'info' });
     reload();
   }
 
@@ -221,6 +228,7 @@ export default function Contest() {
     setScore('');
     setNote('');
     announceAmcChanged();
+    notify('Score logged', { body: `${value} on the ${data?.contest.name ?? 'paper'}.` });
     reload();
   }
 
@@ -245,9 +253,20 @@ export default function Contest() {
   );
 
   async function unimport() {
-    if (!window.confirm('Remove this contest from Summit for every account? Answers already given are kept.')) return;
-    await amc.removeImport(contestId);
+    const yes = await confirm({
+      title: 'Remove this contest from Summit?',
+      body: 'It goes for every account. Answers already given are kept.',
+      confirmLabel: 'Remove',
+      danger: true,
+    });
+    if (!yes) return;
+    const reply = await amc.removeImport(contestId);
+    if (!reply.success) {
+      notify('Could not remove the contest', { body: reply.message, tone: 'bad' });
+      return;
+    }
     announceAmcChanged();
+    notify('Contest removed', { tone: 'info' });
     reload();
   }
 

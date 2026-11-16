@@ -13,7 +13,7 @@
  * downloads it.
  */
 import { Suspense, lazy, useEffect, useState } from 'react';
-import { Navigate, Route, Routes, useLocation } from 'react-router-dom';
+import { Navigate, Route, Routes, useLocation, useNavigationType } from 'react-router-dom';
 import { Ambient, AppBoundary, Loading, Rail, Toasts, Topbar, VerifyBanner } from '@/components';
 import { RequireAccount } from './RequireAccount';
 import { useAuth, usePinnedViewport } from '@/hooks';
@@ -51,6 +51,33 @@ const MockResult = lazy(() => import('@/pages/amc/MockResult'));
 const StudyPlan = lazy(() => import('@/pages/amc/StudyPlan'));
 const Analytics = lazy(() => import('@/pages/amc/Analytics'));
 const Search = lazy(() => import('@/pages/amc/Search'));
+
+/**
+ * Every app page's code, fetched once the browser is idle after sign-in, so
+ * moving between pages never waits on a download (and never shows the loading
+ * screen for one). Vite hands back the same module the lazy routes above ask
+ * for, so nothing is fetched twice.
+ */
+const PAGE_LOADERS = [
+  () => import('@/pages/amc/Review'), () => import('@/pages/amc/Problems'), () => import('@/pages/amc/Problem'),
+  () => import('@/pages/amc/Topics'), () => import('@/pages/amc/Topic'), () => import('@/pages/amc/Contests'),
+  () => import('@/pages/amc/MockContests'), () => import('@/pages/amc/Contest'), () => import('@/pages/amc/TakeMock'),
+  () => import('@/pages/amc/MockResult'), () => import('@/pages/amc/StudyPlan'), () => import('@/pages/amc/Analytics'),
+  () => import('@/pages/amc/Search'), () => import('@/pages/amc/Posts'), () => import('@/pages/Settings'),
+];
+
+function whenIdle(work: () => void): () => void {
+  const w = window as Window & {
+    requestIdleCallback?: (cb: () => void, opts?: { timeout: number }) => number;
+    cancelIdleCallback?: (id: number) => void;
+  };
+  if (w.requestIdleCallback) {
+    const id = w.requestIdleCallback(work, { timeout: 3000 });
+    return () => w.cancelIdleCallback?.(id);
+  }
+  const id = window.setTimeout(work, 1200);
+  return () => window.clearTimeout(id);
+}
 
 /**
  * Where the productivity app's pages used to be. Each had a URL long enough
@@ -185,6 +212,22 @@ export default function App() {
      rather than on the calendar because the calendar's own route redirects and
      a redirect drops the fragment. See hooks/useVoid.ts. */
   useVoid();
+
+  /* A new page starts at its top, as following a link to a new document
+     would; back and forward leave the place alone. Only the path counts, so a
+     filter or a tab that changes the query keeps the reader where they were. */
+  const navigationType = useNavigationType();
+  useEffect(() => {
+    if (navigationType !== 'POP') window.scrollTo({ top: 0, left: 0, behavior: 'auto' });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- on a new path only
+  }, [pathname]);
+
+  /* Fetch the other pages' code while nothing else is happening. */
+  const { status } = useAuth();
+  useEffect(() => {
+    if (status !== 'signed-in') return undefined;
+    return whenIdle(() => PAGE_LOADERS.forEach((load) => void load().catch(() => {})));
+  }, [status]);
 
   /* The paper look loads on demand (styles/paperLook.ts). A visit that began
      on the landing page doesn't have it yet, so the first app page holds on

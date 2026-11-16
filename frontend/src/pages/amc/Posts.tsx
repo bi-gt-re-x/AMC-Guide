@@ -20,7 +20,7 @@
  * Edit and Delete.
  */
 import { useState, type ReactNode } from 'react';
-import { ErrorState, Loading } from '@/components';
+import { useNotice, ErrorState, Loading } from '@/components';
 import { Empty, PageHeader } from '@/components/Amc/bits';
 import { MathText } from '@/components/Amc/MathText';
 import { useApi, useDocumentTitle } from '@/hooks';
@@ -202,6 +202,7 @@ function ProblemComposer({ editing, kindSwitch, onSaved, onCancel }: {
     : BLANK);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
+  const { notify } = useNotice();
   const set = (patch: Partial<PostDraft>) => setDraft((d) => ({ ...d, ...patch }));
   const aime = draft.level === 'AIME';
   const choices = draft.choices ?? ['', '', '', '', ''];
@@ -214,6 +215,7 @@ function ProblemComposer({ editing, kindSwitch, onSaved, onCancel }: {
       const reply = editing ? await amc.editPost(editing.id, body) : await amc.createPost(body);
       if (reply.success) {
         setDraft(BLANK);
+        notify(editing ? 'Problem updated' : 'Problem posted');
         onSaved();
       } else {
         setMessage(reply.message);
@@ -269,23 +271,29 @@ function TestComposer({ editing, kindSwitch, onSaved, onCancel }: {
   const [open, setOpen] = useState(0);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
+  const { notify, confirm } = useNotice();
   const count = TEST_LENGTH[level];
   const gaps = problems.map((p) => problemGap(level, p));
   const ready = gaps.filter((g) => !g).length;
   const started = problems.some((p) => p.statement.trim() || p.answer || p.solution.trim());
 
-  function pickLevel(l: Level) {
+  async function pickLevel(l: Level) {
     if (l === level) return;
     // AMC 10 and AMC 12 papers have the same shape; the AIME's is different, so its problems start over.
     const reshape = (l === 'AIME') !== (level === 'AIME');
-    if (reshape && started && !window.confirm(`Switching to ${l} clears the problems below. Go ahead?`)) return;
+    if (reshape && started && !(await confirm({
+      title: `Switch to the ${l}?`, body: 'The problems below are cleared.', confirmLabel: 'Switch', danger: true,
+    }))) return;
     setLevel(l);
     if (reshape) { setProblems([]); setIssues([]); setOpen(0); }
   }
 
   async function read() {
     setMessage('');
-    if (started && !window.confirm(`Replace the ${count} problems below with what you pasted?`)) return;
+    if (started && !(await confirm({
+      title: 'Replace the problems below?', body: `The ${count} problems are replaced with what you pasted.`,
+      confirmLabel: 'Replace', danger: true,
+    }))) return;
     setBusy(true);
     try {
       const reply = await amc.parseTest(level, source, key);
@@ -315,6 +323,7 @@ function TestComposer({ editing, kindSwitch, onSaved, onCancel }: {
       const reply = editing ? await amc.editPost(editing.id, body) : await amc.createPost(body);
       if (reply.success) {
         setTitle(''); setProblems([]); setSource(''); setKey(''); setIssues([]); setOpen(0);
+        notify(editing ? 'Test updated' : 'Test posted');
         onSaved();
       } else {
         setMessage(reply.message);
@@ -431,11 +440,18 @@ function Composer({ editing, onSaved, onCancel }: {
 function PostHead({ post, meta, onEdit, onDeleted, onError }: {
   post: Post; meta: string; onEdit: () => void; onDeleted: () => void; onError: (m: string) => void;
 }) {
+  const { notify, confirm } = useNotice();
   async function remove() {
     const what = post.kind === 'test' ? 'this test' : 'this problem';
-    if (!window.confirm(`Delete ${what} for everyone? This cannot be undone.`)) return;
+    const yes = await confirm({
+      title: `Delete ${what} for everyone?`, body: 'This cannot be undone.', confirmLabel: 'Delete', danger: true,
+    });
+    if (!yes) return;
     const reply = await amc.deletePost(post.id);
-    if (reply.success) onDeleted(); else onError(reply.message);
+    if (reply.success) {
+      notify(post.kind === 'test' ? 'Test deleted' : 'Problem deleted', { tone: 'info' });
+      onDeleted();
+    } else onError(reply.message);
   }
   return (
     <header className="am-post-head">

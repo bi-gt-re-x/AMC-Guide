@@ -10,6 +10,8 @@ export { Rail, STATS_CHANGED } from './Rail';
 /* The bell's two faces: the panel inside the top bar and the pop-ups over the
    page. See components/Notifications. */
 export { NotificationPanel, Toasts } from './Notifications';
+export { NoticesProvider, useNotice } from './Notices/Notices';
+export type { ConfirmOptions, NoticeApi, NoticeTone } from './Notices/Notices';
 export { Topbar } from './Topbar';
 /* Chrome for the same reason the bar is: one strip for the app, drawn by
    App.tsx. See components/VerifyBanner. */

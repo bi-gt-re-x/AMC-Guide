@@ -1486,3 +1486,15 @@ html[data-theme="dark"] .am-predict-tag { color: #0d1117; }
 @media (max-width: 640px) {
     .am-weak .am-card-head { flex-direction: column; align-items: flex-start; }
 }
+
+/* Page to page: each page eases in rather than snapping, quick enough not to
+   feel like waiting. Only on arrival (the element is new per route), so a page
+   re-rendering as you work in it doesn't replay it. */
+.amc-page { animation: am-page-in 240ms cubic-bezier(.22, 1, .36, 1) both; }
+@keyframes am-page-in {
+    from { opacity: 0; transform: translateY(6px); }
+    to { opacity: 1; transform: none; }
+}
+@media (prefers-reduced-motion: reduce) {
+    .amc-page { animation: none; }
+}

@@ -9,7 +9,7 @@
  */
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
-import { ErrorState, Loading } from '@/components';
+import { useNotice, ErrorState, Loading } from '@/components';
 import { AIHelp } from '@/components/Amc/AIHelp';
 import { MathText } from '@/components/Amc/MathText';
 import {
@@ -47,6 +47,7 @@ export default function Problem() {
   const weakNext = weakAt >= 0 ? weakSet[weakAt + 1] : undefined;
   const navigate = useNavigate();
   const { data, error, loading, reload } = useApi(() => amc.problem(problemId), [problemId]);
+  const { notify } = useNotice();
   useDocumentTitle(data ? data.problem.sources[0] ? `${data.problem.sources[0].name} #${data.problem.sources[0].number}` : 'Problem' : 'Problem');
 
   const [answer, setAnswer] = useState('');
@@ -124,9 +125,15 @@ export default function Problem() {
   }
 
   async function toggleReview() {
-    if (data?.review?.review_status === 'active') await amc.removeReview(problemId);
-    else await amc.addReview(problemId);
+    const removing = data?.review?.review_status === 'active';
+    const reply = removing ? await amc.removeReview(problemId) : await amc.addReview(problemId);
+    if (!reply.success) {
+      notify('Could not update Review', { body: reply.message, tone: 'bad' });
+      return;
+    }
     announceAmcChanged();
+    notify(removing ? 'Removed from Review' : 'Added to Review',
+           removing ? { tone: 'info' } : { body: 'It comes back on the review schedule.' });
     reload();
   }
 
@@ -135,6 +142,8 @@ export default function Problem() {
     if (reply.success) {
       setNoteSaved(true);
       window.setTimeout(() => setNoteSaved(false), 1600);
+    } else {
+      notify('Could not save the note', { body: reply.message, tone: 'bad' });
     }
   }
 

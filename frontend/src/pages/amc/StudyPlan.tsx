@@ -7,7 +7,7 @@
  */
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ErrorState, Loading } from '@/components';
+import { useNotice, ErrorState, Loading } from '@/components';
 import { CategoryDot, Meter, PageHeader } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
 import {
@@ -79,6 +79,7 @@ function PlanForm({
   const [message, setMessage] = useState('');
   const [busy, setBusy] = useState(false);
   const { data: topicData } = useApi(() => amc.topics(), []);
+  const { notify } = useNotice();
   const topics = (topicData?.categories ?? [])
     .flatMap((c) => c.topics)
     .filter((t) => t.levels.includes(form.target));
@@ -100,6 +101,7 @@ function PlanForm({
       const reply = await amc.savePlan({ ...form, details });
       if (reply.success) {
         announceAmcChanged();
+        notify(initial ? 'Plan updated' : 'Plan built', { body: 'Your weeks are laid out below.' });
         onSaved(reply, !initial || initial.target !== form.target);
       } else setMessage(reply.message);
     } finally {
@@ -333,6 +335,7 @@ function CoachCard({
 export default function StudyPlan() {
   useDocumentTitle('Study Plan');
   const { data, error, loading, reload } = useApi(() => amc.plan(), []);
+  const { notify, confirm } = useNotice();
   const [payload, setPayload] = useState<PlanPayload | null>(null);
   const [editing, setEditing] = useState(false);
   const [coaching, setCoaching] = useState(false);
@@ -401,9 +404,20 @@ export default function StudyPlan() {
   }
 
   async function clear() {
-    if (!window.confirm('Delete your study plan? Your answers and review log are kept.')) return;
-    await amc.clearPlan();
+    const yes = await confirm({
+      title: 'Delete your study plan?',
+      body: 'Your answers and review log are kept.',
+      confirmLabel: 'Delete plan',
+      danger: true,
+    });
+    if (!yes) return;
+    const reply = await amc.clearPlan();
+    if (!reply.success) {
+      notify('Could not delete the plan', { body: reply.message, tone: 'bad' });
+      return;
+    }
     announceAmcChanged();
+    notify('Study plan deleted', { tone: 'info' });
     reload();
   }
 

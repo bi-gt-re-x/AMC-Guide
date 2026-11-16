@@ -10,6 +10,7 @@
  */
 import { useState } from 'react';
 import { useApi } from '@/hooks';
+import { useNotice } from '@/components';
 import { amc, announceAmcChanged, type BundleRow } from '@/services/amc';
 
 export function BulkImporter({ onSaved }: { onSaved: () => void }) {
@@ -19,6 +20,7 @@ export function BulkImporter({ onSaved }: { onSaved: () => void }) {
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   const [open, setOpen] = useState(false);
+  const { notify } = useNotice();
 
   async function run(save: boolean) {
     setBusy(true);
@@ -34,6 +36,7 @@ export function BulkImporter({ onSaved }: { onSaved: () => void }) {
       if (save) {
         setMessage(`Saved ${reply.saved} paper${reply.saved === 1 ? '' : 's'}.`);
         setText('');
+        notify(`Saved ${reply.saved} paper${reply.saved === 1 ? '' : 's'}`);
         announceAmcChanged();
         reload();
         onSaved();

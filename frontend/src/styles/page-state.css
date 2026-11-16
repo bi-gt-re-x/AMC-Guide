@@ -40,6 +40,14 @@
 .page-state p { margin: 0; }
 
 /* --- loading ------------------------------------------------------------ */
+/* Held back a moment, then faded in: most pages are ready inside that moment,
+   and a spinner that flashes for a tenth of a second reads as a flicker, not
+   as waiting. */
+.page-state-loading { animation: pageStateIn 220ms ease-out 180ms both; }
+@keyframes pageStateIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
 .page-spinner {
     width: 28px;
     height: 28px;
@@ -56,6 +64,7 @@
 
 /* A spinner that cannot spin is a dot. Say "loading" and hold still instead. */
 @media (prefers-reduced-motion: reduce) {
+    .page-state-loading { animation: none; }
     .page-spinner {
         animation: none;
         border-top-color: #EAEAEA;

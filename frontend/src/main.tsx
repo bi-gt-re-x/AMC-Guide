@@ -22,7 +22,7 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
 import App from './App';
-import { RootBoundary } from '@/components';
+import { NoticesProvider, RootBoundary } from '@/components';
 import {
   AuthProvider,
   NotificationsProvider,
@@ -93,7 +93,12 @@ void start.then(() => createRoot(container).render(
                       reads is six numbers' worth of aggregates counted in SQL.
                       See context/NotificationsProvider. */}
                   <NotificationsProvider>
-                    <App />
+                    {/* The in-app answer to an action ("Score deleted") and
+                        the "are you sure?" before one, in place of the
+                        browser's own dialogs. See components/Notices. */}
+                    <NoticesProvider>
+                      <App />
+                    </NoticesProvider>
                   </NotificationsProvider>
               </StatsProvider>
             </SettingsProvider>

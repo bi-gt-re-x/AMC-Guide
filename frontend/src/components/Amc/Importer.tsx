@@ -9,6 +9,7 @@
  */
 import { useState } from 'react';
 import { MathText } from './MathText';
+import { useNotice } from '@/components';
 import { amc, announceAmcChanged, type ImportPreview, type PastContest } from '@/services/amc';
 
 export function Importer({ contest, onSaved }: { contest: PastContest; onSaved: () => void }) {
@@ -18,6 +19,7 @@ export function Importer({ contest, onSaved }: { contest: PastContest; onSaved: 
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
   const aime = contest.level === 'AIME';
+  const { notify } = useNotice();
 
   async function run(save: boolean) {
     setBusy(true);
@@ -28,6 +30,7 @@ export function Importer({ contest, onSaved }: { contest: PastContest; onSaved: 
         setPreview(reply);
         if (save) {
           announceAmcChanged();
+          notify(`${contest.name} imported`, { body: 'It stays locked until you sit it.' });
           onSaved();
         }
       } else {
