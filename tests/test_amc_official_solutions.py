@@ -8,6 +8,7 @@ from backend.amc import catalog, official, official_solutions
 from backend.amc.official_solutions import SOLUTIONS
 
 KEY_2026_10A = 'BADACAACDCDDCBBDCDCCCADDB'
+KEY_2026_12A = 'ADACACACEBDECCACADDDDCDDB'
 
 
 @pytest.fixture(autouse=True)
@@ -36,6 +37,10 @@ def test_each_solution_ends_on_its_answer_and_is_clean_tex(pid):
 
 def test_the_2026_amc_10a_is_written_up_against_its_key():
     assert [SOLUTIONS['2026-amc-10a-%d' % n]['answer'] for n in range(1, 26)] == list(KEY_2026_10A)
+
+
+def test_the_2026_amc_12a_is_written_up_against_its_key():
+    assert [SOLUTIONS['2026-amc-12a-%d' % n]['answer'] for n in range(1, 26)] == list(KEY_2026_12A)
 
 
 def test_a_solution_is_withheld_when_the_key_disagrees():

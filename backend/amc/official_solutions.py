@@ -11,7 +11,7 @@ key the solution is left off rather than shown beside the wrong answer
 (`for_problem`). tests/test_amc_official_solutions.py checks that each one ends
 on its answer.
 
-Written so far: the 2026 AMC 10A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
+Written so far: the 2026 AMC 10A and 12A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
 10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
 Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, and the
 2018 AMC 10A. A problem whose numbers are only in a picture the
@@ -266,7 +266,7 @@ SOLUTIONS = {
         'insight': r'There are only $10$ ways to cut a $3 \times 3$ grid into three connected trios, so list them.',
         'steps': [
             r'Two cuts are straight: three rows or three columns. The other eight use L-shapes, and listing them gives $10$ partitions in all.',
-            r"A section wins a point only with at least two X's. All $5$ X's are in the top two rows, so two winning sections must share them two and two (or two and three).",
+            r"A section wins a point only with at least two X's. The grid has just $4$ X's, all in the top two rows, so two winning sections must take exactly two each.",
             r'Four partitions earn two points: the three rows; the top-left L with the top-right L; the top row with an L-section through the middle; and the left column with the L through the top-right.',
             r'So $4$ of the $10$ win, a fraction of $\frac{2}{5}$. The answer is $\textbf{(C)}\ \frac{2}{5}$.',
         ],
@@ -319,6 +319,306 @@ SOLUTIONS = {
             r'It can be done: room $k$ is skipped on $k - 1$ days, $190 = 2 \cdot 95$ skips in all, and no room is skipped more than $19$ times, so two skips a day can be spread out without repeating a room. The answer is $\textbf{(B)}\ 95$.',
         ],
         'trap': r'Solving only $20T = 210 + 18d$ for the smallest $d$ ($d = 5$) and ignoring that room $1$ can take one nut a day.',
+    },
+    # ------------------------------------------------------------------ 2026 AMC 12A
+    # Shared with the 2026 AMC 10A: 1-5 (10A 2-5, 7), 6 (10A 10), 10 (10A 15),
+    # 11 (10A 16), 16 (10A 21), 17 (10A 22) and 20 (10A 24).
+    '2026-amc-12a-1': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'A',
+        'insight': r'The $27\%$ is taken on the pre-tax price, but the question asks for a share of what is actually paid.',
+        'steps': [
+            r'Say the price before tax is $100$. The tax is $27$ and the customer pays $127$.',
+            r'The tax is $\frac{27}{127} \approx 0.213$ of the amount paid.',
+            r'That rounds to $21\%$. The answer is $\textbf{(A)}\ 21\%$.',
+        ],
+        'trap': r'Picking $27\%$: that is the tax as a share of the price before tax, not of the total.',
+    },
+    '2026-amc-12a-2': {
+        'topics': ['similar-triangles', 'coordinate-geometry', 'area'],
+        'answer': 'D',
+        'insight': r'Triangles $FBE$ and $FDA$ are similar with ratio $BE : DA = 1 : 2$, so $F$ sits a third of the way from $B$ to $D$.',
+        'steps': [
+            r'Put $B = (0,0)$, $C = (24,0)$, $A = (0,24)$ and $D = (24,24)$, so $E = (12, 0)$.',
+            r'Line $BD$ is $y = x$ and line $AE$ is $y = 24 - 2x$. They meet where $x = 24 - 2x$, at $F = (8, 8)$.',
+            r'Triangle $BEF$ has base $BE = 12$ along the bottom side and height $8$, so its area is $\frac12 \cdot 12 \cdot 8 = 48$.',
+            r'The answer is $\textbf{(D)}\ 48$.',
+        ],
+        'trap': r'Using height $12$, as if $F$ were the midpoint of $\overline{BD}$. It is a third of the way along, not halfway.',
+    },
+    '2026-amc-12a-3': {
+        'topics': ['polygons', 'angle-chasing'],
+        'answer': 'A',
+        'insight': r'Think in exterior angles: they always add up to $360^\circ$, and a $190^\circ$ angle has an exterior angle of $-10^\circ$.',
+        'steps': [
+            r'A $150^\circ$ angle turns the walker $30^\circ$; a $190^\circ$ angle turns them $10^\circ$ the other way.',
+            r'Pair each $150^\circ$ angle with a $190^\circ$ angle: each pair turns $30^\circ - 10^\circ = 20^\circ$ in all.',
+            r'The pairs must turn $360^\circ$, so there are $360 \div 20 = 18$ pairs, which is $36$ sides.',
+            r'(Check: $18 \cdot 150^\circ + 18 \cdot 190^\circ = 6120^\circ = 180^\circ \cdot 34$.) The answer is $\textbf{(A)}\ 36$.',
+        ],
+        'trap': r'Treating the $190^\circ$ angles as if they turned the same way as the others, which gives $360 \div 40 = 9$ pairs.',
+    },
+    '2026-amc-12a-4': {
+        'topics': ['sequences-series', 'statistics'],
+        'answer': 'C',
+        'insight': r'Adding a number equal to the current mean leaves the mean unchanged, so the sequence freezes at $a_3$.',
+        'steps': [
+            r'$a_3$ is the mean of $94$ and $190$, which is $142$.',
+            r'Now the first three terms have mean $142$, so $a_4 = 142$, and adding $142$ keeps the mean at $142$.',
+            r'Every later term is $142$ in the same way, so $a_{10} = 142$.',
+            r'The answer is $\textbf{(C)}\ 142$.',
+        ],
+        'trap': r'Grinding out ten terms by hand as if the mean kept moving, and slipping on the arithmetic.',
+    },
+    '2026-amc-12a-5': {
+        'topics': ['diophantine', 'linear-equations'],
+        'answer': 'A',
+        'insight': r'Subtracting the equations removes $x$ and leaves $y + z$ alone.',
+        'steps': [
+            r'Subtract the first equation from the second: $2y + 2z = 10$, so $y + z = 5$ and then $x = 26$.',
+            r'Positive integers with $y + z = 5$: $(1,4), (2,3), (3,2), (4,1)$.',
+            r'Each gives one triple, so there are $4$. The answer is $\textbf{(A)}\ 4$.',
+        ],
+        'trap': r'Allowing $y = 0$ or $z = 0$, which gives $6$; the problem says positive integers.',
+    },
+    '2026-amc-12a-6': {
+        'topics': ['statistics', 'sequences-series'],
+        'answer': 'C',
+        'insight': r'Use the sum-of-squares formula for the mean and the middle square for the median, then cancel $n + 1$.',
+        'steps': [
+            r'The mean of $1^2, 2^2, \dots, n^2$ is $\frac{(n+1)(2n+1)}{6}$. With $n$ odd the median is the middle term, $\left(\frac{n+1}{2}\right)^2$.',
+            r'We need $\frac{(n+1)(2n+1)}{6} = 1.32 \cdot \frac{(n+1)^2}{4}$. Dividing by $n + 1$: $\frac{2n+1}{6} = 0.33(n+1)$, so $0.02n = 0.98$ and $n = 49$.',
+            r'With $n$ even the median is $\frac{(n/2)^2 + (n/2+1)^2}{2}$, and the same equation becomes $n^2 - 48n - 148 = 0$, whose discriminant $2896$ is not a perfect square. So no even $n$ works.',
+            r'(Check: the median of the $49$ squares is $625$ and the mean is $\frac{50 \cdot 99}{6} = 825 = 1.32 \cdot 625$.) The answer is $\textbf{(C)}\ 49$.',
+        ],
+        'trap': r'Using the median of $1, 2, \dots, n$ instead of the middle square.',
+    },
+    '2026-amc-12a-7': {
+        'topics': ['complex-numbers', 'exponents'],
+        'answer': 'A',
+        'insight': r'Square first: $(1 \pm i)^2 = \pm 2i$, which turns the $20$th power into a $10$th power of something easy.',
+        'steps': [
+            r'$(1+i)^2 = 2i$, so $(1+i)^{20} = (2i)^{10} = 1024 \cdot i^{10} = -1024$.',
+            r'$(1-i)^2 = -2i$, so $(1-i)^{20} = (-2i)^{10} = 1024 \cdot i^{10} = -1024$.',
+            r'The sum is $-2048$. The answer is $\textbf{(A)}\ -2048$.',
+        ],
+        'trap': r'Expecting the two conjugate terms to cancel and answering $0$. Conjugates add to twice the real part, and here the real part is not $0$.',
+    },
+    '2026-amc-12a-8': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'C',
+        'insight': r'The two percentages only have to add to $120$, and an AMC 12 percentage point is three times as many students as an AMC 10 one.',
+        'steps': [
+            r'Let $p$ and $q$ be the AMC 10 and AMC 12 turnout percentages. The school averaged them, so $p + q = 120$.',
+            r'The number who sat is $\frac{25p}{100} + \frac{75q}{100} = \frac{25p + 75(120 - p)}{100} = 90 - \frac{p}{2}$, which shrinks as $p$ grows.',
+            r'$p$ can be at most $100$, so take $p = 100$ and $q = 20$: all $25$ AMC 10 students and $15$ of the $75$ AMC 12 students. That is $40$.',
+            r'The answer is $\textbf{(C)}\ 40$.',
+        ],
+        'trap': r'Answering $60$, as if the averaged percentage were the true one.',
+    },
+    '2026-amc-12a-9': {
+        'topics': ['nonlinear-systems', 'absolute-value'],
+        'answer': 'E',
+        'insight': r'The second equation factors as $x(y^2 - 16) = 0$ once you clear the $y$, so either $x = 0$ or $y = \pm 4$.',
+        'steps': [
+            r'$y \neq 0$, and multiplying by $y$ gives $16x = xy^2$, so $x = 0$ or $y^2 = 16$.',
+            r'If $x = 0$: $|{-y^2}| = 4$ gives $y = \pm 2$. That is $2$ pairs.',
+            r'If $y = \pm 4$: $|x^2 - 16| = 4$ gives $x^2 = 20$ or $x^2 = 12$, so $4$ values of $x$ for each of the $2$ values of $y$. That is $8$ pairs.',
+            r'In all $2 + 8 = 10$. The answer is $\textbf{(E)}\ 10$.',
+        ],
+        'trap': r'Dividing both sides by $x$ and losing the $x = 0$ solutions, which leaves $8$.',
+    },
+    '2026-amc-12a-10': {
+        'topics': ['recursion', 'gcd-lcm'],
+        'answer': 'B',
+        'insight': r'Run it backward. Each fraction has exactly one parent, found the way the Euclidean algorithm finds a gcd.',
+        'steps': [
+            r'Every node is less than $1$, and a node $\frac{p}{q}$ has children $\frac{p}{p+q}$ and $\frac{q}{p+q}$. So a node $\frac{x}{y}$ came from the parent made of $x$ and $y - x$, smaller one on top.',
+            r'$\frac{20}{27} \leftarrow \frac{7}{20} \leftarrow \frac{7}{13} \leftarrow \frac{6}{7} \leftarrow \frac{1}{6} \leftarrow \frac{1}{5} \leftarrow \frac14 \leftarrow \frac13 \leftarrow \frac12$.',
+            r'The chain reaches the top node, so $\frac{20}{27}$ is in the tree, $8$ steps down: level $8$.',
+            r'The answer is $\textbf{(B)}\ 8$.',
+        ],
+        'trap': r'Trying to build the tree forward; it doubles every level and you will not reach level $8$ in time.',
+    },
+    '2026-amc-12a-11': {
+        'topics': ['probability', 'casework', 'combinations'],
+        'answer': 'D',
+        'insight': r'To score low you have to waste balls on a color that has already hit its cap.',
+        'steps': [
+            r'If at least $3$ reds are drawn, red gives $3$ and the other balls give at least $1$, so the score is at least $4$. It is $4$ only with all $6$ reds and one other ball.',
+            r'With $2$ or fewer reds, at least $5$ balls are black or white. The lowest such score is $4$, from $0$ reds, $4$ blacks and $3$ whites, or $0$ reds, $3$ blacks and $4$ whites.',
+            r'So the lowest score is $4$. The draws that give it: $6$ reds and $1$ black ($4$ ways), $6$ reds and $1$ white ($4$), $4$ blacks and $3$ whites ($4$), $3$ blacks and $4$ whites ($4$). That is $16$ draws.',
+            r'Out of $\binom{14}{7} = 3432$, the probability is $\frac{16}{3432} = \frac{2}{429}$. The answer is $\textbf{(D)}\ \frac{2}{429}$.',
+        ],
+        'trap': r'Finding only the all-reds draws ($\frac{8}{3432}$) and missing the black-and-white ones.',
+    },
+    '2026-amc-12a-12': {
+        'topics': ['modular-arithmetic'],
+        'answer': 'E',
+        'insight': r'Every modulus divides $12$, so check the twelve remainders mod $12$ once.',
+        'steps': [
+            r'Mod $12$: $x \equiv 0 \pmod 2$ covers $0, 2, 4, 6, 8, 10$; $x \equiv 0 \pmod 3$ covers $0, 3, 6, 9$; $x \equiv 1 \pmod 4$ covers $1, 5, 9$.',
+            r'$x \equiv 5 \pmod 6$ covers $5, 11$, and $x \equiv 7 \pmod{12}$ covers $7$.',
+            r'Together that is every remainder from $0$ to $11$, so every integer satisfies at least one congruence: all $2026$ of them.',
+            r'The answer is $\textbf{(E)}\ 2026$.',
+        ],
+        'trap': r'Reaching for inclusion-exclusion over five overlapping sets and slipping on one of the overlaps.',
+    },
+    '2026-amc-12a-13': {
+        'topics': ['probability', 'permutations'],
+        'answer': 'C',
+        'insight': r'Random spots make a random order. So the board increases exactly when the four rolls are distinct and land in the one right order.',
+        'steps': [
+            r'The four rolls are all different with probability $\frac{8 \cdot 7 \cdot 6 \cdot 5}{8^4} = \frac{1680}{4096} = \frac{105}{256}$.',
+            r'Choosing empty spots at random puts the four numbers in a uniformly random order, and only $1$ of the $4! = 24$ orders is increasing.',
+            r'So the probability is $\frac{105}{256} \cdot \frac{1}{24} = \frac{35}{2048}$.',
+            r'The answer is $\textbf{(C)}\ \frac{35}{2048}$.',
+        ],
+        'trap': r'Answering $\frac{1}{24}$ and forgetting that a repeated roll can never be strictly increasing.',
+    },
+    '2026-amc-12a-14': {
+        'topics': ['solid-geometry', 'linear-equations'],
+        'answer': 'C',
+        'insight': r'Write the inside of the two joined boxes in terms of $a$, $b$, $c$; it has to be the box $a \times b \times c$ again.',
+        'steps': [
+            r'One box is open on a $b \times c$ face, so the walls take $2$ off $b$ and $c$ but only $1$ off the depth $a$: the inside is $(b-2) \times (c-2) \times (a-1)$.',
+            r'Two boxes joined at their open faces enclose $(b-2) \times (c-2) \times (2a-2)$, and this must be $a \times b \times c$ in some order.',
+            r'$b - 2$ and $c - 2$ cannot be $b$ or $c$ themselves, so $b - 2 = a$, $c - 2 = b$ and $2a - 2 = c$. Then $2a - 2 = a + 4$, so $a = 6$, $b = 8$, $c = 10$.',
+            r'$a + b + c = 24$. The answer is $\textbf{(C)}\ 24$.',
+        ],
+        'trap': r'Taking $2$ off the depth too, as if the box were closed on both $b \times c$ faces.',
+    },
+    '2026-amc-12a-15': {
+        'topics': ['trigonometry', 'logarithms'],
+        'answer': 'A',
+        'insight': r'$\sin(a+b)\sin(a-b) = \sin^2 a - \sin^2 b$, so the cosines never come in.',
+        'steps': [
+            r'Expanding, $\sin(a+b)\sin(a-b) = \sin^2 a \cos^2 b - \cos^2 a \sin^2 b = \sin^2 a - \sin^2 b$.',
+            r'That is $\frac{1}{16} - \frac{1}{64} = \frac{3}{64}$, and $\log_2 \frac{3}{64} = \log_2 3 - 6 \approx 1.58 - 6 = -4.42$.',
+            r'The greatest integer less than $-4.42$ is $-5$.',
+            r'The answer is $\textbf{(A)}\ -5$.',
+        ],
+        'trap': r'Rounding $-4.42$ toward zero and answering $-4$.',
+    },
+    '2026-amc-12a-16': {
+        'topics': ['casework', 'probability'],
+        'answer': 'C',
+        'insight': r'There are only $10$ ways to cut a $3 \times 3$ grid into three connected trios, so list them.',
+        'steps': [
+            r'Two cuts are straight: three rows or three columns. The other eight use L-shapes, and listing them gives $10$ partitions in all.',
+            r"A section wins a point only with at least two X's. The grid has just $4$ X's, all in the top two rows, so two winning sections must take exactly two each.",
+            r'Four partitions earn two points: the three rows; the top-left L with the top-right L; the top row with an L-section through the middle; and the left column with the L through the top-right.',
+            r'So $4$ of the $10$ win, a fraction of $\frac{2}{5}$. The answer is $\textbf{(C)}\ \frac{2}{5}$.',
+        ],
+        'trap': r"Treating mirror images as the same partition. The X's and O's make them different, so all $10$ count.",
+    },
+    '2026-amc-12a-17': {
+        'topics': ['conics', 'transformations'],
+        'answer': 'A',
+        'insight': r'Stretch the picture so the ellipses become circles: tangent circles have centers exactly two radii apart.',
+        'steps': [
+            r'Neighbors in a row are $4$ apart and touch, so each ellipse has horizontal semi-axis $2$. Call the vertical semi-axis $b$.',
+            r'Shrink widths by $2$ and heights by $b$. Every ellipse becomes a circle of radius $1$, so touching neighbors end up $2$ apart.',
+            r'$O = (0,0)$ and $A = (2, 4.5)$ touch, and become $(0,0)$ and $\left(1, \frac{4.5}{b}\right)$. So $1 + \frac{20.25}{b^2} = 4$ and $b = \frac{3\sqrt3}{2}$.',
+            r'The major axis is $2b = 3\sqrt3$, so $m + p = 6$. The answer is $\textbf{(A)}\ 6$.',
+        ],
+        'trap': r'Answering with the semi-axis $\frac{3\sqrt3}{2}$, or reading the $9$ as the major axis.',
+    },
+    '2026-amc-12a-18': {
+        'topics': ['solid-geometry', 'circles', 'right-triangles'],
+        'answer': 'D',
+        'insight': r'The distances from $O$ to three perpendicular planes through $P$ are the coordinates of $O$ with $P$ as the origin.',
+        'steps': [
+            r'A plane at distance $d$ from $O$ cuts a circle of radius $\sqrt{81 - d^2}$. So the three distances satisfy $d^2 = 81 - 49 = 32$, $81 - 16 = 65$ and $81 - 9 = 72$.',
+            r'Put $P$ at the origin with the planes as the coordinate planes. Then $O$ has coordinates $(\pm d_1, \pm d_2, \pm d_3)$.',
+            r'$OP^2 = 32 + 65 + 72 = 169$, so $OP = 13$.',
+            r'The answer is $\textbf{(D)}\ 13$.',
+        ],
+        'trap': r'Adding the squared radii instead ($49 + 16 + 9 = 74$) and treating that as $OP^2$.',
+    },
+    '2026-amc-12a-19': {
+        'topics': ['trigonometry'],
+        'answer': 'D',
+        'insight': r'Pair $\sin x$ with $\sin 3x$ and $1$ with $\cos 2x$: both sides then share the factor $2\cos x + 1$.',
+        'steps': [
+            r'$\sin x + \sin 3x = 2\sin 2x \cos x$, so the left side is $\sin 2x\,(2\cos x + 1)$. And $1 + \cos 2x = 2\cos^2 x$, so the right side is $\cos x\,(2\cos x + 1)$.',
+            r'The equation becomes $(2\cos x + 1)(\sin 2x - \cos x) = 0$, that is $(2\cos x + 1)\cos x\,(2\sin x - 1) = 0$.',
+            r'On $[0, 2\pi]$: $\cos x = -\frac12$ at $\frac{2\pi}{3}, \frac{4\pi}{3}$; $\cos x = 0$ at $\frac{\pi}{2}, \frac{3\pi}{2}$; $\sin x = \frac12$ at $\frac{\pi}{6}, \frac{5\pi}{6}$. These six are all different.',
+            r'The answer is $\textbf{(D)}\ 6$.',
+        ],
+        'trap': r'Dividing by $\cos x$ or by $2\cos x + 1$ and losing the solutions where it is zero.',
+    },
+    '2026-amc-12a-20': {
+        'topics': ['polynomials', 'basic-counting'],
+        'answer': 'D',
+        'insight': r'Subtract $f(3-\sqrt5)$ from $f(3+\sqrt5)$ and factor out $2\sqrt5$: what is left is a linear condition on the coefficients.',
+        'steps': [
+            r'Let $f(x) = x^3 + ax^2 + bx + c$, $r = 3 + \sqrt5$ and $s = 3 - \sqrt5$, so $r + s = 6$ and $rs = 4$.',
+            r'$f(r) - f(s) = (r - s)\left(r^2 + rs + s^2 + a(r + s) + b\right)$, and $r^2 + rs + s^2 = (r+s)^2 - rs = 32$. So the condition is $32 + 6a + b = 0$.',
+            r'$b = -32 - 6a$ must lie in $[-10, 10]$, so $a \in \{-7, -6, -5, -4\}$. The constant $c$ can be any of the $21$ integers.',
+            r'That is $4 \cdot 21 = 84$ polynomials. The answer is $\textbf{(D)}\ 84$.',
+        ],
+        'trap': r'Forgetting that $c$ can be anything, which leaves only the $4$ choices of $a$.',
+    },
+    '2026-amc-12a-21': {
+        'topics': ['geometric-probability', 'polygons', 'area'],
+        'answer': 'D',
+        'insight': r'A piece on one side has area proportional to the distance from $P$ to that side, and opposite sides are a fixed distance apart.',
+        'steps': [
+            r'Let the side be $s$ and the apothem $h$. The hexagon has area $3sh$, and the piece on a side at distance $d$ from $P$ has area $\frac12 sd$. It is at least a tenth of the whole exactly when $d \ge \frac35 h$.',
+            r'Distances to opposite sides add up to $2h$, so both pieces of an opposite pair are happy when $\frac35 h \le d \le \frac75 h$: $P$ lies within $\frac25 h$ of the center line between them.',
+            r'The three pairs give three bands that meet in a regular hexagon with apothem $\frac25 h$, similar to the cookie.',
+            r'Its share of the area is $\left(\frac25\right)^2 = \frac{4}{25}$. The answer is $\textbf{(D)}\ \frac{4}{25}$.',
+        ],
+        'trap': r'Answering $\frac25$, the ratio of lengths, instead of squaring it for the ratio of areas.',
+    },
+    '2026-amc-12a-22': {
+        'topics': ['recursion', 'basic-counting', 'graph-theory'],
+        'answer': 'C',
+        'insight': r'A subflock is a tree where each bird has $0$, $1$ or $2$ ordered followers, and those are counted by the Motzkin numbers.',
+        'steps': [
+            r'Let $T(n)$ count subflocks of $n$ birds. The front bird has no follower, one follower (a subflock of $n-1$), or two (left and right subflocks with $n - 1$ birds between them).',
+            r'So $T(1) = 1$ and $T(n) = T(n-1) + \sum_{i=1}^{n-2} T(i)\,T(n-1-i)$, which gives $T(1), \dots, T(6) = 1, 1, 2, 4, 9, 21$.',
+            r'The leader has two followers, whose subflocks hold the other $7$ birds: $T(1)T(6) + T(2)T(5) + T(3)T(4) + T(4)T(3) + T(5)T(2) + T(6)T(1) = 21 + 9 + 8 + 8 + 9 + 21 = 76$.',
+            r'The answer is $\textbf{(C)}\ 76$.',
+        ],
+        'trap': r'Counting a bird with a single follower twice, as if that follower could be on the left or the right.',
+    },
+    '2026-amc-12a-23': {
+        'topics': ['polynomials', 'sequences-series'],
+        'answer': 'D',
+        'insight': r'The product telescopes to $\frac{1}{1-x}$, so the job is to write $\frac{1}{1-x}$ as a quadratic using $x^3 = 1 - x^2$.',
+        'steps': [
+            r'$(1-x)(1+x)(1+x^2)\cdots(1+x^{2^k}) = 1 - x^{2^{k+1}} \to 1$ as $0 < x < 1$, so the product is $\frac{1}{1-x}$.',
+            r'We need $(1-x)(ax^2 + bx + c) = 1$. Expanding and replacing $x^3$ by $1 - x^2$: $(2a - b)x^2 + (b - c)x + (c - a) = 1$.',
+            r'So $b = 2a$, $c = b$ and $c - a = 1$, which give $a = 1$, $b = c = 2$. (Check: $x \approx 0.755$, and $\frac{1}{1-x} \approx 4.08 \approx x^2 + 2x + 2$.)',
+            r'$a + b + c = 5$. The answer is $\textbf{(D)}\ 5$.',
+        ],
+        'trap': r'Forgetting to reduce $x^3$ with $x^3 + x^2 = 1$ and matching coefficients of a cubic, which has no solution.',
+    },
+    '2026-amc-12a-24': {
+        'topics': ['circles', 'coordinate-geometry', 'quadrilaterals'],
+        'answer': 'D',
+        'insight': r'Put $AB$ on the $x$-axis. Each circle sits in a right-angle corner, so its center is $(r, r)$ or $(4 - r, r)$, and tangency to $DC$ fixes each radius in terms of $AD$.',
+        'steps': [
+            r'Let $A = (0,0)$, $B = (4,0)$, $D = (0,p)$. Since $CD = 5$ and $AB = 4$, $C$ is $3$ higher than $D$ (or lower; the mirror case is the same): $C = (4, p+3)$, and line $DC$ is $3x - 4y + 4p = 0$.',
+            r'$\omega_1$ has center $(r_1, r_1)$, and distance $r_1$ to $DC$ gives $\frac{4p - r_1}{5} = r_1$, so $r_1 = \frac{2p}{3}$. In the same way $\omega_2$ at $(4 - r_2, r_2)$ gives $r_2 = 1 + \frac{p}{3}$.',
+            r'Write $t = \frac{p}{3}$, so $r_1 = 2t$, $r_2 = 1 + t$. Tangency: $(4 - r_1 - r_2)^2 + (r_2 - r_1)^2 = (r_1 + r_2)^2$, that is $10(1-t)^2 = (1+3t)^2$, or $t^2 - 26t + 9 = 0$. The circles fit side by side only if $t < 1$, so $t = 13 - 4\sqrt{10}$.',
+            r'The distance between centers is $r_1 + r_2 = 1 + 3t = 40 - 12\sqrt{10}$, so $m + n + p = 40 + 12 + 10 = 62$. The answer is $\textbf{(D)}\ 62$.',
+        ],
+        'trap': r'Taking the other root $t = 13 + 4\sqrt{10}$, which makes the circles far too big for a trapezoid only $4$ wide.',
+    },
+    '2026-amc-12a-25': {
+        'topics': ['modular-arithmetic', 'factors-divisors'],
+        'answer': 'B',
+        'insight': r'The number of square roots of $1$ mod $m$ is a power of $2$, so "at least $50$" really means at least $64$.',
+        'steps': [
+            r'By the Chinese remainder theorem the count multiplies over prime powers: an odd prime power gives $2$ roots ($\pm 1$), $2$ gives $1$, $4$ gives $2$, and $2^k$ with $k \ge 3$ gives $4$. Since $0$ is never a root, all of them lie between $1$ and $m - 1$.',
+            r'The count is a power of $2$, so we need $64 = 2^6$. With $8$ and four odd primes: $8 \cdot 3 \cdot 5 \cdot 7 \cdot 11 = 9240$. With $4$ and five odd primes: $60060$. With six odd primes: $255255$.',
+            r'Higher powers of a prime add nothing but size, so the least $m$ is $9240$, whose digits add to $9 + 2 + 4 + 0 = 15$.',
+            r'The answer is $\textbf{(B)}\ 15$.',
+        ],
+        'trap': r'Forgetting that a factor of $8$ doubles the count twice, and settling for $4 \cdot 3 \cdot 5 \cdot 7 \cdot 11 \cdot 13 = 60060$.',
     },
     # ------------------------------------------------------------------ 2025 AMC 10A
     '2025-amc-10a-1': {
