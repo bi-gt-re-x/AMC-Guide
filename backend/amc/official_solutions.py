@@ -12,8 +12,8 @@ key the solution is left off rather than shown beside the wrong answer
 on its answer.
 
 Written so far: the 2026 AMC 10A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
-10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, and the 2021
-Fall AMC 10B. A problem whose numbers are only in a picture the
+10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
+Fall AMC 10A and 10B, and the 2020 AMC 10A. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -3281,6 +3281,520 @@ SOLUTIONS = {
             r"Unscaled: $\frac{18}{10} + \frac{5}{3} = \frac{52}{15}$, so $m + n = 67$. The answer is $\textbf{(E) } 67$.",
         ],
         'trap': r"Finding only the $t = \frac34$ rectangle drawn in the figure; $R$ can also be a square.",
+    },
+    # ------------------------------------------------------------------ 2021 Fall AMC 10A
+    '2021-fall-amc-10a-1': {
+        'topics': ['arithmetic'],
+        'answer': 'C',
+        'insight': r"$2112 - 2021 = 91 = 7 \cdot 13$, and $169 = 13^2$.",
+        'steps': [
+            r"$\frac{91^2}{13^2} = 7^2 = 49$.",
+            r"The answer is $\textbf{(C) } 49$.",
+        ],
+        'trap': r"Forgetting the square and answering $7$.",
+    },
+    '2021-fall-amc-10a-2': {
+        'topics': ['area', 'word-problems'],
+        'answer': 'E',
+        'insight': r"Find which side was shortened: $3 \times 6 = 18$, so it was the $4$-inch side.",
+        'steps': [
+            r"Shortening the $6$-inch side instead gives $4 \times 5 = 20$.",
+            r"The answer is $\textbf{(E) } 20$.",
+        ],
+        'trap': r"Answering $18$ again; the other side gives a different area.",
+    },
+    '2021-fall-amc-10a-3': {
+        'topics': ['solid-geometry'],
+        'answer': 'D',
+        'insight': r"The clay can be reshaped, so only volume matters.",
+        'steps': [
+            r"The cube holds $216$; each ball is $\frac43\pi \cdot 8 = \frac{32\pi}{3} \approx 33.5$.",
+            r"$216 \div 33.5 \approx 6.4$, so $6$ balls fit. The answer is $\textbf{(D) } 6$.",
+        ],
+        'trap': r"Packing rigid balls of diameter $4$, which fit only one to an edge.",
+    },
+    '2021-fall-amc-10a-4': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'B',
+        'insight': r"Work in minutes: $30$ mph is $2$ minutes a mile, $40$ mph is $1\frac12$ and $20$ mph is $3$.",
+        'steps': [
+            r"Route A: $6 \cdot 2 = 12$ minutes. Route B: $4\frac12 \cdot 1\frac12 + \frac12 \cdot 3 = 6\frac34 + 1\frac12 = 8\frac14$ minutes.",
+            r"The difference is $3\frac34$. The answer is $\textbf{(B) } 3 \frac{3}{4}$.",
+        ],
+        'trap': r"Driving all $5$ miles of Route B at $40$ mph and then adding the school zone on top.",
+    },
+    '2021-fall-amc-10a-5': {
+        'topics': ['divisibility', 'factors-divisors'],
+        'answer': 'E',
+        'insight': r"Rule out the choices with quick divisibility tests.",
+        'steps': [
+            r"$A = 5$ makes it a multiple of $5$. The digit sum $5 + A$ is a multiple of $3$ for $A = 1$ and $A = 7$.",
+            r"For $A = 3$, the alternating digit sum $2 - 0 + 2 - 1 + 0 - 3 = 0$, so $11$ divides $202103$.",
+            r"That leaves $A = 9$. The answer is $\textbf{(E) } 9$.",
+        ],
+        'trap': r"Stopping at the digit-sum test and picking $3$; $202103 = 11 \cdot 18373$.",
+    },
+    '2021-fall-amc-10a-6': {
+        'topics': ['word-problems', 'arithmetic'],
+        'answer': 'B',
+        'insight': r"From pole $1$ to pole $41$ there are $40$ gaps, not $41$.",
+        'steps': [
+            r"One gap is $5280 \div 40 = 132$ feet. A stride is $132 \div 44 = 3$ feet and a leap $132 \div 12 = 11$ feet.",
+            r"$11 - 3 = 8$. The answer is $\textbf{(B) } 8$.",
+        ],
+        'trap': r"Dividing the mile by $41$ poles instead of $40$ gaps.",
+    },
+    '2021-fall-amc-10a-7': {
+        'topics': ['angle-chasing', 'triangles'],
+        'answer': 'D',
+        'insight': r"Triangle $DEF$ is isosceles, so find its apex angle at $D$.",
+        'steps': [
+            r"Around $D$: $\angle FDE = 360^\circ - 90^\circ - 110^\circ = 160^\circ$, so the base angles are $10^\circ$ each.",
+            r"$\angle AFE = 180^\circ - \angle DFE = 170^\circ$. The answer is $\textbf{(D) } 170$.",
+        ],
+        'trap': r"Taking $\angle FDE = 110^\circ - 90^\circ = 20^\circ$; $E$ is on the far side of line $CD$.",
+    },
+    '2021-fall-amc-10a-8': {
+        'topics': ['digits-bases', 'diophantine'],
+        'answer': 'B',
+        'insight': r"$10a + b = a + b^2$ becomes $9a = b(b-1)$.",
+        'steps': [
+            r"$b(b-1)$ must be a multiple of $9$ with $b \le 9$: only $b = 9$, giving $72 = 9a$ and $a = 8$.",
+            r"Only $89$ works. The answer is $\textbf{(B) } 1$.",
+        ],
+        'trap': r"Counting $b = 0$ or $b = 1$, which give $a = 0$ and so no two-digit number.",
+    },
+    '2021-fall-amc-10a-9': {
+        'topics': ['probability', 'parity'],
+        'answer': 'E',
+        'insight': r"Only parity matters: an even roll has probability $\frac34$, an odd one $\frac14$.",
+        'steps': [
+            r"The sum is even when both rolls match in parity: $\left(\frac34\right)^2 + \left(\frac14\right)^2 = \frac{10}{16}$.",
+            r"The answer is $\textbf{(E) } \dfrac58$.",
+        ],
+        'trap': r"Using $\frac34$ for each even face rather than for all three together.",
+    },
+    '2021-fall-amc-10a-10': {
+        'topics': ['statistics', 'expected-value'],
+        'answer': 'B',
+        'insight': r"A random student is more likely to be in a big class, so weight each class by its size.",
+        'steps': [
+            r"$t = \frac{50 + 20 + 20 + 5 + 5}{5} = 20$ and $s = \frac{50^2 + 20^2 + 20^2 + 5^2 + 5^2}{100} = 33.5$.",
+            r"$t - s = -13.5$. The answer is $\textbf{(B) } {-}13.5$.",
+        ],
+        'trap': r"Thinking $t = s$ because both average the same five numbers.",
+    },
+    '2021-fall-amc-10a-11': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'A',
+        'insight': r"Measure in Emily's steps. If the ship moves $r$ steps for each of hers, walking with it she covers the ship plus its motion.",
+        'steps': [
+            r"With the ship: $210 = L + 210r$. Against it: $42 = L - 42r$.",
+            r"Subtracting, $168 = 252r$, so $r = \frac23$ and $L = 210 - 140 = 70$. The answer is $\textbf{(A) } 70$.",
+        ],
+        'trap': r"Averaging $210$ and $42$ to get $126$.",
+    },
+    '2021-fall-amc-10a-12': {
+        'topics': ['modular-arithmetic', 'digits-bases'],
+        'answer': 'D',
+        'insight': r"$9 \equiv -1 \pmod 5$, so the digits count with alternating signs, starting with $+$ at the units.",
+        'steps': [
+            r"From the units up the digits are $2, 5, 0, 0, 0, 0, 6, 0, 0, 7, 2$: $2 - 5 + 6 - 7 + 2 = -2$.",
+            r"$-2 \equiv 3 \pmod 5$. The answer is $\textbf{(D) } 3$.",
+        ],
+        'trap': r"Adding the digits as if $9 \equiv 1$; that is the rule for $8$ or for $3$, not $5$.",
+    },
+    '2021-fall-amc-10a-13': {
+        'topics': ['probability', 'combinations'],
+        'answer': 'D',
+        'insight': r"With $k$ black balls, each black ball differs from $6 - k$ others, which must be at least $3$.",
+        'steps': [
+            r"So $k \le 3$, and the same for white gives $k \ge 3$: exactly three of each.",
+            r"$\frac{\binom63}{64} = \frac{20}{64} = \frac5{16}$. The answer is $\textbf{(D) } \frac{5}{16}$.",
+        ],
+        'trap': r"Reading more than half of $5$ as at least $2$ instead of at least $3$.",
+    },
+    '2021-fall-amc-10a-14': {
+        'topics': ['coordinate-geometry', 'absolute-value', 'quadratics'],
+        'answer': 'D',
+        'insight': r"The second equation says $|x| + |y| = 3$ or $5$: two diamonds. The first is the parabola $y = 3 - \frac{x^2}3$.",
+        'steps': [
+            r"The parabola passes through $(0,3)$ and $(\pm3, 0)$, all corners of the small diamond, and between them it stays outside it ($3 - \frac{x^2}3 \ge 3 - |x|$). That is $3$ points.",
+            r"Its vertex $(0,3)$ is inside the big diamond, so it leaves it once on each side, through the lower edges: $2$ points.",
+            r"$3 + 2 = 5$. The answer is $\textbf{(D) } 5$.",
+        ],
+        'trap': r"Taking only $|x| + |y| - 4 = 1$ and missing the square root's negative case.",
+    },
+    '2021-fall-amc-10a-15': {
+        'topics': ['circles', 'cyclic-quadrilaterals'],
+        'answer': 'C',
+        'insight': r"Let $O$ be the centre of the tangent circle. $\angle ABO = \angle ACO = 90^\circ$, so $A, B, O, C$ lie on the circle with diameter $AO$.",
+        'steps': [
+            r"$AO^2 = AB^2 + OB^2 = 54 + 50 = 104$.",
+            r"The circle through $A, B, C$ has area $\pi \cdot \frac{104}{4} = 26\pi$. The answer is $\textbf{(C) } 26\pi$.",
+        ],
+        'trap': r"Using $AO$ as the radius instead of the diameter, which gives $104\pi$.",
+    },
+    '2021-fall-amc-10a-16': {
+        'topics': ['floor-ceiling', 'functions', 'graphs-transformations'],
+        'answer': 'D',
+        'insight': r"Replace $x$ by $1 - x$ and see what happens.",
+        'steps': [
+            r"$f(1 - x) = |\lfloor 1 - x \rfloor| - |\lfloor x \rfloor| = -f(x)$.",
+            r"So $(x, y)$ on the graph puts $(1 - x, -y)$ on it: symmetry about $\left(\frac12, 0\right)$. The answer is $\textbf{(D) }$ the point $\left(\dfrac12, 0\right)$.",
+        ],
+        'trap': r"Checking only a few integer points; at integers $f$ looks symmetric about other things too.",
+    },
+    '2021-fall-amc-10a-17': {
+        'topics': ['polygons', 'coordinate-geometry'],
+        'answer': 'D',
+        'insight': r"On a flat panel, height changes in step with position, and in a regular hexagon $\vec{BC} = \vec{AO}$ where $O$ is the centre.",
+        'steps': [
+            r"So $h(O) - h(A) = h(C) - h(B) = 1$, giving $h(O) = 13$.",
+            r"$E$ is opposite $B$ through $O$, so $h(E) = 2 \cdot 13 - 9 = 17$. The answer is $\textbf{(D) } 17$.",
+        ],
+        'trap': r"Assuming the heights change by the same amount around the hexagon, step by step.",
+    },
+    '2021-fall-amc-10a-18': {
+        'topics': ['casework', 'basic-counting'],
+        'answer': 'C',
+        'insight': r"The four sections form a cycle: each borders two others and is diagonal to the third. Fix the two diagonal sections first.",
+        'steps': [
+            r"Call corn/wheat and soybeans/potatoes partners. The other two sections each need a crop that isn't a partner of either fixed one.",
+            r"If the diagonal pair is the same crop ($4$ ways), each other section has $3$ choices: $4 \cdot 9 = 36$. Otherwise ($12$ ways) two crops are ruled out, leaving $2$: $12 \cdot 4 = 48$.",
+            r"$36 + 48 = 84$. The answer is $\textbf{(C) } 84$.",
+        ],
+        'trap': r"Treating diagonal sections as bordering each other.",
+    },
+    '2021-fall-amc-10a-19': {
+        'topics': ['area', 'circles'],
+        'answer': 'A',
+        'insight': r"Inside, the disk sweeps a frame $2$ wide but misses a little at each corner. Outside, it sweeps four $s \times 2$ strips and four quarter circles of radius $2$.",
+        'steps': [
+            r"Inside: $s^2 - (s - 4)^2 - 4\left(1 - \frac\pi4\right) = 8s - 20 + \pi$. Outside: $8s + 4\pi$.",
+            r"$8s + 4\pi = 2(8s - 20 + \pi)$ gives $s = 5 + \frac\pi4$, so $a + b + c = 10$. The answer is $\textbf{(A) } 10$.",
+        ],
+        'trap': r"Forgetting the unswept corners inside, where the disk can't reach into the right angle.",
+    },
+    '2021-fall-amc-10a-20': {
+        'topics': ['quadratics', 'inequalities'],
+        'answer': 'B',
+        'insight': r"Neither has two distinct real roots means $b^2 \le 4c$ and $c^2 \le 4b$.",
+        'steps': [
+            r"Multiplying, $b^2c^2 \le 16bc$, so $bc \le 16$; with both conditions only small values work.",
+            r"Checking: $(1,1), (1,2), (2,1), (2,2), (3,3), (4,4)$. The answer is $\textbf{(B) } 6$.",
+        ],
+        'trap': r"Using $b^2 < 4c$; a double root is allowed, so equality counts.",
+    },
+    '2021-fall-amc-10a-21': {
+        'topics': ['probability', 'combinations'],
+        'answer': 'E',
+        'insight': r"Both probabilities have the same $5^{20}$ underneath, so compare the counts.",
+        'steps': [
+            r"$q$ counts $\frac{20!}{4!^5}$. For $p$, choose the $3$-bin and $5$-bin ($5 \cdot 4$ ways), then $\frac{20!}{3!\,5!\,4!^3}$.",
+            r"$\frac pq = 20 \cdot \frac{4!^2}{3!\,5!} = 20 \cdot \frac{4}{5} = 16$. The answer is $\textbf{(E) } 16$.",
+        ],
+        'trap': r"Forgetting to choose which bins get $3$ and $5$ balls, which gives $\frac45$.",
+    },
+    '2021-fall-amc-10a-22': {
+        'topics': ['solid-geometry', 'right-triangles'],
+        'answer': 'B',
+        'insight': r"The centres sit at height $r$, at the corners of an equilateral triangle of side $2r$, so each is $\frac{2r}{\sqrt3}$ from the axis.",
+        'steps': [
+            r"In a cross-section through the axis and one centre, the cone's side is $12x + 5y = 60$, and the centre $\left(\frac{2r}{\sqrt3}, r\right)$ is $r$ from it.",
+            r"$60 - \frac{24r}{\sqrt3} - 5r = 13r$, so $r = \frac{60}{18 + 8\sqrt3} = \frac{30(9 - 4\sqrt3)}{33}$.",
+            r"$r = \frac{90 - 40\sqrt3}{11}$. The answer is $\textbf{(B) } \frac{90-40\sqrt{3}}{11}$.",
+        ],
+        'trap': r"Putting the centres $r$ from the axis instead of $\frac{2r}{\sqrt3}$.",
+    },
+    '2021-fall-amc-10a-23': {
+        'topics': ['factors-divisors', 'functions'],
+        'answer': 'D',
+        'insight': r"$f_1(12) = 12$ and $f_1(8) = 8$ are fixed points, and every chain falls into one of them quickly.",
+        'steps': [
+            r"For $n \le 50$, $f_1(n)$ is one of $2, 4, 6, 8, 10, 12, 16, 18, 20$. Of these, $12, 18, 20$ lead to $12$; the rest lead to $8$.",
+            r"So $n$ needs $6$, $9$ or $10$ divisors: $12, 18, 20, 28, 32, 44, 45, 50$; $36$; $48$.",
+            r"That is $10$. The answer is $\textbf{(D) } 10$.",
+        ],
+        'trap': r"Counting only numbers with $6$ divisors and missing $36$ and $48$, whose chains pass through $18$ and $20$.",
+    },
+    '2021-fall-amc-10a-24': {
+        'topics': ['casework', 'solid-geometry'],
+        'answer': 'E',
+        'insight': r"Adding the four side faces counts each vertical edge twice: $4 + 4 + 2(\text{vertical } 1\text{s}) = 8$, so exactly two vertical edges are $1$.",
+        'steps': [
+            r"Opposite verticals ($2$ ways): each side face has one vertical $1$, so its top and bottom edges add to $1$. Choose $2$ top edges ($6$ ways); the bottom follows. That is $12$.",
+            r"Adjacent verticals ($4$ ways): the face between them has no other $1$, the opposite face has both top and bottom $1$, and the two remaining faces need one more each: $2$ ways. That is $8$.",
+            r"$12 + 8 = 20$. The answer is $\textbf{(E) } 20$.",
+        ],
+        'trap': r"Dividing by the cube's symmetries; the problem counts every labeling separately.",
+    },
+    '2021-fall-amc-10a-25': {
+        'topics': ['quadratics', 'polynomials', 'functions'],
+        'answer': 'A',
+        'insight': r"Write $p(x) = (x - h)^2 - t^2$, with roots $h \pm t$. Then $p(p(x)) = 0$ means $p(x) = h + t$ or $p(x) = h - t$.",
+        'steps': [
+            r"$p(x) = c$ has two solutions when $c > -t^2$ and one when $c = -t^2$. Three in all needs the smaller target to hit the minimum: $h - t = -t^2$.",
+            r"The roots add to $2h = 2(t - t^2)$, largest at $t = \frac12$, $h = \frac14$.",
+            r"$\tilde p(x) = \left(x - \frac14\right)^2 - \frac14$, so $\tilde p(1) = \frac9{16} - \frac4{16} = \frac5{16}$. The answer is $\textbf{(A) } \frac{5}{16}$.",
+        ],
+        'trap': r"Making the larger target $h + t$ touch the minimum; it is always above it.",
+    },
+    # ------------------------------------------------------------------ 2020 AMC 10A
+    '2020-amc-10a-1': {
+        'topics': ['decimals-fractions', 'linear-equations'],
+        'answer': 'E',
+        'insight': r"Put everything over $12$.",
+        'steps': [
+            r"$\frac5{12} - \frac4{12} = \frac1{12}$, so $x = \frac9{12} + \frac1{12} = \frac{10}{12}$.",
+            r"The answer is $\textbf{(E) } \frac{5}{6}$.",
+        ],
+        'trap': r"Subtracting $\frac34$ instead of adding it, which gives $-\frac23$.",
+    },
+    '2020-amc-10a-2': {
+        'topics': ['statistics'],
+        'answer': 'C',
+        'insight': r"Five numbers with mean $15$ add to $75$.",
+        'steps': [
+            r"$a + b = 75 - 15 = 60$, so their average is $30$.",
+            r"The answer is $\textbf{(C) } 30$.",
+        ],
+        'trap': r"Giving $a + b = 60$ instead of its average.",
+    },
+    '2020-amc-10a-3': {
+        'topics': ['decimals-fractions', 'polynomials'],
+        'answer': 'A',
+        'insight': r"Each top matches a bottom up to a sign: $a - 3 = -(3 - a)$, and so on.",
+        'steps': [
+            r"Pairing them gives three factors of $-1$: $(-1)^3 = -1$.",
+            r"The answer is $\textbf{(A) } {-}1$.",
+        ],
+        'trap': r"Cancelling the pairs as if they were equal, which gives $1$.",
+    },
+    '2020-amc-10a-4': {
+        'topics': ['word-problems', 'arithmetic'],
+        'answer': 'E',
+        'insight': r"Work out one hour: $60$ miles.",
+        'steps': [
+            r"She earns $60 \cdot \$0.50 = \$30$ and uses $2$ gallons costing $\$4$.",
+            r"$30 - 4 = 26$ dollars an hour. The answer is $\textbf{(E) } 26$.",
+        ],
+        'trap': r"Working out both hours and forgetting to divide by $2$.",
+    },
+    '2020-amc-10a-5': {
+        'topics': ['absolute-value', 'quadratics'],
+        'answer': 'C',
+        'insight': r"Split into $x^2 - 12x + 34 = 2$ and $x^2 - 12x + 34 = -2$, and check each has real roots.",
+        'steps': [
+            r"$x^2 - 12x + 32 = 0$ gives $x = 4, 8$. $x^2 - 12x + 36 = 0$ gives $x = 6$ (once).",
+            r"$4 + 8 + 6 = 18$. The answer is $\textbf{(C) } 18$.",
+        ],
+        'trap': r"Using Vieta on both equations, which counts the double root $6$ twice and gives $24$.",
+    },
+    '2020-amc-10a-6': {
+        'topics': ['basic-counting', 'divisibility'],
+        'answer': 'B',
+        'insight': r"A multiple of $5$ with an even last digit ends in $0$.",
+        'steps': [
+            r"The first digit is $2, 4, 6$ or $8$; the middle two are any of $0, 2, 4, 6, 8$; the last is $0$.",
+            r"$4 \cdot 5 \cdot 5 \cdot 1 = 100$. The answer is $\textbf{(B) } 100$.",
+        ],
+        'trap': r"Allowing $0$ as the first digit, which gives $125$.",
+    },
+    '2020-amc-10a-7': {
+        'topics': ['arithmetic', 'sequences-series'],
+        'answer': 'C',
+        'insight': r"The five rows hold every number once, so each row is a fifth of the total.",
+        'steps': [
+            r"$-10$ to $10$ cancels, leaving $11 + 12 + 13 + 14 = 50$.",
+            r"Each row adds to $10$. The answer is $\textbf{(C) } 10$.",
+        ],
+        'trap': r"Answering the total $50$ instead of one row.",
+    },
+    '2020-amc-10a-8': {
+        'topics': ['sequences-series'],
+        'answer': 'B',
+        'insight': r"Group in fours: $(4k-3) + (4k-2) + (4k-1) - 4k = 8k - 6$.",
+        'steps': [
+            r"For $k = 1$ to $50$: $8 \cdot \frac{50 \cdot 51}{2} - 6 \cdot 50 = 10{,}200 - 300 = 9{,}900$.",
+            r"The answer is $\textbf{(B) } 9,900$.",
+        ],
+        'trap': r"Adding everything and subtracting the multiples of $4$ once; they need to come off twice.",
+    },
+    '2020-amc-10a-9': {
+        'topics': ['gcd-lcm', 'linear-equations'],
+        'answer': 'B',
+        'insight': r"With $x$ adults and $x$ children, they fill $\frac x7 + \frac x{11} = \frac{18x}{77}$ sections.",
+        'steps': [
+            r"That is a whole number when $77 \mid x$; the least is $x = 77$, giving $N = 18$.",
+            r"The answer is $\textbf{(B) } 18$.",
+        ],
+        'trap': r"Answering $77$, the number of adults, not the number of sections.",
+    },
+    '2020-amc-10a-10': {
+        'topics': ['solid-geometry', 'area'],
+        'answer': 'B',
+        'insight': r"Every side face shows completely, and looking down, the exposed tops together make one $7 \times 7$ square.",
+        'steps': [
+            r"Sides: $4(1 + 4 + 9 + 16 + 25 + 36 + 49) = 560$. Tops: $49$. Bottom: $49$.",
+            r"$560 + 98 = 658$. The answer is $\textbf{(B) } 658$.",
+        ],
+        'trap': r"Adding all six faces of every cube; the hidden bottoms and covered tops don't show.",
+    },
+    '2020-amc-10a-11': {
+        'topics': ['statistics', 'perfect-powers'],
+        'answer': 'C',
+        'insight': r"The median is the average of the $2020$th and $2021$st smallest numbers. Count how many are at most some $m$ near $2000$.",
+        'steps': [
+            r"Up to $1976$: the numbers $1$ to $1976$ and the squares up to $44^2 = 1936$, so $1976 + 44 = 2020$.",
+            r"The next number is $1977$ (before $45^2 = 2025$). The median is $\frac{1976 + 1977}{2} = 1976.5$. The answer is $\textbf{(C) } 1976.5$.",
+        ],
+        'trap': r"Forgetting that the small squares also fall below $2020$, so the median is below $2020$.",
+    },
+    '2020-amc-10a-12': {
+        'topics': ['triangle-centers', 'area'],
+        'answer': 'C',
+        'insight': r"The medians meet at the centroid $P$, which cuts each one $2 : 1$, so $PM = PC = 8$.",
+        'steps': [
+            r"$\angle MPC = 90^\circ$, so triangle $MPC$ has area $\frac12 \cdot 8 \cdot 8 = 32$.",
+            r"The centroid splits the triangle into three equal parts with the vertices, so the area is $3 \cdot 32 = 96$. The answer is $\textbf{(C) } 96$.",
+        ],
+        'trap': r"Using the full medians as legs: $\frac12 \cdot 12 \cdot 12 = 72$.",
+    },
+    '2020-amc-10a-13': {
+        'topics': ['probability', 'symmetry-counting'],
+        'answer': 'B',
+        'insight': r"Reflecting in the line $y = x$ swaps vertical and horizontal sides, so from $(2,2)$, $(1,1)$ or $(3,3)$ the chance is $\frac12$.",
+        'steps': [
+            r"From $(1,2)$: left ends on a vertical side ($1$); right goes to $(2,2)$ ($\frac12$); up and down go to $(1,3)$ and $(1,1)$ ($\frac12$ each).",
+            r"$\frac14 \cdot 1 + \frac14 \cdot \frac12 + \frac12 \cdot \frac12 = \frac58$. The answer is $\textbf{(B) } \frac 58$.",
+        ],
+        'trap': r"Thinking the walk is symmetric between the four sides and answering $\frac12$; the frog starts next to a vertical side.",
+    },
+    '2020-amc-10a-14': {
+        'topics': ['polynomials', 'exponents'],
+        'answer': 'D',
+        'insight': r"$\frac{x^3}{y^2} + \frac{y^3}{x^2} = \frac{x^5 + y^5}{(xy)^2} = \frac{x^5 + y^5}4$. Build power sums with $p_n = 4p_{n-1} + 2p_{n-2}$.",
+        'steps': [
+            r"$p_1 = 4$, $p_2 = 20$, $p_3 = 88$, $p_4 = 392$, $p_5 = 1744$.",
+            r"$4 + \frac{1744}{4} = 4 + 436 = 440$. The answer is $\textbf{(D) } 440$.",
+        ],
+        'trap': r"Sign errors in the recurrence: with $xy = -2$ it is $+2p_{n-2}$, not $-2p_{n-2}$.",
+    },
+    '2020-amc-10a-15': {
+        'topics': ['factors-divisors', 'perfect-powers', 'probability'],
+        'answer': 'E',
+        'insight': r"$12! = 2^{10} \cdot 3^5 \cdot 5^2 \cdot 7 \cdot 11$. A square divisor uses only even exponents.",
+        'steps': [
+            r"Divisors: $11 \cdot 6 \cdot 3 \cdot 2 \cdot 2 = 792$. Square divisors: $6 \cdot 3 \cdot 2 \cdot 1 \cdot 1 = 36$.",
+            r"$\frac{36}{792} = \frac1{22}$, so $m + n = 23$. The answer is $\textbf{(E) } 23$.",
+        ],
+        'trap': r"Miscounting the $2$s in $12!$: $6 + 3 + 1 = 10$.",
+    },
+    '2020-amc-10a-16': {
+        'topics': ['geometric-probability', 'circles'],
+        'answer': 'B',
+        'insight': r"The square is $2020^2$ unit squares, each looking the same, so work in one unit square with a quarter disk at each corner.",
+        'steps': [
+            r"The four quarter disks make $\pi d^2$ (for $d < \frac12$ they don't overlap), and this should be $\frac12$.",
+            r"$d = \sqrt{\frac1{2\pi}} \approx 0.399$. The answer is $\textbf{(B) } 0.4$.",
+        ],
+        'trap': r"Using one quarter disk per square, which gives $d \approx 0.8$.",
+    },
+    '2020-amc-10a-17': {
+        'topics': ['polynomials', 'inequalities', 'basic-counting'],
+        'answer': 'E',
+        'insight': r"$P(n)$ is $0$ at the $100$ squares and negative where an odd number of factors are negative.",
+        'steps': [
+            r"Between $(2k-1)^2$ and $(2k)^2$ an odd number of factors are negative, so $P < 0$ there: $4k - 2$ integers.",
+            r"$\sum_{k=1}^{50}(4k - 2) = 5100 - 100 = 5000$, plus the $100$ roots: $5100$. The answer is $\textbf{(E) } 5100$.",
+        ],
+        'trap': r"Leaving out the $100$ integers where $P(n) = 0$; the inequality includes them.",
+    },
+    '2020-amc-10a-18': {
+        'topics': ['parity', 'basic-counting'],
+        'answer': 'C',
+        'insight': r"$ad - bc$ is odd when exactly one of $ad$, $bc$ is odd.",
+        'steps': [
+            r"A product of two numbers from $\{0,1,2,3\}$ is odd in $2 \cdot 2 = 4$ of the $16$ cases.",
+            r"$2 \cdot 4 \cdot 12 = 96$. The answer is $\textbf{(C) } 96$.",
+        ],
+        'trap': r"Forgetting the factor $2$ for which product is the odd one.",
+    },
+    '2020-amc-10a-19': {
+        'topics': ['graph-theory', 'basic-counting'],
+        'answer': 'E',
+        'insight': r"The path goes top, around the top ring, down, around the bottom ring, bottom; it can't double back within a ring.",
+        'steps': [
+            r"$5$ first faces in the top ring. Then stay or walk $1$ to $4$ faces either way: $9$ choices of where to leave the ring.",
+            r"Each top-ring face touches $2$ bottom-ring faces, and again $9$ choices of where to leave the bottom ring.",
+            r"$5 \cdot 9 \cdot 2 \cdot 9 = 810$. The answer is $\textbf{(E) } 810$.",
+        ],
+        'trap': r"Allowing only one step around each ring.",
+    },
+    '2020-amc-10a-20': {
+        'topics': ['coordinate-geometry', 'circles', 'area'],
+        'answer': 'D',
+        'insight': r"Use coordinates: $A = (0,0)$, $C = (20, 0)$, $D = (20, 30)$, $E = (5, 0)$. $B$ lies on line $DE$ and on the circle with diameter $AC$.",
+        'steps': [
+            r"Line $DE$: $y = 2(x - 5)$. Circle: $x^2 - 20x + y^2 = 0$. Substituting, $x^2 - 12x + 20 = 0$, so $x = 2$ (the root below $AC$) and $B = (2, -6)$.",
+            r"Triangle $ABC$ has area $\frac12 \cdot 20 \cdot 6 = 60$, and triangle $ACD$ has $\frac12 \cdot 20 \cdot 30 = 300$.",
+            r"$60 + 300 = 360$. The answer is $\textbf{(D) } 360$.",
+        ],
+        'trap': r"Taking the other intersection $(10, 10)$, which is on the same side of $AC$ as $D$.",
+    },
+    '2020-amc-10a-21': {
+        'topics': ['polynomials', 'exponents', 'digits-bases'],
+        'answer': 'C',
+        'insight': r"With $y = 2^{17}$, $\frac{y^{17} + 1}{y + 1} = y^{16} - y^{15} + \cdots - y + 1$.",
+        'steps': [
+            r"Pair the terms: $y^{2j} - y^{2j-1} = y^{2j-1}(2^{17} - 1)$, which is $17$ consecutive powers of $2$.",
+            r"$8$ pairs give $136$ powers, plus the final $1$: $137$. The answer is $\textbf{(C) } 137$.",
+        ],
+        'trap': r"Counting the $17$ terms of the alternating sum as the answer; the minus signs have to be removed first.",
+    },
+    '2020-amc-10a-22': {
+        'topics': ['floor-ceiling', 'factors-divisors'],
+        'answer': 'A',
+        'insight': r"The three floors are equal unless a multiple of $n$ lands at $999$ or $1000$; then the sum is $3a + 1$ or $3a + 2$.",
+        'steps': [
+            r"So $n$ divides $999$ or $1000$, but $n = 1$ gives $998 + 999 + 1000 = 2997$, a multiple of $3$.",
+            r"$999 = 3^3 \cdot 37$ has $8$ divisors and $1000$ has $16$; dropping $n = 1$ from both: $7 + 15 = 22$. The answer is $\textbf{(A) } 22$.",
+        ],
+        'trap': r"Counting $n = 1$, where both jumps happen and the sum is a multiple of $3$ again.",
+    },
+    '2020-amc-10a-23': {
+        'topics': ['transformations', 'casework'],
+        'answer': 'A',
+        'insight': r"$T$ is only fixed by doing nothing, so the three moves must compose to the identity; that needs an even number of reflections.",
+        'steps': [
+            r"No reflections: rotations of $90^\circ$ steps $i, j, k \in \{1,2,3\}$ adding to $4$ or $8$: $(1,1,2)$ and $(2,3,3)$ in some order, $6$ ways.",
+            r"Two reflections: two equal ones cancel and leave a rotation that must be $0^\circ$, which isn't allowed. The $x$- and $y$-reflections make a $180^\circ$ turn, so add a $180^\circ$ rotation: $2$ orders times $3$ positions, $6$ ways.",
+            r"$6 + 6 = 12$. The answer is $\textbf{(A) } 12$.",
+        ],
+        'trap': r"Ignoring order with reflections; a reflection and a rotation don't commute in general.",
+    },
+    '2020-amc-10a-24': {
+        'topics': ['gcd-lcm', 'modular-arithmetic'],
+        'answer': 'C',
+        'insight': r"Turn each gcd into congruences: $21 \mid n + 120$ but $63 \nmid n + 120$; $60 \mid n + 63$ but $120 \nmid n + 63$.",
+        'steps': [
+            r"$n \equiv 6 \pmod{21}$ and $n \equiv 57 \pmod{60}$ combine to $n \equiv 237 \pmod{420}$: $1077, 1497, 1917, \ldots$",
+            r"$1077 + 120 = 1197 = 63 \cdot 19$ fails; $1497 + 63 = 1560 = 120 \cdot 13$ fails; $1917$ works.",
+            r"$1 + 9 + 1 + 7 = 18$. The answer is $\textbf{(C) } 18$.",
+        ],
+        'trap': r"Stopping at the first $n$ that meets the divisibility conditions without checking the gcd is not larger.",
+    },
+    '2020-amc-10a-25': {
+        'topics': ['probability', 'casework', 'games-strategy'],
+        'answer': 'A',
+        'insight': r"Compare the options. Keeping two dice with sum at most $6$ and rerolling one wins with $\frac16$. Keeping one die $a$ and rerolling two wins with $\frac{6-a}{36}$. Rerolling all wins with $\frac{15}{216}$.",
+        'steps': [
+            r"Rerolling two is never better than $\frac16$, so it is best only when no two dice add to $6$ or less, and $\frac{6-a}{36} > \frac{15}{216}$ needs $a \le 3$.",
+            r"Smallest die $a$, other two at least $7 - a$: $a = 1$ with $6, 6$ ($3$ orders); $a = 2$ with $5$s and $6$s ($12$); $a = 3$ with $4$s to $6$s ($27$).",
+            r"$\frac{42}{216} = \frac7{36}$. The answer is $\textbf{(A) } \frac{7}{36}$.",
+        ],
+        'trap': r"Forgetting the reroll-all option, which beats keeping a $4$ or more.",
     },
 }
 
