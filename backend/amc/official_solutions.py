@@ -13,7 +13,8 @@ on its answer.
 
 Written so far: the 2026 AMC 10A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
 10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
-Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, and the 2019 AMC 10B. A problem whose numbers are only in a picture the
+Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, and the
+2018 AMC 10A. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -4313,6 +4314,514 @@ SOLUTIONS = {
             r"$1 + 35 + 28 + 1 = 65$. The answer is $\textbf{(C) }65$.",
         ],
         'trap': r"Allowing blocks of zero $1$s, which would put two $0$s together.",
+    },
+    # ------------------------------------------------------------------ 2019 AMC 10A
+    '2019-amc-10a-1': {
+        'topics': ['exponents', 'arithmetic'],
+        'answer': 'C',
+        'insight': r"Work from the inside out: $1^9 = 1$, so $0^1 = 0$ and $2^0 = 1$.",
+        'steps': [
+            r"The second term is $1^9 = 1$, so the total is $1 + 1 = 2$.",
+            r"The answer is $\textbf{(C) } 2$.",
+        ],
+        'trap': r"Reading $0^{(1^9)}$ as $1$, as if any power were $1$.",
+    },
+    '2019-amc-10a-2': {
+        'topics': ['factorials', 'digits-bases'],
+        'answer': 'A',
+        'insight': r"$15!$ already has three factors of $5$ and plenty of $2$s, so it ends in $000$; so does $20!$.",
+        'steps': [
+            r"The difference of two multiples of $1000$ is a multiple of $1000$, so its hundreds digit is $0$.",
+            r"The answer is $\textbf{(A) }0$.",
+        ],
+        'trap': r"Thinking subtraction might borrow into the hundreds place; both numbers end in at least three zeros.",
+    },
+    '2019-amc-10a-3': {
+        'topics': ['quadratics', 'word-problems'],
+        'answer': 'D',
+        'insight': r"With Bonita now $b$, Ana is $b^2$, and last year $b^2 - 1 = 5(b - 1)$.",
+        'steps': [
+            r"Dividing by $b - 1$ (they are different ages, so $b \ne 1$): $b + 1 = 5$, so $b = 4$ and Ana is $16$.",
+            r"$n = 16 - 4 = 12$. The answer is $\textbf{(D) } 12$.",
+        ],
+        'trap': r"Keeping $b = 1$, which makes them the same age.",
+    },
+    '2019-amc-10a-4': {
+        'topics': ['pigeonhole'],
+        'answer': 'B',
+        'insight': r"Find the most balls you can draw without reaching $15$ of any colour, then add one.",
+        'steps': [
+            r"At most $14$ red, green and yellow each, and all $13$ blue, $11$ white and $9$ black: $42 + 33 = 75$.",
+            r"One more forces $15$ of a colour: $76$. The answer is $\textbf{(B) } 76$.",
+        ],
+        'trap': r"Taking $14$ of every colour; there are only $13$, $11$ and $9$ of the last three.",
+    },
+    '2019-amc-10a-5': {
+        'topics': ['sequences-series'],
+        'answer': 'D',
+        'insight': r"Allow negative integers: a run starting at $-44$ cancels down to the numbers after $44$.",
+        'steps': [
+            r"$-44 + (-43) + \cdots + 44 + 45 = 45$ uses $90$ integers. A run of $N$ integers adding to $45$ has $N(2a + N - 1) = 90$, so $N \le 90$.",
+            r"The answer is $\textbf{(D) } 90$.",
+        ],
+        'trap': r"Using only positive integers, which allows at most $9$.",
+    },
+    '2019-amc-10a-6': {
+        'topics': ['quadrilaterals', 'cyclic-quadrilaterals'],
+        'answer': 'C',
+        'insight': r"A point equidistant from all four vertices is the centre of a circle through them, so the question is which quadrilaterals are cyclic.",
+        'steps': [
+            r"A quadrilateral is cyclic exactly when opposite angles add to $180^\circ$: squares, rectangles and isosceles trapezoids do; non-square rhombi and general parallelograms don't.",
+            r"That is $3$. The answer is $\textbf{(C) } 3$.",
+        ],
+        'trap': r"Counting the rhombus because its diagonals meet at a centre of symmetry; that point is not equidistant from all four vertices.",
+    },
+    '2019-amc-10a-7': {
+        'topics': ['coordinate-geometry', 'area'],
+        'answer': 'C',
+        'insight': r"Find where each line through $(2,2)$ meets $x + y = 10$.",
+        'steps': [
+            r"$y = \frac x2 + 1$ meets it at $(6, 4)$, and $y = 2x - 2$ at $(4, 6)$.",
+            r"Triangle $(2,2), (6,4), (4,6)$: $\frac12|4 \cdot 4 - 2 \cdot 2| = 6$. The answer is $\textbf{(C) } 6$.",
+        ],
+        'trap': r"Mixing up the lines' slopes and intercepts so both pass through the wrong point.",
+    },
+    '2019-amc-10a-8': {
+        'topics': ['transformations', 'symmetry-counting'],
+        'answer': 'C',
+        'insight': r"Check each motion against the slanted segments: they point up-right above the line and down-left below it.",
+        'steps': [
+            r"A translation by one period works. A $180^\circ$ turn about the point of $\ell$ halfway between an upper and a lower square swaps them, slants included.",
+            r"Reflecting in $\ell$ would put an upper square where there is none, and reflecting in a perpendicular line flips the slant direction. So $2$ work.",
+            r"The answer is $\textbf{(C) } 2$.",
+        ],
+        'trap': r"Ignoring the slanted segments; without them a perpendicular reflection would work too.",
+    },
+    '2019-amc-10a-9': {
+        'topics': ['divisibility', 'factorials'],
+        'answer': 'B',
+        'insight': r"$\frac{n!}{n(n+1)/2} = \frac{2 \cdot (n-1)!}{n + 1}$, so the question is when $n + 1$ fails to divide $2(n-1)!$.",
+        'steps': [
+            r"That happens when $n + 1$ is an odd prime (a composite $n+1$ has its factors in $(n-1)!$).",
+            r"$997$ is prime, so $n = 996$. The answer is $\textbf{(B) } 996$.",
+        ],
+        'trap': r"Looking for $n$ itself to be prime; it's $n + 1$ that matters.",
+    },
+    '2019-amc-10a-10': {
+        'topics': ['gcd-lcm', 'coordinate-geometry'],
+        'answer': 'C',
+        'insight': r"The bug enters a new tile each time it crosses a grid line. Since $\gcd(10, 17) = 1$, it never crosses two lines at once.",
+        'steps': [
+            r"It crosses $9$ inner lines one way and $16$ the other, so it visits $1 + 9 + 16 = 26$ tiles (that is $10 + 17 - 1$).",
+            r"The answer is $\textbf{(C) } 26$.",
+        ],
+        'trap': r"Adding $10 + 17$ without removing the double count of the starting tile.",
+    },
+    '2019-amc-10a-11': {
+        'topics': ['factors-divisors', 'perfect-powers'],
+        'answer': 'C',
+        'insight': r"$201^9 = 3^9 \cdot 67^9$. Count squares and cubes by exponents, then remove the sixth powers counted twice.",
+        'steps': [
+            r"Squares: even exponents $0$ to $8$, $5 \cdot 5 = 25$. Cubes: $0, 3, 6, 9$, $4 \cdot 4 = 16$. Sixth powers: $0, 6$, $2 \cdot 2 = 4$.",
+            r"$25 + 16 - 4 = 37$. The answer is $\textbf{(C) } 37$.",
+        ],
+        'trap': r"Missing that $201 = 3 \cdot 67$ isn't prime.",
+    },
+    '2019-amc-10a-12': {
+        'topics': ['statistics'],
+        'answer': 'E',
+        'insight': r"The modes are $1$ to $28$ (each appearing $12$ times), so $d = 14.5$.",
+        'steps': [
+            r"The median is the $183$rd value; $1$ to $15$ fill $180$ places, so $M = 16$.",
+            r"The extra low values pull the mean down: $\mu = \frac{5738}{365} \approx 15.7$. So $d < \mu < M$.",
+            r"The answer is $\textbf{(E) } d < \mu < M$.",
+        ],
+        'trap': r"Taking the mode as $1$ only; every date from $1$ to $28$ ties for most common.",
+    },
+    '2019-amc-10a-13': {
+        'topics': ['circles', 'angle-chasing', 'triangle-centers'],
+        'answer': 'D',
+        'insight': r"$BC$ is a diameter, so $\angle BDC = \angle BEC = 90^\circ$: $BD$ and $CE$ are altitudes and $F$ is the orthocentre.",
+        'steps': [
+            r"The base angles are $70^\circ$ each. At the orthocentre, $\angle BFC = 180^\circ - \angle A = 110^\circ$.",
+            r"The answer is $\textbf{(D) } 110$.",
+        ],
+        'trap': r"Using $\angle C = 40^\circ$ instead of $\angle A$, which gives $140^\circ$.",
+    },
+    '2019-amc-10a-14': {
+        'topics': ['casework', 'combinations'],
+        'answer': 'D',
+        'insight': r"With four lines there are at most $\binom42 = 6$ crossing points; see which counts can actually happen.",
+        'steps': [
+            r"$0$: all parallel. $1$: all through one point. $3$: three parallel plus one more. $4$: two pairs of parallels. $5$: two parallel plus two others. $6$: general position.",
+            r"$2$ is impossible. $0 + 1 + 3 + 4 + 5 + 6 = 19$. The answer is $\textbf{(D) } 19$.",
+        ],
+        'trap': r"Leaving out $0$, which adds nothing but is easy to forget, or including $2$.",
+    },
+    '2019-amc-10a-15': {
+        'topics': ['sequences-series', 'recursion'],
+        'answer': 'E',
+        'insight': r"Take reciprocals: $\frac1{a_n} = \frac2{a_{n-1}} - \frac1{a_{n-2}}$, so $\frac1{a_n}$ is arithmetic.",
+        'steps': [
+            r"$\frac1{a_1} = 1$ and $\frac1{a_2} = \frac73$, a step of $\frac43$, so $\frac1{a_n} = \frac{4n - 1}{3}$.",
+            r"$a_{2019} = \frac{3}{8075}$, so $p + q = 8078$. The answer is $\textbf{(E) } 8078$.",
+        ],
+        'trap': r"Computing a few terms and guessing the pattern for $a_n$ rather than $\frac1{a_n}$.",
+    },
+    '2019-amc-10a-16': {
+        'topics': ['circles', 'area'],
+        'answer': 'A',
+        'insight': r"The outer small circles have centres $2\sqrt3$ from the middle, so the big radius is $2\sqrt3 + 1$.",
+        'steps': [
+            r"$\pi(2\sqrt3 + 1)^2 - 13\pi = \pi(13 + 4\sqrt3) - 13\pi = 4\pi\sqrt3$.",
+            r"The answer is $\textbf{(A) } 4 \pi \sqrt{3}$.",
+        ],
+        'trap': r"Taking the big radius as $4$ by counting circles across the middle row only.",
+    },
+    '2019-amc-10a-17': {
+        'topics': ['permutations', 'casework'],
+        'answer': 'D',
+        'insight': r"Sort by the colour of the cube left out.",
+        'steps': [
+            r"Red left out: $\frac{8!}{1!\,3!\,4!} = 280$. Blue: $\frac{8!}{2!\,2!\,4!} = 420$. Green: $\frac{8!}{2!\,3!\,3!} = 560$.",
+            r"$280 + 420 + 560 = 1260$. The answer is $\textbf{(D) } 1,260$.",
+        ],
+        'trap': r"Dividing $8!$ by $2!\,3!\,4!$ as if all nine cubes went into the tower; that gives $140$.",
+    },
+    '2019-amc-10a-18': {
+        'topics': ['digits-bases', 'quadratics'],
+        'answer': 'D',
+        'insight': r"$0.\overline{23}_k = \frac{2k + 3}{k^2 - 1}$, just as $0.\overline{23} = \frac{23}{99}$ in base ten.",
+        'steps': [
+            r"$\frac{2k+3}{k^2 - 1} = \frac{7}{51}$ gives $7k^2 - 102k - 160 = 0$.",
+            r"$k = \frac{102 + 122}{14} = 16$. The answer is $\textbf{(D) } 16$.",
+        ],
+        'trap': r"Using $k^2$ instead of $k^2 - 1$ in the denominator.",
+    },
+    '2019-amc-10a-19': {
+        'topics': ['quadratics', 'inequalities'],
+        'answer': 'B',
+        'insight': r"Pair the outer and inner factors: $(x+1)(x+4) = x^2 + 5x + 4$ and $(x+2)(x+3) = x^2 + 5x + 6$.",
+        'steps': [
+            r"With $u = x^2 + 5x + 5$ the product is $(u - 1)(u + 1) = u^2 - 1 \ge -1$, reached when $u = 0$.",
+            r"$-1 + 2019 = 2018$. The answer is $\textbf{(B) } 2018$.",
+        ],
+        'trap': r"Trying integer values of $x$, where the product is never below $0$.",
+    },
+    '2019-amc-10a-20': {
+        'topics': ['probability', 'parity'],
+        'answer': 'B',
+        'insight': r"Only the positions of the $5$ odd numbers matter. Each row and column needs $1$ or $3$ of them.",
+        'steps': [
+            r"Five odds split $3, 1, 1$ across rows and across columns, so they fill one whole row and one whole column: $3 \cdot 3 = 9$ patterns.",
+            r"$\frac{9}{\binom95} = \frac9{126} = \frac1{14}$. The answer is $\textbf{(B) } \dfrac{1}{14}$.",
+        ],
+        'trap': r"Counting arrangements of the numbers in the numerator but only positions in the denominator.",
+    },
+    '2019-amc-10a-21': {
+        'topics': ['solid-geometry', 'right-triangles', 'circles'],
+        'answer': 'D',
+        'insight': r"The sphere meets the triangle's plane in the triangle's incircle.",
+        'steps': [
+            r"The $15$-$15$-$24$ triangle has height $9$, area $108$ and semi-perimeter $27$, so the inradius is $4$.",
+            r"The distance is $\sqrt{6^2 - 4^2} = 2\sqrt5$. The answer is $\textbf{(D) } 2\sqrt{5}$.",
+        ],
+        'trap': r"Answering the inradius $4$ itself.",
+    },
+    '2019-amc-10a-22': {
+        'topics': ['probability', 'geometric-probability'],
+        'answer': 'B',
+        'insight': r"Each number is $0$ with chance $\frac14$, $1$ with chance $\frac14$, and uniform with chance $\frac12$. Split by type.",
+        'steps': [
+            r"Both endpoints: they must differ, $2 \cdot \frac14 \cdot \frac14 = \frac18$. One endpoint, one uniform: the uniform one must land in the far half, $2 \cdot \frac12 \cdot \frac12 \cdot \frac12 = \frac14$.",
+            r"Both uniform: $\frac14 \cdot \frac14 = \frac1{16}$. Total $\frac18 + \frac14 + \frac1{16} = \frac7{16}$. The answer is $\textbf{(B) } \frac{7}{16}$.",
+        ],
+        'trap': r"Forgetting the factor $2$ for which number is the endpoint.",
+    },
+    '2019-amc-10a-23': {
+        'topics': ['sequences-series'],
+        'answer': 'C',
+        'insight': r"Tadd's $k$th turn is turn $3k - 2$ overall, where he says $3k - 2$ numbers. After $k$ turns he has said $\frac{k(3k - 1)}2$.",
+        'steps': [
+            r"$k = 36$ gives $1926$ and $k = 37$ gives $2035$, so his $2019$th number is the $93$rd of his turn $109$.",
+            r"The first $108$ turns used $\frac{108 \cdot 109}{2} = 5886$ numbers, so it is $5886 + 93 = 5979$.",
+            r"The answer is $\textbf{(C)}\ 5979$.",
+        ],
+        'trap': r"Counting Tadd's turns as $1, 2, 3, \ldots$ numbers long; they are $1, 4, 7, \ldots$.",
+    },
+    '2019-amc-10a-24': {
+        'topics': ['polynomials'],
+        'answer': 'B',
+        'insight': r"Multiply by $s - p$ and let $s \to p$: $\frac1A = (p - q)(p - r) = P'(p)$.",
+        'steps': [
+            r"$\sum P'(p) = \sum (3p^2 - 44p + 80) = 3\sum p^2 - 44 \cdot 22 + 240$.",
+            r"$\sum p^2 = 22^2 - 2 \cdot 80 = 324$, so the total is $972 - 968 + 240 = 244$. The answer is $\textbf{(B) }244$.",
+        ],
+        'trap': r"Solving for the roots numerically; the sum only needs Vieta.",
+    },
+    '2019-amc-10a-25': {
+        'topics': ['factorials', 'divisibility'],
+        'answer': 'D',
+        'insight': r"$\frac{(n^2)!}{(n!)^n}$ is a multinomial coefficient, so the expression is that divided by $n^2$.",
+        'steps': [
+            r"When $n$ is prime, $(n^2 - 1)!$ has only $n - 1$ factors of $n$ but $(n!)^n$ has $n$, so it fails. $n = 4$ also fails ($15!$ has $11$ twos, $(4!)^4$ has $12$).",
+            r"Every other $n$ works. There are $15$ primes up to $50$, so $50 - 16 = 34$.",
+            r"The answer is $\textbf{(D) } 34$.",
+        ],
+        'trap': r"Forgetting $n = 4$, which fails for a different reason.",
+    },
+    # ------------------------------------------------------------------ 2018 AMC 10A
+    '2018-amc-10a-1': {
+        'topics': ['decimals-fractions', 'exponents'],
+        'answer': 'B',
+        'insight': r"Work from the inside out; each $^{-1}$ flips a fraction.",
+        'steps': [
+            r"$3^{-1} + 1 = \frac43$, then $\frac34 + 1 = \frac74$, then $\frac47 + 1 = \frac{11}7$.",
+            r"The answer is $\textbf{(B) }\frac{11}7$.",
+        ],
+        'trap': r"Stopping one level early at $\frac74$.",
+    },
+    '2018-amc-10a-2': {
+        'topics': ['decimals-fractions', 'word-problems'],
+        'answer': 'A',
+        'insight': r"Give Jacqueline $100$: Liliane has $150$ and Alice $125$.",
+        'steps': [
+            r"$\frac{150}{125} = 1.2$, so Liliane has $20\%$ more.",
+            r"The answer is $\textbf{(A)}$ Liliane has $20\%$ more soda than Alice.",
+        ],
+        'trap': r"Subtracting the percentages to get $25\%$; the comparison is to Alice, not Jacqueline.",
+    },
+    '2018-amc-10a-3': {
+        'topics': ['factorials', 'clocks-calendars'],
+        'answer': 'E',
+        'insight': r"Cancel the seconds, minutes and hours out of $10!$ first.",
+        'steps': [
+            r"$10! = 3{,}628{,}800$ seconds $= 60{,}480$ minutes $= 1008$ hours $= 42$ days.",
+            r"$42$ days after noon on January 1 is noon on February 12. The answer is $\textbf{(E) }$ February 12.",
+        ],
+        'trap': r"Counting January 1 as day $1$ and landing on February 11.",
+    },
+    '2018-amc-10a-4': {
+        'topics': ['combinations', 'permutations'],
+        'answer': 'E',
+        'insight': r"Choose three periods with no two adjacent, then order the courses.",
+        'steps': [
+            r"Non-adjacent triples from $6$ periods: $\binom43 = 4$ ($135, 136, 146, 246$). Each can be filled $3! = 6$ ways.",
+            r"$4 \cdot 6 = 24$. The answer is $\textbf{(E) }24$.",
+        ],
+        'trap': r"Counting only which periods are used, which gives $4$.",
+    },
+    '2018-amc-10a-5': {
+        'topics': ['inequalities', 'logic'],
+        'answer': 'D',
+        'insight': r"Negate each statement: $d < 6$, $d > 5$ and $d > 4$.",
+        'steps': [
+            r"All three together give $5 < d < 6$.",
+            r"The answer is $\textbf{(D) } (5,6)$.",
+        ],
+        'trap': r"Negating “at most $5$” as “at least $5$”, which includes $5$ itself.",
+    },
+    '2018-amc-10a-6': {
+        'topics': ['decimals-fractions', 'word-problems'],
+        'answer': 'B',
+        'insight': r"With $65\%$ likes and $35\%$ dislikes, the score is $30\%$ of the votes.",
+        'steps': [
+            r"$0.3V = 90$, so $V = 300$.",
+            r"The answer is $\textbf{(B) } 300$.",
+        ],
+        'trap': r"Setting $0.65V = 90$, which treats the score as the number of likes.",
+    },
+    '2018-amc-10a-7': {
+        'topics': ['exponents', 'factors-divisors'],
+        'answer': 'E',
+        'insight': r"$4000 = 2^5 \cdot 5^3$, and $\left(\frac25\right)^n$ adds $n$ twos and removes $n$ fives (or the reverse for negative $n$).",
+        'steps': [
+            r"$2^{5+n} \cdot 5^{3-n}$ is an integer when $-5 \le n \le 3$.",
+            r"That is $9$ values. The answer is $\textbf{(E) }9$.",
+        ],
+        'trap': r"Only counting $n \ge 0$, which gives $4$.",
+    },
+    '2018-amc-10a-8': {
+        'topics': ['linear-equations', 'word-problems'],
+        'answer': 'C',
+        'insight': r"With $n$ nickels, there are $n + 3$ dimes and $20 - 2n$ quarters.",
+        'steps': [
+            r"$5n + 10(n+3) + 25(20 - 2n) = 320$ gives $35n = 210$, so $n = 6$ and there are $8$ quarters.",
+            r"$8 - 6 = 2$. The answer is $\textbf{(C) } 2$.",
+        ],
+        'trap': r"Answering $8$, the number of quarters.",
+    },
+    '2018-amc-10a-9': {
+        'topics': ['similar-triangles', 'area'],
+        'answer': 'E',
+        'insight': r"Triangle $ADE$ is the strip of $7$ small triangles plus the triangle above it, made of $9$ small ones (its base is $3$ small bases).",
+        'steps': [
+            r"$[ADE] = 9 + 7 = 16$, so $[DBCE] = 40 - 16 = 24$.",
+            r"The answer is $\textbf{(E) } 24$.",
+        ],
+        'trap': r"Measuring the figure, which is not to scale.",
+    },
+    '2018-amc-10a-10': {
+        'topics': ['exponents', 'polynomials'],
+        'answer': 'A',
+        'insight': r"Multiply the difference by the sum: $(49 - x^2) - (25 - x^2) = 24$.",
+        'steps': [
+            r"$3 \cdot (\text{sum}) = 24$, so the sum is $8$.",
+            r"The answer is $\textbf{(A) }8$.",
+        ],
+        'trap': r"Solving for $x$ first, which is slow and invites sign mistakes.",
+    },
+    '2018-amc-10a-11': {
+        'topics': ['combinations', 'probability'],
+        'answer': 'E',
+        'insight': r"Each die is at least $1$, so share the extra $3$ among $7$ dice; no die can go over $6$.",
+        'steps': [
+            r"Stars and bars: $\binom{3 + 6}{6} = 84$.",
+            r"The answer is $\textbf{(E) }84$.",
+        ],
+        'trap': r"Using $\binom{10}{7}$; the dice start at $1$, not $0$.",
+    },
+    '2018-amc-10a-12': {
+        'topics': ['absolute-value', 'coordinate-geometry'],
+        'answer': 'C',
+        'insight': r"$\big||x| - |y|\big| = 1$ is four lines' worth of V shapes; check where the line $x + 3y = 3$ crosses them.",
+        'steps': [
+            r"Solving quadrant by quadrant gives $(0, 1)$, $\left(\frac32, \frac12\right)$ and $(-3, 2)$.",
+            r"The answer is $\textbf{(C) } 3$.",
+        ],
+        'trap': r"Assuming each of the four sign cases gives a point; some solutions land in the wrong quadrant.",
+    },
+    '2018-amc-10a-13': {
+        'topics': ['right-triangles', 'similar-triangles'],
+        'answer': 'D',
+        'insight': r"The crease is the perpendicular bisector of $AB$, from the midpoint of $AB$ to side $AC$.",
+        'steps': [
+            r"It starts $\frac52$ from $A$ and makes a right angle with $AB$, so its length is $\frac52 \tan A = \frac52 \cdot \frac34$.",
+            r"$\frac{15}{8}$. The answer is $\textbf{(D) }  \frac{15}{8}$.",
+        ],
+        'trap': r"Running the crease to side $BC$; it meets $AC$ first.",
+    },
+    '2018-amc-10a-14': {
+        'topics': ['exponents', 'estimation'],
+        'answer': 'A',
+        'insight': r"$3^{100} + 2^{100} = 81 \cdot 3^{96} + 16 \cdot 2^{96}$, so the fraction is a weighted average of $81$ and $16$.",
+        'steps': [
+            r"It equals $81 - \frac{65 \cdot 2^{96}}{3^{96} + 2^{96}}$, just under $81$.",
+            r"The answer is $\textbf{(A) }80$.",
+        ],
+        'trap': r"Rounding to $81$; the small correction is subtracted.",
+    },
+    '2018-amc-10a-15': {
+        'topics': ['circles', 'similar-triangles'],
+        'answer': 'D',
+        'insight': r"Each tangency point lies on the ray from the big centre through a small centre.",
+        'steps': [
+            r"The small centres are $13 - 5 = 8$ from the big centre and $10$ apart. Scaling by $\frac{13}8$ moves them to $A$ and $B$.",
+            r"$AB = 10 \cdot \frac{13}8 = \frac{65}4$, so $m + n = 69$. The answer is $\textbf{(D) } 69$.",
+        ],
+        'trap': r"Taking $AB = 10$, the distance between the small centres.",
+    },
+    '2018-amc-10a-16': {
+        'topics': ['right-triangles', 'basic-counting'],
+        'answer': 'D',
+        'insight': r"The distance from $B$ to a point on $AC$ drops from $20$ to the altitude and rises to $21$.",
+        'steps': [
+            r"$AC = 29$, so the altitude is $\frac{20 \cdot 21}{29} \approx 14.5$.",
+            r"Lengths $15$ to $20$ appear on the $A$ side and $15$ to $21$ on the $C$ side: $6 + 7 = 13$. The answer is $\textbf{(D) }13$.",
+        ],
+        'trap': r"Counting each length once, as if each were reached at only one point.",
+    },
+    '2018-amc-10a-17': {
+        'topics': ['divisibility', 'pigeonhole'],
+        'answer': 'C',
+        'insight': r"Split $1$ to $12$ into six chains where each divides the next: $\{1,2,4,8\}, \{3,6,12\}, \{5,10\}, \{7\}, \{9\}, \{11\}$. $S$ takes exactly one from each.",
+        'steps': [
+            r"$9$ is forced, which rules out $3$; and $2$ would force $3$ from its chain. $1$ divides everything.",
+            r"$\{4, 5, 6, 7, 9, 11\}$ works, so the least is $4$. The answer is $\textbf{(C) } 4$.",
+        ],
+        'trap': r"Starting with $2$ and greedily adding numbers without checking the whole set.",
+    },
+    '2018-amc-10a-18': {
+        'topics': ['digits-bases'],
+        'answer': 'D',
+        'insight': r"This is balanced ternary: every integer from $-3280$ to $3280$ is written exactly one way.",
+        'steps': [
+            r"The largest is $1 + 3 + \cdots + 3^7 = \frac{3^8 - 1}{2} = 3280$.",
+            r"Nonnegative values: $0$ to $3280$, that is $3281$. The answer is $\textbf{(D) } 3281$.",
+        ],
+        'trap': r"Halving all $3^8 = 6561$ forms and forgetting $0$.",
+    },
+    '2018-amc-10a-19': {
+        'topics': ['modular-arithmetic', 'probability'],
+        'answer': 'E',
+        'insight': r"Only the units digit matters: $1, 3, 5, 7, 9$ raised to the $n$th power.",
+        'steps': [
+            r"$1$: always ($20$). $3$ and $7$: when $4 \mid n$ ($5$ each). $5$: never. $9$: when $n$ is even ($10$).",
+            r"$\frac{20 + 5 + 5 + 10}{100} = \frac25$. The answer is $\textbf{(E) }   \frac{2}{5}$.",
+        ],
+        'trap': r"Forgetting that $9^n$ ends in $1$ for every even $n$.",
+    },
+    '2018-amc-10a-20': {
+        'topics': ['symmetry-counting', 'basic-counting'],
+        'answer': 'B',
+        'insight': r"A fully symmetric code is fixed by the colours of one triangular wedge, one-eighth of the grid.",
+        'steps': [
+            r"The wedge contains $1 + 2 + 3 + 4 = 10$ squares, giving $2^{10}$ colourings.",
+            r"Remove all-black and all-white: $1024 - 2 = 1022$. The answer is $\textbf{(B)} \text{ 1022}$.",
+        ],
+        'trap': r"Forgetting to remove the two single-colour codes.",
+    },
+    '2018-amc-10a-21': {
+        'topics': ['conics', 'quadratics'],
+        'answer': 'E',
+        'insight': r"Substitute $x^2 = y + a$: $y^2 + y + a - a^2 = 0$, which factors as $(y + a)(y - a + 1) = 0$.",
+        'steps': [
+            r"$y = -a$ gives $x = 0$, one point. $y = a - 1$ gives $x^2 = 2a - 1$, two points when $a > \frac12$.",
+            r"The answer is $\textbf{(E) }a>\frac12$.",
+        ],
+        'trap': r"Using the tangency condition $a = \frac14$; that gives the wrong count.",
+    },
+    '2018-amc-10a-22': {
+        'topics': ['gcd-lcm', 'factors-divisors'],
+        'answer': 'D',
+        'insight': r"Track the powers of $2$ and $3$ through the chain of gcds.",
+        'steps': [
+            r"$\gcd(a,b) = 24$ with $9 \mid b$ forces exactly one $3$ in $a$; $\gcd(c,d) = 54$ with $4 \mid c$ forces exactly one $2$ in $d$.",
+            r"So $\gcd(d, a) = 6m$ with $m$ coprime to $6$. Between $70$ and $100$ that is only $78 = 6 \cdot 13$.",
+            r"$13$ divides $a$. The answer is $\textbf{(D)} \text{ 13}$.",
+        ],
+        'trap': r"Ignoring the extra conditions and trying $72$, $84$, $90$ or $96$, which have too many $2$s or $3$s.",
+    },
+    '2018-amc-10a-23': {
+        'topics': ['area', 'coordinate-geometry'],
+        'answer': 'D',
+        'insight': r"With the right angle at the origin, the hypotenuse is $3x + 4y = 12$; the square's far corner is $(s, s)$.",
+        'steps': [
+            r"Its distance to the hypotenuse is $\frac{12 - 7s}{5} = 2$, so $s = \frac27$.",
+            r"Planted: $\frac{6 - \frac4{49}}{6} = 1 - \frac{2}{147} = \frac{145}{147}$. The answer is $\textbf{(D) } \frac{145}{147}$.",
+        ],
+        'trap': r"Measuring the distance from the right-angle corner instead of the square's far corner.",
+    },
+    '2018-amc-10a-24': {
+        'topics': ['area-ratios', 'triangles'],
+        'answer': 'D',
+        'insight': r"The bisector splits $BC$ in the ratio $AB : AC = 5 : 1$, and splits the midline $DE$ the same way.",
+        'steps': [
+            r"$[ABG] = \frac56 \cdot 120 = 100$. Triangle $ADE$ has area $30$, and $[ADF] = \frac56 \cdot 30 = 25$.",
+            r"$[FDBG] = 100 - 25 = 75$. The answer is $\textbf{(D) }75$.",
+        ],
+        'trap': r"Splitting $BC$ in the ratio $1 : 5$, the wrong way round.",
+    },
+    '2018-amc-10a-25': {
+        'topics': ['digits-bases', 'polynomials'],
+        'answer': 'D',
+        'insight': r"With $x = 10^n$: $A_n = \frac{a(x-1)}9$, $B_n = \frac{b(x-1)}9$, $C_n = \frac{c(x^2-1)}9$. Two values of $n$ force a polynomial identity.",
+        'steps': [
+            r"Dividing $C_n - B_n = A_n^2$ by $\frac{x-1}9$: $c(x + 1) - b = \frac{a^2(x - 1)}9$, so $c = \frac{a^2}9$ and $b = 2c$.",
+            r"$c$ must be a square with $2c \le 9$: $c = 4$, $a = 6$, $b = 8$, or $c = 1$, $a = 3$, $b = 2$.",
+            r"The largest sum is $6 + 8 + 4 = 18$. The answer is $\textbf{(D) } 18$.",
+        ],
+        'trap': r"Taking $c = 9$, which needs $b = 18$, not a digit.",
     },
 }
 
