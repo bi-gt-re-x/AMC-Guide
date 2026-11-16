@@ -12,7 +12,7 @@ key the solution is left off rather than shown beside the wrong answer
 on its answer.
 
 Written so far: the 2026 AMC 10A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
-10B, the 2023 AMC 10A and 10B, and the 2022 AMC 10A and 10B. A problem whose numbers are only in a picture the
+10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, and the 2021 AMC 10A. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -2483,6 +2483,270 @@ SOLUTIONS = {
             r"$149 + 99 + 89 = 337$. The answer is $\textbf{(B) }337$.",
         ],
         'trap': r"Comparing areas instead of lattice points, which drops every \"$+1$\".",
+    },
+    # ------------------------------------------------------------------ 2021 AMC 10A
+    '2021-amc-10a-1': {
+        'topics': ['arithmetic'],
+        'answer': 'D',
+        'insight': r"Each bracket is $n^2 - n = n(n-1)$.",
+        'steps': [
+            r"The brackets are $2$, $6$ and $12$.",
+            r"$2 - 6 + 12 = 8$. The answer is $\textbf{(D) } 8$.",
+        ],
+        'trap': r"Missing the minus sign in front of the middle bracket and adding all three to get $20$.",
+    },
+    '2021-amc-10a-2': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'C',
+        'insight': r"Lara's school is one part and Portia's is three, so the total is four parts.",
+        'steps': [
+            r"One part is $2600 \div 4 = 650$.",
+            r"Portia's school has $3 \cdot 650 = 1950$ students. The answer is $\textbf{(C) } 1950$.",
+        ],
+        'trap': r"Answering $650$, which is Lara's school.",
+    },
+    '2021-amc-10a-3': {
+        'topics': ['digits-bases', 'linear-equations'],
+        'answer': 'D',
+        'insight': r"If the smaller number is $n$, the larger is $10n$, so the sum is $11n$.",
+        'steps': [
+            r"$11n = 17{,}402$ gives $n = 1582$.",
+            r"The difference is $10n - n = 9n = 14{,}238$. The answer is $\textbf{(D) } 14{,}238$.",
+        ],
+        'trap': r"Setting up $n + \frac{n}{10}$ instead: erasing the units digit divides the multiple of $10$ by $10$, so the larger number is $10n$.",
+    },
+    '2021-amc-10a-4': {
+        'topics': ['sequences-series'],
+        'answer': 'D',
+        'insight': r"The distances form an arithmetic sequence: $5, 12, 19, \ldots$ for $30$ terms.",
+        'steps': [
+            r"The last term is $5 + 29 \cdot 7 = 208$.",
+            r"The sum is $\frac{30(5 + 208)}{2} = 15 \cdot 213 = 3195$. The answer is $\textbf{(D) } 3195$.",
+        ],
+        'trap': r"Using $30 \cdot 7$ for the last step instead of $29 \cdot 7$: the first second has no increase.",
+    },
+    '2021-amc-10a-5': {
+        'topics': ['statistics'],
+        'answer': 'B',
+        'insight': r"Work with totals, not means.",
+        'steps': [
+            r"All $k$ scores total $8k$, and the $12$ scores total $12 \cdot 14 = 168$.",
+            r"The other $k - 12$ scores total $8k - 168$, so their mean is $\frac{8k-168}{k-12}$. The answer is $\textbf{(B) } \frac{8k-168}{k-12}$.",
+        ],
+        'trap': r"Subtracting the means, as in choice (A); means of different-sized groups don't subtract.",
+    },
+    '2021-amc-10a-6': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'A',
+        'insight': r"Call each half of the trail $d$ miles. Jean walks $d$ miles in the time Chantal takes for three legs.",
+        'steps': [
+            r"Chantal's time is $\frac d4 + \frac d2 + \frac d3 = \frac{13d}{12}$ hours.",
+            r"Jean covers $d$ miles in that time, so Jean's speed is $d \div \frac{13d}{12} = \frac{12}{13}$. The answer is $\textbf{(A) } \frac{12}{13}$.",
+        ],
+        'trap': r"Averaging the speeds $4$, $2$ and $3$; speeds over equal distances average harmonically, not arithmetically.",
+    },
+    '2021-amc-10a-7': {
+        'topics': ['logic'],
+        'answer': 'D',
+        'insight': r"Chain the second and third facts: purple means can't subtract, which means can't add.",
+        'steps': [
+            r"So no purple snake can add. Every happy snake can add, so no happy snake is purple.",
+            r"The answer is $\textbf{(D) }$ Happy snakes are not purple.",
+        ],
+        'trap': r"Choosing (E): nothing says happy snakes can't subtract; in fact a snake that can add must be able to subtract.",
+    },
+    '2021-amc-10a-8': {
+        'topics': ['decimals-fractions', 'digits-bases'],
+        'answer': 'E',
+        'insight': r"Write both numbers as fractions: $1.\overline{ab} = 1 + \frac{ab}{99}$ and $1.ab = 1 + \frac{ab}{100}$.",
+        'steps': [
+            r"The difference is $ab\left(\frac1{99} - \frac1{100}\right) = \frac{ab}{9900}$.",
+            r"$66 \cdot \frac{ab}{9900} = \frac{ab}{150} = 0.5$, so $ab = 75$. The answer is $\textbf{(E) } 75$.",
+        ],
+        'trap': r"Writing the repeating decimal as $1 + \frac{ab}{100}$ too, which makes the two products equal.",
+    },
+    '2021-amc-10a-9': {
+        'topics': ['inequalities', 'polynomials'],
+        'answer': 'D',
+        'insight': r"Expand: the $\pm 2xy$ terms cancel and what is left factors.",
+        'steps': [
+            r"$(xy-1)^2 + (x+y)^2 = x^2y^2 + x^2 + y^2 + 1 = (x^2+1)(y^2+1)$.",
+            r"Both factors are at least $1$, with equality at $x = y = 0$. The answer is $\textbf{(D) } 1$.",
+        ],
+        'trap': r"Guessing $0$: both squares can't vanish together, since $x = -y$ makes $xy - 1 = -x^2 - 1 < 0$.",
+    },
+    '2021-amc-10a-10': {
+        'topics': ['exponents', 'polynomials'],
+        'answer': 'C',
+        'insight': r"Multiply by $3 - 2 = 1$ and let difference of squares collapse the product.",
+        'steps': [
+            r"$(3-2)(3+2) = 3^2 - 2^2$, then $(3^2-2^2)(3^2+2^2) = 3^4 - 2^4$, and so on.",
+            r"After the last factor it is $3^{128} - 2^{128}$. The answer is $\textbf{(C) } 3^{128}-2^{128}$.",
+        ],
+        'trap': r"Multiplying the bases to get $5^{127}$: a sum of powers is not a power of the sum.",
+    },
+    '2021-amc-10a-11': {
+        'topics': ['digits-bases', 'divisibility'],
+        'answer': 'E',
+        'insight': r"Expand both numbers in base $b$ and subtract.",
+        'steps': [
+            r"$2021_b - 221_b = (2b^3 + 2b + 1) - (2b^2 + 2b + 1) = 2b^2(b-1)$.",
+            r"This is a multiple of $3$ when $b$ or $b - 1$ is, which covers $3, 4, 6, 7$ but not $8$. The answer is $\textbf{(E) } 8$.",
+        ],
+        'trap': r"Thinking $b = 3$ fails because $2021_3$ has a digit too big; it doesn't, all digits are at most $2$.",
+    },
+    '2021-amc-10a-12': {
+        'topics': ['solid-geometry', 'similar-triangles'],
+        'answer': 'E',
+        'insight': r"The liquid in each cone is a smaller cone similar to the whole, so its volume is proportional to the cube of its height.",
+        'steps': [
+            r"Equal volumes: $\frac13\pi(3^2)h_1 = \frac13\pi(6^2)h_2$, so $h_1 = 4h_2$.",
+            r"Adding the same marble multiplies both volumes by the same factor, so both heights grow by the same factor $t$.",
+            r"The rises are $(t-1)h_1$ and $(t-1)h_2$, in the ratio $4:1$. The answer is $\textbf{(E) } 4:1$.",
+        ],
+        'trap': r"Answering $2:1$ from the radii; the rise depends on the area of the surface, which goes with the square of the radius.",
+    },
+    '2021-amc-10a-13': {
+        'topics': ['solid-geometry', 'right-triangles'],
+        'answer': 'C',
+        'insight': r"Check the faces at $A$ against Pythagoras: $2^2 + 3^2 = 13$, $2^2 + 4^2 = 20$, $3^2 + 4^2 = 25$.",
+        'steps': [
+            r"So $AB$, $AC$ and $AD$ are mutually perpendicular, like the corner of a box.",
+            r"The volume is $\frac16 \cdot 2 \cdot 3 \cdot 4 = 4$. The answer is $\textbf{(C) } 4$.",
+        ],
+        'trap': r"Using $\frac13$ instead of $\frac16$: the base is the right triangle with area $\frac12 \cdot 2 \cdot 3$, not a rectangle.",
+    },
+    '2021-amc-10a-14': {
+        'topics': ['polynomials', 'casework'],
+        'answer': 'A',
+        'insight': r"By Vieta the six roots add to $10$ and multiply to $16$, so they are powers of $2$.",
+        'steps': [
+            r"Six powers of $2$ with product $2^4$ and sum $10$: only $2, 2, 2, 2, 1, 1$ works.",
+            r"$B = -e_3$, the sum of products of three roots: $\binom43 \cdot 8 + \binom42 \cdot 2 \cdot 4 + 4 \cdot 2 = 32 + 48 + 8 = 88$.",
+            r"So $B = -88$. The answer is $\textbf{(A) } {-}88$.",
+        ],
+        'trap': r"Forgetting the sign: $B$ is minus the sum of triple products.",
+    },
+    '2021-amc-10a-15': {
+        'topics': ['permutations', 'symmetry-counting'],
+        'answer': 'C',
+        'insight': r"The curves meet where $(A - C)x^2 = D - B$, which needs $A - C$ and $D - B$ to have the same sign.",
+        'steps': [
+            r"There are $6 \cdot 5 \cdot 4 \cdot 3 = 360$ ordered choices, and swapping $B$ with $D$ pairs each good one with a bad one, so $180$ are good.",
+            r"Each pair of curves is counted twice (either curve first), so there are $90$. The answer is $\textbf{(C) } 90$.",
+        ],
+        'trap': r"Stopping at $180$ and forgetting that the order of the two curves doesn't matter.",
+    },
+    '2021-amc-10a-16': {
+        'topics': ['statistics', 'sequences-series'],
+        'answer': 'C',
+        'insight': r"The list has $1 + 2 + \cdots + 200 = 20{,}100$ numbers, so the median averages the $10{,}050$th and $10{,}051$st.",
+        'steps': [
+            r"The last $141$ sits at position $\frac{141 \cdot 142}{2} = 10{,}011$, and the last $142$ at $10{,}153$.",
+            r"Both middle positions hold $142$. The answer is $\textbf{(C) } 142$.",
+        ],
+        'trap': r"Taking the middle value $100.5$ as if each number appeared once.",
+    },
+    '2021-amc-10a-17': {
+        'topics': ['quadrilaterals', 'similar-triangles', 'coordinate-geometry'],
+        'answer': 'D',
+        'insight': r"$BC = CD$ makes $CP \perp BD$, so $AD$ and $CP$ are both perpendicular to $BD$.",
+        'steps': [
+            r"Put $D = (0,0)$, $B = (2p, 0)$, $P = (p, 0)$, $C = (p, -h)$ and $A = (0, a)$.",
+            r"$AB \parallel DC$ means $\frac{a}{2p} = \frac{h}{p}$, so $a = 2h$ and $AB = 2CD$. Then $AC$ crosses $BD$ at $x = \frac{2p}{3}$.",
+            r"$OP = \frac p3 = 11$, so $p = 33$, and $h^2 = 43^2 - 33^2 = 760$.",
+            r"$AD = 2h = 2\sqrt{760} = 4\sqrt{190}$, so $m + n = 194$. The answer is $\textbf{(D) } 194$.",
+        ],
+        'trap': r"Leaving $\sqrt{760}$ unsimplified: $760 = 4 \cdot 190$.",
+    },
+    '2021-amc-10a-18': {
+        'topics': ['functions', 'factors-divisors'],
+        'answer': 'E',
+        'insight': r"$f$ turns a product into a sum, so $f\left(\prod p^{e}\right) = \sum e\,p$, with negative exponents in the denominator.",
+        'steps': [
+            r"(A) $17 - 5 \cdot 2 = 7$; (B) $11 - 4 \cdot 2 = 3$; (C) $7 - 2 \cdot 3 = 1$; (D) $7 - 2 - 3 = 2$.",
+            r"(E) $2 \cdot 5 - 11 = -1 < 0$. The answer is $\textbf{(E) } \frac{25}{11}$.",
+        ],
+        'trap': r"Assuming a fraction below $1$ must give a negative value, as a logarithm would.",
+    },
+    '2021-amc-10a-19': {
+        'topics': ['coordinate-geometry', 'circles', 'absolute-value'],
+        'answer': 'E',
+        'insight': r"$|x-y| + |x+y| = 2\max(|x|, |y|)$, so the curve is $x^2 + y^2 = 6\max(|x|,|y|)$.",
+        'steps': [
+            r"Where $|y| \le x$, this is $(x-3)^2 + y^2 = 9$, the circle through the origin centred at $(3,0)$, from $(3,-3)$ to $(3,3)$.",
+            r"That piece of region is the triangle $(0,0), (3,3), (3,-3)$ of area $9$ plus a half disk of area $\frac{9\pi}{2}$.",
+            r"Four such pieces give $36 + 18\pi$, so $m + n = 54$. The answer is $\textbf{(E) } 54$.",
+        ],
+        'trap': r"Counting four whole disks; each circle only bounds the region in its own quarter.",
+    },
+    '2021-amc-10a-20': {
+        'topics': ['permutations', 'casework'],
+        'answer': 'D',
+        'insight': r"The terms must zigzag: up, down, up, down or down, up, down, up. By symmetry ($k \mapsto 6 - k$) count one shape and double.",
+        'steps': [
+            r"For up-down-up-down, the peaks are positions $2$ and $4$ and must hold $5$ and the larger of the rest.",
+            r"Peaks $\{5,4\}$: $2 \cdot 3! = 12$ ways. Peaks $\{5,3\}$: $3$ must sit beside only $1$ and $2$, giving $4$ ways. That makes $16$.",
+            r"Doubling gives $32$. The answer is $\textbf{(D) } 32$.",
+        ],
+        'trap': r"Counting only the up-down-up-down shape; its mirror image down-up-down-up doubles the count.",
+    },
+    '2021-amc-10a-21': {
+        'topics': ['polygons', 'triangles'],
+        'answer': 'C',
+        'insight': r"Extending alternate sides of an equiangular hexagon makes an equilateral triangle whose side is one hexagon side plus its two neighbours.",
+        'steps': [
+            r"With sides $a, b, c, d, e, f$ from $AB$ on, the first triangle has side $s_1 = f + a + b = b + c + d = d + e + f$, and the second $s_2 = a + b + c = c + d + e = e + f + a$.",
+            r"Adding all six expressions counts each side three times: $3s_1 + 3s_2 = 3P$, so $P = s_1 + s_2$.",
+            r"$\frac{\sqrt3}{4}s_1^2 = 192\sqrt3$ gives $s_1 = 16\sqrt3$, and $\frac{\sqrt3}{4}s_2^2 = 324\sqrt3$ gives $s_2 = 36$.",
+            r"$P = 36 + 16\sqrt3$, so $m + n + p = 55$. The answer is $\textbf{(C) } 55$.",
+        ],
+        'trap': r"Thinking the hexagon must be regular; equal angles don't force equal sides.",
+    },
+    '2021-amc-10a-22': {
+        'topics': ['statistics', 'sequences-series', 'diophantine'],
+        'answer': 'B',
+        'insight': r"If $n$ sheets after the first $k$ are taken, the missing pages are $2k+1$ to $2k+2n$, which add to $n(4k + 2n + 1)$.",
+        'steps': [
+            r"All pages add to $1275$, so $1275 - n(4k+2n+1) = 19(50 - 2n)$, which simplifies to $n(4k + 2n - 37) = 325$.",
+            r"$325 = 13 \cdot 25$. Trying $n = 13$: $4k + 26 - 37 = 25$ gives $k = 9$, and the sheets fit since $9 + 13 \le 25$.",
+            r"The other factors fail: $n = 1$ needs $k = 90$, $n = 5$ needs $k = 23$ (past the last sheet), and $n = 25$ takes every sheet. The answer is $\textbf{(B) } 13$.",
+        ],
+        'trap': r"Removing pages instead of whole sheets; every sheet carries an odd page and the next even page.",
+    },
+    '2021-amc-10a-23': {
+        'topics': ['probability', 'recursion'],
+        'answer': 'D',
+        'insight': r"Only three kinds of square matter: centre, edge and corner. Track the chance of being at each.",
+        'steps': [
+            r"From the centre every hop lands on an edge. From an edge, $\frac12$ goes to a corner, $\frac14$ to the centre and $\frac14$ wraps to the opposite edge.",
+            r"After hop $1$: edge $1$. After hop $2$: corner $\frac12$, centre $\frac14$, edge $\frac14$.",
+            r"After hop $3$: new corner $\frac18$; edge $\frac14 + \frac1{16} = \frac5{16}$. After hop $4$: new corner $\frac{5}{32}$.",
+            r"Total $\frac12 + \frac18 + \frac5{32} = \frac{25}{32}$. The answer is $\textbf{(D) } \frac{25}{32}$.",
+        ],
+        'trap': r"Forgetting the wrap-around: from an edge, hopping outward lands on the opposite edge, not a corner.",
+    },
+    '2021-amc-10a-24': {
+        'topics': ['coordinate-geometry', 'area'],
+        'answer': 'D',
+        'insight': r"The graphs are two pairs of parallel lines, $x + ay = \pm 2a$ and $ax - y = \pm a$, and the pairs are perpendicular.",
+        'steps': [
+            r"The region is a rectangle. Its sides are the distances between parallel lines: $\frac{4a}{\sqrt{1+a^2}}$ and $\frac{2a}{\sqrt{a^2+1}}$.",
+            r"The area is $\frac{8a^2}{a^2+1}$. The answer is $\textbf{(D) } \frac{8a^2}{a^2+1}$.",
+        ],
+        'trap': r"Taking the gap between $x + ay = \pm2a$ as $4a$; the distance between lines divides by the length of the normal $\sqrt{1+a^2}$.",
+    },
+    '2021-amc-10a-25': {
+        'topics': ['casework', 'graph-theory'],
+        'answer': 'E',
+        'insight': r"The centre touches all four edge squares, so the other two chips of the centre's colour must sit in corners.",
+        'steps': [
+            r"Say the centre colour is $X$ and the other colours are $Y$ and $Z$. Its two corners are either opposite ($2$ ways) or on one side ($4$ ways).",
+            r"Opposite corners: the six free squares form two separate paths of three (edge, corner, edge). Each path alternates, so one is $YZY$ and the other $ZYZ$: $2$ ways, $4$ in all.",
+            r"Corners on one side: the edge between them touches only $X$, and the other five free squares form one path of five, which alternates as $YZYZY$ or $ZYZYZ$. The lone edge takes the colour used twice: $2$ ways, $8$ in all.",
+            r"That is $12$ for each of the $3$ centre colours, $36$ in total. The answer is $\textbf{(E) } 36$.",
+        ],
+        'trap': r"Putting the centre colour's other chips on edge squares, which all touch the centre.",
     },
 }
 
