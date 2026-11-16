@@ -12,7 +12,8 @@ key the solution is left off rather than shown beside the wrong answer
 on its answer.
 
 Written so far: the 2026 AMC 10A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
-10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, and the 2021 AMC 10A. A problem whose numbers are only in a picture the
+10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, and the 2021
+Fall AMC 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -2747,6 +2748,539 @@ SOLUTIONS = {
             r"That is $12$ for each of the $3$ centre colours, $36$ in total. The answer is $\textbf{(E) } 36$.",
         ],
         'trap': r"Putting the centre colour's other chips on edge squares, which all touch the centre.",
+    },
+    # ------------------------------------------------------------------ 2021 AMC 10B
+    '2021-amc-10b-1': {
+        'topics': ['absolute-value', 'inequalities'],
+        'answer': 'D',
+        'insight': r"$3\pi \approx 9.42$, so $|x| < 3\pi$ means $-9 \le x \le 9$ for integers.",
+        'steps': [
+            r"That is $9$ negatives, $9$ positives and $0$: $19$ integers.",
+            r"The answer is $\textbf{(D) } 19$.",
+        ],
+        'trap': r"Forgetting $0$, or counting only the positive solutions.",
+    },
+    '2021-amc-10b-2': {
+        'topics': ['absolute-value', 'exponents'],
+        'answer': 'D',
+        'insight': r"$\sqrt{a^2} = |a|$, and $3 - 2\sqrt3$ is negative because $2\sqrt3 = \sqrt{12} > 3$.",
+        'steps': [
+            r"$|3 - 2\sqrt3| + |3 + 2\sqrt3| = (2\sqrt3 - 3) + (3 + 2\sqrt3) = 4\sqrt3$.",
+            r"The answer is $\textbf{(D) } 4\sqrt{3}$.",
+        ],
+        'trap': r"Cancelling the square root and the square directly, which gives $6$.",
+    },
+    '2021-amc-10b-3': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'C',
+        'insight': r"The team has as many juniors as seniors: $\frac14 J = \frac1{10} S$.",
+        'steps': [
+            r"So $S = \frac52 J$, and $J + \frac52 J = 28$ gives $J = 8$.",
+            r"The answer is $\textbf{(C) } 8$.",
+        ],
+        'trap': r"Answering $20$, the number of seniors.",
+    },
+    '2021-amc-10b-4': {
+        'topics': ['word-problems', 'arithmetic'],
+        'answer': 'B',
+        'insight': r"Count the blue students who are not in blue-blue pairs: each sits in a mixed pair.",
+        'steps': [
+            r"The $23$ blue pairs use $46$ blue students, so $11$ blue students are in mixed pairs, using $11$ yellow students.",
+            r"That leaves $75 - 11 = 64$ yellow students in $32$ pairs. The answer is $\textbf{(B) } 32$.",
+        ],
+        'trap': r"Subtracting pairs instead of people: $66 - 23 = 43$ counts the mixed pairs too.",
+    },
+    '2021-amc-10b-5': {
+        'topics': ['factors-divisors', 'casework'],
+        'answer': 'B',
+        'insight': r"Start with $30$: with single digits it can only be $5 \cdot 6$.",
+        'steps': [
+            r"Then $24$ can't use $6$, so it is $3 \cdot 8$ rather than $4 \cdot 6$.",
+            r"$5 + 6 + 3 + 8 = 22$. The answer is $\textbf{(B) } 22$.",
+        ],
+        'trap': r"Picking $4 \cdot 6$ for $24$ first and then reusing the $6$ in $5 \cdot 6$; the ages are distinct.",
+    },
+    '2021-amc-10b-6': {
+        'topics': ['statistics'],
+        'answer': 'C',
+        'insight': r"Take $3$ morning students and $4$ afternoon students; the ratio is all that matters.",
+        'steps': [
+            r"The mean is $\frac{3 \cdot 84 + 4 \cdot 70}{7} = \frac{532}{7} = 76$.",
+            r"The answer is $\textbf{(C) } 76$.",
+        ],
+        'trap': r"Averaging $84$ and $70$ to get $77$; the afternoon class is bigger, so it weighs more.",
+    },
+    '2021-amc-10b-7': {
+        'topics': ['circles', 'area', 'casework'],
+        'answer': 'D',
+        'insight': r"Circles tangent to $\ell$ at $A$ on the same side are nested, so on each side only the ring between the largest and the next one counts.",
+        'steps': [
+            r"Put the $7$ circle alone on one side: all $49\pi$ of it counts.",
+            r"On the other side the $5, 3, 1$ circles leave the ring between $5$ and $3$: $25\pi - 9\pi = 16\pi$.",
+            r"$49\pi + 16\pi = 65\pi$, more than any other split (for example $7, 1$ against $5, 3$ gives $48\pi + 16\pi$). The answer is $\textbf{(D) } 65\pi$.",
+        ],
+        'trap': r"Counting the inside of the $1$ circle on the crowded side; it lies inside the $3$ and $5$ circles too.",
+    },
+    '2021-amc-10b-8': {
+        'topics': ['sequences-series', 'casework'],
+        'answer': 'A',
+        'insight': r"The odd squares mark where each ring ends: $9$ and $25$ sit at the top-right corners of the $3 \times 3$ and $5 \times 5$ squares.",
+        'steps': [
+            r"The second row from the top is the top row of the middle $13 \times 13$ square, which ends at $169$ in its top-right corner. That ring runs left to right along this row, so the row's inner part is $157, 158, \ldots, 169$.",
+            r"The outer ring starts with $170$ just right of $169$, goes down, across the bottom and up the left side, reaching the second row at $225 - 15 = 210$ just before the top-left corner $211$.",
+            r"So the row is $210, 157, \ldots, 169, 170$: least $157$, greatest $210$, and $157 + 210 = 367$. The answer is $\textbf{(A) } 367$.",
+        ],
+        'trap': r"Taking $170$ or $169$ as the greatest; the outer ring comes back up the left side, passing through the second row at $210$.",
+    },
+    '2021-amc-10b-9': {
+        'topics': ['transformations', 'coordinate-geometry'],
+        'answer': 'D',
+        'insight': r"Undo the moves in reverse order: reflect $(-6, 3)$ back over $y = -x$, then rotate clockwise about $(1,5)$.",
+        'steps': [
+            r"Reflecting over $y = -x$ sends $(x, y)$ to $(-y, -x)$, so before it the point was $(-3, 6)$.",
+            r"Relative to $(1,5)$ that is $(-4, 1)$. Turning it $90^\circ$ clockwise gives $(1, 4)$, so $P = (2, 9)$.",
+            r"$b - a = 9 - 2 = 7$. The answer is $\textbf{(D) } 7$.",
+        ],
+        'trap': r"Undoing the rotation counterclockwise again instead of clockwise.",
+    },
+    '2021-amc-10b-10': {
+        'topics': ['solid-geometry'],
+        'answer': 'A',
+        'insight': r"The water's volume is the cone's volume.",
+        'steps': [
+            r"$\frac13 \pi \cdot 12^2 \cdot 18 = 864\pi$.",
+            r"$\pi \cdot 24^2 \cdot h = 864\pi$ gives $h = \frac{864}{576} = 1.5$. The answer is $\textbf{(A) } 1.5$.",
+        ],
+        'trap': r"Forgetting the $\frac13$ in the cone's volume, which gives $4.5$.",
+    },
+    '2021-amc-10b-11': {
+        'topics': ['diophantine', 'area'],
+        'answer': 'D',
+        'insight': r"With $m$ rows and $n$ columns the interior is $(m-2)(n-2)$, and it should be half of all $mn$ pieces.",
+        'steps': [
+            r"$2(m-2)(n-2) = mn$ rearranges to $(m-4)(n-4) = 8$.",
+            r"So $(m, n) = (5, 12)$ or $(6, 8)$, giving $60$ or $48$ pieces. The answer is $\textbf{(D) } 60$.",
+        ],
+        'trap': r"Setting the interior equal to the perimeter count $2m + 2n$, which counts each corner twice.",
+    },
+    '2021-amc-10b-12': {
+        'topics': ['factors-divisors'],
+        'answer': 'C',
+        'insight': r"Every divisor is an odd divisor times $1, 2, 4$ or $8$, since $N$ has exactly $2^3$.",
+        'steps': [
+            r"$N = (2 \cdot 17)^2 \cdot (3^2 \cdot 7) \cdot (2 \cdot 3^3 \cdot 5)$ has $2^3$. If the odd divisors add to $O$, all divisors add to $(1 + 2 + 4 + 8)O = 15O$.",
+            r"The even ones add to $14O$, so the ratio is $1 : 14$. The answer is $\textbf{(C) } 1 : 14$.",
+        ],
+        'trap': r"Comparing odd divisors with all divisors, which gives $1 : 15$.",
+    },
+    '2021-amc-10b-13': {
+        'topics': ['digits-bases', 'linear-equations'],
+        'answer': 'B',
+        'insight': r"$\underline{32d}_n$ and $\underline{324}_n$ differ only in the last digit, so subtracting them removes $n$.",
+        'steps': [
+            r"$\underline{11d1}_6 = 216 + 36 + 6d + 1 = 253 + 6d$, and $\underline{324}_n = \underline{32d}_n + (4 - d) = 267 - d$.",
+            r"$267 - d = 253 + 6d$ gives $d = 2$. Then $3n^2 + 2n + 2 = 263$, so $n = 9$.",
+            r"$n + d = 11$. The answer is $\textbf{(B) } 11$.",
+        ],
+        'trap': r"Reading $\underline{11d1}$ in base $n$ instead of base six.",
+    },
+    '2021-amc-10b-14': {
+        'topics': ['circles', 'right-triangles'],
+        'answer': 'B',
+        'insight': r"Equal chords are equally far from the centre, so the centre is halfway between the two $38$ chords.",
+        'steps': [
+            r"With spacing $d$, the $38$ chords are $\frac d2$ from the centre and the $34$ chord is $\frac{3d}{2}$.",
+            r"$r^2 = 19^2 + \frac{d^2}{4} = 17^2 + \frac{9d^2}{4}$, so $2d^2 = 72$ and $d = 6$. The answer is $\textbf{(B) } 6$.",
+        ],
+        'trap': r"Putting the centre on the middle line; the middle chord would then be the longest, but $38, 38, 34$ has two equal longest chords.",
+    },
+    '2021-amc-10b-15': {
+        'topics': ['polynomials', 'exponents'],
+        'answer': 'B',
+        'insight': r"Factor out $x^7$: the expression is $x^7\left(x^4 - 7 + x^{-4}\right)$.",
+        'steps': [
+            r"Squaring, $x^2 + x^{-2} = 5 - 2 = 3$, and again, $x^4 + x^{-4} = 9 - 2 = 7$.",
+            r"So the bracket is $0$. The answer is $\textbf{(B) } 0$.",
+        ],
+        'trap': r"Solving for $x$ and raising it to the $11$th power by hand.",
+    },
+    '2021-amc-10b-16': {
+        'topics': ['divisibility', 'casework'],
+        'answer': 'C',
+        'insight': r"An uphill integer can't end in $0$, so to be divisible by $5$ it ends in $5$, and every other digit is from $1$ to $4$.",
+        'steps': [
+            r"For divisibility by $3$ the digits before the $5$ must add to $1 \pmod 3$.",
+            r"Subsets of $\{1,2,3,4\}$ with that sum: $\{1\}, \{4\}, \{1,3\}, \{3,4\}, \{1,2,4\}, \{1,2,3,4\}$, giving $15, 45, 135, 345, 1245, 12345$.",
+            r"That is $6$. The answer is $\textbf{(C) } 6$.",
+        ],
+        'trap': r"Looking for uphill integers ending in $0$; no digit can come before a $0$, so none exist.",
+    },
+    '2021-amc-10b-17': {
+        'topics': ['logic', 'casework'],
+        'answer': 'C',
+        'insight': r"Start with the smallest scores, which have the fewest ways to be made.",
+        'steps': [
+            r"Oscar's $4$ must be $1 + 3$. Aditi's $7$ can't use $1$ or $3$, and $7 = 2 + 5$ is the only option left.",
+            r"Kim's $17$ is $8 + 9$ or $7 + 10$, and Tyrone's $16$ is $6 + 10$ or $7 + 9$. They can't share cards, so Kim has $8, 9$ and Tyrone $6, 10$.",
+            r"Ravon gets the rest: $4$ and $7$. The answer is $\textbf{(C) }$ Ravon was given card 4.",
+        ],
+        'trap': r"Stopping after Oscar and Aditi and guessing from what looks likely; the high scores pin down the rest.",
+    },
+    '2021-amc-10b-18': {
+        'topics': ['probability', 'conditional-probability'],
+        'answer': 'C',
+        'insight': r"Repeats of an even number already seen change nothing; only the order in which new outcomes first appear matters.",
+        'steps': [
+            r"The first new outcome must be an even number: $\frac{3}{6} = \frac12$.",
+            r"Among the two unseen evens and the three odds, the next new one must be even: $\frac25$. Then $\frac14$ for the last even before any odd.",
+            r"$\frac12 \cdot \frac25 \cdot \frac14 = \frac1{20}$. The answer is $\textbf{(C) } \frac{1}{20}$.",
+        ],
+        'trap': r"Requiring the first three rolls to be $2, 4, 6$ in some order, which ignores repeats and gives $\frac1{36}$.",
+    },
+    '2021-amc-10b-19': {
+        'topics': ['statistics', 'linear-equations'],
+        'answer': 'D',
+        'insight': r"Removing the largest versus removing the smallest changes the mean of $n - 1$ numbers from $32$ to $40$, and that gap is the $72$ between them.",
+        'steps': [
+            r"$\frac{72}{n - 1} = 40 - 32 = 8$, so $n = 10$.",
+            r"Without the largest the sum is $9 \cdot 32 = 288$; without both it is $8 \cdot 35 = 280$, so the least is $8$ and the largest $80$.",
+            r"The total is $368$ and the mean $36.8$. The answer is $\textbf{(D) } 36.8$.",
+        ],
+        'trap': r"Averaging $32$, $35$ and $40$; the means are of different sets.",
+    },
+    '2021-amc-10b-20': {
+        'topics': ['polygons', 'area', 'triangles'],
+        'answer': 'D',
+        'insight': r"$ABFC$ (with $F$ the inner point joined to $A$, $B$ and $C$) has four sides of $2$ and diagonal $BF = 2$, so it is a rhombus of two equilateral triangles.",
+        'steps': [
+            r"Its long diagonal is $AC = 2\sqrt3$, and likewise $AD = 2\sqrt3$. With $CD = 2$, triangle $ACD$ has height $\sqrt{12 - 1} = \sqrt{11}$, so area $\sqrt{11}$.",
+            r"The pentagon is triangle $ACD$ plus triangles $ABC$ and $AED$, each half a rhombus of area $2\sqrt3$: $\sqrt{11} + 2\sqrt3 = \sqrt{11} + \sqrt{12}$.",
+            r"$m + n = 23$. The answer is $\textbf{(D) } 23$.",
+        ],
+        'trap': r"Assuming the pentagon is regular because all its sides are $2$.",
+    },
+    '2021-amc-10b-21': {
+        'topics': ['similar-triangles', 'right-triangles'],
+        'answer': 'A',
+        'insight': r"Let the fold meet $\overline{CD}$ at $F$. Then $FC' = FC$, which gives a right triangle $C'DF$.",
+        'steps': [
+            r"With $DF = x$: $\left(\frac13\right)^2 + x^2 = (1 - x)^2$, so $x = \frac49$ and $C'F = \frac59$: a $3$-$4$-$5$ triangle with perimeter $\frac43$.",
+            r"The fold keeps the right angle at $C$, so the angle at $C'$ is right and triangle $AEC'$ is similar to $DC'F$, with $AC' = \frac23$ matching $DF = \frac49$.",
+            r"The scale is $\frac32$, so the perimeter is $\frac32 \cdot \frac43 = 2$. The answer is $\textbf{(A) } 2$.",
+        ],
+        'trap': r"Matching $AC'$ to $C'D$ instead of $DF$; the similar triangles are turned relative to each other.",
+    },
+    '2021-amc-10b-22': {
+        'topics': ['probability', 'permutations'],
+        'answer': 'D',
+        'insight': r"Fix Ang's colours. A box is all one colour exactly when Ben and Jasmin both put Ang's colour there, so use inclusion–exclusion over the boxes.",
+        'steps': [
+            r"For a given set of $k$ boxes, the chance is $\left(\frac{(5-k)!}{5!}\right)^2$.",
+            r"$P = \binom51\frac1{25} - \binom52\frac1{400} + \binom53\frac1{3600} - \binom54\frac1{14400} + \frac1{14400} = \frac{2556}{14400} = \frac{71}{400}$.",
+            r"$m + n = 471$. The answer is $\textbf{(D) } 471$.",
+        ],
+        'trap': r"Using $5 \cdot \frac1{25} = \frac15$, which counts arrangements with two matching boxes twice.",
+    },
+    '2021-amc-10b-23': {
+        'topics': ['geometric-probability', 'area'],
+        'answer': 'C',
+        'insight': r"Track the coin's centre: it ranges over a $7 \times 7$ square, and the coin touches black when the centre is within $\frac12$ of a black region.",
+        'steps': [
+            r"Near a corner the centre must satisfy $x + y \le 2 + \frac{\sqrt2}{2}$ with $x, y \ge \frac12$: a triangle with legs $1 + \frac{\sqrt2}2$, area $\frac34 + \frac{\sqrt2}2$. Four corners give $3 + 2\sqrt2$.",
+            r"Around the diamond: its area $8$, plus strips $\frac12$ wide along its perimeter $8\sqrt2$, plus four quarter circles: $8 + 4\sqrt2 + \frac\pi4$.",
+            r"$P = \frac{11 + 6\sqrt2 + \frac\pi4}{49} = \frac{44 + 24\sqrt2 + \pi}{196}$, so $a + b = 68$. The answer is $\textbf{(C) } 68$.",
+        ],
+        'trap': r"Dividing by $64$, the whole square; the centre can only land in the $7 \times 7$ square that keeps the coin inside.",
+    },
+    '2021-amc-10b-24': {
+        'topics': ['games-strategy'],
+        'answer': 'B',
+        'insight': r"Give each wall a nim value: the smallest number not reachable in one move. Beth wins exactly when the values XOR to $0$.",
+        'steps': [
+            r"Walls of $1, 2, 3$ bricks have values $1, 2, 3$. A $4$ goes to $3, 2, 1 \oplus 2, 1 \oplus 1$, values $3, 2, 3, 0$, so its value is $1$; a $5$ has value $4$ and a $6$ has value $3$.",
+            r"$(6,2,1)$: $3 \oplus 2 \oplus 1 = 0$. The others give $3, 3, 1, 2$.",
+            r"The answer is $\textbf{(B) } (6,2,1)$.",
+        ],
+        'trap': r"Using a wall's length as its nim value, as in ordinary Nim; here a $4$ is worth $1$ and a $6$ is worth $3$.",
+    },
+    '2021-amc-10b-25': {
+        'topics': ['coordinate-geometry', 'lattice-paths'],
+        'answer': 'E',
+        'insight': r"$300$ is a third of the $900$ points, and the line $y = \frac23 x$ through $(30, 20)$ cuts off exactly a third.",
+        'steps': [
+            r"Below $y = \frac23 x$: $\sum_{x=1}^{30}\left\lfloor \frac{2x}3 \right\rfloor = \frac23 \cdot 465 - 10 = 300$, counting the $10$ points on the line.",
+            r"Any smaller slope loses those $10$ points, so $m \ge \frac23$. The count stays $300$ until the line reaches the next lattice point above it, at slope $\frac{19}{28}$.",
+            r"$\frac{19}{28} - \frac23 = \frac1{84}$, so $a + b = 85$. The answer is $\textbf{(E) } 85$.",
+        ],
+        'trap': r"Taking the next slope as $\frac{21}{30} = \frac7{10}$; $\frac{19}{28}$ is closer, found by looking for $\frac yx$ just above $\frac23$ with $x \le 30$.",
+    },
+    # ------------------------------------------------------------------ 2021 Fall AMC 10B
+    '2021-fall-amc-10b-1': {
+        'topics': ['arithmetic', 'digits-bases'],
+        'answer': 'E',
+        'insight': r"Each digit $1, 2, 3, 4$ appears once in every place value.",
+        'steps': [
+            r"Every column adds to $1 + 2 + 3 + 4 = 10$, so the sum is $10 \cdot 1111 = 11{,}110$.",
+            r"The answer is $\textbf{(E) } 11{,}110$.",
+        ],
+        'trap': r"Dropping a carry when adding column by column; the symmetry avoids carrying at all.",
+    },
+    '2021-fall-amc-10b-2': {
+        'topics': ['area', 'coordinate-geometry'],
+        'answer': 'B',
+        'insight': r"The shape is the big triangle $(1,0), (3,5), (5,0)$ with the notch $(1,0), (3,2), (5,0)$ cut out of it.",
+        'steps': [
+            r"The big triangle has base $4$ and height $5$, area $10$. The notch has base $4$ and height $2$, area $4$.",
+            r"$10 - 4 = 6$. The answer is $\textbf{(B) } 6$.",
+        ],
+        'trap': r"Adding the notch instead of subtracting it, which gives $14$.",
+    },
+    '2021-fall-amc-10b-3': {
+        'topics': ['decimals-fractions', 'gcd-lcm'],
+        'answer': 'E',
+        'insight': r"Over the common denominator the top is a difference of squares.",
+        'steps': [
+            r"$\frac{2021^2 - 2020^2}{2020 \cdot 2021} = \frac{4041}{2020 \cdot 2021}$.",
+            r"$4041 = 3^2 \cdot 449$ shares no factor with $2020 = 2^2 \cdot 5 \cdot 101$ or $2021 = 43 \cdot 47$. The answer is $\textbf{(E) } 4041$.",
+        ],
+        'trap': r"Guessing $1$ because the two fractions are so close; closeness says the fraction is small, not that its top is $1$.",
+    },
+    '2021-fall-amc-10b-4': {
+        'topics': ['absolute-value', 'word-problems'],
+        'answer': 'C',
+        'insight': r"The gap starts at $N$, and Minneapolis falling $5$ while St. Louis rises $3$ shrinks it by $8$.",
+        'steps': [
+            r"$|N - 8| = 2$, so $N = 10$ or $N = 6$.",
+            r"$10 \cdot 6 = 60$. The answer is $\textbf{(C) } 60$.",
+        ],
+        'trap': r"Only taking $N - 8 = 2$; St. Louis may end up the warmer one.",
+    },
+    '2021-fall-amc-10b-5': {
+        'topics': ['exponents'],
+        'answer': 'E',
+        'insight': r"Write everything as a power of $2$.",
+        'steps': [
+            r"$\frac{8^{2022}}{4} = \frac{2^{6066}}{2^2} = 2^{6064} = 4^{3032}$.",
+            r"The answer is $\textbf{(E) } 4^{3032}$.",
+        ],
+        'trap': r"Dividing the exponent by $4$ instead of subtracting $2$ from it.",
+    },
+    '2021-fall-amc-10b-6': {
+        'topics': ['factors-divisors'],
+        'answer': 'B',
+        'insight': r"$2021 = 43 \cdot 47$, and the number of divisors is a product of (exponent $+1$) terms.",
+        'steps': [
+            r"The choices are $p^{2020}$ or $p^{46}q^{42}$; the smallest is $2^{46} \cdot 3^{42}$.",
+            r"That is $2^4 \cdot 6^{42}$, so $m = 16$ and $k = 42$, and $m + k = 58$. The answer is $\textbf{(B) } 58$.",
+        ],
+        'trap': r"Giving $3$ the larger exponent; the smaller prime takes the bigger power.",
+    },
+    '2021-fall-amc-10b-7': {
+        'topics': ['decimals-fractions', 'casework'],
+        'answer': 'C',
+        'insight': r"List the special fractions $\frac{a}{15 - a}$ and sort them by denominator after simplifying.",
+        'steps': [
+            r"Integers: $2, 4, 14$. Halves: $\frac12, \frac32, \frac{13}2$. Quarters: $\frac14, \frac{11}4$. The rest ($\frac1{14}, \frac2{13}, \frac4{11}, \frac23, \frac78, \frac87$) can't pair with anything to make an integer.",
+            r"Integer + integer: $4, 6, 8, 16, 18, 28$. Half + half: $1, 2, 3, 7, 8, 13$. Quarter + quarter: $3$.",
+            r"The distinct values are $1, 2, 3, 4, 6, 7, 8, 13, 16, 18, 28$: $11$. The answer is $\textbf{(C) } 11$.",
+        ],
+        'trap': r"Counting $3$ and $8$ twice; they come from two kinds of pair.",
+    },
+    '2021-fall-amc-10b-8': {
+        'topics': ['factors-divisors', 'polynomials'],
+        'answer': 'C',
+        'insight': r"$16{,}383 = 2^{14} - 1$, a difference of squares.",
+        'steps': [
+            r"$2^{14} - 1 = (2^7 - 1)(2^7 + 1) = 127 \cdot 129 = 127 \cdot 3 \cdot 43$.",
+            r"$127$ is prime and its digits add to $10$. The answer is $\textbf{(C) } 10$.",
+        ],
+        'trap': r"Stopping at $129$ without noticing it is $3 \cdot 43$.",
+    },
+    '2021-fall-amc-10b-9': {
+        'topics': ['decimals-fractions', 'linear-equations'],
+        'answer': 'C',
+        'insight': r"Let $p$ be the magical fraction of blue knights, so $2p$ is the red one, and average over all knights.",
+        'steps': [
+            r"$\frac27 \cdot 2p + \frac57 \cdot p = \frac16$, so $\frac97 p = \frac16$ and $p = \frac7{54}$.",
+            r"Red knights: $2p = \frac7{27}$. The answer is $\textbf{(C) } \frac{7}{27}$.",
+        ],
+        'trap': r"Answering $p$ itself, the blue knights' fraction.",
+    },
+    '2021-fall-amc-10b-10': {
+        'topics': ['logic', 'perfect-powers'],
+        'answer': 'A',
+        'insight': r"Alice's remark rules out $1$ and $40$ for her. Bob can then only be sure if his number is at an end of what's left.",
+        'steps': [
+            r"Bob knows if he has $1$ or $2$ (he is smaller, since Alice has neither $1$ nor his number) or $39$ or $40$. The only prime is $2$.",
+            r"$200 + a$ is a square with $3 \le a \le 39$: only $225$, so $a = 25$.",
+            r"$2 + 25 = 27$. The answer is $\textbf{(A) } 27$.",
+        ],
+        'trap': r"Forgetting that Bob also learned Alice doesn't hold $1$, which is what makes $2$ certain.",
+    },
+    '2021-fall-amc-10b-11': {
+        'topics': ['circles', 'area', 'polygons'],
+        'answer': 'B',
+        'insight': r"Each reflected arc bites a circular segment out of the hexagon, the same size as the segment outside it.",
+        'steps': [
+            r"The circle has radius $1$. One segment is a $60^\circ$ sector minus an equilateral triangle: $\frac\pi6 - \frac{\sqrt3}4$.",
+            r"The region is the hexagon minus six segments: $\frac{3\sqrt3}2 - 6\left(\frac\pi6 - \frac{\sqrt3}4\right) = 3\sqrt3 - \pi$.",
+            r"The answer is $\textbf{(B) } 3\sqrt{3}-\pi$.",
+        ],
+        'trap': r"Thinking the reflected arcs bulge outward and adding the segments to the hexagon.",
+    },
+    '2021-fall-amc-10b-12': {
+        'topics': ['polynomials', 'casework'],
+        'answer': 'D',
+        'insight': r"The left side is $\frac12\left[(x-y)^2 + (y-z)^2 + (z-x)^2\right]$.",
+        'steps': [
+            r"For it to equal $1$, the three differences must be $\pm1, \pm1, 0$ in some order.",
+            r"(D): $x = z$ and $y = x + 1$ gives differences $-1, 1, 0$, so the value is $1$. The others allow $(2,2,0)$ or $(1,1,2)$ type differences.",
+            r"The answer is $\textbf{(D) }$ $x=z$ and $y-1=x$.",
+        ],
+        'trap': r"Choosing (A), which works only when $x - y = 1$; $x > y$ by more makes the value $(x-y)^2$.",
+    },
+    '2021-fall-amc-10b-13': {
+        'topics': ['similar-triangles', 'area'],
+        'answer': 'B',
+        'insight': r"The triangle's half-width shrinks linearly with height, and the two squares give two heights where you know it.",
+        'steps': [
+            r"With half-base $w$ and height $h$: at height $3$ the half-width is $\frac32$, and at height $5$ it is $1$.",
+            r"So it drops $\frac12$ over $2$ units, reaching $0$ at height $9$, and the half-base is $\frac32 + \frac34 = \frac94$.",
+            r"The area is $\frac94 \cdot 9 = \frac{81}4 = 20\frac14$. The answer is $\textbf{(B) } 20\frac14$.",
+        ],
+        'trap': r"Measuring the figure; it isn't drawn to scale.",
+    },
+    '2021-fall-amc-10b-14': {
+        'topics': ['probability', 'divisibility'],
+        'answer': 'C',
+        'insight': r"Count the failures: the product has at most one factor of $2$.",
+        'steps': [
+            r"No factor of $2$: all six dice odd, $\left(\frac12\right)^6 = \frac1{64}$.",
+            r"Exactly one: one die shows $2$ or $6$ and the rest are odd, $6 \cdot \frac13 \cdot \left(\frac12\right)^5 = \frac4{64}$.",
+            r"$1 - \frac5{64} = \frac{59}{64}$. The answer is $\textbf{(C) } \frac{59}{64}$.",
+        ],
+        'trap': r"Counting a $4$ as only one factor of $2$; a single $4$ already makes the product divisible by $4$.",
+    },
+    '2021-fall-amc-10b-15': {
+        'topics': ['similar-triangles', 'right-triangles', 'quadrilaterals'],
+        'answer': 'D',
+        'insight': r"Let $\theta = \angle PBC = \angle APB$. Then $\cos\theta = \frac{BR}{BC}$ from triangle $BRC$ and $\sin\theta = \frac{AB}{BP}$ from triangle $ABP$.",
+        'steps': [
+            r"With side $s$ and $BP = 13$: $\left(\frac6s\right)^2 + \left(\frac s{13}\right)^2 = 1$, so $s^4 - 169s^2 + 6084 = 0$.",
+            r"$s^2 = 117$ or $52$. With $s^2 = 52$, $AP = 13\cos\theta = \frac{78}{s} > s$, so $P$ would be off the side.",
+            r"The area is $117$. The answer is $\textbf{(D) } 117$.",
+        ],
+        'trap': r"Keeping $52$; check that $P$ actually lands on $\overline{AD}$.",
+    },
+    '2021-fall-amc-10b-16': {
+        'topics': ['expected-value', 'permutations'],
+        'answer': 'D',
+        'insight': r"By linearity, find the chance one ball ends where it started and multiply by $5$.",
+        'steps': [
+            r"A ball is touched by $2$ of the $5$ swaps. It ends at home if neither swap touches it, $\left(\frac35\right)^2$, or if Silva repeats Chris's swap that moved it, $\frac25 \cdot \frac15$.",
+            r"That is $\frac{9}{25} + \frac{2}{25} = \frac{11}{25}$, and $5 \cdot \frac{11}{25} = 2.2$. The answer is $\textbf{(D) } 2.2$.",
+        ],
+        'trap': r"Missing the case where Silva undoes Chris's swap and puts both balls back.",
+    },
+    '2021-fall-amc-10b-17': {
+        'topics': ['transformations', 'coordinate-geometry', 'trigonometry'],
+        'answer': 'D',
+        'insight': r"Two reflections in lines through the origin make a rotation by twice the angle from $\ell$ to $m$.",
+        'steps': [
+            r"$(-1, 4) \to (4, 1)$ is a $90^\circ$ clockwise turn, so $m$ is $45^\circ$ clockwise from $\ell$.",
+            r"$\ell$ has slope $5$, so $m$ has slope $\frac{5 - 1}{1 + 5} = \frac23$: the line $2x - 3y = 0$.",
+            r"The answer is $\textbf{(D) } 2x-3y=0$.",
+        ],
+        'trap': r"Turning $\ell$ by $45^\circ$ counterclockwise, which gives slope $-\frac32$, choice (B).",
+    },
+    '2021-fall-amc-10b-18': {
+        'topics': ['polygons', 'area', 'trigonometry'],
+        'answer': 'E',
+        'insight': r"Cut the polygon from the centre into $24$ equal triangles, each joining a spike tip to the notch beside it.",
+        'steps': [
+            r"A spike tip is a corner of a square, $3\sqrt2$ from the centre. A notch is where sides with normals $30^\circ$ apart cross, $\frac{3}{\cos 30^\circ} = 2\sqrt3$ from the centre. They are $15^\circ$ apart.",
+            r"Each triangle has area $\frac12 \cdot 3\sqrt2 \cdot 2\sqrt3 \sin 15^\circ = 3\sqrt6 \cdot \frac{\sqrt6 - \sqrt2}{4} = \frac{9 - 3\sqrt3}{2}$.",
+            r"$24$ of them: $108 - 36\sqrt3$, so $a + b + c = 147$. The answer is $\textbf{(E) } 147$.",
+        ],
+        'trap': r"Adding the three squares and subtracting overlaps pairwise; the triple overlap gets lost.",
+    },
+    '2021-fall-amc-10b-19': {
+        'topics': ['exponents', 'estimation'],
+        'answer': 'A',
+        'insight': r"$N \approx 7.78 \times 10^{312}$. For the $r$th root, write $10^{312}$ as $10^{r k}$ times what is left over.",
+        'steps': [
+            r"$r = 2, 3, 4, 6$ divide $312$, so the leading digits come from $\sqrt{7.78} \approx 2.8$, $\sqrt[3]{7.78} \approx 1.98$, $\sqrt[4]{7.78} \approx 1.67$ and $\sqrt[6]{7.78} \approx 1.41$: $2, 1, 1, 1$.",
+            r"For $r = 5$, $312 = 310 + 2$, so take $\sqrt[5]{778} \approx 3.8$: digit $3$.",
+            r"$2 + 1 + 1 + 3 + 1 = 8$. The answer is $\textbf{(A) } 8$.",
+        ],
+        'trap': r"Using $\sqrt[3]{7.78} \approx 2$; it is just under $2$ because $2^3 = 8$.",
+    },
+    '2021-fall-amc-10b-20': {
+        'topics': ['conditional-probability', 'probability'],
+        'answer': 'C',
+        'insight': r"By symmetry Hugo wins with probability $\frac14$. Find the chance he rolls a $5$ and wins, then divide.",
+        'steps': [
+            r"After a $5$, the other three roll at most $5$. If $k$ of them tie with $5$, Hugo wins the tie-break with probability $\frac1{k+1}$.",
+            r"$\left(\frac46\right)^3 + 3 \cdot \frac16 \left(\frac46\right)^2 \cdot \frac12 + 3 \left(\frac16\right)^2 \frac46 \cdot \frac13 + \left(\frac16\right)^3 \frac14 = \frac{369}{864}$.",
+            r"$\frac{\frac16 \cdot \frac{369}{864}}{\frac14} = \frac{41}{144}$. The answer is $\textbf{(C) } \frac{41}{144}$.",
+        ],
+        'trap': r"Ignoring ties, which gives $\frac{\frac16\left(\frac46\right)^3}{\frac14}$.",
+    },
+    '2021-fall-amc-10b-21': {
+        'topics': ['polygons', 'basic-counting'],
+        'answer': 'E',
+        'insight': r"If two inscribed polygons share no vertex and the larger has more sides, each side of the smaller one is crossed exactly twice.",
+        'steps': [
+            r"So a pair with $m < n$ sides crosses $2m$ times.",
+            r"$(5,6), (5,7), (5,8)$: $10$ each. $(6,7), (6,8)$: $12$ each. $(7,8)$: $14$.",
+            r"$30 + 24 + 14 = 68$. The answer is $\textbf{(E) } 68$.",
+        ],
+        'trap': r"Using $2n$ with the larger polygon's count.",
+    },
+    '2021-fall-amc-10b-22': {
+        'topics': ['divisibility', 'sequences-series', 'modular-arithmetic'],
+        'answer': 'B',
+        'insight': r"$S_n = \frac{(1 + \cdots + n)^2 - (1^2 + \cdots + n^2)}{2} = \frac{(n-1)n(n+1)(3n+2)}{24}$.",
+        'steps': [
+            r"$3n + 2$ is never a multiple of $3$, and $24$ has one $3$, so $(n-1)n(n+1)$ needs a factor of $9$: one of them is a multiple of $9$.",
+            r"So $n \equiv 0, \pm1 \pmod 9$: $8, 9, 10, 17, 18, 19, 26, 27, 28, 35$.",
+            r"They add to $197$. The answer is $\textbf{(B) } 197$.",
+        ],
+        'trap': r"Forgetting the $3$ in the $24$ and only asking for a factor of $3$, which every $n$ has.",
+    },
+    '2021-fall-amc-10b-23': {
+        'topics': ['probability', 'graph-theory'],
+        'answer': 'D',
+        'insight': r"Count the colourings with no one-coloured triangle: on five points, the only way is for each colour to form a $5$-cycle.",
+        'steps': [
+            r"Each vertex has $4$ edges; with no one-coloured triangle each colour gets exactly $2$, so each colour forms a $5$-cycle.",
+            r"There are $12$ five-cycles on five points, each giving one such colouring.",
+            r"$1 - \frac{12}{1024} = \frac{253}{256}$. The answer is $\textbf{(D) } \frac{253}{256}$.",
+        ],
+        'trap': r"Answering $1$ from Ramsey's theorem; that needs six points, and five points can avoid it.",
+    },
+    '2021-fall-amc-10b-24': {
+        'topics': ['symmetry-counting', 'combinations'],
+        'answer': 'A',
+        'insight': r"Use Burnside: average over the $24$ rotations of the cube the number of colourings each one fixes.",
+        'steps': [
+            r"Identity: $\binom84 = 70$. Quarter turns about a face axis ($6$): two $4$-cycles of corners, $2$ each. Half turns about a face axis ($3$): four $2$-cycles, $\binom42 = 6$ each.",
+            r"Turns about a corner axis ($8$): two fixed corners and two $3$-cycles, $2 \cdot 2 = 4$ each. Half turns about an edge axis ($6$): four $2$-cycles, $6$ each.",
+            r"$\frac{70 + 12 + 18 + 32 + 36}{24} = 7$. The answer is $\textbf{(A) } 7$.",
+        ],
+        'trap': r"Dividing $70$ by $24$ and rounding; colourings with symmetry are fixed by more than one rotation.",
+    },
+    '2021-fall-amc-10b-25': {
+        'topics': ['coordinate-geometry', 'quadrilaterals', 'trigonometry'],
+        'answer': 'E',
+        'insight': r"The $1 \times 3$ rectangle and the unit square fix the big square. Then $R$ has three corners on known lines and one free angle.",
+        'steps': [
+            r"Tilt the $1 \times 3$ rectangle by $\theta$. Its width gives the side $3\cos\theta + \sin\theta$; the unit square on top gives height $4\sin\theta + 2\cos\theta$. Equal sides force $\tan\theta = \frac13$ and a side of $\sqrt{10}$.",
+            r"Scale by $\sqrt{10}$, so the figure's coordinates are exact: $R$ has a corner at $(4,7)$, one on $y = 10$, one on $x = 10$ and one on the line $x + 3y = 19$.",
+            r"If $R$'s side to the top has slope $t$, the conditions reduce to $4t^2 - 7t + 3 = 0$, so $t = 1$ or $\frac34$, with scaled areas $18$ and $\frac{50}3$.",
+            r"Unscaled: $\frac{18}{10} + \frac{5}{3} = \frac{52}{15}$, so $m + n = 67$. The answer is $\textbf{(E) } 67$.",
+        ],
+        'trap': r"Finding only the $t = \frac34$ rectangle drawn in the figure; $R$ can also be a square.",
     },
 }
 

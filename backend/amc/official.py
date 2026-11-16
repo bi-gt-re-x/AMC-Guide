@@ -90,7 +90,11 @@ def _clean_wiki(text):
     text = re.sub(r'\[\[[^\]|]*\|\s*Solution[^\]]*\]\]', '', text, flags=re.I)
     text = re.sub(r'\[\[(?:[^\]|]*\|)?([^\]]*)\]\]', r'\1', text)
     text = re.sub(r'\[https?://\S+\s+([^\]]*)\]', r'\1', text)
-    text = re.sub(r"'''?", '', text)
+    # Wiki bold and italics (`''word''`) go, but not inside math, where `P''`
+    # is a double prime (2021 Fall AMC 10B #17).
+    parts = re.split(r'(<(?:i|c)?math>.*?</(?:i|c)?math>|(?<!\\)\$\$.*?(?<!\\)\$\$|(?<!\\)\$.*?(?<!\\)\$)',
+                     text, flags=re.S)
+    text = ''.join(part if i % 2 else re.sub(r"'''?", '', part) for i, part in enumerate(parts))
     text = re.sub(r'</?(?:center|div|span|p|br|small|big|sup|sub)[^>]*>', ' ', text, flags=re.I)
     text = re.sub(r'\{\{[^}]*\}\}', '', text)
     # Wiki list items (`* item`, `*item`) as bullet lines.
@@ -98,8 +102,12 @@ def _clean_wiki(text):
     return text
 
 
-def _split_choices(block):
-    """`\\textbf{(A) } 3 \\qquad \\textbf{(B) } 4 ...` into five strings, or None."""
+def _split_choices(block, keep_math=False):
+    """`\\textbf{(A) } 3 \\qquad \\textbf{(B) } 4 ...` into five strings, or None.
+
+    With `keep_math`, each choice keeps its own `$...$`, for choices one to a
+    line that mix math and words (`$\\textbf{(A)}\\: x>y$ and $y=z$`).
+    """
     marks = list(_CHOICE_MARK.finditer(block))
     letters = [next(g for g in m.groups() if g) for m in marks]
     # The first run of A, B, C, D, E in order.
@@ -115,13 +123,32 @@ def _split_choices(block):
         part = block[m.end():end]
         part = re.sub(r'\\(?:qquad|quad|hspace\{[^}]*\}|hfill|\\|newline|;|,|:)|~|&', ' ', part)
         part = re.sub(r'\\ ', ' ', part)
-        # Math delimiters go; an escaped `\$` is a dollar sign and stays (`\textbf{(A) }\$46`).
-        part = re.sub(r'(?<!\\)\$', ' ', part)
+        if keep_math:
+            part = _own_math(part, opens_in_math=not _outside_math(block, m.start()))
+        else:
+            # Math delimiters go; an escaped `\$` is a dollar sign and stays (`\textbf{(A) }\$46`).
+            part = re.sub(r'(?<!\\)\$', ' ', part)
         part = re.sub(r'\s+', ' ', part).strip().rstrip(',;').strip()
         if not part:
             return None
         out.append(part)
     return out
+
+
+def _own_math(part, opens_in_math):
+    """One choice cut from running text, with balanced `$...$` of its own.
+
+    A choice whose letter sat in math (`$\\textbf{(A)}\\: x>y$ and $y=z$`)
+    starts inside that math, and ends on the next choice's opening `$`.
+    """
+    if opens_in_math:
+        part = '$' + part
+    if len(re.findall(r'(?<!\\)\$', part)) % 2:
+        part = re.sub(r'(?<!\\)\$(?!.*(?<!\\)\$)', ' ', part, flags=re.S)
+    # Pair the delimiters left to right; an empty pair is what a letter on its
+    # own left behind (`$\\textbf{(A) }$ Purple ...`).
+    return re.sub(r'(?<!\\)\$(.*?)(?<!\\)\$',
+                  lambda m: '$' + m.group(1).strip() + '$' if m.group(1).strip() else ' ', part, flags=re.S)
 
 
 def _choice_text(raw):
@@ -166,6 +193,11 @@ def _find_choices(body):
         # are found here, and the first one's opening `$` is left behind.
         if not _outside_math(body, first.start()):
             statement = re.sub(r'(?<!\\)\$+\s*$', '', statement.rstrip())
+        # Choices that mix math and words keep their own math.
+        mixed = _split_choices(body, keep_math=True)
+        if mixed and any(re.search(r'(?<!\\)\$', c) for c in mixed):
+            whole = [re.fullmatch(r'\$([^$]*)\$', c) for c in mixed]
+            return [_choice_text(w.group(1)) if w else c for w, c in zip(whole, mixed)], statement.strip()
         return [_choice_text(c) if re.search(r'[\\^_{}]', c) else c for c in choices], statement.strip()
     return None, body
 

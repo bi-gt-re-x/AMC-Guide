@@ -168,6 +168,8 @@ def test_wiki_source_with_imath_bullets_and_wrapped_lines():
     ('2022-amc-10b', 'ADDABABBDDBCEBDDCBCDEECBA', set()),
     ('2022-amc-10a', 'DBEECABDDECACEDDDACEBDBEB', set()),
     ('2021-amc-10a', 'DCDDBADEDCEECACCDEEDCBDDE', set()),
+    ('2021-amc-10b', 'DDCBBCDADADCBBBCCCDDADCBE', set()),
+    ('2021-fall-amc-10b', 'EBECEBCCCABDBCDDDEACEBDAE', set()),
 ])
 def test_the_2024_and_2023_10a_are_written_up_against_their_keys(contest, key, unwritten):
     for n in range(1, 26):
@@ -205,3 +207,18 @@ def test_choices_one_to_a_line_and_align_inside_cmath():
     assert one['statement'] == 'When?' and one['choices'][4] == '$20 \\text{ seconds}$'
     assert two['statement'] == 'Which?' and two['choices'] == ['Choice %s.' % c for c in 'ABCDE']
     assert three['statement'] == 'The sets\n$$\\begin{aligned}&\\{1\\},\\\\ &\\{2\\}\\end{aligned}$$\nHow many?'
+
+
+def test_double_prime_in_math_and_choices_mixing_math_and_words():
+    # 2021 Fall AMC 10B #17 writes P'' in math, which the wiki's ''italic''
+    # stripping must leave alone; #12 puts each choice on a line of its own,
+    # with math and words mixed (`<math>\textbf{(A)} \: x>y</math> and <math>y=z</math>`).
+    source = (
+        "==Problem 1==\nA ''special'' point <math>P'</math> goes to <math>P''</math>.\n\n"
+        '<math>\\textbf{(A) }1\\qquad\\textbf{(B) }2\\qquad\\textbf{(C) }3\\qquad\\textbf{(D) }4\\qquad\\textbf{(E) }5</math>\n\n'
+        '==Problem 2==\nWhich?\n\n' + ''.join(
+            '<math>\\textbf{(%s)} \\: x>%d</math> and <math>y=z</math>\n\n' % (c, i) for i, c in enumerate('ABCDE')))
+    one, two = official.parse_contest(source, 'AMC 10')
+    assert one['statement'] == "A special point $P'$ goes to $P''$."
+    assert two['statement'] == 'Which?'
+    assert two['choices'] == ['$x>%d$ and $y=z$' % i for i in range(5)]
