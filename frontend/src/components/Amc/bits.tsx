@@ -194,15 +194,39 @@ export function AnswerInput({
 }
 
 /** Seconds since mount, paused while the tab is hidden. */
+/** Whether the reader is here: the tab is showing and its window has focus.
+ *  Timers stop while either is false, so time spent in another tab, app or
+ *  window does not count against a problem or a contest. */
+export function windowActive(): boolean {
+  return document.visibilityState === 'visible' && document.hasFocus();
+}
+
+export function useWindowActive(): boolean {
+  const [active, setActive] = useState(windowActive);
+  useEffect(() => {
+    const update = () => setActive(windowActive());
+    window.addEventListener('focus', update);
+    window.addEventListener('blur', update);
+    document.addEventListener('visibilitychange', update);
+    return () => {
+      window.removeEventListener('focus', update);
+      window.removeEventListener('blur', update);
+      document.removeEventListener('visibilitychange', update);
+    };
+  }, []);
+  return active;
+}
+
 export function useStopwatch(running: boolean) {
   const [seconds, setSeconds] = useState(0);
+  const active = useWindowActive();
   useEffect(() => {
-    if (!running) return undefined;
+    if (!running || !active) return undefined;
     const id = window.setInterval(() => {
-      if (document.visibilityState === 'visible') setSeconds((s) => s + 1);
+      if (windowActive()) setSeconds((s) => s + 1);
     }, 1000);
     return () => window.clearInterval(id);
-  }, [running]);
+  }, [running, active]);
   return [seconds, setSeconds] as const;
 }
 

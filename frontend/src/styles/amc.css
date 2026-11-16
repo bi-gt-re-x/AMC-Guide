@@ -714,6 +714,9 @@ html[data-theme="dark"] .am-choice.is-picked .am-choice-letter { background: var
 }
 .am-exam-clock { font-family: var(--font-mono); font-size: 22px; font-weight: 600; }
 .am-exam-clock.is-low { color: var(--am-bad); }
+.am-exam-clock.is-paused { color: var(--am-muted); }
+.am-exam-clock small { margin-left: 8px; font-family: var(--font-sans, inherit); font-size: 11px; font-weight: 600;
+    letter-spacing: .06em; text-transform: uppercase; vertical-align: middle; }
 .am-exam { display: grid; grid-template-columns: minmax(0, 1fr) 280px; gap: var(--space-4); align-items: start; }
 .am-exam-side { position: sticky; top: calc(var(--topnav-h, 0px) + 96px); }
 @media (max-width: 1024px) { .am-exam { grid-template-columns: minmax(0, 1fr); } .am-exam-side { position: static; } }
@@ -1157,12 +1160,26 @@ mark.am-hl { background: var(--am-warn-soft); color: inherit; border-radius: 3px
 .am-mock-step { border-style: dashed; }
 
 /* The exam: a cover page, then the paper and a bubble answer sheet. */
-.am-cover { max-width: 680px; margin: var(--space-6) auto; padding: var(--space-6); }
-.am-cover h1 { font-family: var(--am-serif); font-weight: 400; font-size: var(--text-3xl); margin: 0 0 var(--space-4); line-height: 1.15; }
-.am-cover-rules { margin: 0 0 var(--space-6); padding-left: 1.2em; display: grid; gap: var(--space-2); color: var(--am-body); line-height: 1.55; }
-.am-cover-actions { display: flex; justify-content: flex-end; gap: var(--space-2); }
+/* The cover page before a timed contest: one quiet column, the paper's name,
+   three facts, four rules and one button. */
+.am-cover { max-width: 520px; margin: clamp(var(--space-6), 8vh, 96px) auto var(--space-8); text-align: center; }
+.am-cover .am-kicker { margin: 0 0 var(--space-2); }
+.am-cover h1 { font-family: var(--am-serif); font-weight: 400; font-size: clamp(30px, 5vw, 42px); margin: 0 0 var(--space-6); line-height: 1.12; text-wrap: balance; }
+.am-cover-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); margin: 0 0 var(--space-6);
+    border-top: 1px solid var(--am-line); border-bottom: 1px solid var(--am-line); }
+.am-cover-facts div { padding: var(--space-4) var(--space-2); }
+.am-cover-facts div + div { border-left: 1px solid var(--am-line-soft); }
+.am-cover-facts dt { font-size: 11px; letter-spacing: .06em; text-transform: uppercase; color: var(--am-muted); }
+.am-cover-facts dd { margin: 6px 0 0; font-family: var(--am-serif); font-size: 24px; color: var(--am-ink); }
+.am-cover-rules { list-style: none; margin: 0 auto var(--space-8); padding: 0; display: grid; gap: var(--space-3);
+    max-width: 44ch; color: var(--am-body); font-size: 14px; line-height: 1.55; }
+.am-cover-actions { display: grid; justify-items: center; gap: var(--space-3); }
+.am-cover-begin { min-width: 220px; min-height: 46px; font-size: 15px; }
 .am-exam-paper { padding: 28px; }
-@media (max-width: 640px) { .am-exam-paper { padding: var(--space-4); } .am-cover { padding: var(--space-4); } }
+@media (max-width: 640px) {
+    .am-exam-paper { padding: var(--space-4); }
+    .am-cover-facts dd { font-size: 20px; }
+}
 .am-bubbles { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; max-height: 60vh; overflow-y: auto; }
 .am-bubble-row { display: flex; align-items: center; gap: 4px; padding: 2px 4px; border-radius: 8px; }
 .am-bubble-row.is-current { background: var(--am-hover); }
@@ -1420,13 +1437,6 @@ html[data-theme="dark"] .am-predict-tag { color: #0d1117; }
 
 /* The timed sitting's strip (pages/amc/TakeMock.tsx): a segment per problem,
    filled once answered, amber when flagged, ringed where you are. */
-.am-exam-strip { list-style: none; display: flex; gap: 3px; margin: calc(-1 * var(--space-2)) 0 var(--space-4); padding: 0; }
-.am-exam-strip li { flex: 1 1 0; min-width: 0; }
-.am-exam-seg { display: block; width: 100%; height: 8px; padding: 0; border: 0; border-radius: 4px; background: var(--am-line); cursor: pointer; }
-.am-exam-seg.is-done { background: var(--am-sage); }
-.am-exam-seg.is-flagged { background: var(--am-warn); }
-.am-exam-seg.is-current { outline: 2px solid var(--am-ink); outline-offset: 1px; }
-.am-qnum .am-muted { font-family: inherit; font-size: 13px; }
 
 /* Past Contests (pages/amc/Contests.tsx): the papers in Summit, as cards above
    the year grid, and picked out in the grid itself. */
