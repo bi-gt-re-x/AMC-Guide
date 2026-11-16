@@ -236,3 +236,37 @@ def test_problem_filters_by_mock_number_and_kind(client, today):
     body = client.get('/api/amc/problems').json()
     assert body['kinds'] == {'summit': 285, 'step': 65, 'official': 0, 'ai': 0}
     assert len(body['mocks']) == 18 and body['families'][0]['techniques']
+
+
+def test_weak_topics_bank_is_twelve_unsolved_problems_spread_over_weak_topics(client, today):
+    body = client.get('/api/amc/review/weak', params={'mocks': 1}).json()
+    assert body['success'] and body['mocks'] and body['size'] == 12
+    ids = [p['id'] for p in body['problems']]
+    assert len(ids) == 12 and len(set(ids)) == 12
+    per_topic = {}
+    for p in body['problems']:
+        per_topic[p['weak_topic']] = per_topic.get(p['weak_topic'], 0) + 1
+    assert len(per_topic) == 4 and set(per_topic.values()) == {3}
+    # The same set all day; a new draw is a different set.
+    assert [p['id'] for p in client.get('/api/amc/review/weak', params={'mocks': 1}).json()['problems']] == ids
+    assert [p['id'] for p in client.get('/api/amc/review/weak', params={'mocks': 1, 'draw': 1}).json()['problems']] != ids
+
+
+def test_weak_topics_bank_follows_misses_and_skips_the_review_log(client, today):
+    # Miss three problems in one topic and solve one in another.
+    topic = BY_ID['step-10-04']['topic']
+    missed = [p['id'] for p in BY_ID.values() if p['topic'] == topic and p['level'] == 'AMC 10'][:3]
+    for pid in missed:
+        wrong = 'A' if BY_ID[pid]['answer'] != 'A' else 'B'
+        client.post('/api/amc/problems/{}/attempt'.format(pid), json={'answer': wrong})
+    body = client.get('/api/amc/review/weak', params={'mocks': 1}).json()
+    assert body['topics'][0]['id'] == topic and body['topics'][0]['attempted'] == 3
+    picked = {p['id'] for p in body['problems']}
+    assert not picked & set(missed)   # already in the error log
+    assert any(p['weak_topic'] == topic for p in body['problems'])
+
+
+def test_weak_topics_bank_without_mocks_is_official_only(client, today):
+    body = client.get('/api/amc/review/weak').json()
+    assert body['success'] and not body['mocks'] and body['pool']['mock'] == 0
+    assert all(p['official'] for p in body['problems'])

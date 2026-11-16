@@ -4,6 +4,8 @@
  *
  * `?review=1` is a review session's problem (pages/amc/Review.tsx): the answer
  * is sent as a review, which is what moves it along the 3/10/21-day schedule.
+ * `?weak=1` is one of the Review page's twelve weak-topic problems: always a
+ * fresh try, with a button on to the next of the twelve.
  */
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -22,6 +24,7 @@ import {
 } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
 import { amc, announceAmcChanged, shortDate, type AttemptReply, type Problem as ProblemData } from '@/services/amc';
+import { readWeakSet } from './weakSet';
 import '@/styles/amc.css';
 
 const STAGES = 3;
@@ -38,6 +41,10 @@ export default function Problem() {
   const { problemId = '' } = useParams();
   const [params] = useSearchParams();
   const reviewing = params.get('review') === '1';
+  const weak = !reviewing && params.get('weak') === '1';
+  const weakSet = weak ? readWeakSet() : [];
+  const weakAt = weakSet.indexOf(problemId);
+  const weakNext = weakAt >= 0 ? weakSet[weakAt + 1] : undefined;
   const navigate = useNavigate();
   const { data, error, loading, reload } = useApi(() => amc.problem(problemId), [problemId]);
   useDocumentTitle(data ? data.problem.sources[0] ? `${data.problem.sources[0].name} #${data.problem.sources[0].number}` : 'Problem' : 'Problem');
@@ -66,7 +73,7 @@ export default function Problem() {
   const answered = Boolean(result || revealed);
   // A problem answered before shows its solution, unless the reader asks to
   // try it again (or it is a review, which is always a fresh try).
-  const seenBefore = Boolean(data?.attempts.length) && !reviewing && !retry && !answered;
+  const seenBefore = Boolean(data?.attempts.length) && !reviewing && !weak && !retry && !answered;
   const locked = answered || seenBefore;
   const [seconds, setSeconds] = useStopwatch(!locked && !loading);
   useEffect(() => setSeconds(0), [problemId, retry, setSeconds]);
@@ -138,8 +145,8 @@ export default function Problem() {
   return (
     <div className="amc-page">
       <nav className="am-muted" style={{ fontSize: 13, marginBottom: 12, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-        <Link to={reviewing ? '/review' : '/problems'} className="am-link">
-          {reviewing ? '← Review' : '← Problems'}
+        <Link to={reviewing || weak ? '/review' : '/problems'} className="am-link">
+          {reviewing || weak ? '← Review' : '← Problems'}
         </Link>
         <span>/</span>
         <Link to={`/topics/${p.topic}`} className="am-link">{p.topic_name}</Link>
@@ -230,6 +237,18 @@ export default function Problem() {
               ) : (
                 <Solution solution={p.solution} insight={p.insight} trap={p.trap} />
               )
+            )}
+
+            {weak && answered && (
+              <div className="am-nav-row">
+                <span className="am-muted" style={{ fontSize: 13 }}>
+                  {weakAt >= 0 ? `Weak topics · ${weakAt + 1} of ${weakSet.length}` : 'Weak topics'}
+                </span>
+                <button type="button" className="am-btn am-btn-primary"
+                        onClick={() => navigate(weakNext ? `/problems/${weakNext}?weak=1` : '/review')}>
+                  {weakNext ? 'Next weak-topic problem →' : 'Back to Review'}
+                </button>
+              </div>
             )}
 
             {reviewing && answered && (

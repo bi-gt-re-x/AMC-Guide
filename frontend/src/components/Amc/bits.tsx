@@ -47,9 +47,9 @@ export function CategoryDot({ category }: { category: CategoryId }) {
   return <i className={`am-dot am-tone-${CATEGORY_TONE[category]}`} aria-hidden="true" />;
 }
 
-export function ProblemRow({ problem, extra }: { problem: ProblemSummary; extra?: ReactNode }) {
+export function ProblemRow({ problem, extra, to }: { problem: ProblemSummary; extra?: ReactNode; to?: string }) {
   return (
-    <Link to={`/problems/${problem.id}`} className="am-row">
+    <Link to={to ?? `/problems/${problem.id}`} className="am-row">
       <div className="am-row-main">
         <div className="am-row-head">
           <CategoryDot category={problem.category} />

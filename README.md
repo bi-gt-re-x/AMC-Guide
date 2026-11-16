@@ -10,7 +10,7 @@ paper, a study plan to contest day, and search across all of it.
 | Page | Path | What it does |
 | --- | --- | --- |
 | Dashboard | `/dashboard` | Today's plan, the next problem, projected score vs goal, progress by category |
-| Review | `/review` | The error log: misses return after 3, 10 and 21 days until mastered |
+| Review | `/review` | Weak topics: twelve problems from your four weakest topics (first-try accuracy), drawn from every imported official paper and, when ticked, the Summit and Step mocks, pitched where you get about two in three right, walked one after another (`backend/amc/weak.py`). Then Wrong problems, the error log: misses return after 3, 10 and 21 days until mastered |
 | Problems | `/problems`, `/problems/:id` | Every problem in contest order (mock #1 to #25), with a chooser down the left for source (Summit Mock sets, Step problems, official papers), contest, mock set, year, problem number, rating 1-10 (1 is an AMC 10 #1, 10 the hardest AIME problem), topic, technique and status; answer to unlock the solution, key insight and trap |
 | Topics | `/topics`, `/topics/:id` | 63 topics in 5 categories and 92 techniques in 5 strategy families, each with key ideas and its problems |
 | Mock Contests | `/mock-contests` | Five Summit Mock sets each for the AMC 10, AMC 12 and AIME (plus the original Step Mocks), in real problem order at real difficulty, sat on an exam screen with a cover page and bubble answer sheet, graded 6 / 1.5 / 0 with a report |

@@ -1464,3 +1464,15 @@ html[data-theme="dark"] .am-predict-tag { color: #0d1117; }
 .am-pace dd { margin: 4px 0 0; font-family: var(--am-serif); font-size: 26px; color: var(--am-ink); font-variant-numeric: tabular-nums; }
 .am-choose-note { margin: 0 0 var(--space-2); font-size: 11px; color: var(--am-muted); line-height: 1.4; }
 .am-mock-vs { margin: var(--space-2) 0 0; font-size: 12px; color: var(--am-muted); }
+
+/* Review (pages/amc/Review.tsx): the weak-topics set above the error log. */
+.am-weak { margin-bottom: var(--am-gap); }
+.am-weak-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
+.am-weak-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--am-body); cursor: pointer; }
+.am-weak-topics { list-style: none; margin: 0 0 var(--space-4); padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); }
+.am-weak-topics li { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; }
+.am-section-head { margin: var(--space-6) 0 var(--space-4); }
+.am-link-btn { background: none; border: 0; padding: 0; cursor: pointer; font: inherit; }
+@media (max-width: 640px) {
+    .am-weak .am-card-head { flex-direction: column; align-items: flex-start; }
+}

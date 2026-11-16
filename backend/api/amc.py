@@ -11,7 +11,7 @@ from typing import Dict, Optional, Union
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from backend.amc import catalog, coach, engine, insights, store
+from backend.amc import catalog, coach, engine, insights, store, weak
 from backend.amc import official
 from backend.amc import problems as pb
 from backend.api.guard import current_username
@@ -369,6 +369,25 @@ def review_queue(username: str = Depends(current_username)):
     return ok(due=due, upcoming=upcoming, mastered=mastered, forecast=forecast,
               by_topic=sorted(({'name': k, 'count': n} for k, n in by_topic.items()), key=lambda r: -r['count']),
               intervals=engine.INTERVALS)
+
+
+@router.get('/api/amc/review/weak')
+def review_weak(mocks: int = 0, draw: int = 0, username: str = Depends(current_username)):
+    """Twelve problems from the account's weakest topics (backend/amc/weak.py):
+    official papers always, the Summit and Step mocks when `mocks=1`."""
+    _, _, hist, review_by_id = _context(username)
+    plan = store.plan(username)
+    target = plan['target'] if plan else 'AMC 10'
+    out = weak.bank(hist, review_by_id, target, bool(mocks), username, _today(), max(0, int(draw)))
+    problems = []
+    for p, tid, chance in out['problems']:
+        row = _summary(username, p['id'], hist, review_by_id)
+        row.update(weak_topic=tid, weak_topic_name=catalog.TOPIC_BY_ID[tid]['name'], chance=round(chance, 2))
+        problems.append(row)
+    topics = [{k: t[k] for k in ('id', 'name', 'attempted', 'first_right', 'accuracy', 'in_review', 'picked')}
+              for t in out['topics']]
+    return ok(target=target, mocks=bool(mocks), draw=max(0, int(draw)), size=weak.SIZE,
+              topics=topics, problems=problems, pool=out['pool'])
 
 
 @router.post('/api/amc/review/{problem_id}')

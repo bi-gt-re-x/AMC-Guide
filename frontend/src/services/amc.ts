@@ -437,6 +437,28 @@ export interface ReviewQueue {
   intervals: number[];
 }
 
+/** One problem in the weak-topics bank, with the topic that put it there. */
+export interface WeakProblem extends ProblemSummary {
+  weak_topic: string;
+  weak_topic_name: string;
+  /** The modelled chance of a first-try right answer (backend/amc/smart.py). */
+  chance: number;
+}
+
+/** Twelve problems from the weakest topics (backend/amc/weak.py). */
+export interface WeakBank {
+  target: Level;
+  mocks: boolean;
+  draw: number;
+  size: number;
+  topics: {
+    id: string; name: string; attempted: number; first_right: number;
+    accuracy: number | null; in_review: number; picked: number;
+  }[];
+  problems: WeakProblem[];
+  pool: { official: number; mock: number };
+}
+
 export interface Format {
   count: number;
   minutes: number;
@@ -773,6 +795,8 @@ export const amc = {
     post<AttemptReply>(`/api/amc/problems/${encodeURIComponent(id)}/attempt`, { answer, seconds, source }),
   reveal: (id: string) => post<{ problem: Problem }>(`/api/amc/problems/${encodeURIComponent(id)}/reveal`),
   review: () => get<ReviewQueue>('/api/amc/review'),
+  weakBank: (mocks: boolean, draw = 0) =>
+    get<WeakBank>('/api/amc/review/weak', { mocks: mocks ? 1 : 0, draw }),
   addReview: (id: string) => post<object>(`/api/amc/review/${encodeURIComponent(id)}`),
   removeReview: (id: string) => del<object>(`/api/amc/review/${encodeURIComponent(id)}`),
   noteReview: (id: string, note: string) => post<object>(`/api/amc/review/${encodeURIComponent(id)}/note`, { note }),
