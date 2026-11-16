@@ -59,6 +59,12 @@ For a local account with some history on it:
 
     .venv-fastapi/bin/python scripts/seed_amc_demo.py
 
+Or eight weeks of simulated AMC 10 history (practice, reviews, seven sittings
+including three older official papers, a study plan) on an existing account
+that has no AMC rows yet (`--replace` to reseed, `--clear` to remove):
+
+    .venv-fastapi/bin/python scripts/seed_amc_history.py --user myles
+
 The productivity app this grew out of is described below; its pages are no
 longer routed (their old URLs redirect to the dashboard).
 
