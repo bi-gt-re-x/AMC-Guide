@@ -14,7 +14,7 @@ on its answer.
 Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
 10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
 Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, the
-2018 AMC 10A and 10B, and the 2017 AMC 10A and 10B. A problem whose numbers are only in a picture the
+2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, and the 2016 AMC 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -6207,6 +6207,269 @@ SOLUTIONS = {
             r'$34 + 24 + 168 = 226$. The answer is $\textbf{(A) } 226$.',
         ],
         'trap': r'Giving every digit set $6$ arrangements. Repeated digits and a leading zero cut that down.',
+    },
+    # ------------------------------------------------------------------ 2016 AMC 10B
+    '2016-amc-10b-1': {
+        'topics': ['exponents', 'decimals-fractions'],
+        'answer': 'D',
+        'insight': r'With $a = \frac12$, $a^{-1} = 2$. Work out the top, then divide by $\frac12$.',
+        'steps': [
+            r'The numerator is $2 \cdot 2 + \frac{2}{2} = 5$.',
+            r'Dividing by $a = \frac12$ doubles it: $10$. The answer is $\textbf{(D) } 10$.',
+        ],
+        'trap': r'Multiplying by $\frac12$ instead of dividing, and answering $\frac52$.',
+    },
+    '2016-amc-10b-2': {
+        'topics': ['exponents', 'functions'],
+        'answer': 'B',
+        'insight': r'Just apply the rule to each side. The cube goes on the first number.',
+        'steps': [
+            r'$2 \heartsuit 4 = 2^3 \cdot 4^2 = 128$ and $4 \heartsuit 2 = 4^3 \cdot 2^2 = 256$.',
+            r'The ratio is $\frac{128}{256} = \frac12$. The answer is $\textbf{(B) } \frac{1}{2}$.',
+        ],
+        'trap': r'Cubing the second number instead of the first, which flips the answer to $2$.',
+    },
+    '2016-amc-10b-3': {
+        'topics': ['absolute-value'],
+        'answer': 'D',
+        'insight': r'Peel the bars from the inside out, remembering $-x = +2016$.',
+        'steps': [
+            r'$|x| = 2016$, so $|x| - x = 4032$, and $4032 - |x| = 2016$.',
+            r'Then $|2016| - x = 2016 + 2016 = 4032$. The answer is $\textbf{(D) } 4032$.',
+        ],
+        'trap': r'Reading the final $-x$ as $-2016$ and answering $0$. Since $x$ is negative, $-x$ adds $2016$.',
+    },
+    '2016-amc-10b-4': {
+        'topics': ['clocks-calendars', 'sequences-series'],
+        'answer': 'B',
+        'insight': r'She reads for $1 + 2 + \dots + 15 = 120$ days in a row. Count weeks from the first day.',
+        'steps': [
+            r'Day $1$ is the Monday she finished the first book, and the last book ends on day $120$.',
+            r'Day $120$ is $119 = 17 \cdot 7$ days after day $1$, so it is also a Monday. The answer is $\textbf{(B) }$ Monday.',
+        ],
+        'trap': r'Counting $120$ days after the first Monday. That Monday is day $1$ itself, so it is $119$ days later.',
+    },
+    '2016-amc-10b-5': {
+        'topics': ['statistics'],
+        'answer': 'D',
+        'insight': r'With four ages the median is the average of the middle two, which fixes their sum, not each age.',
+        'steps': [
+            r'The ages add to $4 \cdot 8 = 32$ and the middle two add to $2 \cdot 5 = 10$.',
+            r'The youngest and oldest add to $32 - 10 = 22$. The answer is $\textbf{(D) } 22$.',
+        ],
+        'trap': r'Treating the median as one of the ages and subtracting only $5$, which gives $27$.',
+    },
+    '2016-amc-10b-6': {
+        'topics': ['digits-bases', 'arithmetic'],
+        'answer': 'B',
+        'insight': r'The two hundreds digits differ, so the sum is at least $300$. Aim for a round $400$.',
+        'steps': [
+            r'The hundreds digits are different, so they are at least $1$ and $2$ and $S \ge 300$. A digit sum of $1$ would need $S = 100$.',
+            r'$103 + 297 = 400$ uses six different digits and has digit sum $4$. The answer is $\textbf{(B) } 4$.',
+        ],
+        'trap': r'Answering $1$ for $S = 100$. Two different hundreds digits already push the sum past $300$.',
+    },
+    '2016-amc-10b-7': {
+        'topics': ['angle-chasing', 'linear-equations'],
+        'answer': 'C',
+        'insight': r'The smaller angle has the bigger complement, so that is the one that is twice the other.',
+        'steps': [
+            r'With angles $5x$ and $4x$: $90 - 4x = 2(90 - 5x)$, so $6x = 90$ and $x = 15$.',
+            r'The angles are $75^\circ$ and $60^\circ$, adding to $135$. The answer is $\textbf{(C) } 135$.',
+        ],
+        'trap': r'Doubling the wrong complement: $90 - 5x = 2(90 - 4x)$ gives $x = 30$, angles $150^\circ$ and $120^\circ$, which are not acute.',
+    },
+    '2016-amc-10b-8': {
+        'topics': ['modular-arithmetic', 'exponents'],
+        'answer': 'A',
+        'insight': r'Only the last two digits matter, and even powers of a number ending in $15$ end in $25$.',
+        'steps': [
+            r'$2015^2$ ends in $25$, and $25 \cdot 25 = 625$ ends in $25$, so $2015^{2016} = (2015^2)^{1008}$ ends in $25$.',
+            r'Subtracting $2017$, the last two digits are $25 - 17 = 08$. The answer is $\textbf{(A) } 0$.',
+        ],
+        'trap': r'Using $75$ for the last two digits. That is what odd powers of $15$ end in.',
+    },
+    '2016-amc-10b-9': {
+        'topics': ['coordinate-geometry', 'area'],
+        'answer': 'C',
+        'insight': r'$B$ and $C$ are mirror images, $(\pm a, a^2)$, so the area is $\frac12 \cdot 2a \cdot a^2 = a^3$.',
+        'steps': [
+            r'$a^3 = 64$ gives $a = 4$.',
+            r'$BC = 2a = 8$. The answer is $\textbf{(C) } 8$.',
+        ],
+        'trap': r'Answering $4$, which is half of $BC$.',
+    },
+    '2016-amc-10b-10': {
+        'topics': ['similar-triangles', 'area'],
+        'answer': 'D',
+        'insight': r'Same thickness, so weight follows area, which grows with the square of the side.',
+        'steps': [
+            r'The weight is $12 \cdot \left(\frac53\right)^2 = \frac{300}{9} \approx 33.3$ ounces.',
+            r'The answer is $\textbf{(D) } 33.3$.',
+        ],
+        'trap': r'Scaling by $\frac53$ only and answering $20$.',
+    },
+    '2016-amc-10b-11': {
+        'topics': ['word-problems', 'polygons'],
+        'answer': 'B',
+        'insight': r'Count posts with corners shared, then turn posts into gaps: a side with $n$ posts is $n - 1$ gaps long.',
+        'steps': [
+            r'With $n$ posts on a short side and $2n$ on a long side, $2n + 4n - 4 = 20$, so $n = 4$.',
+            r'The short side has $3$ gaps, $12$ yards, and the long side $7$ gaps, $28$ yards.',
+            r'The area is $12 \cdot 28 = 336$. The answer is $\textbf{(B) } 336$.',
+        ],
+        'trap': r'Multiplying posts by $4$ instead of gaps, which gives $16 \cdot 32 = 512$.',
+    },
+    '2016-amc-10b-12': {
+        'topics': ['probability', 'parity'],
+        'answer': 'D',
+        'insight': r'A product is odd only when both numbers are odd, so count that and subtract.',
+        'steps': [
+            r'There are $\binom52 = 10$ pairs, and $\binom32 = 3$ of them are both odd.',
+            r'The product is even with probability $1 - \frac{3}{10} = 0.7$. The answer is $\textbf{(D) } 0.7$.',
+        ],
+        'trap': r'Answering $0.4$, the chance that a single number is even.',
+    },
+    '2016-amc-10b-13': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'D',
+        'insight': r'Count sets in terms of the quadruplet sets, then turn sets into babies.',
+        'steps': [
+            r'With $q$ sets of quadruplets there are $4q$ sets of triplets and $12q$ sets of twins.',
+            r'Babies: $4q + 3 \cdot 4q + 2 \cdot 12q = 40q = 1000$, so $q = 25$.',
+            r'That is $4 \cdot 25 = 100$ babies in quadruplets. The answer is $\textbf{(D) } 100$.',
+        ],
+        'trap': r'Answering $25$, the number of sets instead of babies.',
+    },
+    '2016-amc-10b-14': {
+        'topics': ['coordinate-geometry', 'basic-counting'],
+        'answer': 'D',
+        'insight': r'The line rises to the right, so a square fits when its top-left corner is under the line. Count column by column.',
+        'steps': [
+            r'A square with left side at $x = a$ needs its top at most $\lfloor \pi a \rfloor$, and $\lfloor \pi \rfloor, \lfloor 2\pi \rfloor, \lfloor 3\pi \rfloor, \lfloor 4\pi \rfloor = 3, 6, 9, 12$. Its right side must be at most $5$.',
+            r'Side $1$ ($a = 1$ to $4$): $3 + 6 + 9 + 12 = 30$. Side $2$ ($a = 1$ to $3$): $2 + 5 + 8 = 15$. Side $3$ ($a = 1, 2$): $1 + 4 = 5$. Side $4$: none.',
+            r'$30 + 15 + 5 = 50$. The answer is $\textbf{(D) } 50$.',
+        ],
+        'trap': r'Checking the top-right corner against the line. It is the left edge, where the line is lowest, that limits the square.',
+    },
+    '2016-amc-10b-15': {
+        'topics': ['parity', 'logic'],
+        'answer': 'C',
+        'insight': r'Color the grid like a checkerboard. The path $1, 2, \dots, 9$ alternates colors, so the corners and center hold the odd numbers.',
+        'steps': [
+            r'The corners and the center are the $5$ squares of one color, and consecutive numbers alternate colors, so these $5$ squares hold $1, 3, 5, 7, 9$.',
+            r'Those add to $25$, and the corners add to $18$, so the center is $7$. The answer is $\textbf{(C) } 7$.',
+        ],
+        'trap': r'Guessing $5$ in the center as in a magic square. This grid follows a path, not equal sums.',
+    },
+    '2016-amc-10b-16': {
+        'topics': ['sequences-series', 'inequalities'],
+        'answer': 'E',
+        'insight': r'With second term $1$, the first term is $\frac1r$ and $S = \frac{1}{r(1-r)}$. Make $r(1 - r)$ as large as possible.',
+        'steps': [
+            r'$S > 0$ forces $0 < r < 1$, and then $r(1 - r) \le \frac14$, with equality at $r = \frac12$.',
+            r'So $S \ge 4$, reached by $2 + 1 + \frac12 + \dots$. The answer is $\textbf{(E) } 4$.',
+        ],
+        'trap': r'Thinking a small ratio gives a small sum. With the second term fixed at $1$, a small $r$ means a huge first term.',
+    },
+    '2016-amc-10b-17': {
+        'topics': ['solid-geometry', 'polynomials'],
+        'answer': 'D',
+        'insight': r'The eight corner products are exactly the terms of $(a + b)(c + d)(e + f)$, where each pair is two opposite faces.',
+        'steps': [
+            r'The three pair sums add to $2 + 3 + \dots + 7 = 27$, so their product is largest when each is $9$.',
+            r'Pairing $2$ with $7$, $3$ with $6$ and $4$ with $5$ gives $9^3 = 729$. The answer is $\textbf{(D) } 729$.',
+        ],
+        'trap': r'Trying to make the biggest single corner product. The sum depends only on the three opposite pairs.',
+    },
+    '2016-amc-10b-18': {
+        'topics': ['factors-divisors', 'sequences-series'],
+        'answer': 'E',
+        'insight': r'$n$ terms starting at $a$ add to $\frac{n(2a + n - 1)}{2}$, so split $690$ into two factors.',
+        'steps': [
+            r'$n(2a + n - 1) = 690 = 2 \cdot 3 \cdot 5 \cdot 23$, with $2 \le n < 2a + n - 1$ and the two factors of opposite parity.',
+            r'$690$ has one factor of $2$, so every factor pair has opposite parity. The pairs with smaller factor $n \ge 2$ are $n = 2, 3, 5, 6, 10, 15, 23$.',
+            r'That is $7$ ways. The answer is $\textbf{(E) } 7$.',
+        ],
+        'trap': r'Counting only odd lengths, which have a middle number. Even lengths like $2$ ($172 + 173$) work too.',
+    },
+    '2016-amc-10b-19': {
+        'topics': ['coordinate-geometry', 'similar-triangles'],
+        'answer': 'D',
+        'insight': r'Put the rectangle on axes, walk along $EF$ with one parameter $t$, and find where it meets each line.',
+        'steps': [
+            r'With $D = (0,0)$: $A = (0,4)$, $C = (5,0)$, $E = (4,4)$, $F = (2,0)$, $G = (5,1)$. Points of $EF$ are $(4 - 2t, 4 - 4t)$, a fraction $t$ of the way from $E$ to $F$.',
+            r'$AC$ is $4x + 5y = 20$, met at $t = \frac47$. $AG$ is $3x + 5y = 20$, met at $t = \frac{6}{13}$.',
+            r'$\frac{PQ}{EF} = \frac47 - \frac{6}{13} = \frac{10}{91}$. The answer is $\textbf{(D) } \frac{10}{91}$.',
+        ],
+        'trap': r'Placing $G$ one unit from $B$ instead of from $C$.',
+    },
+    '2016-amc-10b-20': {
+        'topics': ['transformations', 'coordinate-geometry'],
+        'answer': 'C',
+        'insight': r'A dilation by $k$ is $X \mapsto kX + v$. Find $k$ from the radii and $v$ from the centers.',
+        'steps': [
+            r'$k = \frac32$, and $(5, 6) = \frac32(2, 2) + v$ gives $v = (2, 3)$.',
+            r'The origin goes to $v = (2, 3)$, a distance of $\sqrt{13}$. The answer is $\textbf{(C) } \sqrt{13}$.',
+        ],
+        'trap': r'Answering $5$, how far the center $A$ moves. Points move by different amounts under a dilation.',
+    },
+    '2016-amc-10b-21': {
+        'topics': ['circles', 'absolute-value', 'area'],
+        'answer': 'B',
+        'insight': r'In each quadrant the curve is a circle whose diameter joins $(1, 0)$ and $(0, 1)$.',
+        'steps': [
+            r'For $x, y \ge 0$: $\left(x - \frac12\right)^2 + \left(y - \frac12\right)^2 = \frac12$, a circle through $(0,0)$, $(1,0)$ and $(0,1)$. The segment from $(1,0)$ to $(0,1)$ is a diameter.',
+            r'In this quadrant the region is the triangle under that diameter, area $\frac12$, plus the half disk beyond it, area $\frac{\pi}{4}$.',
+            r'Four quadrants: $\pi + 2$. The answer is $\textbf{(B) } \pi+2$.',
+        ],
+        'trap': r"Counting the whole circle in each quadrant. The arcs that dip across the axes are not part of this quadrant's piece, so only the half disk and the triangle count.",
+    },
+    '2016-amc-10b-22': {
+        'topics': ['combinations', 'graph-theory'],
+        'answer': 'A',
+        'insight': r'A triple that is not a cycle has one team that beat both others. Count those and subtract.',
+        'steps': [
+            r'Each team plays $20$ games, so there are $21$ teams and $\binom{21}{3} = 1330$ triples.',
+            r'A team beat $10$ others, so it tops $\binom{10}{2} = 45$ triples. Non-cycles: $21 \cdot 45 = 945$.',
+            r'$1330 - 945 = 385$. The answer is $\textbf{(A) } 385$.',
+        ],
+        'trap': r'Answering $945$, the triples that are not cycles.',
+    },
+    '2016-amc-10b-23': {
+        'topics': ['polygons', 'area-ratios'],
+        'answer': 'C',
+        'insight': r'Tile the hexagon with small equilateral triangles. The new hexagon is the middle band between the two lines.',
+        'steps': [
+            r'With side $3$, the hexagon is $54$ unit triangles in $6$ rows parallel to $AB$, of $7, 9, 11, 11, 9, 7$ triangles.',
+            r'$ZW$ and $YX$ fall after rows $2$ and $4$, so $WCXYFZ$ is the middle two rows: $22$ triangles.',
+            r'$\frac{22}{54} = \frac{11}{27}$. The answer is $\textbf{(C) } \frac{11}{27}$.',
+        ],
+        'trap': r'Taking the middle band as a third of the area. It is the widest part of the hexagon.',
+    },
+    '2016-amc-10b-24': {
+        'topics': ['digits-bases', 'sequences-series', 'casework'],
+        'answer': 'D',
+        'insight': r'Write the common difference with the digit gaps. Then only two patterns are possible.',
+        'steps': [
+            r'Let $p = b - a$, $q = c - b$, $r = d - c$. Then $\overline{bc} - \overline{ab} = 10p + q$ and $\overline{cd} - \overline{bc} = 10q + r$, so $r = 10p - 9q$.',
+            r'$r$ is between $-9$ and $9$, and the difference $10p + q$ is positive, so $q = p \ge 1$ or $q = p + 1$.',
+            r'$q = p$: the digits step evenly, as in $1234, \dots, 6789$ and $1357, 2468, 3579$. That is $9$.',
+            r'$q = p + 1$: the digits are $a, a + p, a + 2p + 1, a + 3p - 8$. That gives $8890$, $5680$, $6791$, $2470$, $3581$, $4692$, $1482$ and $2593$: $8$.',
+            r'$9 + 8 = 17$. The answer is $\textbf{(D) } 17$.',
+        ],
+        'trap': r'Only counting numbers whose digits step evenly, like $1234$ and $1357$. Carries give the other $8$, such as $4692$.',
+    },
+    '2016-amc-10b-25': {
+        'topics': ['floor-ceiling', 'basic-counting'],
+        'answer': 'A',
+        'insight': r'$f$ depends only on the fractional part of $x$, and it goes up by at least $1$ at each fraction $\frac{j}{k}$ with $k \le 10$.',
+        'steps': [
+            r'With $x = n + t$, $\lfloor kx \rfloor - k\lfloor x \rfloor = \lfloor kt \rfloor$. As $t$ runs from $0$ to $1$, $f$ starts at $0$ and goes up at each fraction $\frac{j}{k}$ in $(0, 1)$ with $2 \le k \le 10$.',
+            r'The distinct fractions are counted by $\varphi(2) + \dots + \varphi(10) = 1 + 2 + 2 + 4 + 2 + 6 + 4 + 6 + 4 = 31$.',
+            r'So $f$ takes $1 + 31 = 32$ values. The answer is $\textbf{(A) } 32$.',
+        ],
+        'trap': r'Counting $\frac12$ and $\frac24$ as different jumps, which gives $1 + 45 = 46$.',
     },
 }
 
