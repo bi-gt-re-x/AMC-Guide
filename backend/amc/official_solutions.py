@@ -11,7 +11,7 @@ key the solution is left off rather than shown beside the wrong answer
 (`for_problem`). tests/test_amc_official_solutions.py checks that each one ends
 on its answer.
 
-Written so far: the 2026 AMC 10A and 12A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
+Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
 10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
 Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, and the
 2018 AMC 10A. A problem whose numbers are only in a picture the
@@ -619,6 +619,286 @@ SOLUTIONS = {
             r'The answer is $\textbf{(B)}\ 15$.',
         ],
         'trap': r'Forgetting that a factor of $8$ doubles the count twice, and settling for $4 \cdot 3 \cdot 5 \cdot 7 \cdot 11 \cdot 13 = 60060$.',
+    },
+    # ------------------------------------------------------------------ 2026 AMC 10B
+    '2026-amc-10b-1': {
+        'topics': ['exponents', 'arithmetic'],
+        'answer': 'D',
+        'insight': r'Every term is a multiple of $2^{2023}$. Pull it out of the top and the bottom and it cancels.',
+        'steps': [
+            r'The top is $2^{2023}(2^3 + 2^2 - 1) = 2^{2023} \cdot 11$.',
+            r'The bottom is $2^{2023}(2 - 1) = 2^{2023}$.',
+            r'The quotient is $11$. The answer is $\textbf{(D) } 11$.',
+        ],
+        'trap': r'Cancelling exponents term by term, as if $\frac{2^{2026}}{2^{2024}}$ and the rest could be divided separately across a sum.',
+    },
+    '2026-amc-10b-2': {
+        'topics': ['similar-triangles', 'solid-geometry', 'word-problems'],
+        'answer': 'D',
+        'insight': r'Mass goes with volume, and volume scales as the cube of the height ratio.',
+        'steps': [
+            r'The heights are in the ratio $8 : 6 = 4 : 3$, so the volumes, and the masses, are in the ratio $64 : 27$.',
+            r'The larger one weighs $486 \cdot \frac{64}{27} = 18 \cdot 64 = 1152$ grams.',
+            r'The answer is $\textbf{(D) } 1152$.',
+        ],
+        'trap': r'Scaling by $\frac43$ (giving $648$) or by its square (giving $864$). A solid scales in all three directions.',
+    },
+    '2026-amc-10b-3': {
+        'topics': ['solid-geometry'],
+        'answer': 'C',
+        'insight': r'Each bee reaches an eighth of a ball, and the shortest edge is $1$, so no two bees reach the same point.',
+        'steps': [
+            r'At a corner the three faces meet at right angles, so the part of the radius-$\frac12$ ball inside the box is one eighth of it: $\frac18 \cdot \frac43 \pi \left(\frac12\right)^3 = \frac{\pi}{48}$.',
+            r'Two corners are at least $1$ apart, so their eighth-balls only touch. The eight together reach $8 \cdot \frac{\pi}{48} = \frac{\pi}{6}$.',
+            r'The box holds $1 \cdot 2 \cdot 3 = 6$, so $6 - \frac{\pi}{6}$ is out of reach. The answer is $\textbf{(C) } 6-\frac{\pi}{6}$.',
+        ],
+        'trap': r'Giving each bee a quarter or a half of the ball. Only an eighth of it is inside the box.',
+    },
+    '2026-amc-10b-4': {
+        'topics': ['linear-equations', 'quadratics'],
+        'answer': 'D',
+        'insight': r'Regroup so the fractions with the same numerator sit together: each pair then has a difference of squares for its denominator.',
+        'steps': [
+            r'Move terms across: $\frac{3}{x+4} + \frac{3}{x-4} = \frac{4}{x+3} + \frac{4}{x-3}$.',
+            r'That is $\frac{6x}{x^2 - 16} = \frac{8x}{x^2 - 9}$. As $x > 0$, divide by $2x$: $3(x^2 - 9) = 4(x^2 - 16)$.',
+            r'So $x^2 = 64 - 27 = 37$ and $x = \sqrt{37}$. The answer is $\textbf{(D) } \sqrt{37}$.',
+        ],
+        'trap': r'Clearing all four denominators at once, which gives a quartic. Pairing first keeps it to $x^2 = 37$.',
+    },
+    '2026-amc-10b-5': {
+        'topics': ['circles', 'graph-theory'],
+        'answer': 'B',
+        'insight': r'Each new segment adds one region, plus one more for every segment it crosses. So count segments and crossings.',
+        'steps': [
+            r'There are $2026$ segments, one from each point to the point two places along.',
+            r'The segment from $P_k$ to $P_{k+2}$ cuts off only $P_{k+1}$, so it crosses exactly the two segments that end at $P_{k+1}$. That is $\frac{2026 \cdot 2}{2} = 2026$ crossings, no three through one point.',
+            r'Regions: $1 + 2026 + 2026 = 4053$ (for $10$ points the same count gives $1 + 10 + 10 = 21$, as in the figure). The answer is $\textbf{(B) } 4053$.',
+        ],
+        'trap': r'Leaving out the one region the circle starts with and answering $4052$.',
+    },
+    '2026-amc-10b-6': {
+        'topics': ['divisibility', 'polynomials'],
+        'answer': 'C',
+        'insight': r'Divide: $n^2 - 1 = (n+2)(n-2) + 3$, so $n + 2$ has to divide $3$.',
+        'steps': [
+            r'$\frac{n^2-1}{n+2} = n - 2 + \frac{3}{n+2}$, an integer exactly when $n + 2$ divides $3$.',
+            r'$n + 2 \in \{-3, -1, 1, 3\}$, so $n \in \{-5, -3, -1, 1\}$.',
+            r'That is four integers. The answer is $\textbf{(C) } 4$.',
+        ],
+        'trap': r'Counting only the positive divisors of $3$ and answering $2$. The question asks about all integers $n$.',
+    },
+    '2026-amc-10b-7': {
+        'topics': ['coordinate-geometry', 'circles'],
+        'answer': 'A',
+        'insight': r'Put each of the three points into the equation. Each one gives one of the constants.',
+        'steps': [
+            r'$(0,0)$ gives $c = 0$.',
+            r'$(3,0)$ gives $9 + 3a = 0$, so $a = -3$. $(0,4)$ gives $16 + 4b = 0$, so $b = -4$.',
+            r'$a + b + c = -7$. The answer is $\textbf{(A) } -7$.',
+        ],
+        'trap': r'Reading $a$ and $b$ off the centre $\left(\frac32, 2\right)$ with the wrong sign and answering $7$.',
+    },
+    '2026-amc-10b-8': {
+        'topics': ['sequences-series', 'parity'],
+        'answer': 'D',
+        'insight': r'The $k$-th set runs from $k$ to $3k - 2$ in steps of $2$, so it holds $2026$ when $k$ is even and in range.',
+        'steps': [
+            r'The $k$-th set is $k, k+2, \dots, k + 2(k-1) = 3k - 2$. All its members have the parity of $k$, so $k$ must be even.',
+            r'It also needs $k \le 2026 \le 3k - 2$, that is $676 \le k \le 2026$.',
+            r'The even $k$ from $676$ to $2026$ number $\frac{2026 - 676}{2} + 1 = 676$, and $6 + 7 + 6 = 19$. The answer is $\textbf{(D) } 19$.',
+        ],
+        'trap': r'Forgetting the parity condition: all $1351$ values of $k$ from $676$ to $2026$ give digit sum $10$.',
+    },
+    '2026-amc-10b-9': {
+        'topics': ['casework', 'basic-counting'],
+        'answer': 'D',
+        'insight': r'Follow the students in, one count at a time, and keep only the arrangements the rules can actually produce.',
+        'steps': [
+            r'Number the desks $1$ to $5$. One student: any desk, $5$ ways. Two students: the second can always avoid the first, so any $2$ desks that are not side by side, $6$ ways.',
+            r'Three students: from desks $\{1,3\}$, $\{3,5\}$ or $\{1,5\}$ the third takes a desk with no neighbour, giving $\{1,3,5\}$. From $\{1,4\}$, $\{2,4\}$ or $\{2,5\}$ every free desk touches someone, so the third sits next to one student. That gives $\{1,2,4\}, \{1,3,4\}, \{1,4,5\}, \{2,4,5\}, \{1,2,5\}, \{2,3,5\}$, and $7$ arrangements in all.',
+            r'Four students: applying the rule to each of those $7$ gives only $\{1,2,3,5\}$, $\{1,3,4,5\}$ and $\{1,2,4,5\}$, so $3$. Five students: $1$.',
+            r'$5 + 6 + 7 + 3 + 1 = 22$. The answer is $\textbf{(D) } 22$.',
+        ],
+        'trap': r'Assuming the third student can always find a desk with no neighbour. With students at desks $2$ and $4$, every empty desk touches someone.',
+    },
+    '2026-amc-10b-10': {
+        'topics': ['absolute-value', 'coordinate-geometry', 'area'],
+        'answer': 'E',
+        'insight': r'The second inequality is $(x - y)^2 - 4(x - y) \le 0$, so the region is a rectangle with sides along $x \pm y = \text{const}$.',
+        'steps': [
+            r'$x^2 + y^2 - 2xy - 4(x - y) \le 0$ is $(x-y)(x-y-4) \le 0$, so $0 \le x - y \le 4$. The first inequality is $-4 \le x + y \le 4$.',
+            r'Lines $x - y = 0$ and $x - y = 4$ are $\frac{4}{\sqrt2} = 2\sqrt2$ apart, and lines $x + y = \pm 4$ are $\frac{8}{\sqrt2} = 4\sqrt2$ apart. The two families are perpendicular.',
+            r'The rectangle has area $2\sqrt2 \cdot 4\sqrt2 = 16$. The answer is $\textbf{(E) } 16$.',
+        ],
+        'trap': r'Taking $4$ and $8$ as the side lengths. Lines $x + y = c$ are $\frac{|c_1 - c_2|}{\sqrt2}$ apart, not $|c_1 - c_2|$.',
+    },
+    '2026-amc-10b-11': {
+        'topics': ['area-ratios', 'triangles'],
+        'answer': 'B',
+        'insight': r'Subtract the three corner triangles. Each corner triangle is the product of its two side fractions.',
+        'steps': [
+            r'$AD = \frac13 AB$ and $AE = \frac45 AC$, so $[ADE] = \frac13 \cdot \frac45 = \frac{4}{15}$ of $[ABC]$.',
+            r'$BD = \frac23 BA$ and $BF = \frac14 BC$, so $[BDF] = \frac16$. $CF = \frac34 CB$ and $CE = \frac15 CA$, so $[CFE] = \frac{3}{20}$.',
+            r'The corners take $\frac{16 + 10 + 9}{60} = \frac{7}{12}$, leaving $\frac{5}{12}$. The answer is $\textbf{(B) } \frac{5}{12}$.',
+        ],
+        'trap': r'Measuring a fraction from the wrong end. $E$ is $\frac15$ of the way from $C$, so $AE$ is $\frac45$ of $AC$.',
+    },
+    '2026-amc-10b-12': {
+        'topics': ['probability', 'lattice-paths'],
+        'answer': 'D',
+        'insight': r'Heads lead from the start and can never trail without first tying, so heads must stay ahead after every toss.',
+        'steps': [
+            r'After $1$ head, toss $2$ must also be heads (a tail ties it at $1$ to $1$). Now heads lead $2$ to $0$ with four tosses left.',
+            r'Of the $16$ ways to finish, those that tie: $TT$ first ($4$ ways), or a first tie on toss $6$ ($HTTT$ or $THTT$, $2$ ways). So $16 - 6 = 10$ keep heads ahead.',
+            r'The probability is $\frac{10}{32} = \frac{5}{16}$. The answer is $\textbf{(D) } \frac{5}{16}$.',
+        ],
+        'trap': r'Counting the sequences that end with more heads rather than those that are ahead after every toss.',
+    },
+    '2026-amc-10b-13': {
+        'topics': ['geometric-probability', 'circles'],
+        'answer': 'E',
+        'insight': r'The point of $\overline{PQ}$ nearest the origin is its midpoint, at distance $2\cos\frac{\theta}{2}$, where $\theta$ is the angle $POQ$.',
+        'steps': [
+            r'Fix $P$. The angle $\theta = \angle POQ$ is uniform on $[0^\circ, 180^\circ]$.',
+            r'The chord stays at least $1$ from the origin when $2\cos\frac{\theta}{2} \ge 1$, that is $\theta \le 120^\circ$.',
+            r'The probability is $\frac{120}{180} = \frac23$. The answer is $\textbf{(E) } \frac23$.',
+        ],
+        'trap': r'Letting $Q$ lie only on one side of $P$: it may be up to $120^\circ$ either way, which is $240^\circ$ of the $360^\circ$, not $120^\circ$.',
+    },
+    '2026-amc-10b-14': {
+        'topics': ['exponents', 'nonlinear-systems'],
+        'answer': 'E',
+        'insight': r'Set $a = 2^r$ and $b = 2^s$. Then $ab = 2^{r+s} = 4$, $a + b = 7$, and the question asks for $a^3 + b^3$.',
+        'steps': [
+            r'$ab = 2^{r+s} = 2^2 = 4$ and $a + b = 7$.',
+            r'$a^3 + b^3 = (a+b)^3 - 3ab(a+b) = 343 - 84 = 259$.',
+            r'The answer is $\textbf{(E) } 259$.',
+        ],
+        'trap': r'Trying to find $r$ and $s$. They are logarithms with no nice form, and you only need the sum and product of $2^r$ and $2^s$.',
+    },
+    '2026-amc-10b-15': {
+        'topics': ['geometric-probability', 'quadratics'],
+        'answer': 'D',
+        'insight': r'A real root needs $u^2 \ge 4v^2$, which for non-negative $u$ and $v$ is the half-plane $u \ge 2v$.',
+        'steps': [
+            r'The discriminant is $u^2 - 4v^2 \ge 0$. As $u, v \ge 0$, this is $u \ge 2v$.',
+            r'In the $30 \times 10$ rectangle of $(u, v)$, the bad part $u < 2v$ is the triangle with vertices $(0,0)$, $(0,10)$, $(20,10)$, of area $100$.',
+            r'The probability is $\frac{300 - 100}{300} = \frac23$. The answer is $\textbf{(D) } \frac23$.',
+        ],
+        'trap': r'Writing the discriminant as $u^2 - 4v$, forgetting that the constant term is $v^2$.',
+    },
+    '2026-amc-10b-16': {
+        'topics': ['casework', 'basic-counting'],
+        'answer': 'E',
+        'insight': r'Split on whether both red and blue are used. If they are, red and blue can only sit on opposite corners.',
+        'steps': [
+            r'No red: $2^4 = 16$ colourings. No blue: $16$. Both of these count all-white, so $16 + 16 - 1 = 31$ colourings miss red or blue.',
+            r'With both: a red square and a blue square must be diagonal from each other, and each other square touches both, so those two are white. Pick the diagonal ($2$ ways) and which end is red ($2$ ways): $4$.',
+            r'$31 + 4 = 35$. The answer is $\textbf{(E) } 35$.',
+        ],
+        'trap': r'Adding $16 + 16$ without removing the all-white grid counted twice, or forgetting the $4$ grids with red and blue on a diagonal.',
+    },
+    '2026-amc-10b-17': {
+        'topics': ['logic'],
+        'answer': 'B',
+        'insight': r'If $F$ statements are false, the true ones are exactly the first $F - 1000$, and true plus false is $2026$.',
+        'steps': [
+            r'Statement $k$ is true when $F \ge k + 1000$, so statements $1$ through $F - 1000$ are true and the rest false: $T = F - 1000$.',
+            r'$T + F = 2026$ gives $2F - 1000 = 2026$, so $F = 1513$ and $T = 513$.',
+            r'Check: statement $513$ claims at least $1513$ false (true), statement $514$ claims $1514$ (false). The answer is $\textbf{(B) } 513$.',
+        ],
+        'trap': r'Answering $1513$, the number of false statements, instead of the true ones.',
+    },
+    '2026-amc-10b-18': {
+        'topics': ['factorials', 'factors-divisors'],
+        'answer': 'C',
+        'insight': r'$2025 = 3^4 \cdot 5^2$. Count the $3$s and $5$s in $2026!$ and see which runs out first.',
+        'steps': [
+            r'Threes in $2026!$: $675 + 225 + 75 + 25 + 8 + 2 = 1010$. Fives: $405 + 81 + 16 + 3 = 505$.',
+            r'$2025^n$ needs $4n \le 1010$ and $2n \le 505$. Both allow $n \le 252$ and fail at $253$.',
+            r'So $2025^{252}$ divides $2026!$ and $2025^{253}$ does not. The answer is $\textbf{(C) } 253$.',
+        ],
+        'trap': r'Answering $252$, the largest power that does divide. The question asks for the least that does not.',
+    },
+    '2026-amc-10b-19': {
+        'topics': ['probability', 'recursion'],
+        'answer': 'D',
+        'insight': r'If Anika goes first, Ben is in his going-first position once she misses, so $A$ is just $B$ times her chance of missing.',
+        'steps': [
+            r'Ben draws red with probability $\frac25$, Anika draws green with probability $\frac35$, so she misses with probability $\frac25$.',
+            r'Ben first: $B = \frac25 + \frac35 \cdot \frac25 \cdot B$, so $B \cdot \frac{19}{25} = \frac25$ and $B = \frac{10}{19}$.',
+            r'Anika first: $A = \frac25 B = \frac{4}{19}$. Then $B - A = \frac{6}{19}$. The answer is $\textbf{(D) } \frac{6}{19}$.',
+        ],
+        'trap': r'Giving Anika a miss probability of $\frac35$. She loses her turn on red, which is $\frac{8}{20} = \frac25$.',
+    },
+    '2026-amc-10b-20': {
+        'topics': ['modular-arithmetic', 'basic-counting'],
+        'answer': 'E',
+        'insight': r'$1$ through $7$ is a full set of remainders. Only $8$, $9$ and $10$ upset the balance, so count by how many of them are used.',
+        'steps': [
+            r'All three from $1$ to $7$: pick two freely and the third is forced, $7 \cdot 7 = 49$ ways.',
+            r'Exactly one from $\{8, 9, 10\}$: $3$ positions, $3$ numbers, one free choice from $1$ to $7$ and the last forced: $3 \cdot 3 \cdot 7 = 63$. Exactly two: $3 \cdot 3 \cdot 3 = 27$, the third from $1$ to $7$ forced.',
+            r'All three from $\{8, 9, 10\}$ (remainders $1, 2, 3$) need remainders adding to $7$: arrangements of $1, 3, 3$ or $2, 2, 3$, $6$ ways.',
+            r'$49 + 63 + 27 + 6 = 145$. The answer is $\textbf{(E) } 145$.',
+        ],
+        'trap': r'Estimating $\frac{1000}{7} \approx 143$. The remainders $1, 2, 3$ each come up twice, so the count is not a seventh of $1000$.',
+    },
+    '2026-amc-10b-21': {
+        'topics': ['circles', 'coordinate-geometry'],
+        'answer': 'C',
+        'insight': r'Tangent circles of radius $r$ have centres $2r$ apart, and the centres sit on opposite long sides.',
+        'steps': [
+            r'With $A = (0,0)$, the centres are $(r, 0)$ and $(6 - r, 3)$.',
+            r'They are $2r$ apart: $(6 - 2r)^2 + 3^2 = 4r^2$, so $45 - 24r = 0$ and $r = \frac{15}{8}$.',
+            r'The answer is $\textbf{(C) } \frac{15}{8}$.',
+        ],
+        'trap': r'Setting the horizontal gap $6 - 2r$ equal to $2r$ and ignoring that the centres are $3$ apart vertically.',
+    },
+    '2026-amc-10b-22': {
+        'topics': ['lattice-paths', 'casework'],
+        'answer': 'C',
+        'insight': r'In each column the path can only run straight up or straight down, so a path is fixed by the height at which it leaves each column.',
+        'steps': [
+            r'With no revisits and no left steps, the path in each column is one vertical run, then a step right. It must rise from $(a, 0)$ and drop to $(b, 0)$, staying at height $1$ to $4$ in between.',
+            r'So the path is set by its exit height in columns $a, a+1, \dots, b-1$, each any of $1, 2, 3, 4$: $4^{b-a}$ paths.',
+            r'Pairs with $b - a = 1, 2, 3, 4$ number $4, 3, 2, 1$, so the total is $4 \cdot 4 + 3 \cdot 16 + 2 \cdot 64 + 1 \cdot 256 = 448$.',
+            r'The answer is $\textbf{(C) } 448$.',
+        ],
+        'trap': r'Making the height go only up then only down, like a mountain. Between columns it may rise or fall freely, so each exit height is a free choice of $4$.',
+    },
+    '2026-amc-10b-23': {
+        'topics': ['expected-value', 'probability'],
+        'answer': 'D',
+        'insight': r'Linearity of expectation: work out one face and multiply by $6$. Shared vertices do not matter.',
+        'steps': [
+            r'A face has $4$ vertices, each blue with probability $\frac13$. None blue: $\frac{16}{81}$. Exactly one: $4 \cdot \frac13 \cdot \frac{8}{27} = \frac{32}{81}$.',
+            r'At least two: $1 - \frac{48}{81} = \frac{11}{27}$.',
+            r'Expected faces: $6 \cdot \frac{11}{27} = \frac{22}{9}$. The answer is $\textbf{(D) } \frac{22}{9}$.',
+        ],
+        'trap': r'Thinking the faces sharing vertices makes this hard. Expectation adds up whether or not the events are independent.',
+    },
+    '2026-amc-10b-24': {
+        'topics': ['sequences-series', 'invariants'],
+        'answer': 'C',
+        'insight': r'$a_n + 2a_{n+1} + 3a_{n+2}$ never changes, and the terms settle quickly to a limit $L$ with $6L$ equal to it.',
+        'steps': [
+            r'With $a_{n+3} = \frac{a_n + a_{n+1} + a_{n+2}}{3}$: $a_{n+1} + 2a_{n+2} + 3a_{n+3} = a_n + 2a_{n+1} + 3a_{n+2}$.',
+            r'The terms approach a limit $L$ (the gaps shrink by a factor of about $\frac{1}{\sqrt3}$ per step, so term $2026$ is $L$ to many decimal places). Then $6L = a_1 + 2a_2 + 3a_3$.',
+            r'$6L$ for the choices: $14$, $7$, $35$, $33$, $32$. The largest is $(3,4,8)$. The answer is $\textbf{(C) } (3,4,8)$.',
+        ],
+        'trap': r'Taking the limit to be the plain average of the first three. Choices (C), (D) and (E) all sum to $15$, but later terms weigh more.',
+    },
+    '2026-amc-10b-25': {
+        'topics': ['area', 'polygons', 'transformations'],
+        'answer': 'A',
+        'insight': r'Each card is the last one turned $30^\circ$ about $A$, so the fan is $12$ copies of the quadrilateral $ACPF$, where $P$ is where $\overline{BC}$ meets $\overline{GF}$.',
+        'steps': [
+            r'$AB = 1$ and $AC = 2$ give $BC = \sqrt3$ and $\angle CAD = 30^\circ$. Each card is turned $30^\circ$, so after $12$ cards the next lands on $ABCD$. The polygon is $12$ copies of $ACPF$ turned $30^\circ$ apart.',
+            r'Put $A = (0,0)$, $B = (1,0)$, $C = (1, \sqrt3)$. Turning $30^\circ$ clockwise gives $G = \left(\frac{\sqrt3}{2}, \frac32\right)$ and $F = (\sqrt3, 1)$. Line $GF$ has slope $-\frac{1}{\sqrt3}$ and meets $x = 1$ at $P = \left(1, 2 - \frac{\sqrt3}{3}\right)$.',
+            r'$[ACP] = \frac12 \cdot CP \cdot 1 = \frac12\left(\frac{4\sqrt3}{3} - 2\right) = \frac{2\sqrt3}{3} - 1$. $[APF] = \frac12\left|1 \cdot 1 - \sqrt3\left(2 - \frac{\sqrt3}{3}\right)\right| = \sqrt3 - 1$.',
+            r'$[ACPF] = \frac{5\sqrt3}{3} - 2$, so the polygon has area $12\left(\frac{5\sqrt3}{3} - 2\right) = 20\sqrt3 - 24$. The answer is $\textbf{(A) } 20\sqrt{3}-24$.',
+        ],
+        'trap': r'Joining the far corners $C$ and $F$ with a straight edge, which gives $12 \cdot [ACF] = 12$. The boundary dips inward to $P$ between them.',
     },
     # ------------------------------------------------------------------ 2025 AMC 10A
     '2025-amc-10a-1': {
