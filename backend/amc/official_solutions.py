@@ -14,7 +14,7 @@ on its answer.
 Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
 10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
 Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, and the
-2018 AMC 10A. A problem whose numbers are only in a picture the
+2018 AMC 10A and 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -5149,6 +5149,281 @@ SOLUTIONS = {
             r"The answer is $\textbf{(D) } 34$.",
         ],
         'trap': r"Forgetting $n = 4$, which fails for a different reason.",
+    },
+    # ------------------------------------------------------------------ 2018 AMC 10B
+    '2018-amc-10b-1': {
+        'topics': ['arithmetic', 'area'],
+        'answer': 'A',
+        'insight': r'Count pieces along each side and multiply.',
+        'steps': [
+            r'Along the $20$-inch side there are $20 \div 2 = 10$ pieces, and along the $18$-inch side $18 \div 2 = 9$.',
+            r'That makes $10 \cdot 9 = 90$ pieces. The answer is $\textbf{(A) } 90$.',
+        ],
+        'trap': r'Dividing the area $360$ by $2$ instead of by the piece area $4$, and answering $180$.',
+    },
+    '2018-amc-10b-2': {
+        'topics': ['word-problems', 'arithmetic'],
+        'answer': 'D',
+        'insight': r'Turn each half hour into miles, then turn the missing miles back into a speed.',
+        'steps': [
+            r'The first half hour covers $30$ miles and the second $32.5$, so $62.5$ miles in all.',
+            r'The last half hour covers $96 - 62.5 = 33.5$ miles, which is $67$ miles per hour.',
+            r'The answer is $\textbf{(D) } 67$.',
+        ],
+        'trap': r'Answering $64$, the average over the whole $90$ minutes, instead of the last half hour.',
+    },
+    '2018-amc-10b-3': {
+        'topics': ['basic-counting', 'casework'],
+        'answer': 'B',
+        'insight': r'Only which digits are multiplied together matters, and four digits split into pairs in just three ways.',
+        'steps': [
+            r'The pairings give $1 \cdot 2 + 3 \cdot 4 = 14$, $1 \cdot 3 + 2 \cdot 4 = 11$ and $1 \cdot 4 + 2 \cdot 3 = 10$.',
+            r'Those are three different values. The answer is $\textbf{(B) } 3$.',
+        ],
+        'trap': r'Counting the $24$ orders of the digits. Swapping within a product, or swapping the two products, changes nothing.',
+    },
+    '2018-amc-10b-4': {
+        'topics': ['solid-geometry', 'nonlinear-systems'],
+        'answer': 'B',
+        'insight': r'The three different faces are $XY$, $XZ$ and $YZ$. Their product is $(XYZ)^2$.',
+        'steps': [
+            r'Say $XY = 24$, $XZ = 48$, $YZ = 72$. Then $(XYZ)^2 = 24 \cdot 48 \cdot 72 = 82944 = 288^2$, so $XYZ = 288$.',
+            r'$X = \frac{288}{72} = 4$, $Y = \frac{288}{48} = 6$ and $Z = \frac{288}{24} = 12$.',
+            r'$X + Y + Z = 22$. The answer is $\textbf{(B) } 22$.',
+        ],
+        'trap': r'Guessing dimensions that fit one face, like $4 \times 6$, without checking the other two.',
+    },
+    '2018-amc-10b-5': {
+        'topics': ['basic-counting', 'combinations'],
+        'answer': 'D',
+        'insight': r'Count the complement: subsets with no prime at all.',
+        'steps': [
+            r'The set has $8$ elements, so $2^8 = 256$ subsets.',
+            r'A subset with no prime uses only $4, 6, 8, 9$: $2^4 = 16$ of them, the empty set included.',
+            r'$256 - 16 = 240$. The answer is $\textbf{(D) } 240$.',
+        ],
+        'trap': r'Counting only the subsets made entirely of primes. "At least one prime" allows non-primes alongside.',
+    },
+    '2018-amc-10b-6': {
+        'topics': ['probability', 'casework'],
+        'answer': 'D',
+        'insight': r'Three draws are needed exactly when the first two add to at most $4$.',
+        'steps': [
+            r'The first two draws in order are one of $5 \cdot 4 = 20$ equally likely pairs. Sums of at most $4$: $(1,2), (2,1), (1,3), (3,1)$.',
+            r'After any of those, every chip left is at least $2$, so the third draw always passes $4$.',
+            r'The probability is $\frac{4}{20} = \frac15$. The answer is $\textbf{(D) } \frac15$.',
+        ],
+        'trap': r'Treating a sum of exactly $4$ as enough. The sum has to exceed $4$, so $1 + 3$ still needs a third draw.',
+    },
+    '2018-amc-10b-7': {
+        'topics': ['circles', 'area'],
+        'answer': 'D',
+        'insight': r'With small radius $r$ the large radius is $Nr$, so the areas are $N$ small halves against $N^2$.',
+        'steps': [
+            r'The small semicircles cover $A = N \cdot \frac12 \pi r^2$ and the large one is $\frac12 \pi (Nr)^2 = N^2 \cdot \frac12 \pi r^2$.',
+            r'So $B = (N^2 - N) \cdot \frac12 \pi r^2$ and $A : B = 1 : (N - 1)$.',
+            r'$N - 1 = 18$ gives $N = 19$. The answer is $\textbf{(D) } 19$.',
+        ],
+        'trap': r'Comparing $A$ with the whole large semicircle, $A : (A + B) = 1 : N$, and answering $18$.',
+    },
+    '2018-amc-10b-8': {
+        'topics': ['sequences-series', 'basic-counting'],
+        'answer': 'C',
+        'insight': r'Count the horizontal toothpicks row by row. The vertical ones are the same count turned on its side.',
+        'steps': [
+            r'In an $n$-step staircase the horizontal rows hold $n, n, n-1, \dots, 1$ toothpicks, which is $n + \frac{n(n+1)}{2}$. The vertical ones match.',
+            r'In all, $2n + n(n+1) = n(n+3)$. Check: $3 \cdot 6 = 18$.',
+            r'$n(n+3) = 180$ gives $n = 12$. The answer is $\textbf{(C) } 12$.',
+        ],
+        'trap': r'Scaling in proportion: $10$ times the toothpicks is not $10$ times the steps, so $30$ is wrong.',
+    },
+    '2018-amc-10b-9': {
+        'topics': ['probability', 'symmetry-counting'],
+        'answer': 'D',
+        'insight': r'Turn every die over: each face $k$ becomes $7 - k$, so a sum $s$ becomes $49 - s$ with the same chance.',
+        'steps': [
+            r'Replacing each top face $k$ by the bottom face $7 - k$ matches rolls with sum $s$ one to one with rolls with sum $7 \cdot 7 - s = 49 - s$.',
+            r'So a sum of $10$ is exactly as likely as a sum of $39$.',
+            r'The answer is $\textbf{(D) } 39$.',
+        ],
+        'trap': r'Reflecting about the wrong centre. The sums run from $7$ to $42$, so the middle is $24.5$, not $21$.',
+    },
+    '2018-amc-10b-10': {
+        'topics': ['solid-geometry', 'coordinate-geometry'],
+        'answer': 'E',
+        'insight': r'The base $BCHE$ is a $1 \times \sqrt{13}$ rectangle in a slanted plane. Find the distance from $M$ to that plane.',
+        'steps': [
+            r'Put $A = (0,0,0)$, $B = (3,0,0)$, $D = (0,1,0)$ and $E = (0,0,2)$. Then $C = (3,1,0)$, $H = (0,1,2)$ and $M = \left(3, \frac12, 2\right)$.',
+            r'$BCHE$ has sides $BC = 1$ and $BE = \sqrt{9 + 4} = \sqrt{13}$, and lies in the plane $2x + 3z = 6$.',
+            r'$M$ is $\frac{|6 + 6 - 6|}{\sqrt{13}} = \frac{6}{\sqrt{13}}$ from that plane, so the volume is $\frac13 \cdot \sqrt{13} \cdot \frac{6}{\sqrt{13}} = 2$.',
+            r'The answer is $\textbf{(E) } 2$.',
+        ],
+        'trap': r'Leaving out the $\frac13$ of the pyramid formula, which gives $6$.',
+    },
+    '2018-amc-10b-11': {
+        'topics': ['modular-arithmetic', 'divisibility'],
+        'answer': 'C',
+        'insight': r'Every prime other than $3$ has $p^2 \equiv 1 \pmod 3$, and $26 \equiv 2$.',
+        'steps': [
+            r'For a prime $p \ne 3$, $p^2 + 26 \equiv 1 + 2 \equiv 0 \pmod 3$, and it is bigger than $3$, so it is not prime. For $p = 3$ it is $35 = 5 \cdot 7$.',
+            r'The others can be prime: $5^2 + 16 = 41$, $7^2 + 24 = 73$, $5^2 + 46 = 71$, $19^2 + 96 = 457$.',
+            r'The answer is $\textbf{(C) } p^2+26$.',
+        ],
+        'trap': r'Trying a few small primes and stopping. Only the remainder mod $3$ proves "never".',
+    },
+    '2018-amc-10b-12': {
+        'topics': ['circles', 'triangle-centers'],
+        'answer': 'C',
+        'insight': r'With $O$ the centre, $A + B = 2O$, so the centroid is $O + \frac13(C - O)$: a circle a third the size.',
+        'steps': [
+            r'The centroid is $\frac{A + B + C}{3} = \frac{2O + C}{3} = O + \frac13 (C - O)$.',
+            r'As $C$ runs round the circle of radius $12$, the centroid runs round a circle of radius $4$ about $O$ (missing the two points level with $A$ and $B$).',
+            r'Its area is $16\pi \approx 50.3$. The answer is $\textbf{(C) } 50$.',
+        ],
+        'trap': r'Using radius $8$, two-thirds of the way along the median from $C$, instead of one third of $OC$.',
+    },
+    '2018-amc-10b-13': {
+        'topics': ['modular-arithmetic', 'divisibility'],
+        'answer': 'C',
+        'insight': r'The terms are $10^k + 1$, and $100 \equiv -1 \pmod{101}$, so the powers of $10$ repeat every $4$.',
+        'steps': [
+            r'The terms are $10^k + 1$ for $k = 2, 3, \dots, 2019$.',
+            r'Mod $101$ the powers of $10$ cycle $10, -1, -10, 1$, so $10^k \equiv -1$ exactly when $k \equiv 2 \pmod 4$.',
+            r'$k = 2, 6, \dots, 2018$: that is $\frac{2018 - 2}{4} + 1 = 505$ terms. The answer is $\textbf{(C) } 505$.',
+        ],
+        'trap': r'Taking every even $k$ and answering $1009$. Only every fourth power of $10$ is $-1$ mod $101$.',
+    },
+    '2018-amc-10b-14': {
+        'topics': ['statistics', 'inequalities'],
+        'answer': 'D',
+        'insight': r'Every other value can appear at most $9$ times, so use as few values as possible, each $9$ times.',
+        'steps': [
+            r'With $d$ distinct values, the list holds at most $10 + 9(d - 1)$ numbers. We need $10 + 9(d-1) \ge 2018$, so $d - 1 \ge \frac{2008}{9} \approx 223.1$.',
+            r'So $d - 1 \ge 224$ and $d \ge 225$. It works: the mode $10$ times, $223$ values $9$ times each and one value once makes $2018$.',
+            r'The answer is $\textbf{(D) } 225$.',
+        ],
+        'trap': r'Rounding $\frac{2008}{9}$ down to $223$ and answering $224$. The other values must cover all $2008$ places.',
+    },
+    '2018-amc-10b-15': {
+        'topics': ['area', 'solid-geometry'],
+        'answer': 'A',
+        'insight': r'Follow the line from the centre of the sheet to a corner: it crosses half the base, climbs a side and reaches the centre of the top.',
+        'steps': [
+            r'From the sheet centre to the middle of a base edge is $\frac{w}{2}$. The corner flap then covers a side of height $h$ and runs $\frac{w}{2}$ across the top to $A$.',
+            r'So the sheet centre is $\frac{w}{2} + h + \frac{w}{2} = w + h$ from each corner: the half-diagonal.',
+            r'A square with diagonal $2(w + h)$ has area $\frac{(2(w+h))^2}{2} = 2(w+h)^2$. The answer is $\textbf{(A) } 2(w+h)^2$.',
+        ],
+        'trap': r'Treating $w + h$ as half a side of the sheet rather than half a diagonal.',
+    },
+    '2018-amc-10b-16': {
+        'topics': ['modular-arithmetic', 'exponents'],
+        'answer': 'E',
+        'insight': r'$n^3 - n = (n-1)n(n+1)$ is always a multiple of $6$, so the cubes have the same remainder as the numbers.',
+        'steps': [
+            r'Each $a_i^3 \equiv a_i \pmod 6$, so the sum of cubes $\equiv 2018^{2018} \pmod 6$.',
+            r'$2018 \equiv 2 \pmod 6$, and the powers of $2$ mod $6$ go $2, 4, 2, 4, \dots$. An even power leaves $4$.',
+            r'The answer is $\textbf{(E) } 4$.',
+        ],
+        'trap': r'Stopping at $2018 \equiv 2$ and answering $2$. The exponent is even, so the remainder is $4$.',
+    },
+    '2018-amc-10b-17': {
+        'topics': ['polygons', 'right-triangles', 'quadratics'],
+        'answer': 'B',
+        'insight': r'Each corner cuts off a right triangle whose hypotenuse is a side $s$; its legs are what is left of the rectangle sides.',
+        'steps': [
+            r'$AB = 8 - 2AP = s$ and $HG = 6 - 2PH = s$, so the corner triangle at $P$ has legs $\frac{8 - s}{2}$ and $\frac{6 - s}{2}$ and hypotenuse $s$.',
+            r'$(8 - s)^2 + (6 - s)^2 = 4s^2$ simplifies to $s^2 + 14s - 50 = 0$, so $s = -7 + 3\sqrt{11}$ (the positive root; then $AP < 4$).',
+            r'$k + m + n = -7 + 3 + 11 = 7$. The answer is $\textbf{(B) } 7$.',
+        ],
+        'trap': r'Assuming the octagon is regular. It is equilateral only; the corner triangles are not isosceles.',
+    },
+    '2018-amc-10b-18': {
+        'topics': ['permutations', 'casework'],
+        'answer': 'D',
+        'insight': r'No row can hold a brother and sister, so each row has exactly one child from each family.',
+        'steps': [
+            r"If one row held a pair, they would take the two end seats with someone from a second family between them. The other row would then hold that child's sibling and the third pair, which must also take the ends, putting the sibling directly behind. So no row holds a pair.",
+            r'Choose the front row: one child from each family ($2^3 = 8$ ways) in some order ($3! = 6$): $48$.',
+            r'The back row is their siblings, with nobody behind their own sibling: $2$ such orders of three. That gives $48 \cdot 2 = 96$. The answer is $\textbf{(D) } 96$.',
+        ],
+        'trap': r'Allowing any order of the siblings in the back row ($6$ ways) and forgetting that no one may sit behind their own sibling.',
+    },
+    '2018-amc-10b-19': {
+        'topics': ['divisibility', 'factors-divisors'],
+        'answer': 'E',
+        'insight': r"Zoe's age divides Chloe's exactly when it divides the gap between them, which never changes.",
+        'steps': [
+            r'If Chloe is $c$, then in $t$ years $1 + t$ divides $c + t$ exactly when $1 + t$ divides $c - 1$. So $c - 1$ has $9$ divisors, and the realistic choice is $c - 1 = 36$: Chloe is $37$.',
+            r'Joey is $38$, and $1 + t$ divides $38 + t$ when $1 + t$ divides $37$. The next time is $1 + t = 37$, when Joey is $74$.',
+            r'$7 + 4 = 11$. The answer is $\textbf{(E) } 11$.',
+        ],
+        'trap': r"Looking for divisors of Chloe's age rather than of the age gap $c - 1$.",
+    },
+    '2018-amc-10b-20': {
+        'topics': ['recursion', 'sequences-series'],
+        'answer': 'B',
+        'insight': r'Apply the rule twice and twice again: the function goes up by exactly $6$ every $6$ steps.',
+        'steps': [
+            r'Substituting $f(n)$ into $f(n+1)$ gives $f(n+1) = -f(n-2) + 2n + 1$. Doing it again gives $f(m + 6) = f(m) + 6$.',
+            r'Check: $f(2) = 1$ and $f(8) = 7$ (the values run $1, 1, 3, 6, 8, 8, 7, 7$).',
+            r'$2018 = 2 + 6 \cdot 336$, so $f(2018) = 1 + 6 \cdot 336 = 2017$. The answer is $\textbf{(B) } 2017$.',
+        ],
+        'trap': r'Seeing $f(7) = 7$ and guessing $f(n) = n$. It is off by one at $n = 2018$.',
+    },
+    '2018-amc-10b-21': {
+        'topics': ['factors-divisors', 'divisibility'],
+        'answer': 'C',
+        'insight': r'$323 = 17 \cdot 19$. A next divisor sharing no factor with $323$ would make $n$ at least $323 \cdot 324$, far too big.',
+        'steps': [
+            r'$n$ is a $4$-digit multiple of $2 \cdot 17 \cdot 19 = 646$. If the next divisor $d$ were coprime to $323$, $n$ would be a multiple of $323d > 100000$.',
+            r'So $d$ is a multiple of $17$ or $19$ above $323$: the smallest are $17 \cdot 20 = 340$ and $19 \cdot 18 = 342$.',
+            r'$n = 6460 = 2^2 \cdot 5 \cdot 17 \cdot 19$ works, with no divisor between $323$ and $340$. The answer is $\textbf{(C) } 340$.',
+        ],
+        'trap': r'Answering $324$. It shares no factor with $323$, so $n$ would need five digits or more.',
+    },
+    '2018-amc-10b-22': {
+        'topics': ['geometric-probability', 'triangles'],
+        'answer': 'C',
+        'insight': r'Side $1$ is the longest, so the triangle is obtuse when $x^2 + y^2 < 1$, as long as it is a triangle at all ($x + y > 1$).',
+        'steps': [
+            r'The region is inside the quarter circle $x^2 + y^2 < 1$ and above the line $x + y = 1$ in the unit square.',
+            r'Its area is $\frac{\pi}{4} - \frac12 \approx 0.285$.',
+            r'The closest choice is $0.29$. The answer is $\textbf{(C) } 0.29$.',
+        ],
+        'trap': r'Forgetting the triangle inequality and answering $\frac{\pi}{4} \approx 0.79$.',
+    },
+    '2018-amc-10b-23': {
+        'topics': ['gcd-lcm', 'diophantine'],
+        'answer': 'B',
+        'insight': r'$ab = \gcd \cdot \text{lcm}$, so with $g$ and $L$ the equation factors: $(g - 20)(L - 12) = 177$.',
+        'steps': [
+            r'$gL + 63 = 20L + 12g$ becomes $(g - 20)(L - 12) = 177 = 3 \cdot 59$. Both factors negative is impossible (they would be at most $19$ and $11$).',
+            r'So $(g, L)$ is $(21, 189)$, $(23, 71)$, $(79, 15)$ or $(197, 13)$. Only $21$ divides $189$.',
+            r'$\frac{L}{g} = 9$ must split into coprime $x$ and $y$ with $a = gx$, $b = gy$: $(1, 9)$ or $(9, 1)$. So $(21, 189)$ and $(189, 21)$. The answer is $\textbf{(B) } 2$.',
+        ],
+        'trap': r'Also splitting $9$ as $3 \cdot 3$. Then $a = b = 63$, whose gcd is $63$, not $21$.',
+    },
+    '2018-amc-10b-24': {
+        'topics': ['polygons', 'area', 'right-triangles'],
+        'answer': 'C',
+        'insight': r'Triangle $XYZ$ pokes out of triangle $ACE$ in three small $30$-$60$-$90$ tips. Subtract them.',
+        'steps': [
+            r'$X$, $Y$, $Z$ are $\frac{\sqrt3}{2}$ from the centre and $120^\circ$ apart, so $XYZ$ has side $\frac32$ and area $\frac{\sqrt3}{4} \cdot \frac94 = \frac{9\sqrt3}{16}$.',
+            r"$XZ$ is perpendicular to $AC$, and $X$ is $\frac14$ from $AC$ (half of $B$'s distance $\frac12$). The tip at $X$ has a $60^\circ$ angle at $X$ and a right angle on $AC$, so its legs are $\frac14$ and $\frac{\sqrt3}{4}$, area $\frac{\sqrt3}{32}$.",
+            r'The hexagon is $\frac{9\sqrt3}{16} - 3 \cdot \frac{\sqrt3}{32} = \frac{15\sqrt3}{32}$. The answer is $\textbf{(C) } \frac{15}{32}\sqrt{3}$.',
+        ],
+        'trap': r'Assuming the two triangles make a regular six-pointed star. They are turned $30^\circ$, not $60^\circ$, so the tips are right triangles.',
+    },
+    '2018-amc-10b-25': {
+        'topics': ['floor-ceiling', 'quadratics'],
+        'answer': 'C',
+        'insight': r'The equation is $\frac{x^2}{10000} = x - \lfloor x \rfloor$: a slow parabola against a sawtooth. Count the teeth it meets.',
+        'steps': [
+            r'$x^2 = 10000(x - \lfloor x \rfloor)$ is less than $10000$, so $-100 < x < 100$.',
+            r'On $[n, n+1)$ the sawtooth $x - n$ rises from $0$ towards $1$ faster than the parabola, so they cross at most once, and they do cross when $\frac{(n+1)^2}{10000} < 1$.',
+            r'That holds for $n = -100, -99, \dots, 98$. For $n = 99$ the crossing would be at $x = 100$ itself, outside $[99, 100)$. So $199$ solutions. The answer is $\textbf{(C) } 199$.',
+        ],
+        'trap': r'Counting a crossing on $[99, 100)$ and answering $200$. The parabola reaches $1$ only at $x = 100$.',
     },
     # ------------------------------------------------------------------ 2018 AMC 10A
     '2018-amc-10a-1': {
