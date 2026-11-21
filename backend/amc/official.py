@@ -116,7 +116,9 @@ def _clean_wiki(text):
                      text, flags=re.S)
     text = ''.join(part if i % 2 else re.sub(r"'''?", '', part) for i, part in enumerate(parts))
     text = _emphasis_to_math(text)
-    text = re.sub(r'</?(?:center|div|span|p|br|small|big|sup|sub)[^>]*>', ' ', text, flags=re.I)
+    # A tag name ends at a space, `/` or `>`: `p<\dfrac{1}{8}` ... `p>` in a
+    # choices line is two inequalities, not a <p> tag (2016 AMC 10A #12).
+    text = re.sub(r'</?(?:center|div|span|p|br|small|big|sup|sub)(?:\s[^>]*)?/?>', ' ', text, flags=re.I)
     text = re.sub(r'\{\{[^}]*\}\}', '', text)
     # Wiki list items (`* item`, `*item`) as bullet lines.
     text = re.sub(r'^\s*\*+\s*', '• ', text, flags=re.M)

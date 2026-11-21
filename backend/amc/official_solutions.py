@@ -14,7 +14,7 @@ on its answer.
 Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
 10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
 Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, the
-2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, and the 2016 AMC 10B. A problem whose numbers are only in a picture the
+2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, and the 2016 AMC 10A and 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -6470,6 +6470,278 @@ SOLUTIONS = {
             r'So $f$ takes $1 + 31 = 32$ values. The answer is $\textbf{(A) } 32$.',
         ],
         'trap': r'Counting $\frac12$ and $\frac24$ as different jumps, which gives $1 + 45 = 46$.',
+    },
+    # ------------------------------------------------------------------ 2016 AMC 10A
+    '2016-amc-10a-1': {
+        'topics': ['factorials', 'arithmetic'],
+        'answer': 'B',
+        'insight': r'Pull $10!$ out of the top before dividing.',
+        'steps': [
+            r'$11! - 10! = 10!\,(11 - 1) = 10 \cdot 10!$.',
+            r'Dividing by $9!$ leaves $10 \cdot 10 = 100$. The answer is $\textbf{(B)}\ 100$.',
+        ],
+        'trap': r'Working out $\frac{11!}{9!} = 110$ and stopping there. The $-\frac{10!}{9!} = -10$ is part of the value.',
+    },
+    '2016-amc-10a-2': {
+        'topics': ['exponents'],
+        'answer': 'C',
+        'insight': r'Write everything as a power of $10$ and compare exponents.',
+        'steps': [
+            r'$100^{2x} = 10^{4x}$ and $1000^5 = 10^{15}$, so the equation is $10^{5x} = 10^{15}$.',
+            r'$5x = 15$ gives $x = 3$. The answer is $\textbf{(C)}\ 3$.',
+        ],
+        'trap': r'Writing $100^{2x}$ as $10^{2x}$, which gives $3x = 15$ and $x = 5$.',
+    },
+    '2016-amc-10a-3': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'C',
+        'insight': r"Each of Ben's dollars puts him $25$ cents ahead of David, so the $\$12.50$ gap counts Ben's dollars in quarters.",
+        'steps': [
+            r'If Ben spent $B$ dollars, David spent $0.75B$, and $B - 0.75B = 0.25B = 12.50$.',
+            r'So $B = 50$ and David spent $37.50$.',
+            r'Together that is $\$87.50$. The answer is $\textbf{(C)}\ \$87.50$.',
+        ],
+        'trap': r'Stopping at David, $\$37.50$, or at Ben, $\$50.00$. Both are among the choices.',
+    },
+    '2016-amc-10a-4': {
+        'topics': ['floor-ceiling', 'decimals-fractions'],
+        'answer': 'B',
+        'insight': r'The floor of a negative number goes down, away from zero.',
+        'steps': [
+            r'$\frac{3/8}{-2/5} = -\frac{15}{16}$, and the greatest integer at most $-\frac{15}{16}$ is $-1$.',
+            r'$\text{rem} = \frac38 - \left(-\frac25\right)(-1) = \frac38 - \frac25 = \frac{15 - 16}{40} = -\frac{1}{40}$. The answer is $\textbf{(B) } -\frac{1}{40}$.',
+        ],
+        'trap': r'Rounding $-\frac{15}{16}$ to $0$ instead of down to $-1$, which gives $\frac38$.',
+    },
+    '2016-amc-10a-5': {
+        'topics': ['solid-geometry', 'perfect-powers'],
+        'answer': 'D',
+        'insight': r'Sides $x$, $3x$, $4x$ give volume $12x^3$, so the volume divided by $12$ must be a cube.',
+        'steps': [
+            r'Dividing the choices by $12$: $4$, $\frac{14}{3}$, $\frac{16}{3}$, $8$ and $12$.',
+            r'Only $8 = 2^3$ is a cube, so $x = 2$, the box is $2 \times 6 \times 8$, and the volume is $96$. The answer is $\textbf{(D)}\ 96$.',
+        ],
+        'trap': r'Picking $48$ because it is a multiple of $1 \cdot 3 \cdot 4 = 12$. All three sides scale, so the quotient by $12$ has to be a cube.',
+    },
+    '2016-amc-10a-6': {
+        'topics': ['digits-bases', 'arithmetic'],
+        'answer': 'D',
+        'insight': r'Each $2$ changed to a $1$ costs its place value: $1$ in the units, $10$ in the tens.',
+        'steps': [
+            r'A units digit $2$ appears in $2$, $12$ and $22$: that costs $3 \cdot 1 = 3$.',
+            r'A tens digit $2$ appears in $20$ through $29$: that costs $10 \cdot 10 = 100$.',
+            r'Ximena is ahead by $103$. The answer is $\textbf{(D)}\ 103$.',
+        ],
+        'trap': r'Counting $22$ only once. Both of its $2$s change, so it alone drops by $11$.',
+    },
+    '2016-amc-10a-7': {
+        'topics': ['statistics', 'linear-equations'],
+        'answer': 'D',
+        'insight': r'The mean alone pins $x$ down. Then check the median and mode agree.',
+        'steps': [
+            r'The six known values add to $540$, so $\frac{540 + x}{7} = x$ gives $540 = 6x$ and $x = 90$.',
+            r'In order: $40, 50, 60, 90, 90, 100, 200$. The median is $90$ and so is the mode. The answer is $\textbf{(D)}\ 90$.',
+        ],
+        'trap': r'Taking the median of the six known values, $\frac{60 + 90}{2} = 75$. With $x$ in the list there are seven values, and $x$ itself is the middle one.',
+    },
+    '2016-amc-10a-8': {
+        'topics': ['word-problems', 'recursion'],
+        'answer': 'C',
+        'insight': r'Work backwards: undo each toll by adding $40$, then undo each doubling by halving.',
+        'steps': [
+            r'He ends with $0$. Before the last toll he had $40$, so before the last doubling $20$.',
+            r'Before the second toll $60$, before the second doubling $30$. Before the first toll $70$, before the first doubling $35$.',
+            r'He started with $35$ coins. The answer is $\textbf{(C)}\ 35$.',
+        ],
+        'trap': r'Undoing in the wrong order (halving before adding the toll back), which loses track of the $40$s.',
+    },
+    '2016-amc-10a-9': {
+        'topics': ['sequences-series', 'quadratics'],
+        'answer': 'D',
+        'insight': r'$1 + 2 + \dots + N = \frac{N(N + 1)}{2}$, and $2 \cdot 2016 = 4032$ sits just above $63^2 = 3969$.',
+        'steps': [
+            r'$N(N + 1) = 4032 = 63 \cdot 64$, so $N = 63$.',
+            r'Its digit sum is $6 + 3 = 9$. The answer is $\textbf{(D)}\ 9$.',
+        ],
+        'trap': r'Taking $\sqrt{2016} \approx 45$ as $N$. The sum of the rows is about $\frac{N^2}{2}$, not $N^2$.',
+    },
+    '2016-amc-10a-10': {
+        'topics': ['area', 'sequences-series'],
+        'answer': 'B',
+        'insight': r'With the inner length $x$, each ring adds $2$ to both dimensions, and its area is the difference of two rectangles.',
+        'steps': [
+            r'The rectangles are $x \times 1$, $(x + 2) \times 3$ and $(x + 4) \times 5$.',
+            r'The regions: inner $x$, middle $3x + 6 - x = 2x + 6$, outer $5x + 20 - (3x + 6) = 2x + 14$.',
+            r'They are in arithmetic progression when $(2x + 6) - x = (2x + 14) - (2x + 6)$, that is $x + 6 = 8$, so $x = 2$. The answer is $\textbf{(B) } 2$.',
+        ],
+        'trap': r'Using the areas of the whole rectangles, $x$, $3x + 6$, $5x + 20$, instead of the coloured rings.',
+    },
+    '2016-amc-10a-11': {
+        'topics': ['area', 'coordinate-geometry'],
+        'answer': 'D',
+        'insight': r'The two lines cross at the centre of the rectangle, and the two shaded pieces are halves of the same shape turned round.',
+        'steps': [
+            r'Put the rectangle at $(0,0)$ to $(8,5)$. The lines run from $(1,5)$ to $(7,0)$ and from $(0,4)$ to $(8,1)$. The figure is symmetric about the centre, so both pass through $(4, 2.5)$.',
+            r'The upper left piece has corners $(0,4)$, $(0,5)$, $(1,5)$, $(4,2.5)$. Cut it along the segment from $(0,5)$ to $(4,2.5)$.',
+            r'One triangle has base $1$ on the left edge and height $4$: area $2$. The other has base $1$ on the top edge and height $5 - 2.5 = 2.5$: area $1.25$.',
+            r'One piece is $3.25$, so both are $6\frac12$. The answer is $\textbf{(D)}\ 6\dfrac{1}{2}$.',
+        ],
+        'trap': r'Treating each shaded piece as a $1$-wide strip running the length of the diagonal. The pieces taper to a point in the middle.',
+    },
+    '2016-amc-10a-12': {
+        'topics': ['probability', 'parity'],
+        'answer': 'A',
+        'insight': r'The product is odd only if all three are odd. Half the numbers are odd, but each pick after the first leaves slightly fewer than half.',
+        'steps': [
+            r'$1008$ of the $2016$ numbers are odd, so $p = \frac{1008}{2016} \cdot \frac{1007}{2015} \cdot \frac{1006}{2014}$.',
+            r'The first factor is $\frac12$, and the other two are each just under $\frac12$.',
+            r'So $p < \frac18$. The answer is $\textbf{(A)}\ p<\dfrac{1}{8}$.',
+        ],
+        'trap': r'Answering $p = \frac18$ as if the picks were independent. Without replacement, taking an odd number makes the next one less likely odd.',
+    },
+    '2016-amc-10a-13': {
+        'topics': ['logic', 'permutations'],
+        'answer': 'B',
+        'insight': r'Everyone ends up in the same five seats, so the moves add to zero. Bea and Ceci net $+1$, so Ada moved one seat left.',
+        'steps': [
+            r'Bea moved $+2$, Ceci $-1$, and the swap moved Dee and Edie by opposite amounts. The total change is $0$, so Ada moved $-1$.',
+            r'Ada now sits on an end seat one to the left of her old one. Seat $5$ cannot be one to the left of anything, so she is now in seat $1$ and was in seat $2$.',
+            r'(It happens: Bea $1 \to 3$, Ada $2 \to 1$, Ceci $3 \to 2$, Dee and Edie swap $4$ and $5$.) The answer is $\textbf{(B) } 2$.',
+        ],
+        'trap': r'Trying seatings one by one and assuming Ada must end in seat $5$, the end the others are moving towards.',
+    },
+    '2016-amc-10a-14': {
+        'topics': ['diophantine', 'parity'],
+        'answer': 'C',
+        'insight': r'$2016$ is even, so the threes come in an even number. Every even count from $0$ to $672$ works.',
+        'steps': [
+            r'$2a + 3b = 2016$ needs $3b$ even, so $b$ is even, and $3b \le 2016$ gives $b \le 672$.',
+            r'Each even $b$ from $0$ to $672$ leaves an even remainder to fill with twos: $\frac{672}{2} + 1 = 337$ ways. The answer is $\textbf{(C)}\ 337$.',
+        ],
+        'trap': r'Forgetting $b = 0$ and answering $336$.',
+    },
+    '2016-amc-10a-15': {
+        'topics': ['circles', 'area'],
+        'answer': 'A',
+        'insight': r'The big circle has radius $3$: across it go a cookie, the centre cookie and another cookie.',
+        'steps': [
+            r'The dough has area $9\pi$ and the seven cookies $7\pi$, so the scrap is $2\pi$.',
+            r'$\pi r^2 = 2\pi$ gives $r = \sqrt2$. The answer is $\textbf{(A) } \sqrt{2}$.',
+        ],
+        'trap': r'Setting $r^2 = 2\pi$ and answering $\sqrt{2\pi}$. The $\pi$ cancels on both sides.',
+    },
+    '2016-amc-10a-16': {
+        'topics': ['transformations', 'coordinate-geometry'],
+        'answer': 'D',
+        'insight': r'A reflection followed by a rotation is again a reflection, and a reflection undoes itself. Find its mirror line.',
+        'steps': [
+            r'Reflecting in the $x$-axis sends $(x, y)$ to $(x, -y)$, and turning $90^\circ$ counterclockwise sends that to $(y, x)$.',
+            r"So the two steps together swap the coordinates: $A'' = (2, 0)$, $B'' = (2, -3)$, $C'' = (0, -3)$. That is the reflection in $y = x$.",
+            r'Reflecting in $y = x$ again swaps them back. The answer is $\textbf{(D)}$, reflection about the line $y = x$.',
+        ],
+        'trap': r'Answering a clockwise rotation, which undoes only the second step and leaves the triangle reflected.',
+    },
+    '2016-amc-10a-17': {
+        'topics': ['probability', 'inequalities'],
+        'answer': 'A',
+        'insight': r'The red ball has $i$ green balls to its left for each $i$ from $0$ to $N$, equally likely. It fails only for $i$ strictly between $\frac25 N$ and $\frac35 N$.',
+        'steps': [
+            r'With $N = 5k$, it fails for $2k < i < 3k$: that is $k - 1$ of the $5k + 1$ positions. So $P(N) = 1 - \frac{k - 1}{5k + 1}$.',
+            r'$P(N) < \frac{321}{400}$ means $\frac{k - 1}{5k + 1} > \frac{79}{400}$, that is $400k - 400 > 395k + 79$, so $5k > 479$ and $k \ge 96$.',
+            r'The least $N$ is $480$, with digit sum $12$. The answer is $\textbf{(A) } 12$.',
+        ],
+        'trap': r'Counting the failing positions as $k + 1$ (including $i = 2k$ and $i = 3k$). Exactly $\frac35$ on one side counts as "at least".',
+    },
+    '2016-amc-10a-18': {
+        'topics': ['symmetry-counting', 'solid-geometry'],
+        'answer': 'C',
+        'insight': r'Opposite faces between them use every label, so each face sums to $\frac{36}{2} = 18$. Then $8$ forces $1$ to sit next to it.',
+        'steps': [
+            r'On each face through $8$ the other three labels add to $10$. Without $1$ the only way is $\{2, 3, 5\}$.',
+            r'Two faces through $8$ share just one other vertex, so they cannot both be $\{8, 2, 3, 5\}$. Hence $1$ is on at least two of the three faces through $8$: it is a neighbour of $8$.',
+            r'Turn the cube so $8$ and $1$ are on a fixed edge. No rotation keeps that edge in place, so from here every labelling is a different arrangement.',
+            r'The face through $8$ but not $1$ holds $2, 3, 5$ in any of $3! = 6$ orders. Each forces the rest: the face through $8$, $1$ and a neighbour $b$ is completed by $9 - b$, and the last vertex takes what is left. All six faces then add to $18$.',
+            r'There are $6$ arrangements. The answer is $\textbf{(C) }6$.',
+        ],
+        'trap': r'Dividing $8!$ by $24$ rotations without using the face condition, or forgetting that the edge through $8$ and $1$ leaves no rotations to divide by.',
+    },
+    '2016-amc-10a-19': {
+        'topics': ['similar-triangles', 'quadrilaterals'],
+        'answer': 'E',
+        'insight': r'$BE \parallel AD$ and $BF \parallel AD$, so each crossing point cuts $BD$ in the ratio of those parallel sides.',
+        'steps': [
+            r'$\triangle BPE \sim \triangle DPA$ with $BE : AD = 1 : 3$, so $BP = \frac14 BD$.',
+            r'$\triangle BQF \sim \triangle DQA$ with $BF : AD = 2 : 3$, so $BQ = \frac25 BD$.',
+            r'$BP : PQ : QD = \frac14 : \left(\frac25 - \frac14\right) : \frac35 = 5 : 3 : 12$, and $5 + 3 + 12 = 20$. The answer is $\textbf{(E) } 20$.',
+        ],
+        'trap': r'Assuming $P$ and $Q$ split $BD$ the way $E$ and $F$ split $BC$, into equal thirds.',
+    },
+    '2016-amc-10a-20': {
+        'topics': ['binomial-coefficients', 'combinations'],
+        'answer': 'B',
+        'insight': r'A term is $a^i b^j c^k d^l$ with exponents $\ge 1$ and the $1$ taking the rest of the $N$. Count those by stars and bars.',
+        'steps': [
+            r'Terms with all four variables are solutions of $i + j + k + l + m = N$ with $i, j, k, l \ge 1$ and $m \ge 0$.',
+            r'Taking $1$ from each of $i, j, k, l$ leaves five non-negative numbers adding to $N - 4$: $\binom{N}{4}$ ways.',
+            r'$\binom{14}{4} = \frac{14 \cdot 13 \cdot 12 \cdot 11}{24} = 1001$. The answer is $\textbf{(B) } 14$.',
+        ],
+        'trap': r'Counting every term, $\binom{N + 4}{4}$, instead of only those with all four variables. Taking $1$ off each of the four exponents is what turns $N + 4$ into $N$.',
+    },
+    '2016-amc-10a-21': {
+        'topics': ['circles', 'coordinate-geometry'],
+        'answer': 'D',
+        'insight': r'Two tangent circles of radii $r$ and $s$ on a line touch it $2\sqrt{rs}$ apart. That places all three centres.',
+        'steps': [
+            r"Tangent centres of radii $r$ and $s$ are $r + s$ apart and differ in height by $s - r$, so their feet are $\sqrt{(r + s)^2 - (s - r)^2} = 2\sqrt{rs}$ apart: $P'Q' = 2\sqrt2$ and $Q'R' = 2\sqrt6$.",
+            r'With $l$ as the $x$-axis: $P = (0, 1)$, $Q = (2\sqrt2, 2)$, $R = (2\sqrt2 + 2\sqrt6, 3)$.',
+            r'Area $= \frac12 \left| 2\sqrt2 \cdot 2 - 1 \cdot (2\sqrt2 + 2\sqrt6) \right| = \frac12 \left| 2\sqrt2 - 2\sqrt6 \right| = \sqrt6 - \sqrt2$. The answer is $\textbf{(D) } \sqrt{6}-\sqrt{2}$.',
+        ],
+        'trap': r'Taking the centres $1 + 2$ and $2 + 3$ apart along the line, as if the circles were the same size.',
+    },
+    '2016-amc-10a-22': {
+        'topics': ['factors-divisors', 'divisibility'],
+        'answer': 'D',
+        'insight': r'In $110n^3$ the primes $2$, $5$, $11$ have exponents $1 + 3a$, so they give factors $2 + 3a$; any other prime gives a factor $1 + 3b$. And $110 = 2 \cdot 5 \cdot 11$.',
+        'steps': [
+            r'Say $n = 2^a 5^b 11^c \cdots$. The factors $2 + 3a$, $2 + 3b$, $2 + 3c$ are each at least $2$ and multiply into $110 = 2 \cdot 5 \cdot 11$.',
+            r'Another prime would add a factor $1 + 3e \ge 4$ dividing $110$: $10$, $22$ or $55$. What is left ($11$, $5$ or $2$) cannot be split into three factors of at least $2$. So the three factors are $2$, $5$, $11$, and $\{a, b, c\} = \{0, 1, 3\}$.',
+            r'$81n^4 = 3^4 \cdot n^4$ has exponents $4$ and $\{0, 4, 12\}$: $5 \cdot 1 \cdot 5 \cdot 13 = 325$ divisors. The answer is $\textbf{(D) }325$.',
+        ],
+        'trap': r'Forgetting the $3^4$ from $81$, which leaves $1 \cdot 5 \cdot 13 = 65$.',
+    },
+    '2016-amc-10a-23': {
+        'topics': ['functions', 'linear-equations'],
+        'answer': 'A',
+        'insight': r'Guess $a \diamondsuit b = \frac{a}{b}$. It satisfies both rules, and the rules force it.',
+        'steps': [
+            r'With $c = b$: $a \diamondsuit 1 = (a \diamondsuit b) \cdot b$, so $a \diamondsuit b = \frac{a \diamondsuit 1}{b}$. With $b = a$ this gives $1 = \frac{a \diamondsuit 1}{a}$, so $a \diamondsuit b = \frac{a}{b}$.',
+            r'Then $2016 \diamondsuit \frac{6}{x} = \frac{2016x}{6} = 336x = 100$, so $x = \frac{100}{336} = \frac{25}{84}$.',
+            r'$p + q = 25 + 84 = 109$. The answer is $\textbf{(A) }109$.',
+        ],
+        'trap': r'Guessing $a \diamondsuit b = \frac{b}{a}$, which satisfies $a \diamondsuit a = 1$ but not the first rule.',
+    },
+    '2016-amc-10a-24': {
+        'topics': ['cyclic-quadrilaterals', 'trigonometry'],
+        'answer': 'E',
+        'insight': r'Equal chords cut equal arcs. If each $200$ cuts an inscribed angle $\alpha$, the fourth side spans $3\alpha$.',
+        'steps': [
+            r'A chord is $2R\sin$ of half its central angle. With $\sin\alpha = \frac{200}{2 \cdot 200\sqrt2} = \frac{\sqrt2}{4}$, the fourth side is $2R\sin(180^\circ - 3\alpha) = 2R\sin 3\alpha$.',
+            r'$\sin 3\alpha = 3\sin\alpha - 4\sin^3\alpha = \frac{3\sqrt2}{4} - \frac{\sqrt2}{8} = \frac{5\sqrt2}{8}$.',
+            r'The side is $400\sqrt2 \cdot \frac{5\sqrt2}{8} = 500$. The answer is $\textbf{(E) } 500$.',
+        ],
+        'trap': r'Assuming the quadrilateral is a square or symmetric enough to answer $200$. The fourth side faces the long arc and is the longest.',
+    },
+    '2016-amc-10a-25': {
+        'topics': ['gcd-lcm', 'casework'],
+        'answer': 'A',
+        'insight': r'Each prime is its own problem: $72 = 2^3 3^2$, $600 = 2^3 3 \cdot 5^2$, $900 = 2^2 3^2 5^2$. Count exponents prime by prime and multiply.',
+        'steps': [
+            r'Fives: $\text{lcm}(x, y)$ has none, so $x$ and $y$ have none and $z$ has $5^2$. One way.',
+            r'Twos: $\max$ of the exponents of $y, z$ is $2$, so $x$ has $2^3$. Then $(y, z)$ exponents in $\{0, 1, 2\}$ with a $2$ among them: $9 - 4 = 5$ ways.',
+            r'Threes: $\max$ for $x, z$ is $1$, so $y$ has $3^2$. Then $(x, z)$ exponents in $\{0, 1\}$ with a $1$ among them: $3$ ways.',
+            r'$1 \cdot 5 \cdot 3 = 15$. The answer is $\textbf{(A)}\ 15$.',
+        ],
+        'trap': r'Counting $3 \cdot 3$ pairs for the twos without requiring the maximum to be exactly $2$.',
     },
 }
 

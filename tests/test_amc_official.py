@@ -69,6 +69,20 @@ def test_plain_text():
     assert found[1]['choices'][2] == '6'
 
 
+
+def test_inequalities_in_choices_are_not_html_tags():
+    # 2016 AMC 10A #12: `p<\dfrac..` and `..p>` once read as a <p> tag and ate choices C to E.
+    src = r"""==Problem 1==
+Which is true of $p$?
+
+<math>\textbf{(A)}\ p<\dfrac{1}{8}\qquad\textbf{(B)}\ p=\dfrac{1}{8}\qquad\textbf{(C)}\ \dfrac{1}{8}<p<\dfrac{1}{3}\qquad\textbf{(D)}\ p=\dfrac{1}{3}\qquad\textbf{(E)}\ p>\dfrac{1}{3}</math>
+<p align="center">x</p>
+"""
+    (one,) = official.parse_contest(src, 'AMC 10')
+    assert one['choices'] == ['$p<\\dfrac{1}{8}$', '$p=\\dfrac{1}{8}$', '$\\dfrac{1}{8}<p<\\dfrac{1}{3}$',
+                              '$p=\\dfrac{1}{3}$', '$p>\\dfrac{1}{3}$']
+    assert '<p' not in one['statement'] and 'align' not in one['statement']
+
 def test_aime_has_no_choices():
     found = official.parse_contest('==Problem 1==\nFind <math>x</math>.\n==Problem 2==\nFind y.', 'AIME')
     assert found[0]['choices'] is None and found[0]['statement'] == 'Find $x$.'
