@@ -11,7 +11,7 @@ paper, a study plan to contest day, and search across all of it.
 | --- | --- | --- |
 | Dashboard | `/dashboard` | Today's plan, the next problem, projected score vs goal, progress by category |
 | Review | `/review` | Weak topics: twelve problems from your four weakest topics (first-try accuracy), drawn from every imported official paper and, when ticked, the Summit and Step mocks, pitched where you get about two in three right, walked one after another (`backend/amc/weak.py`). Then Wrong problems, the error log: misses return after 3, 10 and 21 days until mastered |
-| Problems | `/problems`, `/problems/:id` | Every problem in contest order (mock #1 to #25), with a chooser down the left for source (Summit Mock sets, Step problems, official papers), contest, mock set, year, problem number, rating 1-10 (1 is an AMC 10 #1, 10 the hardest AIME problem), topic, technique and status; answer to unlock the solution, key insight and trap |
+| Problems | `/problems`, `/problems/:id` | Every problem in contest order (mock #1 to #25), with a chooser down the left for source (Summit Mock sets, Step problems, official papers), contest, mock set, year, problem number, rating 1-10 in halves (the AoPS rating times 10/6: an AMC 10 #1 is a 1.5, the hardest AIME problem a 10), topic, technique and status; answer to unlock the solution, key insight and trap |
 | Topics | `/topics`, `/topics/:id` | 63 topics in 5 categories and 92 techniques in 5 strategy families, each with key ideas and its problems |
 | Mock Contests | `/mock-contests` | Five Summit Mock sets each for the AMC 10, AMC 12 and AIME (plus the original Step Mocks), in real problem order at real difficulty, sat on an exam screen with a cover page and bubble answer sheet (official papers too), graded 6 / 1.5 / 0 with a report. The clock only counts time with the window in front: it pauses when you switch tabs, apps or windows |
 | Past Contests | `/contests`, `/contests/:id` | Every official AMC 10/12 and AIME from 2000 to 2026, which can be imported one at a time (paste the AoPS page source and answer key) or many at once ("Import many papers": open a batch link, copy the page, paste) and then read whole like the AoPS problems page, practiced, graded and timed in-site. Text copied from the rendered AoPS page works too. A paper's page shows where you stand on each problem and, folded away, its answer key and Summit's own worked solutions (`backend/amc/official_solutions.py`, written so far for the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and 10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021 Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, and the 2018 AMC 10A); figures can be stored as SVG and are drawn in place of the Asymptote note. Before the first sitting a paper's problems, key and solutions are locked behind a card that offers the timed contest or a confirmed unlock, so it can still be sat cold. Papers in Summit head the list as cards |
@@ -21,8 +21,8 @@ paper, a study plan to contest day, and search across all of it.
 
 The content lives in `backend/amc/` (`bank.py` is the problem bank, `sets/` the
 fifteen Summit Mock papers with `sets/ratings.py` each problem's own reviewed
-rating, `scale.py` Summit's 1-10 scale (the AoPS rating stretched so 10 is the
-hardest AIME problem) and the rating by problem number on a real paper,
+rating, `scale.py` Summit's 1-10 scale (the AoPS 0.5-6 rating times 10/6, so 10 is
+the hardest AIME problem) and the rating by problem number on a real paper,
 `catalog.py` the topics and contests, `engine.py` the rules), the API in
 `backend/api/amc.py`, the tables in `data/sql/amc.sql`, and the pages in
 `frontend/src/pages/amc/`. The Step Mock and Summit Mock problems are original. Only the `temu` account (or the

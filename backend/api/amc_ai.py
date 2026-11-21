@@ -35,8 +35,8 @@ def status(username: str = Depends(current_username)):
 # ---------------------------------------------------------------------------
 DIAGNOSE_SYSTEM = """\
 You are an experienced AMC 10, AMC 12 and AIME coach reading one student's
-results. You get a model of their ability on Summit's 1-10 rating scale (1 is
-an AMC 10 #1, 10 the hardest AIME problem; the rating they solve half the
+results. You get a model of their ability on Summit's 1-10 rating scale (an
+AMC 10 #1 is 1.5, 10 the hardest AIME problem; the rating they solve half the
 time), their predicted score untimed and at their own pace, the topics worth
 the most points, patterns in their mistakes, and their trend. Quote ratings on
 this 1-10 scale, never as AoPS ratings. Explain what the

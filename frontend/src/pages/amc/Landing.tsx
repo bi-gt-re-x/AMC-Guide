@@ -48,7 +48,7 @@ const FLOATERS = [
 const STEPS = [
   {
     n: '01', title: 'Practice',
-    body: 'Hundreds of problems, each rated from 1 (an AMC 10 #1) to 10 (the hardest AIME problem) and tagged by topic and technique. Pick by problem number, year, topic or method.',
+    body: 'Hundreds of problems, each rated from 1 to 10 (an AMC 10 #1 is a 1.5, the hardest AIME problem a 10) and tagged by topic and technique. Pick by problem number, year, topic or method.',
   },
   {
     n: '02', title: 'Review',
@@ -65,9 +65,9 @@ const STEPS = [
 ];
 
 const MOCKS = [
-  { name: 'AMC 10', problems: 25, time: '75 min', sets: 5, note: 'Algebra, counting, number theory and geometry, ramping from 1 to 4 on the scale.', tone: 'sage' },
+  { name: 'AMC 10', problems: 25, time: '75 min', sets: 5, note: 'Algebra, counting, number theory and geometry, ramping from 1.5 to 6.5 on the scale.', tone: 'sage' },
   { name: 'AMC 12', problems: 25, time: '75 min', sets: 5, note: 'Shares eight problems with its AMC 10, then adds logs, trig and complex numbers.', tone: 'clay' },
-  { name: 'AIME', problems: 15, time: '3 hours', sets: 5, note: 'Integer answers 000–999. Fifteen problems from 2.5 up to 6.5.', tone: 'slate' },
+  { name: 'AIME', problems: 15, time: '3 hours', sets: 5, note: 'Integer answers 000–999. Fifteen problems from 4 up to 10.', tone: 'slate' },
 ];
 
 const COACH = [
@@ -287,8 +287,8 @@ function Marquee({ items, reverse = false }: { items: string[]; reverse?: boolea
 function ScaleDemo() {
   const [ref, seen] = useInView<HTMLDivElement>();
   const marks = [
-    { at: 1, label: 'AMC 10 #1' }, { at: 2.5, label: 'AMC 10 #15' }, { at: 4, label: 'AMC 12 #23' },
-    { at: 6.5, label: 'AIME #15' },
+    { at: 1.5, label: 'AMC 10 #1' }, { at: 4, label: 'AMC 10 #15' }, { at: 6.5, label: 'AMC 12 #23' },
+    { at: 10, label: 'AIME #15' },
   ];
   return (
     <div ref={ref} className={`lp-scale${seen ? ' is-in' : ''}`}>
@@ -505,7 +505,7 @@ export default function Landing() {
           <div className="lp-bento">
             <Reveal className="lp-tile lp-tile-wide" delay={0}>
               <h3>Every problem on one scale</h3>
-              <p>Ratings from 1 to 10, where 10 is the hardest AIME problem: the AoPS scale stretched over the contests you are preparing for.</p>
+              <p>Ratings from 1 to 10, where 10 is the hardest AIME problem: the AoPS scale, which tops out at 6, times 10/6.</p>
               <ScaleDemo />
             </Reveal>
             <Reveal className="lp-tile" delay={100}>

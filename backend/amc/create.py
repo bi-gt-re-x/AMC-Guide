@@ -36,7 +36,7 @@ MAA problem. It must have exactly one correct answer, be solvable by hand in
 the time a real problem at that position takes, and need no diagram.
 
 Difficulty uses the AoPS 1-10 scale: AMC 10 problems run from 1 (#1-4) to 4
-(#25), AMC 12 from 1 to 4.5, AIME from 2.5 (#1) to 6.5 (#15). Match the target
+(#25), AMC 12 from 1 to 4.5, AIME from 2.5 (#1) to 6 (#14-15). Match the target
 rating honestly: a 1 is a quick computation, a 3 needs a real idea, a 5 needs
 two ideas put together.
 
@@ -150,7 +150,7 @@ def create(user, level, topic, technique='', rating=None, like=None):
         technique = 'direct-computation'
     # `rating` is on Summit's 1-10 scale; the writer is told the AoPS rating,
     # which is the scale it knows, and that is what is stored.
-    lo, hi = {'AMC 10': (1, 4), 'AMC 12': (1, 4.5), 'AIME': (2.5, 6.5)}[level]
+    lo, hi = {'AMC 10': (1, 4), 'AMC 12': (1, 4.5), 'AIME': (2.5, 6)}[level]
     aops = to_aops(rating) if isinstance(rating, (int, float)) else (lo + hi) / 2
     rating = min(hi, max(lo, round(float(aops) * 2) / 2))
 

@@ -18,9 +18,9 @@ import '@/styles/amc.css';
 const LEVELS: Level[] = ['AMC 10', 'AMC 12', 'AIME'];
 
 const RANGE: Record<Level, string> = {
-  'AMC 10': 'A real AMC 10 runs from 1 to 6 out of 10, easiest first',
-  'AMC 12': 'A real AMC 12 runs from 1 to 6.5 out of 10, easiest first',
-  AIME: 'A real AIME runs from 3.5 to 10 out of 10, easiest first',
+  'AMC 10': 'A real AMC 10 runs from 1.5 to 6.5 out of 10, easiest first',
+  'AMC 12': 'A real AMC 12 runs from 1.5 to 7.5 out of 10, easiest first',
+  AIME: 'A real AIME runs from 4 to 10 out of 10, easiest first',
 };
 
 function MockCard({ m }: { m: MockContest }) {

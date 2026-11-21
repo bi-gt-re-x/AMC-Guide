@@ -121,7 +121,7 @@ def test_contest_pages(client, today):
     # Each problem carries its own rating on Summit's 1-10 scale (from the review in
     # backend/amc/sets/ratings.py), not its slot's: this set's #25 is an AoPS 3.5.
     ratings = [p['rating'] for p in summit['problems']]
-    assert all(1 <= r <= 10 for r in ratings) and ratings[0] == 1 and ratings[-1] == 5
+    assert all(1 <= r <= 10 for r in ratings) and ratings[0] == 1.5 and ratings[-1] == 6
 
 
 def test_logging_a_past_contest(client, today):

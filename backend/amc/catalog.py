@@ -479,9 +479,9 @@ from backend.amc.sets import MOCKS as _SET_MOCKS  # noqa: E402
 
 for _m in _SET_MOCKS:
     _m['blurb'] = {
-        'AMC 10': '25 problems in 75 minutes, real AMC 10 difficulty from #1 to #25 (rated 1 to 4).',
-        'AMC 12': '25 problems in 75 minutes, real AMC 12 difficulty (rated 1 to 4.5). Shares 8 problems with AMC 10 Set {}.'.format(_m['set']),
-        'AIME': '15 problems in 3 hours, real AIME difficulty (rated 2.5 to 6.5). Answers are 0 to 999.',
+        'AMC 10': '25 problems in 75 minutes, real AMC 10 difficulty from #1 to #25 (rated 1.5 to 6.5).',
+        'AMC 12': '25 problems in 75 minutes, real AMC 12 difficulty (rated 1.5 to 7.5). Shares 8 problems with AMC 10 Set {}.'.format(_m['set']),
+        'AIME': '15 problems in 3 hours, real AIME difficulty (rated 4 to 10). Answers are 0 to 999.',
     }[_m['level']]
 MOCKS = MOCKS + _SET_MOCKS
 MOCK_BY_ID = {m['id']: m for m in MOCKS}

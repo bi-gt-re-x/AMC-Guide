@@ -288,7 +288,7 @@ export default function Problem() {
               <dt>Category</dt><dd>{p.category_name}</dd>
               <dt>Technique</dt><dd><Link className="am-link" to={`/problems?technique=${p.technique}`}>{p.technique_name}</Link></dd>
               <dt>Rating</dt>
-              <dd title="1 is an AMC 10 #1 and 10 the hardest AIME problem">
+              <dd title="The AoPS rating times 10/6: an AMC 10 #1 is a 1.5 and the hardest AIME problem a 10">
                 {p.rating != null ? `${p.rating}/10` : '—'}
                 {p.aops != null && <span className="am-muted"> · AoPS {p.aops}</span>}
               </dd>

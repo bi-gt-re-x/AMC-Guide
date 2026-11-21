@@ -14,10 +14,9 @@ export function ratingText(rating: number) {
 
 /**
  * Difficulty on Summit's 1-10 scale (backend/amc/scale.py): a ten-step meter
- * (half a step for .5) and, with `label`, the number. 1 is the first problem of
- * an AMC 10 and 10 the hardest AIME problem; an AMC 10 runs from 1 to about 6,
- * an AMC 12 to 6.5 and an AIME from 3.5 to 10. It is the AoPS competition
- * rating stretched over the whole range.
+ * (half a step for .5) and, with `label`, the number. It is the AoPS
+ * competition rating times 10/6: an AMC 10 runs from 1.5 to 6.5, an AMC 12 to
+ * 7.5 and an AIME from 4 to 10, the hardest AIME problem.
  */
 export function Difficulty({ value, rating, label = true }: { value: number; rating?: number | null; label?: boolean }) {
   const r = rating ?? value;

@@ -169,7 +169,7 @@ export default function Problems() {
         </div>
       </Group>
       <Group title="Rating (1–10)">
-        <p className="am-choose-note">1 is an AMC 10 #1, 10 the hardest AIME problem.</p>
+        <p className="am-choose-note">The AoPS rating times 10/6: an AMC 10 #1 is a 1.5, the hardest AIME problem a 10.</p>
         <div className="am-choose-numbers">
           {RATING_STEPS.map((r) => {
             const n = data.rating_counts[r] ?? 0;

@@ -2,8 +2,8 @@ r"""Smart analytics: a model of the student, not just counts.
 
 ## Ability on the problems' own scale
 
-Every problem carries a Summit 1-10 rating (backend/amc/scale.py: 1 is an AMC
-10 #1, 10 the hardest AIME problem). We model the chance of solving a problem
+Every problem carries a Summit 1-10 rating (backend/amc/scale.py: the AoPS
+rating times 10/6, so an AMC 10 #1 is a 1.5 and the hardest AIME problem a 10). We model the chance of solving a problem
 of rating r at the first try as
 
     P(r) = 1 / (1 + exp(SLOPE * (r - theta)))
@@ -61,12 +61,12 @@ from backend.amc.scale import SCALE_BY_NUMBER
 
 #: Bumped whenever the model or its scale changes, so a cached AI reading of
 #: the old numbers (backend/api/amc_ai.py) is not shown beside the new ones.
-MODEL_VERSION = 'summit-scale-1'
+MODEL_VERSION = 'summit-scale-2'
 #: Logistic slope per Summit rating point (1.6 per AoPS point, rescaled).
-SLOPE = 0.98
+SLOPE = 0.96
 #: Prior on a new student: about an AMC 10 #8-10 (AoPS 2), give or take a lot.
-PRIOR_MEAN = 2.6
-PRIOR_SD = 2.4
+PRIOR_MEAN = 3.3
+PRIOR_SD = 2.45
 TOPIC_SD = 1.3
 #: Days for an answer's weight to halve, and the least weight an old answer keeps.
 HALF_LIFE = 45
@@ -501,7 +501,7 @@ def ai_brief(stats, plan):
     lines = [
         'Contest: {}. Goal: {}.'.format(stats['level'], stats['goal']),
         'First-try answers so far: {}.'.format(stats['answered']),
-        'Ability estimate on Summit\'s 1-10 scale (1 = AMC 10 #1, 10 = hardest AIME problem; the rating solved '
+        'Ability estimate on Summit\'s 1-10 scale (an AMC 10 #1 is 1.5, 10 = hardest AIME problem; the rating solved '
         'half the time, recent answers weighted more): {} ± {}.'.format(stats['theta'], stats['se']),
         'Predicted score: {} untimed (80% range {}-{}); {} with their own pace in the time limit (reaching #{} of {}); '
         'chance of reaching {}: {}%. More likely right than wrong up to #{}.'.format(

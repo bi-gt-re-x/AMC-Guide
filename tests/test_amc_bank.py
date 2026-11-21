@@ -196,8 +196,9 @@ def test_every_solution_is_steps_ending_on_the_answer():
 
 def test_summit_scale_puts_the_hardest_aime_problem_at_ten():
     from backend.amc.scale import to_aops, to_scale
-    aops = [1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5]
-    assert [to_scale(a) for a in aops] == [1, 2, 2.5, 3.5, 4.5, 5, 6, 6.5, 7.5, 8.5, 9, 10]
+    # The AoPS 0.5-6 scale times 10/6, to the nearest half.
+    aops = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6]
+    assert [to_scale(a) for a in aops] == [1, 1.5, 2.5, 3.5, 4, 5, 6, 6.5, 7.5, 8.5, 9, 10]
     assert to_scale(0) == 1 and to_scale(9) == 10                   # clamped to the scale
     assert all(abs(to_scale(to_aops(r)) - r) < 1e-9 for r in [to_scale(a) for a in aops])
 
@@ -206,9 +207,9 @@ def test_official_positions_follow_the_aops_bands():
     from backend.amc import official
     from backend.amc.scale import aops_at
     assert [aops_at('AMC 10', n) for n in (1, 6, 11, 16, 21, 25)] == [1, 1.5, 2, 2.5, 3, 4]
-    assert [official.rating_at('AMC 10', n) for n in (1, 6, 11, 16, 21, 25)] == [1, 2, 2.5, 3.5, 4.5, 6]
-    assert [official.rating_at('AMC 12', n) for n in (1, 10, 20, 25)] == [1, 2.5, 5, 6.5]
-    assert [official.rating_at('AIME', n) for n in (1, 4, 7, 11, 15)] == [3.5, 5, 6, 7.5, 10]
+    assert [official.rating_at('AMC 10', n) for n in (1, 6, 11, 16, 21, 25)] == [1.5, 2.5, 3.5, 4, 5, 6.5]
+    assert [official.rating_at('AMC 12', n) for n in (1, 10, 20, 25)] == [1.5, 3.5, 6, 7.5]
+    assert [official.rating_at('AIME', n) for n in (1, 4, 7, 11, 15)] == [4, 6, 6.5, 8.5, 10]
     for level, table in official.RATING_BY_NUMBER.items():
         assert len(table) == {'AIME': 15}.get(level, 25)
         assert table == sorted(table), level            # never easier further in

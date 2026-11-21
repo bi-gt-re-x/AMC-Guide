@@ -46,7 +46,7 @@ export interface Problem {
   technique: string;
   technique_name: string;
   difficulty: number;
-  /** Summit's 1-10 rating: 1 is an AMC 10 #1, 10 the hardest AIME problem. */
+  /** Summit's 1-10 rating: the AoPS rating times 10/6 (an AMC 10 #1 is 1.5, the hardest AIME problem 10). */
   rating?: number | null;
   /** The AoPS competition rating it comes from. */
   aops?: number | null;
