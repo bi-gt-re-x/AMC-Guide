@@ -13,8 +13,8 @@ on its answer.
 
 Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
 10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
-Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, and the
-2018 AMC 10A and 10B. A problem whose numbers are only in a picture the
+Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, the
+2018 AMC 10A and 10B, and the 2017 AMC 10A and 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -5677,6 +5677,536 @@ SOLUTIONS = {
             r"The largest sum is $6 + 8 + 4 = 18$. The answer is $\textbf{(D) } 18$.",
         ],
         'trap': r"Taking $c = 9$, which needs $b = 18$, not a digit.",
+    },
+    # ------------------------------------------------------------------ 2017 AMC 10B
+    '2017-amc-10b-1': {
+        'topics': ['digits-bases', 'arithmetic'],
+        'answer': 'B',
+        'insight': r'Undo the steps backwards: reverse the result first, then subtract $11$ and divide by $3$.',
+        'steps': [
+            r'Reversed, the result is $17$, $27$, $37$, $47$ or $57$. Subtracting $11$ leaves $6$, $16$, $26$, $36$ or $46$.',
+            r'Only $6$ and $36$ are multiples of $3$, and $6 \div 3 = 2$ is not a two-digit number, so $3n = 36$.',
+            r'Mary thought of $12$: $3 \cdot 12 + 11 = 47$, which reverses to $74$. The answer is $\textbf{(B) } 12$.',
+        ],
+        'trap': r'Subtracting $11$ from $71$ to $75$ before reversing. The digits are switched after the arithmetic, so undo that first.',
+    },
+    '2017-amc-10b-2': {
+        'topics': ['word-problems', 'arithmetic'],
+        'answer': 'C',
+        'insight': r'Time is distance over speed for each stretch. Never average the speeds.',
+        'steps': [
+            r'Each lap takes $\frac{100}{4} + \frac{300}{5} = 25 + 60 = 85$ seconds.',
+            r'Five laps take $425$ seconds, which is $7$ minutes and $5$ seconds. The answer is $\textbf{(C) }$ 7 minutes and 5 seconds.',
+        ],
+        'trap': r'Averaging the speeds to $4.5$ m/s. She spends longer at the slow speed per meter, and the two stretches are different lengths.',
+    },
+    '2017-amc-10b-3': {
+        'topics': ['inequalities'],
+        'answer': 'E',
+        'insight': r'Look for the choice whose two parts can never cancel: a positive part that always beats $|y| < 1$.',
+        'steps': [
+            r'$z > 1 > -y$, so $y + z > 0$ always.',
+            r'The others can fail. With $x$ tiny, $y + x^2$ and $y + xz$ are near $y < 0$. $y + y^2 = y(1 + y)$ is always negative here, and $y + 2y^2 = y(1 + 2y)$ is negative for $-\frac12 < y < 0$.',
+            r'The answer is $\textbf{(E) } y+z$.',
+        ],
+        'trap': r'Picking $y + y^2$ because $y^2$ is positive. With $-1 < y < 0$, $y^2$ is smaller than $|y|$, so the sum is negative.',
+    },
+    '2017-amc-10b-4': {
+        'topics': ['linear-equations'],
+        'answer': 'D',
+        'insight': r'Clear the fraction in the given equation and it collapses to $x = y$.',
+        'steps': [
+            r'$3x + y = -2(x - 3y) = -2x + 6y$, so $5x = 5y$ and $x = y$.',
+            r'Then $\frac{x + 3y}{3x - y} = \frac{4x}{2x} = 2$. The answer is $\textbf{(D) } 2$.',
+        ],
+        'trap': r'Trying to read the second fraction off the first by flipping signs. The expressions are not reciprocals or negatives of each other.',
+    },
+    '2017-amc-10b-5': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'D',
+        'insight': r'Write both moments in one variable and solve.',
+        'steps': [
+            r'With $c$ cherry and $2c$ blueberry at first, afterwards $2c - 10 = 3(c - 10)$.',
+            r'So $2c - 10 = 3c - 30$ and $c = 20$, which means $40$ blueberry. The answer is $\textbf{(D) } 40$.',
+        ],
+        'trap': r'Answering $20$, the number of cherry jelly beans.',
+    },
+    '2017-amc-10b-6': {
+        'topics': ['solid-geometry'],
+        'answer': 'B',
+        'insight': r'Volume caps the count at $4$. Then find a pinwheel that actually fits $4$.',
+        'steps': [
+            r'The box holds $18$ cubic inches and each block takes $4$, so at most $4$ blocks fit.',
+            r'Put the box at $0 \le x \le 3$, $0 \le y \le 2$, $0 \le z \le 3$. Blocks can fill $[0,2] \times [0,2] \times [0,1]$, $[2,3] \times [0,2] \times [0,2]$, $[1,3] \times [0,2] \times [2,3]$ and $[0,1] \times [0,2] \times [1,3]$, turning around the box and leaving the middle $1 \times 2 \times 1$ empty.',
+            r'So $4$ fit. The answer is $\textbf{(B) } 4$.',
+        ],
+        'trap': r'Laying every block flat in the same direction. That fits one per layer, $3$ in all; turning some on end makes room for a fourth.',
+    },
+    '2017-amc-10b-7': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'C',
+        'insight': r'Both halves have the same length $d$, so add their times and set the sum to $44$ minutes in hours.',
+        'steps': [
+            r'$\frac{d}{17} + \frac{d}{5} = \frac{44}{60}$, so $d \cdot \frac{22}{85} = \frac{11}{15}$.',
+            r'$d = \frac{11}{15} \cdot \frac{85}{22} = \frac{17}{6} \approx 2.83$ km.',
+            r'She walked about $2.8$ km. The answer is $\textbf{(C) } 2.8$.',
+        ],
+        'trap': r'Setting the total time to $44$ without turning minutes into hours.',
+    },
+    '2017-amc-10b-8': {
+        'topics': ['coordinate-geometry', 'triangles'],
+        'answer': 'C',
+        'insight': r'In an isosceles triangle the altitude from the apex lands at the midpoint of the base. $A$ is not needed at all.',
+        'steps': [
+            r'$D$ is the midpoint of $BC$, so $C = 2D - B = (-2 - 2,\ 6 + 3)$.',
+            r'$C = (-4, 9)$. The answer is $\textbf{(C) } (-4, 9)$.',
+        ],
+        'trap': r'Reflecting $A$ through $D$. The base is $BC$, so it is $B$ that $D$ mirrors.',
+    },
+    '2017-amc-10b-9': {
+        'topics': ['probability', 'binomial-coefficients'],
+        'answer': 'D',
+        'insight': r'Each question is right with chance $\frac13$. Count exactly two right and all three right.',
+        'steps': [
+            r'Exactly two right: $3$ choices for the wrong one, so $3 \cdot \left(\frac13\right)^2 \cdot \frac23 = \frac{6}{27}$.',
+            r'All three right: $\frac{1}{27}$. Together $\frac{7}{27}$. The answer is $\textbf{(D) } \frac{7}{27}$.',
+        ],
+        'trap': r'Forgetting which question is the wrong one, getting $\frac{2}{27} + \frac{1}{27} = \frac19$.',
+    },
+    '2017-amc-10b-10': {
+        'topics': ['coordinate-geometry', 'linear-equations'],
+        'answer': 'E',
+        'insight': r'Perpendicular slopes multiply to $-1$, which here says $a = b$. Then the point gives two equations for $a$ and $c$.',
+        'steps': [
+            r'The slopes are $\frac{a}{2}$ and $-\frac{2}{b}$, and their product $-\frac{a}{b} = -1$, so $a = b$.',
+            r'Putting in $(1, -5)$: $a + 10 = c$ and $2 - 5a = -c$, so $c = 5a - 2$.',
+            r'$a + 10 = 5a - 2$ gives $a = 3$ and $c = 13$. The answer is $\textbf{(E) } 13$.',
+        ],
+        'trap': r'Taking the slope of $ax - 2y = c$ as $-\frac{a}{2}$. Solving for $y$ gives $y = \frac{a}{2}x - \frac{c}{2}$.',
+    },
+    '2017-amc-10b-11': {
+        'topics': ['conditional-probability'],
+        'answer': 'D',
+        'insight': r'Take $100$ students and fill in all four groups. The question only looks at those who say they dislike it.',
+        'steps': [
+            r'Of $60$ who like dancing, $12$ say they dislike it. Of $40$ who dislike it, $36$ say so.',
+            r'$48$ say they dislike dancing, and $12$ of them like it: $\frac{12}{48} = 25\%$. The answer is $\textbf{(D) } 25\%$.',
+        ],
+        'trap': r'Answering $12\%$, which is out of all students, not out of those who say they dislike dancing.',
+    },
+    '2017-amc-10b-12': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'A',
+        'insight': r'Cost per kilometer is price over efficiency, so the two changes multiply.',
+        'steps': [
+            r'The new car needs $\frac{1}{1.5} = \frac23$ as much fuel, at $1.2$ times the price.',
+            r'It costs $\frac23 \cdot 1.2 = 0.8$ as much, a saving of $20\%$. The answer is $\textbf{(A) } 20\%$.',
+        ],
+        'trap': r'Treating $50\%$ better efficiency as $50\%$ less fuel, or answering $33\frac13\%$ from the efficiency alone.',
+    },
+    '2017-amc-10b-13': {
+        'topics': ['basic-counting', 'linear-equations'],
+        'answer': 'C',
+        'insight': r'Count class seats two ways: by class, and by how many classes each student takes.',
+        'steps': [
+            r'Let $a$, $b$ and $c$ be the numbers taking exactly one, two and three classes. Then $a + b + c = 20$ and $a + 2b + 3c = 10 + 13 + 9 = 32$.',
+            r'Subtracting, $b + 2c = 12$. With $b + c = 9$, $c = 3$. The answer is $\textbf{(C) } 3$.',
+        ],
+        'trap': r'Running full inclusion-exclusion with unknown pairwise overlaps. The "at least two" count makes the simple seat count enough.',
+    },
+    '2017-amc-10b-14': {
+        'topics': ['modular-arithmetic', 'probability'],
+        'answer': 'D',
+        'insight': r'Any number not divisible by $5$ has a fourth power that leaves remainder $1$ mod $5$, so its sixteenth power does too.',
+        'steps': [
+            r'Checking $1, 2, 3, 4$: their fourth powers are $1, 16, 81, 256$, all $\equiv 1 \pmod 5$. So $N^{16} \equiv 1$ whenever $5 \nmid N$, and $N^{16} \equiv 0$ when $5 \mid N$.',
+            r'Exactly $\frac15$ of $1$ to $2020$ are multiples of $5$, so the probability is $\frac45$. The answer is $\textbf{(D) } \frac{4}{5}$.',
+        ],
+        'trap': r'Thinking only $N \equiv 1 \pmod 5$ works and answering $\frac15$.',
+    },
+    '2017-amc-10b-15': {
+        'topics': ['right-triangles', 'area-ratios'],
+        'answer': 'E',
+        'insight': r'$E$ cuts $AC$ in a known ratio, and $\triangle AED$ is that fraction of $\triangle ACD$.',
+        'steps': [
+            r'$AC = 5$. In right triangle $ABC$, $AE = \frac{AB^2}{AC} = \frac95$, so $AE$ is $\frac{9}{25}$ of $AC$.',
+            r'$\triangle AED$ and $\triangle ACD$ share the height from $D$, so $[AED] = \frac{9}{25} \cdot 6 = \frac{54}{25}$. The answer is $\textbf{(E) } \frac{54}{25}$.',
+        ],
+        'trap': r'Using $\frac{BC^2}{AC} = \frac{16}{5}$ for $AE$. The foot is nearer $A$ because $AB$ is the shorter side.',
+    },
+    '2017-amc-10b-16': {
+        'topics': ['digits-bases', 'basic-counting'],
+        'answer': 'A',
+        'insight': r'Count the numbers with no $0$ instead, then subtract from $2017$.',
+        'steps': [
+            r'With no zero: $9$ one-digit, $81$ two-digit, $729$ three-digit, and $9^3 = 729$ from $1000$ to $1999$. Every number from $2000$ to $2017$ has a zero.',
+            r'That is $1548$ without a zero, so $2017 - 1548 = 469$ have one. The answer is $\textbf{(A) } 469$.',
+        ],
+        'trap': r'Counting $2111$ and the like as zero-free four-digit numbers. Only $1000$ to $1999$ contribute, since $2000$ to $2017$ all contain $0$.',
+    },
+    '2017-amc-10b-17': {
+        'topics': ['combinations', 'digits-bases'],
+        'answer': 'B',
+        'insight': r'A monotonous number is just a set of digits written in order, so count subsets.',
+        'steps': [
+            r'Increasing: any nonempty subset of $\{1, \dots, 9\}$ in increasing order ($0$ cannot lead), so $2^9 - 1 = 511$. This includes the one-digit numbers.',
+            r'Decreasing with at least two digits: any subset of $\{0, \dots, 9\}$ of size at least $2$, so $2^{10} - 1 - 10 = 1013$.',
+            r'$511 + 1013 = 1524$. The answer is $\textbf{(B) } 1524$.',
+        ],
+        'trap': r'Counting the one-digit numbers as both increasing and decreasing, which gives $1533$.',
+    },
+    '2017-amc-10b-18': {
+        'topics': ['symmetry-counting', 'casework'],
+        'answer': 'D',
+        'insight': r'Place the one green disk first. That kills all symmetry except a single reflection, which is easy to handle.',
+        'steps': [
+            r'The disks are $3$ corners and $3$ edge middles, and the symmetries mix corners with corners only. So green goes on a corner or on a middle, and either way only the reflection through green is left.',
+            r'Then choose $2$ of the other $5$ disks to be red: $\binom52 = 10$ ways. The reflection fixes the opposite disk and swaps two pairs, so it fixes $2$ of those $10$ and pairs up the other $8$. That leaves $2 + 4 = 6$ paintings.',
+            r'Corner or middle, $6$ each: $12$. The answer is $\textbf{(D) } 12$.',
+        ],
+        'trap': r'Dividing all $\frac{6!}{3!\,2!\,1!} = 60$ paintings by the $6$ symmetries. Paintings fixed by a reflection are not counted $6$ times, so that undercounts.',
+    },
+    '2017-amc-10b-19': {
+        'topics': ['area-ratios', 'triangles'],
+        'answer': 'E',
+        'insight': r'$A^\prime B^\prime C^\prime$ is $ABC$ plus three equal corner triangles, each sharing a $120^\circ$ angle with sides that are multiples of $AB$.',
+        'steps': [
+            r'Take $AB = 1$ and let $S$ be the area of $ABC$, which is $\frac12 \sin 60^\circ$.',
+            r'$\triangle BB^\prime C^\prime$ has $BB^\prime = 3$, $BC^\prime = 4$ and angle $120^\circ$ at $B$, whose sine equals $\sin 60^\circ$. So its area is $3 \cdot 4 \cdot S = 12S$.',
+            r'Three of them plus $ABC$: $37S$. The answer is $\textbf{(E) } 37:1$.',
+        ],
+        'trap': r'Adding the three corner triangles and forgetting $ABC$ in the middle, which gives $36:1$.',
+    },
+    '2017-amc-10b-20': {
+        'topics': ['factors-divisors', 'factorials', 'probability'],
+        'answer': 'B',
+        'insight': r'A divisor picks its power of $2$ independently of its odd part, so only the exponent of $2$ matters.',
+        'steps': [
+            r'The power of $2$ in $21!$ is $10 + 5 + 2 + 1 = 18$, so $21! = 2^{18} m$ with $m$ odd.',
+            r'Divisors are $2^k d$ with $0 \le k \le 18$ and $d \mid m$, and they are odd only for $k = 0$: $1$ choice out of $19$.',
+            r'The answer is $\textbf{(B) } \frac{1}{19}$.',
+        ],
+        'trap': r'Using $18$ choices for the power of $2$ instead of $19$; $2^0$ counts too.',
+    },
+    '2017-amc-10b-21': {
+        'topics': ['right-triangles', 'circles'],
+        'answer': 'D',
+        'insight': r'$6$-$8$-$10$ is a right triangle, so the median to the hypotenuse is $5$. Then use $r = \frac{\text{area}}{s}$ on each half.',
+        'steps': [
+            r'$AD = BD = CD = 5$. Each half has area $\frac{24}{2} = 12$.',
+            r'$\triangle ADB$ has sides $5, 5, 6$, so $s = 8$ and $r = \frac{12}{8} = \frac32$. $\triangle ADC$ has sides $5, 5, 8$, so $s = 9$ and $r = \frac{12}{9} = \frac43$.',
+            r'$\frac32 + \frac43 = \frac{17}{6}$. The answer is $\textbf{(D) } \frac{17}{6}$.',
+        ],
+        'trap': r'Assuming the two inradii are equal because the halves have equal area. Their perimeters differ.',
+    },
+    '2017-amc-10b-22': {
+        'topics': ['similar-triangles', 'circles'],
+        'answer': 'D',
+        'insight': r'$AB$ is a diameter, so $\angle ACB = 90^\circ$. That makes $\triangle ACB$ similar to $\triangle ADE$.',
+        'steps': [
+            r'$AD = 4 + 3 = 7$ and $DE = 5$, so $AE = \sqrt{74}$ and $[ADE] = \frac{35}{2}$.',
+            r'$\triangle ACB$ and $\triangle ADE$ have right angles at $C$ and $D$ and share angle $A$. The hypotenuses are $AB = 4$ and $AE = \sqrt{74}$.',
+            r'$[ABC] = \frac{16}{74} \cdot \frac{35}{2} = \frac{140}{37}$. The answer is $\textbf{(D) } \frac{140}{37}$.',
+        ],
+        'trap': r'Matching $AB$ with $AD$ instead of $AE$. The right angle is at $C$, so $AB$ is a hypotenuse and must pair with the hypotenuse $AE$.',
+    },
+    '2017-amc-10b-23': {
+        'topics': ['modular-arithmetic', 'divisibility'],
+        'answer': 'C',
+        'insight': r'$45 = 5 \cdot 9$. Mod $5$ needs only the last digit; mod $9$ needs only the digit sum, which equals the sum of $1$ to $44$ mod $9$.',
+        'steps': [
+            r'$N$ ends in $4$, so $N \equiv 4 \pmod 5$.',
+            r'Each block of digits is congruent mod $9$ to the number it writes, so $N \equiv 1 + 2 + \dots + 44 = 990 \equiv 0 \pmod 9$.',
+            r'The remainder is a multiple of $9$ that is $4$ mod $5$: $9$. The answer is $\textbf{(C) } 9$.',
+        ],
+        'trap': r'Answering $4$ from the last digit alone. That is only the remainder mod $5$.',
+    },
+    '2017-amc-10b-24': {
+        'topics': ['conics', 'triangles'],
+        'answer': 'C',
+        'insight': r'For an equilateral triangle the centroid is the circumcenter, and symmetry in $y = x$ puts the far vertex at $(-1, -1)$.',
+        'steps': [
+            r'Say the centroid is the vertex $(1, 1)$. The circle around it and the hyperbola are both symmetric in $y = x$, so the triangle is too and has a vertex on that line. It is not $(1, 1)$ itself, so it is $(-1, -1)$.',
+            r'The circumradius is the distance from $(1,1)$ to $(-1,-1)$, $2\sqrt2$, so the side is $2\sqrt2 \cdot \sqrt3 = 2\sqrt6$.',
+            r'The area is $\frac{\sqrt3}{4} \cdot 24 = 6\sqrt3$, whose square is $108$. The answer is $\textbf{(C) } 108$.',
+        ],
+        'trap': r'Taking $2\sqrt2$, the distance from the centroid to a vertex, as the side length.',
+    },
+    '2017-amc-10b-25': {
+        'topics': ['divisibility', 'statistics'],
+        'answer': 'E',
+        'insight': r'Work backwards: the seven-test sum must be a multiple of $7$ in a narrow window, and that pins down everything.',
+        'steps': [
+            r'Seven different scores from $91$ to $100$ sum to between $658$ and $679$. The multiples of $7$ there are $658$, $665$, $672$, $679$.',
+            r'Taking away the $95$ leaves $563$, $570$, $577$ or $584$, and only $570$ is a multiple of $6$. So the first six sum to $570$.',
+            r'The first five sum to a multiple of $5$, so the sixth score is a multiple of $5$: $95$ or $100$. The $95$ came seventh, so it was $100$. The answer is $\textbf{(E) } 100$.',
+        ],
+        'trap': r'Stopping at "a multiple of $5$" and forgetting the scores are all different, so $95$ is already used.',
+    },
+    # ------------------------------------------------------------------ 2017 AMC 10A
+    '2017-amc-10a-1': {
+        'topics': ['arithmetic'],
+        'answer': 'C',
+        'insight': r'Work from the inside out. Each layer doubles and adds one, so the values are one less than powers of $2$.',
+        'steps': [
+            r'From the inside: $3, 7, 15, 31, 63, 127$.',
+            r'The answer is $\textbf{(C) } 127$.',
+        ],
+        'trap': r'Losing count of the layers and stopping at $63$. There are six $2$s.',
+    },
+    '2017-amc-10a-2': {
+        'topics': ['word-problems', 'arithmetic'],
+        'answer': 'D',
+        'insight': r'The $5$-box is the best deal at $60$ cents a popsicle, so buy as many as you can and spend the rest well.',
+        'steps': [
+            r'Two $5$-boxes cost $\$6$ and give $10$. The last $\$2$ buys a $3$-box.',
+            r'That is $13$ popsicles. The answer is $\textbf{(D) } 13$.',
+        ],
+        'trap': r'Spending the leftover $\$2$ on two singles, which gives $12$.',
+    },
+    '2017-amc-10a-3': {
+        'topics': ['area'],
+        'answer': 'B',
+        'insight': r'Walkways are the whole garden minus the beds.',
+        'steps': [
+            r'Across: $1 + 6 + 1 + 6 + 1 = 15$ feet. Up: $1 + 2 + 1 + 2 + 1 + 2 + 1 = 10$ feet. So the garden is $150$ square feet.',
+            r'The six beds cover $6 \cdot 12 = 72$, leaving $150 - 72 = 78$. The answer is $\textbf{(B) } 78$.',
+        ],
+        'trap': r'Answering $72$, the area of the beds.',
+    },
+    '2017-amc-10a-4': {
+        'topics': ['word-problems', 'sequences-series'],
+        'answer': 'B',
+        'insight': r'Each half minute nets one toy, except the last, which ends the moment Mom drops in her three.',
+        'steps': [
+            r'After $27$ half minutes there are $27$ toys in the box.',
+            r'In the $28$th half minute Mom adds $3$ and reaches $30$ before Mia can take any out.',
+            r'$28$ half minutes is $14$ minutes. The answer is $\textbf{(B) } 14$.',
+        ],
+        'trap': r'Counting a net of one toy every time and answering $30$ half minutes, $15$ minutes.',
+    },
+    '2017-amc-10a-5': {
+        'topics': ['linear-equations', 'decimals-fractions'],
+        'answer': 'C',
+        'insight': r'$\frac1x + \frac1y = \frac{x + y}{xy}$, which the problem gives directly.',
+        'steps': [
+            r'$\frac1x + \frac1y = \frac{y + x}{xy}$, and the problem says $x + y = 4xy$.',
+            r'So the sum is $\frac{4xy}{xy} = 4$. The answer is $\textbf{(C) } 4$.',
+        ],
+        'trap': r'Inverting the ratio and answering $\frac14$.',
+    },
+    '2017-amc-10a-6': {
+        'topics': ['logic'],
+        'answer': 'B',
+        'insight': r'Only the contrapositive is guaranteed: no A means not every multiple choice question was right.',
+        'steps': [
+            r'The promise is "all right $\Rightarrow$ an A". Its contrapositive is "no A $\Rightarrow$ not all right", that is, at least one wrong.',
+            r'The answer is $\textbf{(B) }$.',
+        ],
+        'trap': r'Choosing (D), the converse. Others may get an A without a perfect multiple choice score.',
+    },
+    '2017-amc-10a-7': {
+        'topics': ['right-triangles', 'estimation'],
+        'answer': 'A',
+        'insight': r"For a unit square, Jerry walks $2$ and Silvia walks $\sqrt2$. Compare the saving to Jerry's walk.",
+        'steps': [
+            r'Silvia saves $2 - \sqrt2 \approx 0.586$.',
+            r"Out of Jerry's trip of $2$, that is about $29\%$. The answer is $\textbf{(A) } 30\%$.",
+        ],
+        'trap': r"Dividing the saving by Silvia's trip $\sqrt2$ instead of by Jerry's, and getting about $40\%$.",
+    },
+    '2017-amc-10a-8': {
+        'topics': ['combinations'],
+        'answer': 'B',
+        'insight': r'A handshake is any pair that is not two of the $20$ friends.',
+        'steps': [
+            r'$\binom{30}{2} - \binom{20}{2} = 435 - 190 = 245$.',
+            r'The answer is $\textbf{(B) } 245$.',
+        ],
+        'trap': r"Adding up each person's handshakes, which counts every one twice: $490$.",
+    },
+    '2017-amc-10a-9': {
+        'topics': ['word-problems'],
+        'answer': 'C',
+        'insight': r'Going the other way turns uphill into downhill, so redo each leg for Penny.',
+        'steps': [
+            r'Minnie: $\frac{10}{5} + \frac{15}{30} + \frac{20}{20} = 2 + \frac12 + 1 = 3.5$ hours, or $210$ minutes.',
+            r'Penny goes $A \to C \to B \to A$: $\frac{20}{30} + \frac{15}{10} + \frac{10}{40} = 40 + 90 + 15 = 145$ minutes.',
+            r'$210 - 145 = 65$. The answer is $\textbf{(C) } 65$.',
+        ],
+        'trap': r'Giving Penny the same hills as Minnie. Her $15$ km leg is uphill and her $10$ km leg is downhill.',
+    },
+    '2017-amc-10a-10': {
+        'topics': ['polygons', 'inequalities'],
+        'answer': 'B',
+        'insight': r'Four sides make a quadrilateral exactly when the longest is less than the other three together.',
+        'steps': [
+            r'If the new rod $d$ is not the longest, $15 < 3 + 7 + d$, so $d > 5$. If it is, $d < 25$. So $6 \le d \le 24$: $19$ lengths.',
+            r'The $7$ and $15$ rods are already on the table, which leaves $17$. The answer is $\textbf{(B) } 17$.',
+        ],
+        'trap': r'Answering $19$ without removing the rods already used.',
+    },
+    '2017-amc-10a-11': {
+        'topics': ['solid-geometry'],
+        'answer': 'D',
+        'insight': r'The region is a cylinder with a half ball on each end, and the two halves make a whole ball.',
+        'steps': [
+            r'$9\pi \cdot AB + \frac43 \pi \cdot 27 = 216\pi$, so $9 \cdot AB + 36 = 216$.',
+            r'$AB = 20$. The answer is $\textbf{(D) } 20$.',
+        ],
+        'trap': r'Forgetting the rounded ends and answering $24$.',
+    },
+    '2017-amc-10a-12': {
+        'topics': ['coordinate-geometry', 'inequalities'],
+        'answer': 'E',
+        'insight': r'Each choice of equal pair gives a line, and the "no greater" condition cuts each line down to a ray.',
+        'steps': [
+            r'$3 = x + 2 \ge y - 4$: $x = 1$, $y \le 7$. $3 = y - 4 \ge x + 2$: $y = 7$, $x \le 1$. $x + 2 = y - 4 \ge 3$: $y = x + 6$, $x \ge 1$.',
+            r'These are three rays from $(1, 7)$. The answer is $\textbf{(E) }$ three rays with a common endpoint.',
+        ],
+        'trap': r'Dropping the inequality and getting three whole lines. They all meet at $(1, 7)$, so even that is not (C).',
+    },
+    '2017-amc-10a-13': {
+        'topics': ['recursion', 'modular-arithmetic'],
+        'answer': 'D',
+        'insight': r'The sequence repeats every $8$ terms, so any $8$ in a row add to one full period.',
+        'steps': [
+            r'It runs $0, 1, 1, 2, 0, 2, 2, 1$ and then $0, 1$ again, so the period is $8$.',
+            r'Eight consecutive terms add to $0 + 1 + 1 + 2 + 0 + 2 + 2 + 1 = 9$. The answer is $\textbf{(D) } 9$.',
+        ],
+        'trap': r'Reducing the sum mod $3$ as well. The terms are remainders, but their sum is not taken mod $3$.',
+    },
+    '2017-amc-10a-14': {
+        'topics': ['linear-equations', 'word-problems'],
+        'answer': 'D',
+        'insight': r'Set $A = 1$ and solve the two linear equations together.',
+        'steps': [
+            r'$m = 0.2(1 - s)$ and $s = 0.05(1 - m)$. Substituting, $m = 0.2 - 0.01 + 0.01m$, so $m = \frac{19}{99}$.',
+            r'Then $s = 0.05 \cdot \frac{80}{99} = \frac{4}{99}$, and $m + s = \frac{23}{99} \approx 23.2\%$.',
+            r'The answer is $\textbf{(D) } 23\%$.',
+        ],
+        'trap': r'Adding $20\% + 5\% = 25\%$. Each is a percent of something smaller than $A$.',
+    },
+    '2017-amc-10a-15': {
+        'topics': ['geometric-probability'],
+        'answer': 'C',
+        'insight': r'Split on whether Laurent lands in the top half of his range, where he wins outright.',
+        'steps': [
+            r'With probability $\frac12$ Laurent is above $2017$ and wins for sure.',
+            r'Otherwise both are uniform on $[0, 2017]$ and he wins half the time.',
+            r'$\frac12 + \frac12 \cdot \frac12 = \frac34$. The answer is $\textbf{(C) } \frac{3}{4}$.',
+        ],
+        'trap': r'Answering $\frac23$ from the ratio of the interval lengths.',
+    },
+    '2017-amc-10a-16': {
+        'topics': ['factors-divisors', 'gcd-lcm'],
+        'answer': 'B',
+        'insight': r'Horse $k$ is at the start at time $T$ exactly when $k \mid T$. Find the smallest $T$ with five divisors among $1$ to $10$.',
+        'steps': [
+            r'$T = 12$ is divisible by $1, 2, 3, 4, 6$: five horses. Every smaller $T$ has at most four divisors up to $10$.',
+            r'The digit sum of $12$ is $3$. The answer is $\textbf{(B) } 3$.',
+        ],
+        'trap': r'Insisting on horses $1$ to $5$ and taking $\text{lcm}(1, \dots, 5) = 60$. Any five horses will do.',
+    },
+    '2017-amc-10a-17': {
+        'topics': ['coordinate-geometry', 'circles'],
+        'answer': 'D',
+        'insight': r'List the $12$ lattice points. Make $PQ$ as long as possible and $RS$ as short as possible, with neither a whole number.',
+        'steps': [
+            r'The points are $(\pm5, 0)$, $(0, \pm5)$, $(\pm3, \pm4)$, $(\pm4, \pm3)$.',
+            r'The shortest irrational distance is from $(3, 4)$ to $(4, 3)$: $\sqrt2$. The longest is from $(3, 4)$ to $(-4, -3)$: $\sqrt{98} = 7\sqrt2$.',
+            r'The ratio is $7$. The answer is $\textbf{(D) } 7$.',
+        ],
+        'trap': r'Using a diameter, $10$, for $PQ$. It is rational, so it is not allowed.',
+    },
+    '2017-amc-10a-18': {
+        'topics': ['probability', 'sequences-series'],
+        'answer': 'D',
+        'insight': r"If both miss, the game starts over, so Amelia's chance $P$ satisfies a one-line equation.",
+        'steps': [
+            r'Both miss in a round with probability $\frac23 \cdot \frac35 = \frac25$.',
+            r'$P = \frac13 + \frac25 P$, so $P = \frac59$, and $q - p = 4$. The answer is $\textbf{(D) } 4$.',
+        ],
+        'trap': r'Splitting by the ratio $\frac13 : \frac25$. That ignores that Amelia always tosses first.',
+    },
+    '2017-amc-10a-19': {
+        'topics': ['permutations', 'casework'],
+        'answer': 'C',
+        'insight': r'Alice can only sit next to Derek or Eric. Place her first.',
+        'steps': [
+            r'Alice at an end: her neighbor is Derek or Eric ($2$ ways). The other of the pair cannot be next to that neighbor, so goes in one of the last $2$ seats, and Bob and Carla fill the rest in $2$ ways. That is $8$, and $16$ for both ends.',
+            r'Alice in seat $2$, $3$ or $4$: both her neighbors are Derek and Eric ($2$ ways), who are then not adjacent, and Bob and Carla take the last $2$ seats ($2$ ways). That is $4$ each, $12$ in all.',
+            r'$16 + 12 = 28$. The answer is $\textbf{(C) } 28$.',
+        ],
+        'trap': r'Treating the two conditions as independent and multiplying separate fractions. They interact through who can sit beside Alice.',
+    },
+    '2017-amc-10a-20': {
+        'topics': ['digits-bases', 'modular-arithmetic'],
+        'answer': 'D',
+        'insight': r'A number is congruent to its digit sum mod $9$, so $S(n+1) \equiv S(n) + 1 \pmod 9$.',
+        'steps': [
+            r'$1274 \equiv 5 \pmod 9$, so $S(n+1) \equiv 6 \pmod 9$.',
+            r'Of the choices only $1239 \equiv 6$. It happens: $n$ made of $1238$ ones followed by $9999$ turns into $1237$ ones, a $2$ and four zeros.',
+            r'The answer is $\textbf{(D) } 1239$.',
+        ],
+        'trap': r'Thinking $S(n+1)$ must be $S(n) + 1$ or close to it. Trailing $9$s can drop the sum by $9$ each.',
+    },
+    '2017-amc-10a-21': {
+        'topics': ['similar-triangles', 'right-triangles'],
+        'answer': 'D',
+        'insight': r'Each square cuts off a small triangle similar to the big one. Write one similarity equation for each.',
+        'steps': [
+            r'Corner square: the far corner is on the hypotenuse, so $\frac{x}{3} + \frac{x}{4} = 1$ and $x = \frac{12}{7}$.',
+            r'Square on the hypotenuse: the height to the hypotenuse is $\frac{12}{5}$, and the triangle above the square gives $\frac{y}{5} = \frac{12/5 - y}{12/5}$. So $y = \frac{60}{37}$.',
+            r'$\frac{x}{y} = \frac{12}{7} \cdot \frac{37}{60} = \frac{37}{35}$. The answer is $\textbf{(D) } \frac{37}{35}$.',
+        ],
+        'trap': r'Answering $\frac{35}{37}$, which is $\frac{y}{x}$.',
+    },
+    '2017-amc-10a-22': {
+        'topics': ['circles', 'area'],
+        'answer': 'E',
+        'insight': r'The kite $ABOC$ minus the $120^\circ$ sector is exactly the part of the triangle outside the circle.',
+        'steps': [
+            r'With side $s$, the center $O$ makes $OB \perp AB$ and $\angle BAO = 30^\circ$, so $r = \frac{s}{\sqrt3}$ and $\angle BOC = 120^\circ$.',
+            r'The kite has area $s \cdot r = \frac{s^2}{\sqrt3}$, and the sector $\frac13 \pi r^2 = \frac{\pi s^2}{9}$.',
+            r'Dividing their difference by $\frac{\sqrt3}{4}s^2$ gives $\frac43 - \frac{4\pi}{9\sqrt3} = \frac43 - \frac{4\sqrt3\pi}{27}$. The answer is $\textbf{(E) } \frac{4}{3}-\frac{4\sqrt{3}\pi}{27}$.',
+        ],
+        'trap': r'Taking the circle as the incircle of the triangle. It touches $AB$ and $AC$ at $B$ and $C$, so it bulges past $BC$.',
+    },
+    '2017-amc-10a-23': {
+        'topics': ['combinations', 'coordinate-geometry'],
+        'answer': 'B',
+        'insight': r'Count all triples of points, then subtract the ones on a line.',
+        'steps': [
+            r'There are $\binom{25}{3} = 2300$ triples.',
+            r'Collinear: rows and columns $10 \cdot \binom53 = 100$. Diagonals of slope $\pm1$: $2(10 + 2 \cdot 4 + 2 \cdot 1) = 40$. Slopes $\pm2$ and $\pm\frac12$: $3$ each, $12$ in all.',
+            r'$2300 - 152 = 2148$. The answer is $\textbf{(B) } 2148$.',
+        ],
+        'trap': r'Forgetting the slope $\pm2$ and $\pm\frac12$ lines and answering $2160$.',
+    },
+    '2017-amc-10a-24': {
+        'topics': ['polynomials'],
+        'answer': 'C',
+        'insight': r'$g$ has three distinct roots that are all roots of the monic quartic $f$, so $f = g \cdot (x + r)$.',
+        'steps': [
+            r'$(x^3 + ax^2 + x + 10)(x + r)$ has $x$ coefficient $10 + r = 100$ and $x^3$ coefficient $a + r = 1$. So $r = 90$ and $a = -89$.',
+            r'$f(1) = g(1) \cdot 91 = (1 - 89 + 1 + 10) \cdot 91 = -77 \cdot 91 = -7007$.',
+            r'The answer is $\textbf{(C) } -7007$.',
+        ],
+        'trap': r'Trying to find $b$ and $c$ first. Only $r$ and $a$ are needed.',
+    },
+    '2017-amc-10a-25': {
+        'topics': ['divisibility', 'permutations', 'casework'],
+        'answer': 'A',
+        'insight': r'Sort the $81$ three-digit multiples of $11$ by their digits, then count how many three-digit numbers each digit set makes.',
+        'steps': [
+            r'$\overline{abc}$ is a multiple of $11$ when $b = a + c$ or $b = a + c - 11$, and then $\overline{cba}$ is too.',
+            r'With a zero: $110, 220, \dots, 990$ give $9$ sets $\{a, a, 0\}$ making $2$ numbers each, and $209, 308, 407, 506$ and their reversals give $4$ sets making $4$ each. That is $18 + 16 = 34$.',
+            r'A repeated digit and no zero: $121, 242, 363, 484, 616, 737, 858, 979$ give $8$ sets making $3$ each: $24$.',
+            r'The other $81 - 9 - 8 - 8 = 56$ multiples have three different nonzero digits and pair with their reversals into $28$ sets, making $6$ each: $168$.',
+            r'$34 + 24 + 168 = 226$. The answer is $\textbf{(A) } 226$.',
+        ],
+        'trap': r'Giving every digit set $6$ arrangements. Repeated digits and a leading zero cut that down.',
     },
 }
 
