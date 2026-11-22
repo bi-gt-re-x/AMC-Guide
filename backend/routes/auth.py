@@ -216,7 +216,7 @@ def signup(request: Request, body: Signup):
     # `email_in_use` matches the inbox, not the spelling: a "+tag" or Gmail's
     # dots don't make a second account (auth.inbox_key).
     if auth.email_in_use(email):
-        return fail('That email already has a Summit account. Log in instead.',
+        return fail('That email already has an AMC Guide account. Log in instead.',
                     field='email')
     problem = auth.password_problem(password)
     if problem:

@@ -199,7 +199,7 @@
         "diagnosis": { "group": "suggest", "name": "What's going on", "fields": { "limit": { "max": 8, "default": 3 } } },
         "followup": { "group": "suggest", "name": "Changes you're trying", "fields": { "limit": {} } },
         "sessions": { "group": "suggest", "name": "Sessions to plan", "fields": {} },
-        "coach": { "group": "suggest", "name": "What Summit knows", "fields": { "limit": { "max": 8, "default": 4 } } },
+        "coach": { "group": "suggest", "name": "What AMC Guide knows", "fields": { "limit": { "max": 8, "default": 4 } } },
         "lens": { "group": "suggest", "name": "Why this order", "fields": { "style": { "of": ["card", "line"], "default": "card" } } },
         "xp-pulse": { "group": "suggest", "name": "XP pulse", "fields": { "window": {} } },
         "changed": { "group": "insights", "name": "What changed", "fields": { "limit": { "max": 9, "default": 4 } } },
@@ -256,7 +256,7 @@
   },
 
   "behavior": {
-    "_about": "Behavior: the patterns a reader already knows they fall into, tracked until they stop. Each is checked against the sessions where it can show up, gets fixes (interventions) tried one at a time, and is judged by whether it comes up less once a fix starts, through the evidence tiers. backend/tracking/behavior.py and the Behavior page (frontend/src/pages/Behavior.tsx) read this. `recent_days` is the window a pattern's frequency is counted over. A fix that has been clean for `clean_run` checked sessions in a row and has run `resolve_days` days is offered as resolved; the reader decides. `detect` holds the floors for patterns Summit spots in the record, over `lookback_days`. A task is a test or contest when its title has one of `test_words` (any case) or `test_acronyms` (capitals only, since \"act\" and \"sat\" are ordinary words).",
+    "_about": "Behavior: the patterns a reader already knows they fall into, tracked until they stop. Each is checked against the sessions where it can show up, gets fixes (interventions) tried one at a time, and is judged by whether it comes up less once a fix starts, through the evidence tiers. backend/tracking/behavior.py and the Behavior page (frontend/src/pages/Behavior.tsx) read this. `recent_days` is the window a pattern's frequency is counted over. A fix that has been clean for `clean_run` checked sessions in a row and has run `resolve_days` days is offered as resolved; the reader decides. `detect` holds the floors for patterns AMC Guide spots in the record, over `lookback_days`. A task is a test or contest when its title has one of `test_words` (any case) or `test_acronyms` (capitals only, since \"act\" and \"sat\" are ordinary words).",
     "recent_days": 30,
     "clean_run": 6,
     "resolve_days": 14,
@@ -308,7 +308,7 @@
     "deadline_words": ["essay", "project", "report", "paper", "application", "presentation", "lab report", "portfolio", "submission", "submit", "assignment"]
   },
   "log": {
-    "_about": "The Log page: a private journal Summit learns from. Each saved entry is read by a model in the background and turned into short insights, each tagged with a kind. A passing feeling fades after `feeling_days` days and never becomes a lasting fact. `quiet_seconds` is how long an entry has to sit unchanged after an autosave before it's read; pressing Save reads it straight away. backend/tracking/journal.py and frontend/src/pages/Log.tsx both read this. `marks` are the tags an entry can carry (Milestone and the rest), set from the editor or the list; an entry can also be pinned to the top.",
+    "_about": "The Log page: a private journal AMC Guide learns from. Each saved entry is read by a model in the background and turned into short insights, each tagged with a kind. A passing feeling fades after `feeling_days` days and never becomes a lasting fact. `quiet_seconds` is how long an entry has to sit unchanged after an autosave before it's read; pressing Save reads it straight away. backend/tracking/journal.py and frontend/src/pages/Log.tsx both read this. `marks` are the tags an entry can carry (Milestone and the rest), set from the editor or the list; an entry can also be pinned to the top.",
     "title_max": 200,
     "body_max": 20000,
     "feeling_days": 7,

@@ -4,7 +4,7 @@
  * ## It says what the code does
  *
  * An earlier version said data stayed in the browser, which stopped being
- * true when Summit moved to a server; a later one said notes never went to an
+ * true when AMC Guide moved to a server; a later one said notes never went to an
  * AI provider, which stopped being true when task notes and the Log started
  * feeding the prompts. A policy that is wrong in the reader's favor is worse
  * than none. So each section is checkable against the code, and if one of
@@ -24,7 +24,7 @@
  *   deletion and export            the Reset and delete and Data sections of Settings
  *
  * **It is a careful draft, not legal advice**, and should be read by a lawyer
- * before Summit is offered widely. The contact address is utils/contact.ts.
+ * before AMC Guide is offered widely. The contact address is utils/contact.ts.
  *
  * The words are data; LegalDocument draws them.
  */
@@ -43,13 +43,13 @@ const SECTIONS: LegalSection[] = [
     title: 'Who we are and what this covers',
     body: [
       <>
-        Summit ("we", "us" or "our") is a study and productivity tracker. This Privacy Policy
-        explains what personal information we collect when you use the Summit website and web
+        AMC Guide ("we", "us" or "our") is a study and productivity tracker. This Privacy Policy
+        explains what personal information we collect when you use the AMC Guide website and web
         app (the "Service"), how we use it, who we share it with, how long we keep it, and the
         choices and rights you have. It's part of our {terms}.
       </>,
       <>
-        For the purposes of data protection laws such as the GDPR, Summit is the "controller" of
+        For the purposes of data protection laws such as the GDPR, AMC Guide is the "controller" of
         your personal information. You can reach us at {mail}.
       </>,
     ],
@@ -62,13 +62,13 @@ const SECTIONS: LegalSection[] = [
       {
         list: [
           <><strong>Name and email address.</strong> Your email confirms your account, lets you sign in and receives account emails. Your name is used to greet you.</>,
-          <><strong>Username.</strong> You pick it when you finish setting up. It's how your account is known inside Summit and is never shown to other users.</>,
+          <><strong>Username.</strong> You pick it when you finish setting up. It's how your account is known inside AMC Guide and is never shown to other users.</>,
           <><strong>Password.</strong> Stored only as a salted, one-way hash (PBKDF2-SHA256). Nobody, including us, can read your password from it.</>,
           <><strong>Google sign-in.</strong> If you choose "Continue with Google", Google sends us your name and email address and confirms the address is yours. We never see your Google password.</>,
           <><strong>About you.</strong> The optional answers you give during setup and in Settings, such as what you study, your goals, and how you like to work.</>,
         ],
       },
-      { sub: 'As you use Summit' },
+      { sub: 'As you use AMC Guide' },
       {
         list: [
           <><strong>Tasks:</strong> titles, notes, subjects, due dates and times, how hard each was, how it went, the reasons you pick, and the XP they're worth.</>,
@@ -76,13 +76,13 @@ const SECTIONS: LegalSection[] = [
           <><strong>Calendar:</strong> events, times and the daily focus notes you write.</>,
           <><strong>Focus timer:</strong> each sitting's length, breaks, the task it was for and what you meant to get done.</>,
           <><strong>Notes, Spaces and links</strong> you save, including any outside resources you keep.</>,
-          <><strong>The Log:</strong> your journal entries, and the short insights Summit learns from them (see section 6).</>,
+          <><strong>The Log:</strong> your journal entries, and the short insights AMC Guide learns from them (see section 6).</>,
           <><strong>Recommendations</strong> we suggested, and whether you planned or finished them.</>,
           <><strong>Settings and preferences,</strong> such as your theme, start page, daily goal and notification choices.</>,
           <><strong>Messages you send us,</strong> such as support emails.</>,
         ],
       },
-      'We don\'t ask for and don\'t want payment details, government ID numbers, your precise location, your contacts, or information about your health, religion, politics, sexuality or ethnicity. Please don\'t put that kind of information into Summit.',
+      'We don\'t ask for and don\'t want payment details, government ID numbers, your precise location, your contacts, or information about your health, religion, politics, sexuality or ethnicity. Please don\'t put that kind of information into AMC Guide.',
     ],
   },
   {
@@ -104,7 +104,7 @@ const SECTIONS: LegalSection[] = [
     id: 'use',
     title: 'How we use your information',
     body: [
-      'We use your information only to run Summit for you:',
+      'We use your information only to run AMC Guide for you:',
       {
         list: [
           'To create and secure your account, confirm your email and sign you in.',
@@ -113,7 +113,7 @@ const SECTIONS: LegalSection[] = [
           'To personalize suggestions, such as recommended study sessions and free resources, and to schedule planned sessions at the times your own history shows you work best, spaced apart from your other sessions.',
           'To send account emails, such as the link that confirms your address.',
           'To protect the Service and its users, including limiting abuse, investigating problems and enforcing our Terms.',
-          'To fix bugs and improve how Summit works.',
+          'To fix bugs and improve how AMC Guide works.',
           'To meet legal obligations.',
         ],
       },
@@ -148,7 +148,7 @@ const SECTIONS: LegalSection[] = [
     id: 'ai',
     title: 'AI features and what they receive',
     body: [
-      'Some features send a summary of your records to an outside AI provider, which writes a response that we show to you. Depending on how Summit is set up, the provider is Groq, Hugging Face, xAI (Grok) or Anthropic. Each processes the request under its own API terms and privacy policy.',
+      'Some features send a summary of your records to an outside AI provider, which writes a response that we show to you. Depending on how AMC Guide is set up, the provider is Groq, Hugging Face, xAI (Grok) or Anthropic. Each processes the request under its own API terms and privacy policy.',
       { sub: 'When it happens' },
       {
         list: [
@@ -177,28 +177,28 @@ const SECTIONS: LegalSection[] = [
       { sub: 'Limits on what the Log learns' },
       <>
         The Log is told never to infer anything about health, sexuality, gender identity,
-        religion, politics or ethnicity, and Summit throws away any insight that touches those
+        religion, politics or ethnicity, and AMC Guide throws away any insight that touches those
         topics anyway. Insights about how you felt fade after {FEELING_DAYS} days and are never
         treated as lasting facts. You can see every insight on the Log page and remove any of
-        them, and Summit won't learn a removed one again.
+        them, and AMC Guide won't learn a removed one again.
       </>,
-      'If you don\'t want your information sent to an AI provider, don\'t use the AI buttons and don\'t write in the Log. Everything else in Summit works without them.',
+      'If you don\'t want your information sent to an AI provider, don\'t use the AI buttons and don\'t write in the Log. Everything else in AMC Guide works without them.',
     ],
   },
   {
     id: 'sharing',
     title: 'Who we share information with',
     body: [
-      'We share personal information only with these service providers, only as much as each needs, and only to run Summit:',
+      'We share personal information only with these service providers, only as much as each needs, and only to run AMC Guide:',
       {
         list: [
           <><strong>AI providers</strong> (Groq, Hugging Face, xAI, Anthropic), as described in section 6.</>,
           <><strong>Google,</strong> if you sign in with Google; to deliver our emails, which are sent through Gmail; and to load the fonts the site uses from Google Fonts, which means your browser asks Google's servers for them and Google sees your IP address.</>,
-          <><strong>Hosting and database providers</strong> that run the servers Summit is stored on.</>,
+          <><strong>Hosting and database providers</strong> that run the servers AMC Guide is stored on.</>,
         ],
       },
-      'We may also disclose information if the law requires it (for example a valid court order), to protect the safety, rights or property of our users, the public or Summit, or as part of a merger, sale or reorganization, in which case this policy will continue to protect your information.',
-      'Other Summit users can\'t see your account or your content.',
+      'We may also disclose information if the law requires it (for example a valid court order), to protect the safety, rights or property of our users, the public or AMC Guide, or as part of a merger, sale or reorganization, in which case this policy will continue to protect your information.',
+      'Other AMC Guide users can\'t see your account or your content.',
     ],
   },
   {
@@ -206,17 +206,17 @@ const SECTIONS: LegalSection[] = [
     title: 'Emails we send',
     body: [
       'We email you only about your account: today, that means the link that confirms your email address, and a new one if you ask us to send it again. Our emails come from joverdam722@gmail.com and are sent through Gmail.',
-      'We never send marketing email, we never sell or share your address, and we will never ask for your password by email. If you get an email claiming to be from Summit that asks for your password, don\'t answer it, and let us know.',
+      'We never send marketing email, we never sell or share your address, and we will never ask for your password by email. If you get an email claiming to be from AMC Guide that asks for your password, don\'t answer it, and let us know.',
     ],
   },
   {
     id: 'cookies',
     title: 'Cookies and browser storage',
     body: [
-      'Summit uses only what it needs to work:',
+      'AMC Guide uses only what it needs to work:',
       {
         list: [
-          <><strong>Sign-in cookie.</strong> Keeps you signed in for up to 14 days. It's signed so it can't be forged, marked HttpOnly so page scripts can't read it, sent only over secure connections when the site is served over HTTPS, and limited to Summit (SameSite=Lax).</>,
+          <><strong>Sign-in cookie.</strong> Keeps you signed in for up to 14 days. It's signed so it can't be forged, marked HttpOnly so page scripts can't read it, sent only over secure connections when the site is served over HTTPS, and limited to AMC Guide (SameSite=Lax).</>,
           <><strong>Theme cookie.</strong> Remembers light or dark mode so the page doesn't flash the wrong colors.</>,
           <><strong>Browser storage.</strong> Your browser keeps small conveniences on your device, such as which tab or view you last had open and drafts you haven't saved. It stays on your device, and clearing your browser's site data removes it.</>,
         ],
@@ -253,7 +253,7 @@ const SECTIONS: LegalSection[] = [
           'Sign-in sessions use signed, HttpOnly cookies.',
           'Repeated sign-in attempts, sign-ups, email requests and checks are rate limited.',
           'Each account can reach only its own data, and every request is checked for that.',
-          'Access to the servers and database is limited to the people who run Summit.',
+          'Access to the servers and database is limited to the people who run AMC Guide.',
         ],
       },
       'No system is perfectly secure, so we can\'t promise that information will never be accessed without permission. If a breach affects your personal information, we will tell you and any authorities as the law requires. You can help by using a password you don\'t use anywhere else.',
@@ -285,7 +285,7 @@ const SECTIONS: LegalSection[] = [
     id: 'children',
     title: 'Children',
     body: [
-      'Summit is built for students, but it isn\'t for children under 13. Everyone must confirm they are 13 or older to sign up, and we don\'t knowingly collect personal information from children under 13. Users under 18 need a parent or guardian\'s permission.',
+      'AMC Guide is built for students, but it isn\'t for children under 13. Everyone must confirm they are 13 or older to sign up, and we don\'t knowingly collect personal information from children under 13. Users under 18 need a parent or guardian\'s permission.',
       <>
         If you believe a child under 13 has made an account, email {mail} and we will delete it.
         Parents and guardians of users under 18 can also ask to see, correct or delete their
@@ -297,7 +297,7 @@ const SECTIONS: LegalSection[] = [
     id: 'transfers',
     title: 'International transfers',
     body: [
-      'Summit\'s servers and the providers listed in section 7 may be in a different country from you, including the United States. When we move personal information from the EEA, the UK or Switzerland to another country, we rely on the safeguards the law allows, such as the European Commission\'s Standard Contractual Clauses in our providers\' terms.',
+      'AMC Guide\'s servers and the providers listed in section 7 may be in a different country from you, including the United States. When we move personal information from the EEA, the UK or Switzerland to another country, we rely on the safeguards the law allows, such as the European Commission\'s Standard Contractual Clauses in our providers\' terms.',
     ],
   },
   {
@@ -325,15 +325,15 @@ export default function PrivacyPolicy() {
       title="Privacy Policy"
       effective="October 17, 2026"
       intro={[
-        'Your privacy matters to us. This policy explains what Summit collects, why, who sees it, and what you can do about it, in as plain words as we can manage.',
+        'Your privacy matters to us. This policy explains what AMC Guide collects, why, who sees it, and what you can do about it, in as plain words as we can manage.',
       ]}
       summary={[
-        'We collect what you put into Summit, plus your name, email and a hashed password.',
-        'We use it only to run Summit for you. No ads, no selling, no tracking across sites.',
+        'We collect what you put into AMC Guide, plus your name, email and a hashed password.',
+        'We use it only to run AMC Guide for you. No ads, no selling, no tracking across sites.',
         'Some features send a summary of your tasks, or a Log entry, to an AI provider. Never your email or password.',
         'Only you can see your data. We never compare you with other people.',
         'Export or delete everything from Settings, any time.',
-        'Summit is for people 13 and older.',
+        'AMC Guide is for people 13 and older.',
       ]}
       sections={SECTIONS}
     />

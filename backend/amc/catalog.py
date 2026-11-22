@@ -474,7 +474,7 @@ MOCKS = [
 for _m in MOCKS:
     _m.update(family='step', set=None)
 
-# Fifteen Summit Mock sets in real problem order (backend/amc/sets/).
+# Fifteen AMC Guide Mock sets in real problem order (backend/amc/sets/).
 from backend.amc.sets import MOCKS as _SET_MOCKS  # noqa: E402
 
 for _m in _SET_MOCKS:
@@ -695,7 +695,7 @@ TECHNIQUE_IDEA = {tid: idea for f in STRATEGY_FAMILIES for tid, idea in f['techn
 
 
 def short_label(problem_id):
-    """A pill's label: 'S10·7', 'M10-2·7' (Summit Mock AMC 10 Set 2 #7), 'MA-1·4', or "'23 10A·5"."""
+    """A pill's label: 'S10·7', 'M10-2·7' (AMC Guide Mock AMC 10 Set 2 #7), 'MA-1·4', or "'23 10A·5"."""
     head, _, tail = problem_id.rpartition('-')
     if head in PAST_BY_ID and tail.isdigit():
         c = PAST_BY_ID[head]

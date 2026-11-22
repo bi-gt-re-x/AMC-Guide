@@ -1,4 +1,4 @@
-# The Summit engine
+# The AMC Guide engine
 
 One small C++ library, for the one kind of work Python is the wrong tool for.
 
@@ -33,7 +33,7 @@ Any C++17 compiler. There is no CMake here on purpose: this is one source file
 and one header, and a build system would be more lines than the thing it
 builds.
 
-**Nothing in Summit requires it.** `backend/engine/schedule.py` keeps a
+**Nothing in AMC Guide requires it.** `backend/engine/schedule.py` keeps a
 pure-Python planner and uses it when the library is missing, stale, or turned
 off with `SUMMIT_ENGINE=0`. An unbuilt engine is a slightly worse plan, never a
 broken app — which is the only reason a C++ dependency can live in a repo whose
@@ -103,7 +103,7 @@ which is also when a person can least work the answer out themselves.
 
 ## What it does not know
 
-Not one rule about Summit. It is handed durations, values, deadlines, subject
+Not one rule about AMC Guide. It is handed durations, values, deadlines, subject
 ids, capacities, weights, and three numbers that say how to trade them off.
 Every one of those is decided in Python and passed in already decided — the
 weights from whatever model of the reader's day the caller has, the values from

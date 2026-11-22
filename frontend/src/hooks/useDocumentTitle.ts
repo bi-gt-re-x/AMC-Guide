@@ -23,7 +23,7 @@
 import { useEffect } from 'react';
 import { clock } from '@/components/Timer/pomodoro';
 
-const SUFFIX = 'Summit';
+const SUFFIX = 'AMC Guide';
 
 /**
  * What the tab is called while a timer is running: the clock, then what it is

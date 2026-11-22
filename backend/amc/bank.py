@@ -13,7 +13,7 @@ Each entry:
     level       'AMC 10' | 'AMC 12' | 'AIME' (the hardest contest it is written for)
     topic       primary topic id (catalog.TOPICS), plus `also` for secondary ones
     technique   one of catalog.TECHNIQUES
-    rating      Summit 1-12 rating (backend/amc/scale.py; `aops` keeps the AoPS
+    rating      AMC Guide 1-12 rating (backend/amc/scale.py; `aops` keeps the AoPS
                 competition rating it came from), and difficulty (1-5) derived from it —
                 both set from solutions.py at the end of this file
     statement   text, inline math in $...$
@@ -619,7 +619,7 @@ PROBLEMS = [
 ]
 
 # Ratings (judged on the AoPS scale) and step-by-step solutions live beside the
-# bank (backend/amc/solutions.py). Each rating is put on Summit's 1-12 scale
+# bank (backend/amc/solutions.py). Each rating is put on AMC Guide's 1-12 scale
 # (backend/amc/scale.py) and the 1-5 difficulty derived from it, so the two can
 # never disagree.
 from backend.amc.scale import to_scale  # noqa: E402
@@ -631,7 +631,7 @@ for _p in PROBLEMS:
     _p['difficulty'] = tier(_p['rating'])
     _p['solution'] = SOLUTIONS[_p['id']]
 
-# The Summit Mock sets (backend/amc/sets/): fifteen more full papers, each
+# The AMC Guide Mock sets (backend/amc/sets/): fifteen more full papers, each
 # problem rated from a review against real papers and solved step by step.
 from backend.amc.sets import PROBLEMS as _SET_PROBLEMS  # noqa: E402
 

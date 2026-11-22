@@ -1,6 +1,6 @@
 {
-  "name": "Summit",
-  "short_name": "Summit",
+  "name": "AMC Guide",
+  "short_name": "AMC Guide",
   "description": "A gamified productivity tracker: tasks, XP, streaks, a calendar, goals and growth analytics.",
   "start_url": "/",
   "scope": "/",

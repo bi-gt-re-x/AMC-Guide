@@ -1,4 +1,4 @@
-"""Summit Mock AMC 10 · Set 2."""
+"""AMC Guide Mock AMC 10 · Set 2."""
 from backend.amc.sets import P
 
 PROBLEMS = [

@@ -1,5 +1,5 @@
 -- background — what an account says about itself at sign-up, and the facts
--- Summit keeps from it.
+-- AMC Guide keeps from it.
 --
 -- Written by backend/api/background.py from the "About you" step at the end of
 -- sign-up (frontend/src/components/AboutYou/AboutYou.tsx) and from Settings. Read

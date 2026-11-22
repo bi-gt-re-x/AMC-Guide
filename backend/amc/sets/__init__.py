@@ -1,9 +1,9 @@
-r"""The Summit Mock sets: five AMC 10s, five AMC 12s and five AIMEs, written for
+r"""The AMC Guide Mock sets: five AMC 10s, five AMC 12s and five AIMEs, written for
 this site in the shape of the real papers.
 
 Each set is a full paper in real problem order: problem n is written for the
 place problem n takes on a real contest. Its rating is its own, from a review
-against real papers (backend/amc/sets/ratings.py), on Summit's 1-12 scale
+against real papers (backend/amc/sets/ratings.py), on AMC Guide's 1-12 scale
 (backend/amc/scale.py); `slot` keeps the AoPS rating of the place it was
 written for, so a mock can say how it compares with a real paper. As on the real A and B papers, each AMC 12
 set shares eight problems with the AMC 10 set of the same number, moved up
@@ -32,9 +32,9 @@ LETTERS = 'ABCDE'
 
 #: (level, id prefix, contest id prefix, display name).
 FAMILIES = [
-    ('AMC 10', 'mock10', 'mock-10', 'Summit Mock AMC 10'),
-    ('AMC 12', 'mock12', 'mock-12', 'Summit Mock AMC 12'),
-    ('AIME', 'mockaime', 'mock-aime', 'Summit Mock AIME'),
+    ('AMC 10', 'mock10', 'mock-10', 'AMC Guide Mock AMC 10'),
+    ('AMC 12', 'mock12', 'mock-12', 'AMC Guide Mock AMC 12'),
+    ('AIME', 'mockaime', 'mock-aime', 'AMC Guide Mock AIME'),
 ]
 SET_COUNT = 5
 

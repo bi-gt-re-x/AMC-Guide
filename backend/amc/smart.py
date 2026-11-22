@@ -2,7 +2,7 @@ r"""Smart analytics: a model of the student, not just counts.
 
 ## Ability on the problems' own scale
 
-Every problem carries a Summit 1-12 rating (backend/amc/scale.py: the AoPS
+Every problem carries an AMC Guide 1-12 rating (backend/amc/scale.py: the AoPS
 rating times 2, so an AMC 10 #1 is a 2 and the hardest AIME problem a 12). We model the chance of solving a problem
 of rating r at the first try as
 
@@ -62,10 +62,10 @@ from backend.amc.scale import SCALE_BY_NUMBER
 #: Bumped whenever the model or its scale changes, so a cached AI reading of
 #: the old numbers (backend/api/amc_ai.py) is not shown beside the new ones.
 MODEL_VERSION = 'summit-scale-3'
-#: Logistic slope per Summit rating point (1.6 per AoPS point, halved).
+#: Logistic slope per AMC Guide rating point (1.6 per AoPS point, halved).
 SLOPE = 0.8
 #: Prior on a new student: about an AMC 10 #8-10 (AoPS 2), give or take a lot.
-#: These, and every gap in rating points below, are in Summit points (AoPS x 2).
+#: These, and every gap in rating points below, are in AMC Guide points (AoPS x 2).
 PRIOR_MEAN = 4.0
 PRIOR_SD = 2.95
 TOPIC_SD = 1.55
@@ -502,7 +502,7 @@ def ai_brief(stats, plan):
     lines = [
         'Contest: {}. Goal: {}.'.format(stats['level'], stats['goal']),
         'First-try answers so far: {}.'.format(stats['answered']),
-        'Ability estimate on Summit\'s 1-12 scale (the AoPS rating times 2: an AMC 10 #1 is 2, 12 = hardest AIME problem; the rating solved '
+        'Ability estimate on AMC Guide\'s 1-12 scale (the AoPS rating times 2: an AMC 10 #1 is 2, 12 = hardest AIME problem; the rating solved '
         'half the time, recent answers weighted more): {} ± {}.'.format(stats['theta'], stats['se']),
         'Predicted score: {} untimed (80% range {}-{}); {} with their own pace in the time limit (reaching #{} of {}); '
         'chance of reaching {}: {}%. More likely right than wrong up to #{}.'.format(

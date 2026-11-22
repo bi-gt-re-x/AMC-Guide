@@ -1,7 +1,7 @@
 /**
  * The account's level, XP and streak: what the nametag's title is read from.
  *
- * This file was the task list's service. When Summit became an AMC prep site
+ * This file was the task list's service. When AMC Guide became an AMC prep site
  * the tasks went, and this one read is what still uses it (context/StatsProvider).
  */
 import { post } from './api';

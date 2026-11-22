@@ -1,9 +1,9 @@
-"""How hard each Summit Mock problem really is, on the AoPS scale.
+"""How hard each AMC Guide Mock problem really is, on the AoPS scale.
 
 A set's problems are written for a slot on the paper, and at first each was
 rated by its slot (backend/amc/scale.py, `RATING_BY_NUMBER`). A review of every
 problem against the 2023-2026 AMC 10s and recent AMC 12s and AIMEs found the
-Summit Mocks run easier than real papers, and more so toward the end: most of
+AMC Guide Mocks run easier than real papers, and more so toward the end: most of
 an AMC 10's #15-25 sit half a point to a point below a real problem in the same
 place, the AMC 12 sets' #20-25 lean on well-known techniques, and the AIME sets
 open at AMC 10 level (#1-5 around 1.5-2.5, where a real AIME starts at 2.5-3)

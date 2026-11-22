@@ -6,7 +6,7 @@
  *
  * `window.confirm`, `alert` and system notifications are drawn by the browser,
  * in its own style, and block the page (a timed contest's clock included).
- * These are drawn by the app: the question sits over the page in Summit's own
+ * These are drawn by the app: the question sits over the page in AMC Guide's own
  * look, and a notice slides up, says one thing and leaves.
  *
  * ## Not the bell

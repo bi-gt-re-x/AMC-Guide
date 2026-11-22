@@ -1,6 +1,6 @@
 ---
 name: summit-v1-data-schema
-description: datastore tables + record counts for Summit v1 (SQLite data/summit.db, seeded from data/sql/*.sql)
+description: datastore tables + record counts for AMC Guide v1 (SQLite data/summit.db, seeded from data/sql/*.sql)
 metadata: 
   node_type: memory
   type: project

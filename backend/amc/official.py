@@ -565,7 +565,7 @@ from backend.amc.scale import rating_at as _scale_rating_at, tier as _tier  # no
 
 
 def _bands(level):
-    """[(last problem number, rating)] runs on Summit's scale, for the contest guide."""
+    """[(last problem number, rating)] runs on AMC Guide's scale, for the contest guide."""
     out = []
     for number, rating in enumerate(SCALE_BY_NUMBER[level], start=1):
         if out and out[-1][1] == rating:
@@ -579,7 +579,7 @@ RATING_BANDS = {level: _bands(level) for level in RATING_BY_NUMBER}
 
 
 def rating_at(level, number):
-    """Summit's 1-12 rating for problem `number` of a `level` paper (backend/amc/scale.py)."""
+    """AMC Guide's 1-12 rating for problem `number` of a `level` paper (backend/amc/scale.py)."""
     return _scale_rating_at(level, number)
 
 
@@ -611,7 +611,7 @@ def _shape(row):
         answer = int(answer)
     choices = json.loads(row['choices']) if row.get('choices') else None
     pid = problem_id(row['contest_id'], number)
-    # Summit's own write-up, when one has been written for this answer.
+    # AMC Guide's own write-up, when one has been written for this answer.
     ours = official_solutions.for_problem(pid, answer) or {}
     # Its topics are a person's reading. Without one, tagged from the text each
     # time it is read, so better rules reach contests imported before them.

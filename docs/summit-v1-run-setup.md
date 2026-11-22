@@ -1,6 +1,6 @@
 ---
 name: summit-v1-run-setup
-description: How to run the Summit Flask app locally on this macOS machine
+description: How to run the AMC Guide Flask app locally on this macOS machine
 metadata: 
   node_type: memory
   type: project
@@ -10,7 +10,7 @@ metadata:
 
 **As of 2026-07-22 the project lives at the repo root** — the old nested project subdirectory was flattened away (see [[summit-v1-file-tree]]). Run everything from the repo root.
 
-The absolute path that used to be written here is gone on purpose: it was already stale before the rename to Summit, and the rename turned it into a path that had never existed. A checkout's location is not a fact about the project.
+The absolute path that used to be written here is gone on purpose: it was already stale before the rename to AMC Guide, and the rename turned it into a path that had never existed. A checkout's location is not a fact about the project.
 
 **As of the FastAPI rewrite there is no `run_mac.py`.** It existed only because Flask baked `SERVER_NAME` in at `127.0.0.1:5000`, and **port 5000 is occupied by macOS ControlCenter (AirPlay Receiver)**. FastAPI has no such setting, so `backend/config/settings.py` simply defaults to **port 5050** and `python run.py` is the whole story. `PORT` still overrides it.
 

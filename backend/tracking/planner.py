@@ -515,7 +515,7 @@ def _ask(goal: str, instruction: str = '') -> str:
 #: Over the About you and Log lines (backend/api/background.py `about_lines`)
 #: in any brief. Here rather than in journal.py because that module calls this
 #: one.
-ABOUT_HEADING = ("What they told Summit about themselves at sign-up and in their Log, "
+ABOUT_HEADING = ("What they told AMC Guide about themselves at sign-up and in their Log, "
                  "in their own words. Use it a lot: "
                  "let it decide what you suggest, how big and when, and fit their goals, "
                  "habits and preferences. When a line is the reason for a suggestion, you "
@@ -550,7 +550,7 @@ def _brief(title: str, why: str = '', description: str = '',
     if str(deadline or '').strip():
         lines.append('Deadline: {}'.format(str(deadline).strip()[:10]))
     # Where they say they are now, in their own words, from the wizard. The
-    # record below is what Summit counted; this is what it can't count yet.
+    # record below is what AMC Guide counted; this is what it can't count yet.
     if str(starting or '').strip():
         lines.append('Starting point: {}'.format(str(starting).strip()))
     # What they have actually done, from backend/tracking/record.py
@@ -560,7 +560,7 @@ def _brief(title: str, why: str = '', description: str = '',
         lines.append('')
         lines.append('Their record so far:')
         lines.extend('- {}'.format(line) for line in record)
-    # What they've told Summit about themselves in the Log page, from
+    # What they've told AMC Guide about themselves in the Log page, from
     # backend/tracking/journal.py `brief_lines`: their goals, habits and
     # preferences, so a plan fits the person as well as the goal.
     if about:

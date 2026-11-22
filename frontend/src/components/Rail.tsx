@@ -323,11 +323,11 @@ export function Rail() {
   return (
     <nav className="rail" aria-label="Main">
       <div className="rail-brand">
-        <NavLink className="rail-brand-mark" to="/home" aria-label="Summit home">
+        <NavLink className="rail-brand-mark" to="/home" aria-label="AMC Guide home">
           <img src="/static/images/logo.svg" alt="" width={30} height={30} />
         </NavLink>
         <NavLink className="rail-brand-name" to="/home">
-          Summit
+          AMC Guide
         </NavLink>
         <button
           type="button"

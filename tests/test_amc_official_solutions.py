@@ -1,4 +1,4 @@
-"""Summit's own solutions to official papers (backend/amc/official_solutions.py),
+"""AMC Guide's own solutions to official papers (backend/amc/official_solutions.py),
 and how an imported paper serves them."""
 import re
 
@@ -22,6 +22,8 @@ KEY_2013_10B = 'CACDBCBBDCBBEEBBEDDBCCBAE'
 KEY_2012_10B = 'CEBADADBADABBDDACCCAABDBE'
 KEY_2016_10B = 'DBDBDBCACDBDDDCEDEDCBACDA'
 KEY_2026_12A = 'ADACACACEBDECCACADDDDCDDB'
+KEY_2025_12A = 'EBABDBCEEBABDDCDACECAECCA'
+KEY_2025_12B = 'BDDAECCCCACCDBDBCDCECCEDE'
 
 
 @pytest.fixture(autouse=True)
@@ -106,6 +108,11 @@ def test_the_2016_amc_10b_is_written_up_against_its_key():
 
 def test_the_2026_amc_12a_is_written_up_against_its_key():
     assert [SOLUTIONS['2026-amc-12a-%d' % n]['answer'] for n in range(1, 26)] == list(KEY_2026_12A)
+
+
+@pytest.mark.parametrize('paper, key', [('2025-amc-12a', KEY_2025_12A), ('2025-amc-12b', KEY_2025_12B)])
+def test_the_2025_amc_12_papers_are_written_up_against_their_keys(paper, key):
+    assert [SOLUTIONS['%s-%d' % (paper, n)]['answer'] for n in range(1, 26)] == list(key)
 
 
 def test_a_solution_is_withheld_when_the_key_disagrees():

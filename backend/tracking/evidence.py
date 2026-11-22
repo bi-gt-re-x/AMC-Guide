@@ -1,6 +1,6 @@
 """How much a figure is allowed to claim.
 
-Summit makes claims about people's work, and one wrong claim costs more than the
+AMC Guide makes claims about people's work, and one wrong claim costs more than the
 sentence it's in: catch the app calling three good days a pattern and you stop
 believing the rest of the page. So every finding goes through here before it's said.
 

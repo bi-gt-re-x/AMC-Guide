@@ -1,6 +1,6 @@
 # Architecture
 
-Summit is a FastAPI app over a SQLite datastore. The backend owns every rule and
+AMC Guide is a FastAPI app over a SQLite datastore. The backend owns every rule and
 answers JSON; the frontend is mid-move from server-rendered Jinja pages driven
 by vanilla scripts to a React + TypeScript app under `frontend/src/`.
 

@@ -20,7 +20,7 @@ from backend.routes import assets, json_replies, spa
 
 # Imported by name so this list reads as the map of the app. The productivity
 # app's routers (tasks, calendar, goals, analytics and the rest) went when
-# Summit became an AMC prep site.
+# AMC Guide became an AMC prep site.
 API_MODULES = (
     # The AMC prep site: dashboard, problems, review, topics, contests,
     # study plan and search. See backend/amc/.

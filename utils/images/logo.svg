@@ -1,6 +1,6 @@
-<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Summit">
+<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="AMC Guide">
   <!--
-    The Summit mark: one peak, a shoulder beside it, and a base that sweeps.
+    The AMC Guide mark: one peak, a shoulder beside it, and a base that sweeps.
 
     Square viewBox because this is an app icon before it is anything else — the
     rail draws it at 30px, a home screen takes it at whatever size that

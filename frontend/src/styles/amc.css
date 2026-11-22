@@ -1423,7 +1423,7 @@ html[data-theme="dark"] .am-predict-tag { color: #0d1117; }
     background: #ffffff; border: 1px solid var(--am-line); }
 
 /* An official paper's page (pages/amc/Contest.tsx): a tile per problem showing
-   how it stands, the answer key folded away, and Summit's solution unfolded
+   how it stands, the answer key folded away, and AMC Guide's solution unfolded
    under a problem on request. */
 .am-standing { margin-bottom: var(--space-4); }
 .am-standing-tiles { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(auto-fill, minmax(52px, 1fr)); gap: 6px; }
@@ -1455,7 +1455,7 @@ html[data-theme="dark"] .am-predict-tag { color: #0d1117; }
 /* The timed sitting's strip (pages/amc/TakeMock.tsx): a segment per problem,
    filled once answered, amber when flagged, ringed where you are. */
 
-/* Past Contests (pages/amc/Contests.tsx): the papers in Summit, as cards above
+/* Past Contests (pages/amc/Contests.tsx): the papers in AMC Guide, as cards above
    the year grid, and picked out in the grid itself. */
 .am-ready { margin-bottom: var(--space-6); }
 .am-ready .am-h2 { margin: 0 0 var(--space-3); }

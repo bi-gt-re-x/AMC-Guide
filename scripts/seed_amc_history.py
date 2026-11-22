@@ -9,13 +9,13 @@ Development only. Writes to whatever database the app is configured for, so
 never point it at production. It refuses to touch an account that already has
 AMC rows unless --replace (or --clear) says so.
 
-The student is simulated, not scripted: a level on Summit's 1-10 scale that
+The student is simulated, not scripted: a level on AMC Guide's 1-10 scale that
 climbs from 3.0 to about 4.2 over the eight weeks, stronger in algebra and
 weaker in geometry and counting, answering each problem with the chance
 backend/amc/smart.py's model gives. On most days it practises a handful of
-Summit and Step mock problems and works whatever reviews are due (a review it
+AMC Guide and Step mock problems and works whatever reviews are due (a review it
 knows is a little easier than a first try). It sits the Step Mock and three
-Summit Mock AMC 10 sets, and three older official papers (the 2018 AMC 10A and
+AMC Guide Mock AMC 10 sets, and three older official papers (the 2018 AMC 10A and
 the 2019 AMC 10A and 10B), which unlocks those papers for the account. Every
 miss goes through backend/amc/engine.py's review schedule on the day it
 happened, so the error log is exactly what the app would have built. A study
@@ -159,7 +159,7 @@ def seed(user):
     rng = random.Random('summit-amc-history-v1')
     s = Student(user, today, rng)
     sit_on = {today - timedelta(days=d): c for d, c in SITTINGS}
-    # Practice comes from the Summit and Step mocks (AMC 10, and the easier AMC
+    # Practice comes from the AMC Guide and Step mocks (AMC 10, and the easier AMC
     # 12 problems), never from a paper before the day it is sat.
     practice = [p for p in pb.all_problems() if not p.get('official') and not p.get('ai')
                 and (p['level'] == 'AMC 10' or (p['level'] == 'AMC 12' and p['rating'] <= 4.5))]

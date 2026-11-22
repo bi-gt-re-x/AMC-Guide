@@ -7,7 +7,7 @@
 -- can show up (all study work, tests and contests, one subject, or tasks named with a
 -- word), which is what decides the sessions it's checked against. `source` is where it
 -- came from: the reader's own words ('own'), a pattern the Log learned ('log', with the
--- insight's id in `source_ref`), or one Summit spotted in the record ('reason' with the
+-- insight's id in `source_ref`), or one AMC Guide spotted in the record ('reason' with the
 -- struggle reason's key, 'easy', 'length'). The record-based ones are measured from the
 -- tasks themselves as well as from checks.
 --
@@ -17,7 +17,7 @@
 -- happened again after it was marked resolved.
 --
 -- `behavior_checks` is one session looked at for one pattern: a task, from the question
--- after it, or a session logged by hand (a test at school Summit never saw), with what
+-- after it, or a session logged by hand (a test at school AMC Guide never saw), with what
 -- it was in `label`. `times` is how often it happened then; 0 is a clean session, which
 -- counts as much as a slip, since a rate needs both. `used` is whether the fix was
 -- followed (NULL when there was no fix to ask about).

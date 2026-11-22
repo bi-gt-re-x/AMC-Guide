@@ -1,6 +1,6 @@
 ---
 name: summit-v1-file-tree
-description: "At-a-glance file tree of the Summit project after the 2026-07-26 backend rewrite and the 2026-07-27 utils/docs/data move"
+description: "At-a-glance file tree of the AMC Guide project after the 2026-07-26 backend rewrite and the 2026-07-27 utils/docs/data move"
 metadata: 
   node_type: memory
   type: reference

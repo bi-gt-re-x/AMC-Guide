@@ -22,34 +22,34 @@ function Page({ title }: { title?: string }) {
 describe('useDocumentTitle', () => {
   it('names the tab for the page, under the app', () => {
     render(<Page title="Timer" />);
-    expect(document.title).toBe('Timer · Summit');
+    expect(document.title).toBe('Timer · AMC Guide');
   });
 
   it('falls back to the app alone', () => {
     render(<Page />);
-    expect(document.title).toBe('Summit');
+    expect(document.title).toBe('AMC Guide');
   });
 
   it('puts back what was there when the page goes', () => {
-    document.title = 'Recommendations · Summit';
+    document.title = 'Recommendations · AMC Guide';
     const view = render(<Page title="Timer" />);
     view.unmount();
-    expect(document.title).toBe('Recommendations · Summit');
+    expect(document.title).toBe('Recommendations · AMC Guide');
   });
 
   it('puts back the pre-mount title after a title that ticked', () => {
-    document.title = 'Recommendations · Summit';
+    document.title = 'Recommendations · AMC Guide';
     const view = render(<Page title={timerTitle(1500, 'Focus')} />);
-    expect(document.title).toBe('25:00 · Focus · Summit');
+    expect(document.title).toBe('25:00 · Focus · AMC Guide');
 
     // A minute of a running session, one re-render per second.
     for (let left = 1499; left > 1440; left -= 1) {
       view.rerender(<Page title={timerTitle(left, 'Focus')} />);
     }
-    expect(document.title).toBe('24:01 · Focus · Summit');
+    expect(document.title).toBe('24:01 · Focus · AMC Guide');
 
     view.unmount();
-    expect(document.title).toBe('Recommendations · Summit');
+    expect(document.title).toBe('Recommendations · AMC Guide');
   });
 });
 

@@ -141,7 +141,7 @@ export function earnedTitle(account: string): string | null {
  * A stored value read under its current name, or moved there from its old one.
  *
  * The two keys the secret chain writes were `ascenTitle:` and
- * `ascenRankTitle:` before the app was called Summit. Renaming a localStorage
+ * `ascenRankTitle:` before the app was called AMC Guide. Renaming a localStorage
  * key is not like renaming a variable: the old value does not come with it, it
  * is simply orphaned — and what is orphaned here is the thing somebody clicked
  * ten times and followed a chain of clues to earn. So the read falls back to

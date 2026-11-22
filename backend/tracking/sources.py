@@ -1,6 +1,6 @@
 """Reference facts for the AI, looked up before it writes.
 
-The models Summit uses are small and will state a wrong exam date, a made-up
+The models AMC Guide uses are small and will state a wrong exam date, a made-up
 score cutoff or a topic that isn't on a syllabus with the same confidence as a
 right one. So every prompt that drafts something about a real-world topic (a
 goal, its checkpoints, a subject reading, a session plan, a Spaces page) first
@@ -31,7 +31,7 @@ from typing import Dict, List, Tuple
 
 SEARCH_URL = 'https://en.wikipedia.org/w/api.php'
 SUMMARY_URL = 'https://en.wikipedia.org/api/rest_v1/page/summary/{}'
-USER_AGENT = 'Summit/1.2 (study planner; reference lookups)'
+USER_AGENT = 'AMC-Guide/1.2 (study planner; reference lookups)'
 
 #: Seconds for each request. Two rounds (search, then the summaries), so a
 #: dead network costs the reader at most a few seconds, once a day per topic.

@@ -368,15 +368,15 @@ def send_verification(user, request=None):
     name = user.get('name') or user.get('username') or 'there'
     body = (
         "Hi {},\n\n"
-        "Thanks for signing up for Summit. Confirm your email to finish setting "
+        "Thanks for signing up for AMC Guide. Confirm your email to finish setting "
         "up your account:\n\n"
         "{}\n\n"
-        "If you didn't make a Summit account, you can ignore this email. Nobody "
+        "If you didn't make an AMC Guide account, you can ignore this email. Nobody "
         "can use the account until the address is confirmed.\n\n"
-        "Summit\n"
+        "AMC Guide\n"
     ).format(name, link)
     try:
-        sent = _send_mail(user['email'], 'Confirm your email for Summit', body,
+        sent = _send_mail(user['email'], 'Confirm your email for AMC Guide', body,
                           verification_html(name, link))
     except Exception as exc:                  # noqa: BLE001 - report, don't crash signup
         print('[auth] verification e-mail failed: {}'.format(exc))
@@ -396,7 +396,7 @@ def verification_html(name, link):
         '<div style="font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;'
         'max-width:480px;margin:0 auto;padding:24px;color:#1f2933;line-height:1.5">'
         '<h1 style="font-size:20px;margin:0 0 16px">Confirm your email</h1>'
-        '<p style="margin:0 0 16px">Hi {name}, thanks for signing up for Summit. '
+        '<p style="margin:0 0 16px">Hi {name}, thanks for signing up for AMC Guide. '
         'Tap the button to confirm this is your email and finish setting up.</p>'
         '<p style="margin:0 0 24px"><a href="{link}" style="display:inline-block;'
         'background:#2f6fde;color:#ffffff;text-decoration:none;font-weight:600;'
@@ -405,7 +405,7 @@ def verification_html(name, link):
         'Paste this into your browser:</p>'
         '<p style="margin:0 0 24px;font-size:13px;word-break:break-all">'
         '<a href="{link}" style="color:#2f6fde">{link}</a></p>'
-        '<p style="margin:0;font-size:13px;color:#52606d">Didn\'t make a Summit '
+        '<p style="margin:0;font-size:13px;color:#52606d">Didn\'t make an AMC Guide '
         'account? You can ignore this email.</p></div>'
     ).format(name=name, link=link)
 

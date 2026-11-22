@@ -1,4 +1,4 @@
-"""What Summit learns from the Log page, and how it's used.
+"""What AMC Guide learns from the Log page, and how it's used.
 
 The Log is a private journal (backend/api/journal.py). After an entry is
 saved, a model reads it in the background and turns it into a few short
@@ -114,7 +114,7 @@ SENSITIVE = re.compile(
 
 
 def sensitive(text: str) -> bool:
-    """Whether a line touches something Summit must never keep about anyone."""
+    """Whether a line touches something AMC Guide must never keep about anyone."""
     return bool(SENSITIVE.search(text or ''))
 
 
@@ -208,7 +208,7 @@ def lines_from(rows: Iterable[dict], today: Optional[str] = None,
 
 
 def brief_lines(username: str, limit: int = BRIEF_MAX) -> List[str]:
-    """What this account's Log has taught Summit, for a student-facing prompt.
+    """What this account's Log has taught AMC Guide, for a student-facing prompt.
     Empty when there's nothing, so callers can add it unconditionally."""
     if not username:
         return []
@@ -432,7 +432,7 @@ def _learn(username: str, entry_id: str) -> str:
     try:
         text = planner.from_provider(
             brief(entry, existing, removed, today), system=SYSTEM, schema=SCHEMA,
-            instruction='Update what Summit knows about this student from this entry.',
+            instruction='Update what AMC Guide knows about this student from this entry.',
             max_tokens=3000)
         ops = parse(text, [row['id'] for row in existing])
     except Exception as exc:  # noqa: BLE001 - any failure leaves things as they were

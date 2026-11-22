@@ -3,7 +3,7 @@
  *
  * **Weak topics**: twelve problems from the topics the account has missed most
  * (backend/amc/weak.py), more of them from the worst, from the official papers,
- * and from the Summit and Step mocks too when the box is ticked. "Start the 12" walks them on the problem
+ * and from the AMC Guide and Step mocks too when the box is ticked. "Start the 12" walks them on the problem
  * page (`?weak=1`); the set holds still for the day, "New set" draws another.
  *
  * **Wrong problems**: the error log. Every miss — practice, mock, or "show
@@ -71,7 +71,7 @@ function WeakTopics() {
         <div className="am-weak-actions">
           <label className="am-weak-toggle">
             <input type="checkbox" checked={mocks} onChange={(e) => toggleMocks(e.target.checked)} />
-            Include Summit &amp; Step mocks
+            Include AMC Guide &amp; Step mocks
           </label>
           <button type="button" className="am-btn am-btn-sm" disabled={loading} onClick={() => setDraw((d) => d + 1)}>
             New set
@@ -92,7 +92,7 @@ function WeakTopics() {
         <Empty title="Nothing left to pick">
           {mocks
             ? 'Every problem in these topics is solved or already in your review log.'
-            : 'No official problems are left in these topics. Tick “Include Summit & Step mocks” for more.'}
+            : 'No official problems are left in these topics. Tick “Include AMC Guide & Step mocks” for more.'}
         </Empty>
       ) : (
         <>

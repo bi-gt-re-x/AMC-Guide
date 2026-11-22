@@ -594,7 +594,7 @@ export default function Landing() {
       </main>
 
       <footer className="lp-foot lp-wrap">
-        <span>Summit’s mock and step problems are original. AMC and AIME problems are © MAA. Not affiliated with the MAA.</span>
+        <span>AMC Guide’s mock and step problems are original. AMC and AIME problems are © MAA. Not affiliated with the MAA.</span>
         <span><Link to="/privacy-policy">Privacy</Link> · <Link to="/terms-of-service">Terms</Link></span>
       </footer>
     </div>

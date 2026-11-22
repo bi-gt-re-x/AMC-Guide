@@ -118,7 +118,7 @@ def test_contest_pages(client, today):
     assert [m['id'] for m in listing['mocks'] if m['family'] == 'summit'][:2] == ['mock-10-1', 'mock-10-2']
     summit = client.get('/api/amc/contests/mock-12-3').json()
     assert [p['number'] for p in summit['problems']] == list(range(1, 26))
-    # Each problem carries its own rating on Summit's 1-12 scale (from the review in
+    # Each problem carries its own rating on AMC Guide's 1-12 scale (from the review in
     # backend/amc/sets/ratings.py), not its slot's: this set's #25 is an AoPS 3.5.
     ratings = [p['rating'] for p in summit['problems']]
     assert all(1 <= r <= 12 for r in ratings) and ratings[0] == 2 and ratings[-1] == 7

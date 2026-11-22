@@ -1,6 +1,6 @@
 /* engine-settings.js — the room behind THE ENGINE's metal door.
  *
- * Opening ENGINE SETTINGS boots a fake developer console for the Summit Engine:
+ * Opening ENGINE SETTINGS boots a fake developer console for the AMC Guide Engine:
  * a black/green/gray terminal OS with core-module switches, a locked
  * experimental module, a theme "compiler", live performance + diagnostics,
  * audio meters, a hold-to-fire danger zone, and a tiny command line.
@@ -56,7 +56,7 @@
     // char-by-char, so it stays crisp and quick even when the browser throttles
     // background timers.
     function runBoot(pre, done) {
-        var lines = ['> Accessing Summit Engine...', 'Loading subsystems...',
+        var lines = ['> Accessing AMC Guide Engine...', 'Loading subsystems...',
                      'Verifying integrity...', 'ENGINE READY.'];
         pre.classList.add('es-cursor');
         var i = 0, out = '';
@@ -430,7 +430,7 @@
                 out('Access: USER');
                 break;
             case 'version':
-                out('Summit Engine v0.8.2-alpha  (build 240724)');
+                out('AMC Guide Engine v0.8.2-alpha  (build 240724)');
                 break;
             case 'diagnostics':
                 printSeq(out, [

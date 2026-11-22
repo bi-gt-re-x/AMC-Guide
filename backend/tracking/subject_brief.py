@@ -306,7 +306,7 @@ def brief_from(findings: Dict[str, Any]) -> str:
                 entry.get('title'), entry.get('progress'),
                 entry.get('deadline') or 'no date set', when))
 
-    # What they've told Summit in the Log page (backend/tracking/journal.py
+    # What they've told AMC Guide in the Log page (backend/tracking/journal.py
     # `brief_lines`), so the write-up fits the person as well as the figures.
     about = [str(line) for line in (findings.get('about') or []) if str(line).strip()]
     if about:

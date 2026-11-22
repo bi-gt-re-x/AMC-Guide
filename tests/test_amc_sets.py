@@ -1,4 +1,4 @@
-r"""Every Summit Mock answer, recomputed.
+r"""Every AMC Guide Mock answer, recomputed.
 
 Each check below works the problem out independently — by brute force where
 that is quick, by exact arithmetic where it is not — and the test compares it

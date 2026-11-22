@@ -24,7 +24,7 @@
  *
  * ## Every switch here does something
  *
- * That is the rule the page is held to. When Summit became an AMC prep site
+ * That is the rule the page is held to. When AMC Guide became an AMC prep site
  * the productivity sections went with the pages that read them — start page,
  * tasks, calendar, streaks, notifications, analytics, the guided tour — and
  * what is left is the account, how the app looks, the export, and the danger
@@ -579,7 +579,7 @@ export default function Settings() {
             label: 'Accent color',
             hint: skinned
               ? `${skinLabel} brings its own colors. Switch to Light or Dark to choose one.`
-              : 'The color Summit uses for progress, links and highlights.',
+              : 'The color AMC Guide uses for progress, links and highlights.',
             control: (
               /* Left on screen and switched off rather than removed. The row
                  disappearing when a palette is picked would read as the app
@@ -670,7 +670,7 @@ export default function Settings() {
             ),
           },
           {
-            // This said "On the machine running Summit. Nothing is uploaded
+            // This said "On the machine running AMC Guide. Nothing is uploaded
             // anywhere." / "This device", which was true of a laptop and is a
             // false statement on a hosted install — everything here is in the
             // server's database, which is a different promise and a weaker
@@ -679,7 +679,7 @@ export default function Settings() {
             id: 'storage',
             label: 'Where your data lives',
             hint:
-              "It's stored on the server running Summit. It's never sold or shared. The Privacy Policy "
+              "It's stored on the server running AMC Guide. It's never sold or shared. The Privacy Policy "
         + "has the details.",
             control: <span className="st-fixed">This server</span>,
           },
@@ -694,7 +694,7 @@ export default function Settings() {
             id: 'version',
             label: 'Version',
             hint: "The build you're running.",
-            control: <span className="st-fixed">Summit 1.2.0</span>,
+            control: <span className="st-fixed">AMC Guide 1.2.0</span>,
           },
           {
             id: 'legal',

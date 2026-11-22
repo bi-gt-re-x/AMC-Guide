@@ -1,4 +1,4 @@
-r"""Summit's own solutions to official AMC problems.
+r"""AMC Guide's own solutions to official AMC problems.
 
 An imported paper (backend/amc/official.py) carries the MAA's problem text and
 the answer key, and that text lives in the database, not in this repository.
@@ -11,7 +11,7 @@ key the solution is left off rather than shown beside the wrong answer
 (`for_problem`). tests/test_amc_official_solutions.py checks that each one ends
 on its answer.
 
-Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
+Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A, 10B, 12A and 12B, the 2024 AMC 10A and
 10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
 Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, the
 2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, the 2016 AMC 10A and 10B, the 2015 AMC 10A and 10B, the 2014 AMC 10A and 10B, the 2013 AMC 10A and 10B, and the 2012 AMC 10B. A problem whose numbers are only in a picture the
@@ -1475,6 +1475,599 @@ SOLUTIONS = {
             r"$20$ is an odd multiple of $4$, so it folds back to $x = 4$. $16$ is an even multiple, so it folds to $y = 0$. The corner is $(4, 0) = B$. The answer is $\textbf{(B) } B$.",
         ],
         'trap': r"Following the bounces one at a time and losing track. There are eight of them before the path reaches $B$.",
+    },
+    # ------------------------------------------------------------------ 2025 AMC 12A
+    # Shared with the 2025 AMC 10A: 1-6, 12, 15, 16 and 23 (10A 1, 2, 4, 8, 13, 14, 18, 21, 23, 24).
+    # 25 is the reworded problem (the original had no correct choice).
+    '2025-amc-12a-1': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'E',
+        'insight': r"By $2{:}30$ Andy is $8$ miles out, and Betsy closes that gap at $12 - 8 = 4$ miles per hour.",
+        'steps': [
+            r"When Betsy sets off at $2{:}30$, Andy has ridden for an hour and is $8$ miles from the start.",
+            r"After that, Betsy gets $4$ miles per hour further from the start than Andy does, so she draws level after $8 \div 4 = 2$ hours.",
+            r"That is $4{:}30$. The answer is $\textbf{(E)}~4{:}30$.",
+        ],
+        'trap': r"Starting both clocks at $1{:}30$, or adding the two hours to $1{:}30$ instead of $2{:}30$ and answering $3{:}30$.",
+    },
+    '2025-amc-12a-2': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'B',
+        'insight': r"Follow the peanuts: their share is what tells you how much of the second mix went in.",
+        'steps': [
+            r"The first mix holds $5$ pounds of peanuts and $2$ pounds of cashews.",
+            r"Add $w$ pounds of the second mix. Peanuts: $5 + 0.2w = 0.4(10 + w)$, so $1 = 0.2w$ and $w = 5$.",
+            r"Cashews now: $2 + 0.4 \cdot 5 = 4$ pounds. The answer is $\textbf{(B) } 4$.",
+        ],
+        'trap': r"Answering $5$, the weight of the mix that was added, instead of the cashews.",
+    },
+    '2025-amc-12a-3': {
+        'topics': ['statistics', 'linear-equations'],
+        'answer': 'A',
+        'insight': r"Each average comes with a team size, and Ash joining changes it by one. That gives two equations.",
+        'steps': [
+            r"With $s$ students, $12s + x = 14(s + 1)$, so Ash is $x = 2s + 14$.",
+            r"The $15 - s$ teachers give $55(15 - s) + x = 52(16 - s)$, so $x = 7 + 3s$.",
+            r"$2s + 14 = 7 + 3s$ gives $s = 7$ and $x = 28$. (Check: $\frac{8 \cdot 55 + 28}{9} = 52$.) The answer is $\textbf{(A) } 28$.",
+        ],
+        'trap': r"Forgetting that the team grows by one when Ash joins, so the new total is $14s$ rather than $14(s+1)$.",
+    },
+    '2025-amc-12a-4': {
+        'topics': ['logic', 'casework'],
+        'answer': 'B',
+        'insight': r"Call the number of true statements $T$, write when each statement holds, and look for the $T$ that agrees with itself.",
+        'steps': [
+            r"The four statements hold when $T \ge 1$, $T \ge 2$, $T \le 2$ and $T \le 3$ respectively.",
+            r"$T = 3$: statements $1$, $2$ and $4$ hold and $3$ does not. That is exactly three true, so it is consistent.",
+            r"Every other value contradicts itself: $T = 0$ makes two true, $T = 1$ makes three true, $T = 2$ makes four true, and $T = 4$ makes statement $4$ false.",
+            r"So exactly one statement is false. The answer is $\textbf{(B) } 1$.",
+        ],
+        'trap': r"Treating statements $1$ and $4$, or $2$ and $3$, as opposites. They are not each other's negations.",
+    },
+    '2025-amc-12a-5': {
+        'topics': ['area', 'sequences-series'],
+        'answer': 'D',
+        'insight': r"Each shaded ring is $k^4$ times the one outside it, so the shaded area is a geometric series.",
+        'steps': [
+            r"Let the outer square have area $1$. The rings have areas $1 - k^2$ (shaded), $k^2 - k^4$, $k^4 - k^6$ (shaded), and so on.",
+            r"Shaded: $(1 - k^2)(1 + k^4 + k^8 + \dots) = \frac{1 - k^2}{1 - k^4} = \frac{1}{1 + k^2}$.",
+            r"$\frac{1}{1 + k^2} = \frac{16}{25}$ gives $k^2 = \frac{9}{16}$, so $k = \frac34$. The answer is $\textbf{(D) } \frac{3}{4}$.",
+        ],
+        'trap': r"Setting $k$ itself equal to $64\%$ and picking $\frac{16}{25}$.",
+    },
+    '2025-amc-12a-6': {
+        'topics': ['probability', 'permutations'],
+        'answer': 'B',
+        'insight': r"Seat the students first. The four chairs left over form a row, not a circle.",
+        'steps': [
+            r"Seating four different people in six chairs can be done in $6 \cdot 5 \cdot 4 \cdot 3 = 360$ ways.",
+            r"The students take one of the $6$ neighboring pairs, in either order: $12$ ways.",
+            r"The other four chairs form a row with $3$ neighboring pairs, so the teachers have $3 \cdot 2 = 6$ ways.",
+            r"$\frac{12 \cdot 6}{360} = \frac15$. The answer is $\textbf{(B) } \frac{1}{5}$.",
+        ],
+        'trap': r"Giving the teachers $4$ neighboring pairs, as if the leftover chairs still went all the way round.",
+    },
+    '2025-amc-12a-7': {
+        'topics': ['logarithms', 'exponents'],
+        'answer': 'C',
+        'insight': r'Take $\log$ of $v = kn^am^b$: each population fixes one variable, and the coefficients can be read off.',
+        'steps': [
+            r'$\log v = \log k + a\log n + b\log m$.',
+            r'With $n = 5$ this is $(\log k + a\log 5) + b\log m = 4 + 2\log m$, so $b = 2$ and $k \cdot 5^a = 10^4$.',
+            r'With $m = 25$ it is $(\log k + 2\log 25) + a\log n = 4 + 4\log n$, so $a = 4$. Then $k = \frac{10^4}{5^4} = 16$.',
+            r'$k + a + b = 16 + 4 + 2 = 22$. The answer is $\textbf{(C)}~22$.',
+        ],
+        'trap': r'Taking $k = 10^4$ from the constant term and forgetting that $5^a$ is folded into it.',
+    },
+    '2025-amc-12a-8': {
+        'topics': ['circles', 'angle-chasing', 'triangles'],
+        'answer': 'E',
+        'insight': r'Equal inscribed angles at $E$ cut off equal arcs, so $C$ is the midpoint of arc $BD$ and $AC$ bisects angle $BAD$.',
+        'steps': [
+            r'$\angle BEC = \angle CED = 30^\circ$, so arcs $BC$ and $CD$ are $60^\circ$ each and arc $BCD$ is $120^\circ$. Then $\angle BAD = 60^\circ$ and $\angle BAC = \angle CAD = 30^\circ$.',
+            r'In triangle $ABD$, the law of cosines gives $BD^2 = 9^2 + 24^2 - 2 \cdot 9 \cdot 24 \cdot \frac12 = 441$, so $BD = 21$.',
+            r'$AF$ bisects angle $A$, so $BF : FD = AB : AD = 9 : 24 = 3 : 8$, and $BF = \frac{3}{11} \cdot 21 = \frac{63}{11}$.',
+            r'The answer is $\textbf{(E) } \frac{63}{11}$.',
+        ],
+        'trap': r'Using $\angle BAD = 30^\circ$ (one inscribed angle) instead of $60^\circ$ (both arcs together).',
+    },
+    '2025-amc-12a-9': {
+        'topics': ['complex-numbers', 'coordinate-geometry'],
+        'answer': 'E',
+        'insight': r'Plot $w$ and $w^2$ as points; $r$ is where the line through them crosses the real axis.',
+        'steps': [
+            r'$w = 2 + i$ is the point $(2, 1)$ and $w^2 = 4 + 4i + i^2 = 3 + 4i$ is $(3, 4)$.',
+            r'The line through them has slope $\frac{4 - 1}{3 - 2} = 3$: $y - 1 = 3(x - 2)$.',
+            r'It meets $y = 0$ at $x = 2 - \frac13 = \frac53$.',
+            r'The answer is $\textbf{(E)}~\frac53$.',
+        ],
+        'trap': r'Writing $w^2 = 4 + 4i + 1 = 5 + 4i$, forgetting that $i^2 = -1$.',
+    },
+    '2025-amc-12a-10': {
+        'topics': ['circles', 'quadratics'],
+        'answer': 'B',
+        'insight': r'Both arcs share the same central angle measured two ways, so arc length $=$ radius $\times$ angle gives two equations in one radius.',
+        'steps': [
+            r'Let $OA = r$ and let the major arc subtend angle $\theta$. Then $r\theta = 2\pi$, so $\theta = \frac{2\pi}{r}$.',
+            r'$OB = r + 2\pi$ and the minor arc subtends $2\pi - \theta$, so $(r + 2\pi)\left(2\pi - \frac{2\pi}{r}\right) = 2\pi$, that is $(r + 2\pi)(r - 1) = r$.',
+            r'This is $r^2 + (2\pi - 2)r - 2\pi = 0$, whose positive root is $r = 1 - \pi + \sqrt{(\pi - 1)^2 + 2\pi} = 1 - \pi + \sqrt{\pi^2 + 1}$.',
+            r'The answer is $\textbf{(B)}~1 - \pi + \sqrt{\pi^{2} + 1}$.',
+        ],
+        'trap': r'Giving both arcs the same central angle, when the major arc and the minor arc split the full turn between them.',
+    },
+    '2025-amc-12a-11': {
+        'topics': ['coordinate-geometry', 'triangle-centers'],
+        'answer': 'A',
+        'insight': r'$BC$ is horizontal, so the altitude from $A$ is the vertical line $x = 2$; one more altitude finishes it.',
+        'steps': [
+            r'$B$ and $C$ both have $y = 27$, so the altitude from $A$ is $x = 2$.',
+            r'$AC$ has slope $\frac{27 - 31}{18 - 2} = -\frac14$, so the altitude from $B$ has slope $4$: $y = 27 + 4(x - 8)$.',
+            r'At $x = 2$ this gives $y = 27 - 24 = 3$. The orthocenter is $(2, 3)$, outside the obtuse triangle, and $2 + 3 = 5$.',
+            r'The answer is $\textbf{(A)}~5$.',
+        ],
+        'trap': r'Expecting the orthocenter inside the triangle. The angle at $B$ is obtuse, so it lies far below.',
+    },
+    '2025-amc-12a-12': {
+        'topics': ['polynomials', 'quadratics'],
+        'answer': 'B',
+        'insight': r"For one quadratic, the reciprocals of its roots add to (sum of roots)/(product of roots), and here that is the same for every factor.",
+        'steps': [
+            r"$kx^2 - 4x - 3$ has discriminant $16 + 12k > 0$, so two real roots, with sum $\frac{4}{k}$ and product $-\frac{3}{k}$.",
+            r"Their reciprocals add to $\frac{4/k}{-3/k} = -\frac43$, whatever $k$ is.",
+            r"All $4050$ roots: the reciprocals add to $2025 \cdot \left(-\frac43\right) = -2700$, with mean $-\frac{2700}{4050} = -\frac23$.",
+            r"The harmonic mean is the reciprocal of that, $-\frac32$. The answer is $\textbf{(B) } -\frac{3}{2}$.",
+        ],
+        'trap': r"Stopping at the mean of the reciprocals, $-\frac23$, which is choice $\textbf{(E)}$.",
+    },
+    '2025-amc-12a-13': {
+        'topics': ['probability', 'combinations'],
+        'answer': 'D',
+        'insight': r'Think about the two numbers left out: they must hit every run of five consecutive numbers.',
+        'steps': [
+            r'The runs $1$-$5$, $6$-$10$ and $9$-$13$ show that one missing number is not enough, while leaving out $5$ and $10$ works. So $N = 11$.',
+            r'Choosing $11$ numbers is choosing the $2$ left out, $\binom{13}{2} = 78$ ways. They must hit $1$-$5$ and $9$-$13$, so one is at most $5$ and the other at least $9$, and they can be at most $5$ apart so no window of five falls between them.',
+            r'That leaves $\{4, 9\}$, $\{5, 9\}$ and $\{5, 10\}$: $3$ pairs, so the probability is $\frac{3}{78} = \frac{1}{26}$.',
+            r'The answer is $\textbf{(D)}~\frac{1}{26}$.',
+        ],
+        'trap': r'Allowing pairs like $\{3, 9\}$, which leave the run $4$-$8$ untouched.',
+    },
+    '2025-amc-12a-14': {
+        'topics': ['conics'],
+        'answer': 'D',
+        'insight': r'Same eccentricity means similar ellipses, so an area ratio of $2025$ is a length ratio of $45$; then follow the major axis from $G$.',
+        'steps': [
+            r'Let the big ellipse have semi-major axis $A$ and the small one $a = \frac{A}{45}$. Their focal distances are $eA$ and $ea$.',
+            r"$G$ is the big ellipse's right focus, at $eA$ from its center, so the big ellipse reaches $A - eA$ past $G$.",
+            r"$G$ is the small ellipse's left focus, so it reaches $ea + a$ past $G$. The ellipses touch at that common end: $A(1 - e) = a(1 + e)$.",
+            r'So $45(1 - e) = 1 + e$, giving $e = \frac{44}{46} = \frac{22}{23}$. The answer is $\textbf{(D)}~\frac{22}{23}$.',
+        ],
+        'trap': r'Using $2025$ itself as the length ratio, which leads to $\frac{1012}{1013}$, not among the choices.',
+    },
+    '2025-amc-12a-15': {
+        'topics': ['pigeonhole', 'casework'],
+        'answer': 'C',
+        'insight': r"The largest element $m$ pairs everything else off: $x$ and $m - x$ cannot both be in the set.",
+        'steps': [
+            r"$\{11, 12, \dots, 20\}$ is sum-free (any two add to at least $22$), and so are the ten odd numbers. So $10$ is possible.",
+            r"Let $m$ be the largest element. For every other element $x$, $m - x$ is not in the set, and $m - x \ne x$ (that would make $2x = m$).",
+            r"So the other elements and the numbers $m - x$ are two separate groups inside $\{1, \dots, m-1\}$. That gives $2(|S| - 1) \le m - 1 \le 19$, so $|S| \le 10$.",
+            r"The answer is $\textbf{(C) } 10$.",
+        ],
+        'trap': r"Adding $10$ to $\{11, \dots, 20\}$ to reach $11$: $10 + 10 = 20$.",
+    },
+    '2025-amc-12a-16': {
+        'topics': ['triangles', 'trigonometry'],
+        'answer': 'D',
+        'insight': r"$P$ is on the altitude, so $BP$ is the hypotenuse of a right triangle with angle $\frac{B}{2}$ at $B$.",
+        'steps': [
+            r"Law of cosines: $\cos B = \frac{80^2 + 45^2 - 75^2}{2 \cdot 80 \cdot 45} = \frac{2800}{7200} = \frac{7}{18}$.",
+            r"The altitude from $C$ meets $AB$ at $H$ with $BH = 45 \cos B = \frac{35}{2}$.",
+            r"In right triangle $BHP$, $\angle PBH = \frac{B}{2}$ and $\cos\frac{B}{2} = \sqrt{\frac{1 + 7/18}{2}} = \frac56$. So $BP = \frac{35}{2} \cdot \frac{6}{5} = 21$.",
+            r"The answer is $\textbf{(D) } 21$.",
+        ],
+        'trap': r"Using the bisector's foot on $AC$ (the angle bisector theorem) when $P$ is where the bisector meets the altitude.",
+    },
+    '2025-amc-12a-17': {
+        'topics': ['complex-numbers', 'polynomials'],
+        'answer': 'A',
+        'insight': r'Shift by the middle root: with $z = w - 2i$ the product becomes $(w - i)w(w + i) = w^3 + w$.',
+        'steps': [
+            r'Put $z = w - 2i$. The polynomial is $(w - i)\,w\,(w + i) + 10 = w^3 + w + 10$.',
+            r'$w = -2$ is a root, and $w^3 + w + 10 = (w + 2)(w^2 - 2w + 5)$, so the others are $w = 1 \pm 2i$.',
+            r'Shifting does not change the triangle. Its vertices are $(-2, 0)$, $(1, 2)$ and $(1, -2)$: base $4$ on $x = 1$, height $3$, area $6$.',
+            r'The answer is $\textbf{(A)}~6$.',
+        ],
+        'trap': r'Expanding the cubic in $z$ directly and hunting for roots with $i$ in them.',
+    },
+    '2025-amc-12a-18': {
+        'topics': ['basic-counting', 'inequalities', 'casework'],
+        'answer': 'C',
+        'insight': r'Sort the three numbers $a < b < c$. Only $ab > c$ can fail, and it always fails when $a = 1$.',
+        'steps': [
+            r'With $a < b < c$, the conditions $ac > b$ and $bc > a$ hold automatically, so only $ab > c$ matters. If $a = 1$ it says $b > c$, which is false.',
+            r'So $a \ge 2$ and all three come from $\{2, \dots, 8\}$: $\binom{7}{3} = 35$ sets.',
+            r'Sets with $ab \le c$: $a = 2, b = 3$ with $c = 6, 7, 8$, and $a = 2, b = 4, c = 8$. With $a \ge 3$, $ab \ge 12 > 8$. That removes $4$, leaving $31$ sets.',
+            r'Each set can be ordered $3! = 6$ ways, giving $186$. The answer is $\textbf{(C)}~186$.',
+        ],
+        'trap': r'Counting the $31$ sets and forgetting that the triples are ordered.',
+    },
+    '2025-amc-12a-19': {
+        'topics': ['polynomials'],
+        'answer': 'E',
+        'insight': r'Group the terms as $a^2b^2(a + b)$, and $a + b = -c$ because the $x^2$ coefficient is $0$.',
+        'steps': [
+            r'By Vieta, $a + b + c = 0$, $ab + bc + ca = k$ and $abc = -1$.',
+            r'The sum is $a^2b^2(a + b) + b^2c^2(b + c) + c^2a^2(c + a) = -a^2b^2c - b^2c^2a - c^2a^2b$.',
+            r'That is $-abc(ab + bc + ca) = -(-1)(k) = k$.',
+            r'The answer is $\textbf{(E)}~k$.',
+        ],
+        'trap': r'Taking $abc = 1$ (the constant term) instead of $-1$, which gives $-k$.',
+    },
+    '2025-amc-12a-20': {
+        'topics': ['solid-geometry'],
+        'answer': 'C',
+        'insight': r'Slice the solid into a triangular prism under the top edge and two pyramids at the ends.',
+        'steps': [
+            r'Put the base at $0 \le x \le 13$, $0 \le y \le 8$. The top edge runs from $(3, 4, h)$ to $(10, 4, h)$, so a slanted edge goes from $(0,0,0)$ to $(3,4,h)$. Its length $13$ gives $9 + 16 + h^2 = 169$ and $h = 12$.',
+            r'Between $x = 3$ and $x = 10$ the solid is a prism with triangular cross-section (base $8$, height $12$, area $48$) and length $7$: volume $336$.',
+            r'Each end is a pyramid over a $3 \times 8$ rectangle with height $12$: volume $\frac13 \cdot 24 \cdot 12 = 96$, so $192$ for both.',
+            r'The total is $336 + 192 = 528$. The answer is $\textbf{(C)}~528$.',
+        ],
+        'trap': r'Using $13$ as the height. The slanted edges are $13$ long, but the solid is only $12$ tall.',
+    },
+    '2025-amc-12a-21': {
+        'topics': ['sequences-series', 'exponents', 'divisibility'],
+        'answer': 'A',
+        'insight': r'Pull out $2^a$ and set $x = 2^k$: what is left is a ratio of two odd numbers, so $2^a$ must be the whole power of $2$ in $964$.',
+        'steps': [
+            r'The ratio is $2^a \cdot \frac{1 + x^2 + \cdots + x^{2m}}{1 + x + \cdots + x^m}$ with $x = 2^k$. If $k = 0$ the fraction is $1$ and $2^a = 964$ is impossible, so $x$ is even and both sums are odd.',
+            r'So the fraction is odd and $2^a$ is the power of $2$ in $964 = 4 \cdot 241$: $a = 2$, and the fraction is $241$.',
+            r'$m = 1$ gives $\frac{1 + x^2}{1 + x} = x - 1 + \frac{2}{1 + x}$, not an integer. $m = 2$ gives $\frac{1 + x^2 + x^4}{1 + x + x^2} = x^2 - x + 1 = 241$, so $x = 16$ and $k = 4$.',
+            r'$(a, k, m) = (2, 4, 2)$, and $a + k + m = 8$. The answer is $\textbf{(A) } 8$.',
+        ],
+        'trap': r'Missing the factorization $1 + x^2 + x^4 = (1 + x + x^2)(1 - x + x^2)$, which turns the $m = 2$ case into a quadratic.',
+    },
+    '2025-amc-12a-22': {
+        'topics': ['geometric-probability', 'probability'],
+        'answer': 'E',
+        'insight': r'Fix which number is largest and its value $t$; the other two must both land below $\frac t2$.',
+        'steps': [
+            r'Say the first number is the largest, with value $t$. The other two must both be less than $\frac t2$, which happens with probability $\left(\frac t2\right)^2 = \frac{t^2}{4}$.',
+            r'Averaging over $t$ from $0$ to $1$: $\int_0^1 \frac{t^2}{4}\,dt = \frac{1}{12}$.',
+            r'Any of the three numbers can be the largest, so the probability is $3 \cdot \frac{1}{12} = \frac14$.',
+            r'The answer is $\textbf{(E)}~\frac14$.',
+        ],
+        'trap': r'Stopping at $\frac{1}{12}$, the case where one particular number is the largest.',
+    },
+    '2025-amc-12a-23': {
+        'topics': ['permutations', 'combinations'],
+        'answer': 'C',
+        'insight': r"No digit is lower than both its neighbors, so the digits climb to the largest one and then fall.",
+        'steps': [
+            r"A dip anywhere inside the number would be a digit smaller than both neighbors. So a fair number rises strictly to its largest digit and then falls strictly.",
+            r"Choose the set of $k$ digits. The largest is the peak, and each other digit goes either before it (in rising order) or after it (in falling order): $2^{k-1}$ numbers.",
+            r"$\sum_{k=1}^{9} \binom{9}{k} 2^{k-1} = \frac{3^9 - 1}{2} = \frac{19682}{2} = 9841$.",
+            r"The answer is $\textbf{(C) } 9841$.",
+        ],
+        'trap': r"Forgetting to halve and answering $3^9 - 1 = 19682$.",
+    },
+    '2025-amc-12a-24': {
+        'topics': ['circles', 'trigonometry'],
+        'answer': 'C',
+        'insight': r'Join the center to two neighboring small centers: they are $r + 1$ away and $2$ apart, with a $30^\circ$ angle between them.',
+        'steps': [
+            r'The twelve small centers lie on a circle of radius $r + 1$, $30^\circ$ apart, and neighbors are $2$ apart.',
+            r'Half of that isosceles triangle gives $(r + 1)\sin 15^\circ = 1$.',
+            r'$\sin 15^\circ = \frac{\sqrt6 - \sqrt2}{4}$, so $r + 1 = \frac{4}{\sqrt6 - \sqrt2} = \sqrt6 + \sqrt2$ and $r = \sqrt6 + \sqrt2 - 1$.',
+            r'$a + b + c = 6 + 2 - 1 = 7$. The answer is $\textbf{(C) } 7$.',
+        ],
+        'trap': r'Using $\sin 30^\circ$, the whole angle between neighbors, instead of half of it.',
+    },
+    '2025-amc-12a-25': {
+        'topics': ['polynomials', 'inequalities', 'casework'],
+        'answer': 'A',
+        'insight': r'$f$ has the sign of $P \cdot Q$, so it changes sign exactly at the points whose combined multiplicity in $P$ and $Q$ is odd: $a$, $b$, $c$ and $d$.',
+        'steps': [
+            r'$f(a) = f(b) = 0$, so $a, b$ are roots of $P$ only. $f$ is undefined at $c$ and $d$, so they are roots of $Q$. These four sign changes take four of the six roots, $P = (x - a)(x - b)(x - p)$ and $Q = (x - c)(x - d)(x - q)$, and the parity at every other point must stay even. That forces $p = q = t$.',
+            r'$t$ cannot be $a$ or $b$ (they must stay in the set) and cannot puncture $(a, b)$ or $(c, d)$. So $t$ is $c$, $d$, or the one leftover number of $\{1, \dots, 5\}$, provided it lies outside both intervals.',
+            r'Leave out $1$: $t \in \{4, 5, 1\}$. Leave out $2$: it sits in $(1, 3)$, so $t \in \{4, 5\}$. Leave out $3$: it sits in the gap, so $t \in \{4, 5, 3\}$. Leave out $4$: it sits in $(3, 5)$, so $t \in \{3, 5\}$. Leave out $5$: $t \in \{3, 4, 5\}$.',
+            r'That is $3 + 2 + 3 + 2 + 3 = 13$ pairs. The answer is $\textbf{(A) } 13$.',
+        ],
+        'trap': r'Forgetting that a root shared by $P$ and $Q$ is a hole: $f$ is undefined there even though the factors cancel.',
+    },
+    # ------------------------------------------------------------------ 2025 AMC 12B
+    # Shared with the 2025 AMC 10B: 1, 2, 4, 6, 10, 11, 13-15, 17, 19 and 20
+    # (10B 1, 2, 4, 8, 13, 14, 16, 17, 19, 21, 23, 24).
+    '2025-amc-12b-1': {
+        'topics': ['arithmetic', 'word-problems'],
+        'answer': 'B',
+        'insight': r"Only full mugs count, so round down.",
+        'steps': [
+            r"$350 \div 20 = 17.5$.",
+            r"Half a mug is not a properly brewed mug, so the bag makes $17$. The answer is $\textbf{(B) } 17$.",
+        ],
+        'trap': r"Rounding $17.5$ up to $18$.",
+    },
+    '2025-amc-12b-2': {
+        'topics': ['modular-arithmetic', 'sequences-series'],
+        'answer': 'D',
+        'insight': r"The ones digit of $n^2$ depends only on the ones digit of $n$, so the digits repeat every ten.",
+        'steps': [
+            r"One full cycle is $1, 4, 9, 6, 5, 6, 9, 4, 1, 0$, which adds to $45$.",
+            r"$2025 = 202 \cdot 10 + 5$: $202$ full cycles give $9090$, and the last five add $1 + 4 + 9 + 6 + 5 = 25$.",
+            r"$9090 + 25 = 9115$. The answer is $\textbf{(D) } 9115$.",
+        ],
+        'trap': r"Leaving out the five extra squares and answering $9090$.",
+    },
+    '2025-amc-12b-3': {
+        'topics': ['complex-numbers'],
+        'answer': 'D',
+        'insight': r'Multiply the outer pair and the inner pair: $i(i - 3)$ and $(i - 1)(i - 2)$ are conjugate-looking and multiply cleanly.',
+        'steps': [
+            r'$i(i - 3) = -1 - 3i$ and $(i - 1)(i - 2) = i^2 - 3i + 2 = 1 - 3i$.',
+            r'$(-1 - 3i)(1 - 3i) = -1 + 3i - 3i + 9i^2 = -1 - 9 = -10$.',
+            r'The answer is $\textbf{(D) } -10$.',
+        ],
+        'trap': r'Writing $i^2 = 1$ somewhere along the way and landing on $10$ or $6 - 5i$.',
+    },
+    '2025-amc-12b-4': {
+        'topics': ['digits-bases', 'linear-equations'],
+        'answer': 'A',
+        'insight': r"Write both numbers out and remember that a base-seven digit is at most $6$.",
+        'steps': [
+            r"$7a + b = 9b + a$, so $6a = 8b$, or $3a = 4b$.",
+            r"With digits below $7$, the only nonzero solution is $a = 4$, $b = 3$. (Check: $43_7 = 31 = 34_9$.)",
+            r"$a + b = 7$. The answer is $\textbf{(A)}~7$.",
+        ],
+        'trap': r"Taking $a = 8$, $b = 6$, which is not a base-seven digit pair, and answering $14$.",
+    },
+    '2025-amc-12b-5': {
+        'topics': ['diophantine', 'modular-arithmetic'],
+        'answer': 'E',
+        'insight': r'$57x \le 400$ leaves only $x = 1, \dots, 7$; reduce mod $22$ to find the one that works.',
+        'steps': [
+            r'$57x \equiv 400 \pmod{22}$ is $13x \equiv 4 \pmod{22}$. Since $13 \cdot 17 = 221 \equiv 1$, $x \equiv 68 \equiv 2 \pmod{22}$.',
+            r'$x$ is between $1$ and $7$, so $x = 2$ and $y = \frac{400 - 114}{22} = 13$.',
+            r'That is the only solution in positive integers, so the least value of $x + y$ is $15$.',
+            r'The answer is $\textbf{(E) } 15$.',
+        ],
+        'trap': r'Looking for a "least" sum among many solutions; there is just one.',
+    },
+    '2025-amc-12b-6': {
+        'topics': ['divisibility', 'digits-bases'],
+        'answer': 'C',
+        'insight': r"The total in cents, the five-digit number $ABBBA$, must divide evenly by $36$: by $4$ and by $9$.",
+        'steps': [
+            r"Divisible by $9$: $2A + 3B$ is a multiple of $9$, which forces $3 \mid A$.",
+            r"Divisible by $4$: the last two digits $BA$ make a multiple of $4$, so $A$ is even. With $A \ne 0$, that leaves $A = 6$.",
+            r"Then $12 + 3B$ is a multiple of $9$, so $B \in \{2, 5, 8\}$, and only $56$ is a multiple of $4$. So $B = 5$: $\$655.56 = 36 \cdot \$18.21$.",
+            r"$A + B = 11$. The answer is $\textbf{(C)}~11$.",
+        ],
+        'trap': r"Requiring a whole-dollar price per shirt; it only needs to be whole cents.",
+    },
+    '2025-amc-12b-7': {
+        'topics': ['logarithms', 'sequences-series'],
+        'answer': 'C',
+        'insight': r'$\log_2\left(1 + \frac1n\right) = \log_2(n+1) - \log_2 n$, so each term is a difference of reciprocals and the sum telescopes.',
+        'steps': [
+            r'Each term is $\frac{\log_2(n+1) - \log_2 n}{\log_2 n \cdot \log_2(n+1)} = \frac{1}{\log_2 n} - \frac{1}{\log_2(n+1)}$.',
+            r'The sum from $n = 2$ to $255$ telescopes to $\frac{1}{\log_2 2} - \frac{1}{\log_2 256} = 1 - \frac18$.',
+            r'That is $\frac78$. The answer is $\textbf{(C) } \frac{7}{8}$.',
+        ],
+        'trap': r'Ending the telescope at $\log_2 255$ instead of $\log_2 256$, which gives choice (B).',
+    },
+    '2025-amc-12b-8': {
+        'topics': ['polynomials'],
+        'answer': 'C',
+        'insight': r'With integer coefficients, $4 - \sqrt5$ is a root too, and the $x^2$ coefficient gives the third root.',
+        'steps': [
+            r'$4 \pm \sqrt5$ are roots of $x^2 - 8x + 11$. The three roots add to $5$, so the third root is $5 - 8 = -3$.',
+            r'$(x^2 - 8x + 11)(x + 3) = x^3 - 5x^2 - 13x + 33$.',
+            r'So $a = -13$, $b = 33$ and $a + b = 20$.',
+            r'The answer is $\textbf{(C) } 20$.',
+        ],
+        'trap': r'Taking the third root as $+3$ from the factor $x + 3$, or mixing up the sign of the root sum.',
+    },
+    '2025-amc-12b-9': {
+        'topics': ['modular-arithmetic', 'exponents'],
+        'answer': 'C',
+        'insight': r'Work mod $4$ and mod $25$ separately: $6^5 = 7776 \equiv 1 \pmod{25}$.',
+        'steps': [
+            r'The exponent $6^6$ is at least $2$, so $6^{6^6} \equiv 0 \pmod 4$.',
+            r'$6^5 \equiv 1 \pmod{25}$, and $6^6 \equiv 1 \pmod 5$, so $6^{6^6} \equiv 6^1 = 6 \pmod{25}$.',
+            r'The number below $100$ that is $6$ mod $25$ and a multiple of $4$ is $56$. So the tens digit is $5$.',
+            r'The answer is $\textbf{(C)}~5$.',
+        ],
+        'trap': r'Saying every power of $6$ ends in $6$ and stopping there; that fixes the ones digit, not the tens.',
+    },
+    '2025-amc-12b-10': {
+        'topics': ['right-triangles', 'coordinate-geometry'],
+        'answer': 'A',
+        'insight': r"Coordinates make this quick: put the right angle at the origin and the short leg on the $x$-axis.",
+        'steps': [
+            r"Take $C = (0,0)$, $B = (1,0)$ and $A = (0, \sqrt3)$. The altitude from $C$ meets $AB$ at $H = \left(\frac34, \frac{\sqrt3}{4}\right)$, on the line $y = \frac{x}{\sqrt3}$.",
+            r"The median to the short side runs from $A$ to $\left(\frac12, 0\right)$, through the points $\left(\frac s2, \sqrt3(1 - s)\right)$.",
+            r"It meets the altitude when $\sqrt3(1 - s) = \frac{s}{2\sqrt3}$, so $s = \frac67$, at $\left(\frac37, \frac{\sqrt3}{7}\right)$, which is $\frac47$ of the way from $C$ to $H$.",
+            r"The pieces are $\frac47$ and $\frac37$ of the altitude, so $\frac{x}{x+y} = \frac37$. The answer is $\textbf{(A)}~\frac 37$.",
+        ],
+        'trap': r"Using the median to the hypotenuse, which runs from the right angle instead.",
+    },
+    '2025-amc-12b-11': {
+        'topics': ['probability', 'combinations'],
+        'answer': 'C',
+        'insight': r"The captains are the three tallest exactly when those three land in different groups.",
+        'steps': [
+            r"Follow only the three tallest. Wherever the tallest goes, the second tallest lands in another group with probability $\frac68$.",
+            r"The third tallest then avoids both of those groups with probability $\frac37$.",
+            r"$\frac68 \cdot \frac37 = \frac{9}{28}$. The answer is $\textbf{(C) } \frac9{28}$.",
+        ],
+        'trap': r"Using $\frac23 \cdot \frac13$, as if each athlete picked a color independently. The bands run out.",
+    },
+    '2025-amc-12b-12': {
+        'topics': ['area', 'transformations'],
+        'answer': 'C',
+        'insight': r'The blade only slides; it never turns. So it sweeps a strip $3.5$ tall over the horizontal distance $B$ travels.',
+        'steps': [
+            r'$B$ swings $30^\circ$ each side of vertical on a circle of radius $3$, so it moves from $x = -3\sin 30^\circ = -1.5$ to $x = 1.5$: $3$ feet across.',
+            r'Above each $x$ in that range the blade passes exactly once, covering a vertical segment of length $3.5$ centered on $B$.',
+            r'The cleaned area is $3.5 \cdot 3 = 10.50$ square feet.',
+            r'The answer is $\textbf{(C) } 10.50$.',
+        ],
+        'trap': r'Adding a sector of the arc ($\frac{60}{360}\pi \cdot 3^2$) as if the blade swept around $A$.',
+    },
+    '2025-amc-12b-13': {
+        'topics': ['casework', 'permutations'],
+        'answer': 'D',
+        'insight': r"The sectors are all different sizes, so every position counts. Pair them off first and color the pairs afterwards.",
+        'steps': [
+            r"Number the sectors $1$ to $6$ around. Same-colored sectors are $2$ or $3$ apart. Sectors $2$ apart have the same parity, and three odd sectors cannot all be paired that way, so at least one pair is opposite.",
+            r"If $\{1,4\}$ is one pair, the rest pair as $\{2,6\},\{3,5\}$ or as $\{2,5\},\{3,6\}$, which makes every pair opposite. So there are $3$ pairings with exactly one opposite pair and $1$ with all three opposite: $4$ pairings.",
+            r"Each pairing takes the three colors in $3! = 6$ ways: $4 \cdot 6 = 24$. The answer is $\textbf{(D)}~24$.",
+        ],
+        'trap': r"Dividing by rotations as if the sectors were identical. They are different sizes, so a rotated coloring is a new one.",
+    },
+    '2025-amc-12b-14': {
+        'topics': ['sequences-series', 'statistics'],
+        'answer': 'B',
+        'insight': r"The averages are $2028 - k$ from $k = 3$ on, which pins down every term after the third: $x_k = 2029 - 2k$.",
+        'steps': [
+            r"The average of the first $k$ terms is $2025 - (k - 3) = 2028 - k$, so the first $k$ terms add to $k(2028 - k)$.",
+            r"For $k \ge 4$: $x_k = k(2028 - k) - (k - 1)(2029 - k) = 2029 - 2k$.",
+            r"Positive means $k \le 1014$. The first three terms can be chosen to fit (for example $2030, 2023, 2022$, which add to $6075$ and sit above $x_4 = 2021$).",
+            r"So $n$ is at most $1014$. The answer is $\textbf{(B) } 1014$.",
+        ],
+        'trap': r"Requiring $x_n \ge 2$, or counting from the wrong starting term, and answering $1013$.",
+    },
+    '2025-amc-12b-15': {
+        'topics': ['solid-geometry', 'word-problems'],
+        'answer': 'D',
+        'insight': r"Extend the sloping sides down to a point: the container is a big pyramid with a small one cut off, and the midline cut is $2 \times 2$.",
+        'steps': [
+            r"The side of the cross-section grows steadily from $1$ to $3$, so at the midline it is $2$.",
+            r"Extended to their apex, the pyramids with bases $1 \times 1$, $2 \times 2$ and $3 \times 3$ are similar, with volumes in the ratio $1 : 8 : 27$.",
+            r"The lower half holds $8 - 1 = 7$ parts and the upper half $27 - 8 = 19$. Seven parts took $35$ minutes, so $19$ take $95$.",
+            r"The answer is $\textbf{(D) }95$.",
+        ],
+        'trap': r"Assuming the two halves hold the same amount, or that the volume grows like the side, not its cube.",
+    },
+    '2025-amc-12b-16': {
+        'topics': ['clocks-calendars', 'trigonometry'],
+        'answer': 'B',
+        'insight': r'$2025$ minutes is $33$ hours $45$ minutes, so the clock reads $9{:}45$.',
+        'steps': [
+            r'At $9{:}45$ the minute hand points at $270^\circ$ (measured clockwise from $12$).',
+            r'The hour hand is three-quarters of the way from $9$ to $10$: $270^\circ + \frac34 \cdot 30^\circ = 292.5^\circ$.',
+            r'The angle between them is $22.5^\circ$, and $\tan 22.5^\circ = \sqrt2 - 1$.',
+            r'The answer is $\textbf{(B) } \sqrt{2}-1$.',
+        ],
+        'trap': r'Putting the hour hand exactly on $9$, which gives a $0^\circ$ angle.',
+    },
+    '2025-amc-12b-17': {
+        'topics': ['symmetry-counting', 'casework'],
+        'answer': 'C',
+        'insight': r"Turning every red to blue, blue to yellow and yellow to red keeps a coloring valid, so count the colorings with a yellow center and multiply by $3$.",
+        'steps': [
+            r"The center stays the center under every rotation and reflection, and the color swap above sends yellow-center colorings to blue-center and then red-center ones. So the answer is $3$ times the number of yellow-center shapes.",
+            r"A yellow center needs a red edge square, that red needs a blue corner next to it, and so on around. Checking the edge rings one by one, only two kinds work: a red, a yellow and two neighboring blues ($8$ rings, each finished in $2$ ways), or red and blue opposite with yellows between ($4$ rings, each finished in $3$ ways). That is $28$ colorings.",
+            r"Up to rotations and reflections they form $4$ shapes: one that a reflection maps to itself, so it has only $4$ distinct copies, and three with no symmetry, $8$ copies each. Check: $4 + 8 + 8 + 8 = 28$.",
+            r"$4 \cdot 3 = 12$. The answer is $\textbf{(C) } 12$.",
+        ],
+        'trap': r"Dividing the $84$ valid colorings by $8$. Symmetric colorings make some classes smaller, so the classes have to be counted.",
+    },
+    '2025-amc-12b-18': {
+        'topics': ['expected-value', 'probability'],
+        'answer': 'D',
+        'insight': r'After the first game, he is just waiting for the other outcome, and a wait for probability $p$ lasts $\frac1p$ games on average.',
+        'steps': [
+            r'With probability $\frac13$ the first game is a win, and then he waits for a loss: $\frac{1}{2/3} = \frac32$ more games on average.',
+            r'With probability $\frac23$ it is a loss, and then he waits for a win: $\frac{1}{1/3} = 3$ more games.',
+            r'The expected total is $1 + \frac13 \cdot \frac32 + \frac23 \cdot 3 = 1 + \frac12 + 2 = \frac72$.',
+            r'The answer is $\textbf{(D) } \frac{7}{2}$.',
+        ],
+        'trap': r'Forgetting to count the first game, which gives $\frac52$.',
+    },
+    '2025-amc-12b-19': {
+        'topics': ['diophantine', 'modular-arithmetic'],
+        'answer': 'C',
+        'insight': r"Write both numbers for the square in row $i$, column $j$ and set them equal: a linear equation in integers.",
+        'steps': [
+            r"Horace writes $91(i - 1) + j$ there and Vera writes $141(j - 1) + i$. They are equal when $90i - 140j = -50$, that is $9i = 14j - 5$.",
+            r"Modulo $9$: $5j \equiv 5$, so $j \equiv 1$. So $j = 1, 10, 19, \dots, 91$ (that is $11$ values), and $i = 1 + 14t$ stays at most $141$ for each.",
+            r"$11$ squares. The answer is $\textbf{(C) } 11$.",
+        ],
+        'trap': r"Stopping at $j = 82$, or missing the corner square $(141, 91)$ where both write $12831$.",
+    },
+    '2025-amc-12b-20': {
+        'topics': ['probability', 'recursion'],
+        'answer': 'E',
+        'insight': r"Let $p_n$ be the chance of reaching $4$ from $n$. Each rule is a linear equation, and they chain from $p_1$ upward.",
+        'steps': [
+            r"$p_0 = \frac12 p_1$, $p_n = \frac14 p_{n+1} + \frac14 p_{n-1}$ for $n = 1, 2, 3$, and $p_4 = 1$.",
+            r"Write everything in terms of $p_1$: $p_2 = 4p_1 - p_0 = \frac72 p_1$ and $p_3 = 4p_2 - p_1 = 13p_1$.",
+            r"$1 = p_4 = 4p_3 - p_2 = \frac{97}{2} p_1$, so $p_1 = \frac{2}{97}$ and $p_0 = \frac{1}{97}$.",
+            r"The answer is $\textbf{(E) } \frac{1}{97}$.",
+        ],
+        'trap': r"Multiplying the forward chances $\frac12 \cdot \left(\frac14\right)^3$ and ignoring the steps back.",
+    },
+    '2025-amc-12b-21': {
+        'topics': ['triangles', 'trigonometry'],
+        'answer': 'C',
+        'insight': r'Equal area with the same two sides means the angles between them are supplementary, so the cosines are opposite.',
+        'steps': [
+            r'The area is $\frac12 \cdot 8 \cdot 9 \sin\theta$, so the two included angles are $\theta$ and $180^\circ - \theta$.',
+            r'By the law of cosines the third sides satisfy $c_1^2 = 145 - 144\cos\theta$ and $c_2^2 = 145 + 144\cos\theta$, so $c_1^2 + c_2^2 = 290$.',
+            r'$290 = 1^2 + 17^2 = 11^2 + 13^2$. Sides $1$ and $17$ make flat triangles with $8$ and $9$, so the third sides are $11$ and $13$.',
+            r'Their sum is $24$. The answer is $\textbf{(C) } 24$.',
+        ],
+        'trap': r'Keeping $1$ and $17$: $8 + 1 = 9$ and $8 + 9 = 17$, so those triangles have no area.',
+    },
+    '2025-amc-12b-22': {
+        'topics': ['complex-numbers', 'area'],
+        'answer': 'C',
+        'insight': r'All three vertices are $z$ times a fixed point, so the triangle is a fixed triangle scaled by $|z|$ and rotated.',
+        'steps': [
+            r'The vertices are $z$ times $2$, $1 + i$ and $1 - i$. Multiplying by $z$ scales areas by $|z|^2$.',
+            r'The triangle $(2, 0)$, $(1, 1)$, $(1, -1)$ has base $2$ and height $1$, area $1$. So the area is $|z|^2$.',
+            r'$|4z - 2| = 1$ means $\left|z - \frac12\right| = \frac14$, so $|z|$ is at most $\frac12 + \frac14 = \frac34$.',
+            r'The greatest area is $\frac{9}{16}$. The answer is $\textbf{(C)}~\frac{9}{16}$.',
+        ],
+        'trap': r'Reading $|4z - 2| = 1$ as a circle of radius $1$ about $2$.',
+    },
+    '2025-amc-12b-23': {
+        'topics': ['modular-arithmetic', 'factors-divisors'],
+        'answer': 'E',
+        'insight': r'The $z$ remainders start at $0$, lie in $\{0, \dots, z - 1\}$ and strictly increase, so they must be exactly $0, 1, 2, \dots$.',
+        'steps': [
+            r'Strictly increasing values $r_0 < r_1 < \cdots < r_{z-1}$ in $\{0, 1, \dots, z - 1\}$ must be $r_x = x$. In particular $2025 \equiv 1 \pmod z$.',
+            r'Conversely, if $2025 \equiv 1 \pmod z$ then $2025x$ leaves remainder $x$, which increases. So $S$ is the set of divisors of $2024$ greater than $1$.',
+            r'$2024 = 2^3 \cdot 11 \cdot 23$, whose divisors add to $15 \cdot 12 \cdot 24 = 4320$. Leaving out $1$ gives $4319$.',
+            r'The answer is $\textbf{(E)}~4319$.',
+        ],
+        'trap': r'Including $z = 1$, or summing the divisors of $2025$ instead of $2024$.',
+    },
+    '2025-amc-12b-24': {
+        'topics': ['trigonometry', 'logarithms', 'functions'],
+        'answer': 'D',
+        'insight': r'Solutions need $-1 \le \log_{20} x \le 1$, so $\frac{1}{20} \le x \le 20$. In that range the slow log curve crosses the fast sine wave once between each pair of consecutive peaks and troughs.',
+        'steps': [
+            r'$\sin(20\pi x)$ has its extremes at $x = \frac{1}{40} + \frac{k}{20}$, alternating $\pm 1$. Inside $\left[\frac{1}{20}, 20\right]$ they run from $x = \frac{3}{40}$ to $x = \frac{799}{40}$: $399$ extremes, so $398$ gaps between them.',
+            r'On each gap the sine runs from $-1$ to $1$ or back while $\log_{20} x$ stays strictly between $-1$ and $1$. That gives one crossing per gap: $398$.',
+            r'On $\left[\frac{1}{20}, \frac{3}{40}\right]$ the sine falls from $0$ to $-1$ while the log rises from $-1$, so they cross once. On $\left[\frac{799}{40}, 20\right]$ the sine climbs from $-1$ to $0$ while the log is nearly $1$, so they do not meet.',
+            r'In all $398 + 1 = 399$. The answer is $\textbf{(D) } 399$.',
+        ],
+        'trap': r'Counting two crossings per full period over $20$ periods ($400$) without checking the two ends.',
+    },
+    '2025-amc-12b-25': {
+        'topics': ['triangles', 'transformations', 'circles'],
+        'answer': 'E',
+        'insight': r'Rotate by $60^\circ$ about the vertex on the small circle, carrying one other vertex onto the third: the center lands in a line with the third vertex.',
+        'steps': [
+            r"Let $O$ be the center and $A, B, C$ the vertices on the circles of radius $1, 2, 3$. Rotate $60^\circ$ about $A$ so that $B$ goes to $C$, and let $O$ go to $O'$.",
+            r"Triangle $AOO'$ is equilateral, so $OO' = 1$, and $O'C = OB = 2$. With $OC = 3 = 1 + 2$, the point $O'$ lies on segment $OC$.",
+            r"So $\angle AO'C = 180^\circ - 60^\circ = 120^\circ$, and in triangle $AO'C$: $s^2 = AC^2 = 1^2 + 2^2 - 2 \cdot 1 \cdot 2\cos 120^\circ = 7$.",
+            r'The answer is $\textbf{(E) } 7$.',
+        ],
+        'trap': r"Assuming the center is the triangle's centroid; the three vertices are at different distances from it.",
     },
     # ------------------------------------------------------------------ 2024 AMC 10B
     # Problem 19 depends on a table that was missing from the pasted paper,
@@ -8573,7 +9166,7 @@ SOLUTIONS = {
 
 
 def for_problem(problem_id, answer):
-    """The solution for an official problem, if Summit has written one for this answer.
+    """The solution for an official problem, if AMC Guide has written one for this answer.
 
     `answer` is the imported key's answer; a solution written for a different
     one is not returned, since showing it would contradict the key.

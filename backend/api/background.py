@@ -51,12 +51,12 @@ def facts_for(username):
 
 
 def about_lines(username, subject=None):
-    """Everything the account has told Summit, as lines a model reads.
+    """Everything the account has told AMC Guide, as lines a model reads.
 
     What it said at sign-up comes first, then what its Log has taught since.
     Every AI brief should read this rather than the Log alone: a new account
     has written nothing in its Log yet, and its sign-up answers were the only
-    thing Summit knew about it, which no prompt but the subject page's read.
+    thing AMC Guide knew about it, which no prompt but the subject page's read.
 
     `subject` is an id or a name. With one, facts about other subjects are
     left out (backend/tracking/background.py `brief_lines`).

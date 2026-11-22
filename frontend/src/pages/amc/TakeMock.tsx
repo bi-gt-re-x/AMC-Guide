@@ -155,7 +155,7 @@ export default function TakeMock() {
   if (!data.problems.length) {
     return (
       <div className="amc-page">
-        <p>This contest is not in Summit yet. <Link className="am-link" to={`/contests/${contestId}`}>Back</Link></p>
+        <p>This contest is not in AMC Guide yet. <Link className="am-link" to={`/contests/${contestId}`}>Back</Link></p>
       </div>
     );
   }

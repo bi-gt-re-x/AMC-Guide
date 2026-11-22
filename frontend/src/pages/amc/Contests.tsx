@@ -3,7 +3,7 @@
  * official problems and answer keys on the AoPS wiki, with a place to log the
  * score you got. The timed mocks have their own page (MockContests.tsx).
  *
- * Papers brought into Summit come first, as cards with what they hold (worked
+ * Papers brought into AMC Guide come first, as cards with what they hold (worked
  * solutions) and how you have done on them, and stand out in the year grid.
  */
 import { useMemo, useState } from 'react';
@@ -39,7 +39,7 @@ export default function Contests() {
     <div className="amc-page">
       <PageHeader title="Past Contests">
         <p>
-          All {total} official papers since 2000. Papers marked ● are in Summit
+          All {total} official papers since 2000. Papers marked ● are in AMC Guide
           ({data.imported} so far) and can be practiced and timed here.
         </p>
       </PageHeader>
@@ -96,9 +96,9 @@ export default function Contests() {
                 <div className="am-papers">
                   {y.contests.map((c) => (
                     <Link key={c.id} className={`am-paper${c.imported === c.count ? ' is-in' : ''}`} to={`/contests/${c.id}`}
-                          title={c.imported === c.count ? `${c.name}: in Summit` : c.name}>
+                          title={c.imported === c.count ? `${c.name}: in AMC Guide` : c.name}>
                       {c.season ? `${c.season} ` : ''}{c.level}{c.paper ? (c.level === 'AIME' ? ` ${c.paper}` : c.paper) : ''}
-                      {c.imported === c.count && <i className="am-paper-in" title="In Summit">●</i>}
+                      {c.imported === c.count && <i className="am-paper-in" title="In AMC Guide">●</i>}
                       {c.logged && <b>{c.logged.score}</b>}
                     </Link>
                   ))}

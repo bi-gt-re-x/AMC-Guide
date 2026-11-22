@@ -48,7 +48,7 @@ def create_app():
               '`python run.py` does it for you.')
 
     app = FastAPI(
-        title='Summit',
+        title='AMC Guide',
         description='A gamified productivity tracker: tasks, XP, streaks, '
                     'a calendar, goals and growth analytics.',
         version='1.0.1',

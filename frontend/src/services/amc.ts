@@ -15,7 +15,7 @@ export interface ProblemSummary {
   topic_name: string;
   category: CategoryId;
   difficulty: number;
-  /** Summit's 1-12 rating: the AoPS competition rating times 2. */
+  /** AMC Guide's 1-12 rating: the AoPS competition rating times 2. */
   rating?: number | null;
   technique_name: string;
   preview: string;
@@ -46,7 +46,7 @@ export interface Problem {
   technique: string;
   technique_name: string;
   difficulty: number;
-  /** Summit's 1-12 rating: the AoPS rating times 2 (an AMC 10 #1 is 2, the hardest AIME problem 12). */
+  /** AMC Guide's 1-12 rating: the AoPS rating times 2 (an AMC 10 #1 is 2, the hardest AIME problem 12). */
   rating?: number | null;
   /** The AoPS competition rating it comes from. */
   aops?: number | null;
@@ -57,7 +57,7 @@ export interface Problem {
   /** An imported official problem (backend/amc/official.py). */
   official?: boolean;
   /** Whether a worked solution exists, said before it is revealed. Official
-   *  problems have one when Summit has written it (backend/amc/official_solutions.py). */
+   *  problems have one when AMC Guide has written it (backend/amc/official_solutions.py). */
   has_solution?: boolean;
   /** A drawn figure (`<svg ...>`), Asymptote source, 'image', or '' when there is no diagram. */
   diagram?: string;
@@ -66,7 +66,7 @@ export interface Problem {
   /** Written by the AI and kept after an independent second solve agreed. */
   ai?: boolean;
   answer?: string | number;
-  /** Numbered steps; null for an official problem Summit has not written up. */
+  /** Numbered steps; null for an official problem AMC Guide has not written up. */
   solution?: string[] | null;
   insight?: string | null;
   trap?: string | null;
@@ -515,7 +515,7 @@ export interface PastContest extends Format {
   logged?: MockBrief | null;
   /** How many of its problems have been imported (count = all of them). */
   imported?: number;
-  /** How many of its problems have a Summit write-up. */
+  /** How many of its problems have an AMC Guide write-up. */
   written?: number;
   /** Scores logged or sittings taken on it, and the best of them. */
   sittings?: number;
@@ -535,7 +535,7 @@ export interface ContestList {
 /** How a problem of a paper stands: right first time, right after a miss, missed and still open, or untouched. */
 export type ContestProgress = 'first' | 'fixed' | 'open' | 'new';
 
-/** One line of an official paper's answer key, with Summit's write-up when there is one. */
+/** One line of an official paper's answer key, with AMC Guide's write-up when there is one. */
 export interface KeyRow {
   number: number;
   id: string;
@@ -841,7 +841,7 @@ export const amc = {
 };
 
 /** Fired when an answer, a mock or a plan change moves the dashboard's numbers. */
-/** The top of Summit's rating scale (backend/amc/scale.py): the AoPS rating times 2, so 12 is the hardest AIME problem. */
+/** The top of AMC Guide's rating scale (backend/amc/scale.py): the AoPS rating times 2, so 12 is the hardest AIME problem. */
 export const RATING_TOP = 12;
 
 export const AMC_CHANGED = 'summit:amc-changed';

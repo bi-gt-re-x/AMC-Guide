@@ -6,7 +6,7 @@
  *
  * An official paper also shows where you stand on it (a tile per problem:
  * right first time, put right later, still open, untouched) and, closed until
- * asked for, its answer key and Summit's own solutions. Those come from a
+ * asked for, its answer key and AMC Guide's own solutions. Those come from a
  * separate call (`amc.contestKey`) so the timed sitting, which loads this
  * page's data, never carries the answers.
  *
@@ -254,7 +254,7 @@ export default function Contest() {
 
   async function unimport() {
     const yes = await confirm({
-      title: 'Remove this contest from Summit?',
+      title: 'Remove this contest from AMC Guide?',
       body: 'It goes for every account. Answers already given are kept.',
       confirmLabel: 'Remove',
       danger: true,
@@ -294,7 +294,7 @@ export default function Contest() {
             <Importer contest={{ ...c, imported: 0 }} onSaved={reload} />
           ) : (
             <section className="am-card">
-              <div className="am-card-head"><h2>Not in Summit yet</h2></div>
+              <div className="am-card-head"><h2>Not in AMC Guide yet</h2></div>
               <p className="am-muted" style={{ margin: 0 }}>
                 This paper hasn't been brought in yet. Read it on the{' '}
                 <a className="am-link" href={c.problems_url} target="_blank" rel="noreferrer">AoPS wiki ↗</a>
@@ -342,7 +342,7 @@ export default function Contest() {
     <div className="amc-page">
       {back}
       <PageHeader
-        kicker={official ? `${c.year} · ${c.level} · Official` : `${c.level} · ${c.family === 'summit' ? 'Summit Mock' : 'Step Mock'}`}
+        kicker={official ? `${c.year} · ${c.level} · Official` : `${c.level} · ${c.family === 'summit' ? 'AMC Guide Mock' : 'Step Mock'}`}
         title={c.name}
         actions={
           <>
@@ -357,7 +357,7 @@ export default function Contest() {
       >
         <p>
           {official
-            ? `${c.count} problems in ${c.minutes} minutes${c.level === 'AIME' ? ', one point each' : ', 6 for a right answer, 1.5 for a blank, 0 for a wrong one'}.${locked ? ' The problems stay locked until you sit it.' : written ? ` Summit's own worked solution${written === 1 ? ' is' : 's are'} folded under ${written === c.count ? 'every problem' : `${written} of the problems`}, and the answer key has a card of its own. Both stay closed until you open them.` : ''}`
+            ? `${c.count} problems in ${c.minutes} minutes${c.level === 'AIME' ? ', one point each' : ', 6 for a right answer, 1.5 for a blank, 0 for a wrong one'}.${locked ? ' The problems stay locked until you sit it.' : written ? ` AMC Guide's own worked solution${written === 1 ? ' is' : 's are'} folded under ${written === c.count ? 'every problem' : `${written} of the problems`}, and the answer key has a card of its own. Both stay closed until you open them.` : ''}`
             : c.blurb}
         </p>
         {!official && c.difficulty && (
@@ -456,8 +456,8 @@ export default function Contest() {
           {official && !locked && (
             <p className="am-muted" style={{ fontSize: 12, margin: '12px 0 0' }}>
               {written === c.count
-                ? "Problems © MAA, figures redrawn. The topics and solutions are Summit's own."
-                : `Topics are guessed from the wording${written ? ' where Summit has no write-up' : ''}. Problems © MAA${written ? "; the solutions are Summit's own" : ''}.`}{' '}
+                ? "Problems © MAA, figures redrawn. The topics and solutions are AMC Guide's own."
+                : `Topics are guessed from the wording${written ? ' where AMC Guide has no write-up' : ''}. Problems © MAA${written ? "; the solutions are AMC Guide's own" : ''}.`}{' '}
               {data.can_import && (
                 <button type="button" className="am-link am-link-button" onClick={() => void unimport()}>Remove import</button>
               )}

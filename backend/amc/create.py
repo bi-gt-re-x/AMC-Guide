@@ -148,7 +148,7 @@ def create(user, level, topic, technique='', rating=None, like=None):
         raise CreateFailed('No such topic.')
     if technique not in catalog.TECHNIQUE_FAMILY:
         technique = 'direct-computation'
-    # `rating` is on Summit's 1-12 scale; the writer is told the AoPS rating,
+    # `rating` is on AMC Guide's 1-12 scale; the writer is told the AoPS rating,
     # which is the scale it knows, and that is what is stored.
     lo, hi = {'AMC 10': (1, 4), 'AMC 12': (1, 4.5), 'AIME': (2.5, 6)}[level]
     aops = to_aops(rating) if isinstance(rating, (int, float)) else (lo + hi) / 2
@@ -228,7 +228,7 @@ def all_problems():
 
 
 def _shape(row):
-    # Stored on the AoPS scale (what the writer was asked for); served on Summit's.
+    # Stored on the AoPS scale (what the writer was asked for); served on AMC Guide's.
     aops = float(row['rating'])
     rating = to_scale(aops)
     answer = int(row['answer']) if row['level'] == 'AIME' else row['answer']

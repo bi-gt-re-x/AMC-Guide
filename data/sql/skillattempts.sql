@@ -12,7 +12,7 @@
 -- the app could make. The steps under a node have had problems for a while,
 -- graded warm-up, core and stretch, with the answer behind a button. Nothing
 -- remembered whether the reader got them right. This is that memory, and it
--- is the only per-skill evidence Summit holds.
+-- is the only per-skill evidence AMC Guide holds.
 --
 -- ## One row is one batch, not one problem
 --

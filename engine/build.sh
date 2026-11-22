@@ -10,7 +10,7 @@
 # for anyone who wants to touch it. `c++` is whatever the platform calls its
 # compiler and is already on any machine that could use this.
 #
-# Nothing in Summit requires the result. backend/engine/ loads it if it is
+# Nothing in AMC Guide requires the result. backend/engine/ loads it if it is
 # here and falls back to the Python in backend/tracking/analytics.py if it is
 # not, so an unbuilt engine is a slower app and never a broken one.
 set -eu

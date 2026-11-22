@@ -1,5 +1,5 @@
 /**
- * The problem bank, with a chooser down the left: source (Summit Mock sets,
+ * The problem bank, with a chooser down the left: source (AMC Guide Mock sets,
  * Step problems, official papers), contest, mock set, year, problem number,
  * 1-12 rating, topic, technique and status. Every choice lives in the URL, so a
  * filtered list can be bookmarked, shared, and linked to from the topic pages
@@ -24,7 +24,7 @@ const RATING_STEPS = Array.from({ length: RATING_TOP }, (_, i) => String(i + 1))
 const KEYS: (keyof ProblemFilters)[] = ['source', 'level', 'mock', 'year', 'number', 'category', 'topic', 'rating',
   'difficulty', 'status', 'technique', 'q', 'sort'];
 const SOURCES: { id: string; label: string; kind: 'summit' | 'step' | 'official' | 'ai' }[] = [
-  { id: 'summit', label: 'Summit Mock sets', kind: 'summit' },
+  { id: 'summit', label: 'AMC Guide Mock sets', kind: 'summit' },
   { id: 'step', label: 'Step problems', kind: 'step' },
   { id: 'official', label: 'Official papers', kind: 'official' },
   { id: 'ai', label: 'AI practice', kind: 'ai' },
@@ -227,7 +227,7 @@ export default function Problems() {
   return (
     <div className="amc-page">
       <PageHeader title="Problems">
-        <p>Every Summit Mock and Step problem, with solutions, and the official papers brought into Summit.</p>
+        <p>Every AMC Guide Mock and Step problem, with solutions, and the official papers brought into AMC Guide.</p>
       </PageHeader>
 
       <div className="am-browse">
@@ -275,7 +275,7 @@ export default function Problems() {
               </p>
               {data.official === 0 && filters.source === 'official' && (
                 <p className="am-muted" style={{ fontSize: 13 }}>
-                  No official papers are in Summit yet. See <Link className="am-link" to="/contests">Past Contests</Link>.
+                  No official papers are in AMC Guide yet. See <Link className="am-link" to="/contests">Past Contests</Link>.
                 </p>
               )}
               {data.problems.length ? (

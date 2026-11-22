@@ -1,6 +1,6 @@
 ---
 name: summit-v1-overview
-description: What the Summit v1 project is and how its code is structured (Flask productivity app)
+description: What the AMC Guide v1 project is and how its code is structured (Flask productivity app)
 metadata: 
   node_type: memory
   type: project
@@ -8,7 +8,7 @@ metadata:
   modified: 2026-07-28T15:13:43.649Z
 ---
 
-**Summit v1** ("Study Dashboard" / "grind-os") is a Flask productivity web app the user has built over ~3 months (2nd attempt after scrapping a first agent-built version). Gamified study/task tracker: tasks, XP/levels, streaks, a calendar, goals, and a growth analytics/report-card page.
+**AMC Guide v1** ("Study Dashboard" / "grind-os") is a Flask productivity web app the user has built over ~3 months (2nd attempt after scrapping a first agent-built version). Gamified study/task tracker: tasks, XP/levels, streaks, a calendar, goals, and a growth analytics/report-card page.
 
 **Layout:** the repo root IS the project — there is no nested project directory. Entry point is [run.py](run.py), a shim over [backend/run.py](backend/run.py).
 

@@ -1,4 +1,4 @@
-"""The student model in backend/amc/smart.py: ability on Summit's 1-10 scale,
+"""The student model in backend/amc/smart.py: ability on AMC Guide's 1-10 scale,
 weighted toward recent answers, timed predictions from the student's own pace,
 topics ranked by points, practice problems they can win, and timed mocks
 checked against the model."""

@@ -21,7 +21,7 @@ Step Mock problems rate below their position: the mocks are a little gentler
 than real papers at the top end, and the ratings say so.
 
 `RATINGS` below are on the AoPS scale, the way they were judged. The bank
-converts each to Summit's 1-12 scale (backend/amc/scale.py: twice the AoPS
+converts each to AMC Guide's 1-12 scale (backend/amc/scale.py: twice the AoPS
 rating, so 12 is the hardest AIME problem) as it loads, and `difficulty` (1-5) is derived from that
 (`tier`) so the filters and the score projection keep working.
 
@@ -52,7 +52,7 @@ RATINGS = {
 
 
 def tier(rating):
-    """The 1-5 difficulty the rest of the site uses, from a Summit 1-12 rating
+    """The 1-5 difficulty the rest of the site uses, from an AMC Guide 1-12 rating
     (backend/amc/scale.py)."""
     from backend.amc.scale import tier as scale_tier
     return scale_tier(rating)

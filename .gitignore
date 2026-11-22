@@ -35,6 +35,8 @@ data/summit.db-shm
 # copies of an already-ignored file; the .json exports beside them are the
 # tracked fixtures.
 data/backups/*.db
+data/backups/*.dump
+data/backups/*.sql
 
 # A development session key, generated on first run when SECRET_KEY is unset.
 # Per-machine and never shared — see backend/config/settings.py.

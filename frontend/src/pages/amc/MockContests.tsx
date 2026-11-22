@@ -1,7 +1,7 @@
 /**
  * Mock Contests: every timed paper this site can grade, by contest.
  *
- * Each contest has five Summit Mock sets, written in real problem order at real
+ * Each contest has five AMC Guide Mock sets, written in real problem order at real
  * difficulty (problem n sits where problem n sits on a real paper; the AMC 12
  * sets share eight problems with their AMC 10, as the real A and B papers do),
  * plus the shorter-ramp Step Mock as a warm-up. A card shows your best score

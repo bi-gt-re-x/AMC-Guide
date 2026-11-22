@@ -228,7 +228,7 @@ def test_mocks_run_in_rating_order():
             ratings = [p['rating'] for p in ps]
             assert ratings == sorted(ratings), mock['id']
         else:
-            # A Summit set keeps real paper order: its slots never get easier, and its
+            # An AMC Guide set keeps real paper order: its slots never get easier, and its
             # problems' own ratings rise from the first third to the last.
             slots = [p['slot'] for p in ps if p['level'] == mock['level']]
             assert slots == sorted(slots), mock['id']

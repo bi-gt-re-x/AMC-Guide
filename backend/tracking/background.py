@@ -1,4 +1,4 @@
-"""About you: what a new account says about itself, and what Summit keeps of it.
+"""About you: what a new account says about itself, and what AMC Guide keeps of it.
 
 The last step of sign-up asks four things — who you are, what you do, what you
 have already done, and how you want to improve. Two things come of the answers.

@@ -1,4 +1,4 @@
-"""Said vs did: what the reader has told Summit, held up against what they do.
+"""Said vs did: what the reader has told AMC Guide, held up against what they do.
 
 Analytics counts behavior: tasks, XP, focus, hours. The reader also *says*
 things: About you answers at sign-up (backend/tracking/background.py) and

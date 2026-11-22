@@ -735,7 +735,7 @@ ADDED_TABLES = ('''
     CREATE INDEX IF NOT EXISTS subject_resources_place
         ON subject_resources (user_id, subject, place)
 ''', '''
-    -- The Log page's entries and what Summit learned from them. The DDL is data/sql/log.sql's; see the note on ADDED_TABLES.
+    -- The Log page's entries and what AMC Guide learned from them. The DDL is data/sql/log.sql's; see the note on ADDED_TABLES.
     CREATE TABLE IF NOT EXISTS log_entries (
         id          TEXT PRIMARY KEY,
         user_id     TEXT NOT NULL REFERENCES users (username) ON DELETE CASCADE,

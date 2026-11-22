@@ -1,5 +1,5 @@
 /**
- * Where a reader reaches whoever runs Summit: questions, bug reports, privacy
+ * Where a reader reaches whoever runs AMC Guide: questions, bug reports, privacy
  * and deletion requests. The two server-rendered pages that say it too are
  * frontend/html/contact-support.html and careers.html — change all three
  * together.

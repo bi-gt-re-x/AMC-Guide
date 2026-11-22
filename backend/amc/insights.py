@@ -14,7 +14,7 @@ from backend.amc import official
 from backend.amc import problems as pb
 
 #: The buckets the analytics page groups answers by:
-#: Whole points of Summit's 1-12 scale (backend/amc/scale.py).
+#: Whole points of AMC Guide's 1-12 scale (backend/amc/scale.py).
 RATING_BUCKETS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 #: Seconds a problem may take at contest pace.
 PACE = {'AMC 10': 180, 'AMC 12': 180, 'AIME': 720}
@@ -104,7 +104,7 @@ def recent_performance(attempts, mocks, today):
 # What appears on each contest
 # ---------------------------------------------------------------------------
 #: Written for this site from the contests' published formats and the AoPS
-#: competition ratings, given on Summit's 1-12 scale (backend/amc/scale.py).
+#: competition ratings, given on AMC Guide's 1-12 scale (backend/amc/scale.py).
 #: Shares are approximate for a typical recent paper.
 GUIDE = {
     'AMC 10': {
@@ -204,7 +204,7 @@ def _bucket(rating):
 
 
 def by_rating(attempts, hist):
-    """First-try accuracy and time by whole point of Summit's 1-12 rating."""
+    """First-try accuracy and time by whole point of AMC Guide's 1-12 rating."""
     rows = {b: {'rating': b, 'attempted': 0, 'first_right': 0, 'seconds': []} for b in RATING_BUCKETS}
     first_seconds = {}
     for a in attempts:

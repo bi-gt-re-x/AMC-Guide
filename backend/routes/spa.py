@@ -82,7 +82,7 @@ SPA_ROUTES = (
     '/growth-tree',
     # Free-form notes. The one page whose contents the app does not score.
     '/notes',
-    # The private journal Summit learns from. See backend/api/journal.py.
+    # The private journal AMC Guide learns from. See backend/api/journal.py.
     '/log',
     # The old Behavior page, now Your patterns on the Insights tab. Kept so an
     # old link reaches the router, which redirects it (src/App.tsx).

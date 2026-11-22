@@ -1,4 +1,4 @@
-"""Summit's backend.
+"""AMC Guide's backend.
 
 See [main.py](main.py) for how the pieces fit together. `create_app` is the
 only thing an entry point needs.

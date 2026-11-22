@@ -188,7 +188,7 @@ def _mock_brief(row):
 # Problems
 # ---------------------------------------------------------------------------
 def _kind(pid):
-    """'summit' (a Summit Mock set), 'step' (the original Step bank), 'official' or 'ai'."""
+    """'summit' (an AMC Guide Mock set), 'step' (the original Step bank), 'official' or 'ai'."""
     if official.split_id(pid):
         return 'official'
     if pid.startswith('ai-'):
@@ -390,7 +390,7 @@ def review_queue(username: str = Depends(current_username)):
 @router.get('/api/amc/review/weak')
 def review_weak(mocks: int = 0, draw: int = 0, username: str = Depends(current_username)):
     """Twelve problems from the account's weakest topics (backend/amc/weak.py):
-    official papers always, the Summit and Step mocks when `mocks=1`."""
+    official papers always, the AMC Guide and Step mocks when `mocks=1`."""
     _, _, hist, review_by_id = _context(username)
     plan = store.plan(username)
     target = plan['target'] if plan else 'AMC 10'
@@ -557,7 +557,7 @@ def can_import(username):
     return (username or '').strip().lower() in amc_importers()
 
 
-NOT_IMPORTER = 'Only the temu account can bring contests into Summit.'
+NOT_IMPORTER = 'Only the temu account can bring contests into AMC Guide.'
 
 
 def _gradable(contest_id):
@@ -576,7 +576,7 @@ def _gradable(contest_id):
 
 def _mock_difficulty(mock):
     """How hard a mock plays against a real paper of its level: the mean of its
-    problems' own ratings and of a real paper's, on Summit's 1-12 scale."""
+    problems' own ratings and of a real paper's, on AMC Guide's 1-12 scale."""
     from backend.amc.scale import SCALE_BY_NUMBER
     ratings = [pb.get(pid)['rating'] for pid in mock['problems'] if pb.get(pid)]
     real = SCALE_BY_NUMBER[mock['level']]
@@ -656,13 +656,13 @@ def _progress(h):
 
 @router.get('/api/amc/contests/{contest_id}/key')
 def contest_key(contest_id: str, username: str = Depends(current_username)):
-    """An official paper's answer key and Summit's write-ups, for the contest
+    """An official paper's answer key and AMC Guide's write-ups, for the contest
     page to unfold on request. Kept out of `contest` because the timed sitting
     loads that one."""
     past = catalog.PAST_BY_ID.get(contest_id)
     gradable = _gradable(contest_id) if past else None
     if not gradable:
-        return fail('That paper is not in Summit.')
+        return fail('That paper is not in AMC Guide.')
     rows = []
     for number, pid in enumerate(gradable['problems'], start=1):
         p = pb.get(pid)

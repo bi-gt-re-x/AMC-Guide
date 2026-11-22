@@ -165,7 +165,7 @@ describe('the login page', () => {
     const email = document.querySelector('[data-step="create"] [name=email]')!;
     fireEvent.change(email, { target: { value: 'taken@example.test' } });
     fireEvent.blur(email);
-    expect(await screen.findByText(/already has a Summit account/)).toBeInTheDocument();
+    expect(await screen.findByText(/already has an AMC Guide account/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Log in instead' })).toBeInTheDocument();
   });
 });

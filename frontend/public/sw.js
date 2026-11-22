@@ -52,7 +52,7 @@ const PRECACHE = ['/', '/manifest.json', '/favicon.ico', '/apple-touch-icon.png'
 const OFFLINE_PAGE = `<!doctype html>
 <html lang="en"><head><meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Offline · Summit</title>
+<title>Offline · AMC Guide</title>
 <style>
   body { margin:0; min-height:100vh; display:grid; place-items:center;
          background:#f4f5f7; color:#141a22;
@@ -66,7 +66,7 @@ const OFFLINE_PAGE = `<!doctype html>
 </style></head>
 <body><main>
   <h1>No connection</h1>
-  <p>Summit keeps your record on the server, so it needs the network to show
+  <p>AMC Guide keeps your record on the server, so it needs the network to show
      it. This page will work again as soon as you are back.</p>
 </main></body></html>`;
 

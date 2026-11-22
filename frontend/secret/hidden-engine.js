@@ -1,4 +1,4 @@
-/* hidden-engine.js — the Hidden Engine: the heart of Summit, never meant to be
+/* hidden-engine.js — the Hidden Engine: the heart of AMC Guide, never meant to be
  * found. Revealed when the console's secret `unlock hidden` releases the blast
  * doors. A vast mechanical vault around a gigantic rotating Core Engine, with
  * an archive wall, energy-conduit wall, suspended ceiling gears, a circuit

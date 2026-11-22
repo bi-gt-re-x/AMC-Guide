@@ -137,7 +137,7 @@ export default function Login() {
   const home = (
     <Link className="auth-home" to="/home">
       <img src="/static/images/logo.svg" alt="" width={28} height={28} />
-      <span>Summit</span>
+      <span>AMC Guide</span>
     </Link>
   );
 

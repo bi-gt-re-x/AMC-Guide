@@ -17,7 +17,7 @@ four things arithmetic cannot supply:
   2. **What the subject actually is.** "Drill the level below your ceiling" is
      the app's instruction. "Thirty minutes of angle-chasing before you go back
      to olympiad geometry" needs to know what geometry is made of, and there is
-     no table in Summit that knows.
+     no table in AMC Guide that knows.
   3. **What to do next, in order.** Ranked against the reader's stated goal
      rather than against whichever internal measure happens to be lowest.
   4. **Whether the last advice worked.** Given the outcomes of previous
@@ -39,7 +39,7 @@ not have to.
 
 ## What the record cannot support, and is therefore forbidden
 
-Summit records a subject and a difficulty on a task. It does **not** record a
+AMC Guide records a subject and a difficulty on a task. It does **not** record a
 sub-skill. So the model is handed the subject's authored skill tree as a
 *vocabulary* — the names of the areas this subject is made of — and is told
 plainly that these carry no measurement, and that it may recommend one but may
@@ -130,7 +130,7 @@ EVIDENCE_DIRECTIONS = ('helps', 'hurts', 'watch')
 #: should print however confidently it arrives.
 MINUTES = (10, 120)
 
-#: Summit's difficulty scale. Five levels, and the model is told the words.
+#: AMC Guide's difficulty scale. Five levels, and the model is told the words.
 DIFFICULTY = (1, 5)
 
 #: The kinds of session the model may recommend. A closed list, because the
@@ -164,7 +164,7 @@ That is the whole reason this rule exists.
 
 WHAT THE RECORD DOES NOT CONTAIN
 
-Summit records a subject and a difficulty on each task. It does **not** record \
+AMC Guide records a subject and a difficulty on each task. It does **not** record \
 a sub-skill. The <skill_vocabulary> section names the areas this subject is \
 made of — that list is a curriculum, authored, identical for every account, \
 and carries no measurement whatsoever.
@@ -481,7 +481,7 @@ or a search page.
   - `focus`: the area from the vocabulary it is about, or the subject itself.
   - `type`: one of targeted_practice, mixed_practice, timed_set, review, \
 concept, project.
-  - `difficulty`: 1 to 5 on Summit's own scale — 1 Trivial, 2 Easy, 3 Fair, \
+  - `difficulty`: 1 to 5 on AMC Guide's own scale — 1 Trivial, 2 Easy, 3 Fair, \
 4 Hard, 5 Brutal. Choose it against the difficulty curve you were given: the \
 level to work is normally the one at or just below where execution starts to \
 fall, not the one above it.
@@ -845,7 +845,7 @@ def brief_from(state: Dict[str, Any]) -> str:
     curve = state.get('curve') or {}
     rungs = curve.get('rungs') or []
     if rungs:
-        lines = ['Summit rates difficulty 1-5: 1 Trivial, 2 Easy, 3 Fair, '
+        lines = ['AMC Guide rates difficulty 1-5: 1 Trivial, 2 Easy, 3 Fair, '
                  '4 Hard, 5 Brutal. Execution and quality are 0-100.']
         for rung in rungs:
             if not rung.get('done'):
@@ -875,7 +875,7 @@ def brief_from(state: Dict[str, Any]) -> str:
     time = state.get('time') or {}
     if time.get('known'):
         parts.append(_section('time_analysis', [
-            'Summit does not ask how long a task should take. "Usual" below '
+            'AMC Guide does not ask how long a task should take. "Usual" below '
             'means this account\'s own median time at that difficulty in this '
             'subject, so the comparison is against themselves.',
             _kv('Median minutes a task', time.get('typical')),
@@ -1071,7 +1071,7 @@ def brief_from(state: Dict[str, Any]) -> str:
                   if str(entry).strip()]
     if vocabulary:
         parts.append(_section('skill_vocabulary', [
-            'The named areas of this subject, from Summit\'s authored skill '
+            'The named areas of this subject, from AMC Guide\'s authored skill '
             'tree. This is a curriculum: it is identical for every account and '
             'carries NO measurement of this reader. Name one if it helps; do '
             'not state their level in it.',
@@ -1347,7 +1347,7 @@ def _steps(found: Dict[str, Any], counted, owned: set = frozenset()) -> List[Dic
         if not title:
             continue
         # A session built on another productivity app ("Weekly review with
-        # Todoist") isn't one Summit hands out. See free_resources, point 4.
+        # Todoist") isn't one AMC Guide hands out. See free_resources, point 4.
         # Its links are judged one by one in `_resources`.
         words = {key: value for key, value in entry.items() if key != 'resources'}
         if free_resources.names_competitor(json.dumps(words, ensure_ascii=False)):
@@ -1498,7 +1498,7 @@ itself — fewer problems, more time each, then the pace again;
   - the slowest groups say where time goes;
   - the examples say which ranges and papers are done, so name the NEXT \
 range rather than one they have finished.
-<about_the_reader> is what they told Summit at sign-up and in their Log. \
+<about_the_reader> is what they told AMC Guide at sign-up and in their Log. \
 Use it on every pick: favor work toward the goals they named, fit what they \
 said works for them (time of day, length, method) and plan around the \
 patterns they described. When it's why you chose a session, the reason can \
@@ -1530,12 +1530,12 @@ names a paid book the reader already works from, `problems` can still name \
 it, but the link goes to a free source of the same material.
 
 NO OTHER PRODUCTIVITY APPS
-The reader plans, schedules and journals in this app, Summit. \
+The reader plans, schedules and journals in this app, AMC Guide. \
 Never name or link another productivity app: no task managers, \
 calendars, focus timers, note or journal apps, habit or time trackers \
 (Todoist, Notion, Trello, Google Calendar, Pomofocus, Forest, Obsidian, \
 Evernote and the like). A planning, review or journaling session happens in \
-Summit's own Tasks, Calendar, Goals and Log pages, so its `resources` can be \
+AMC Guide's own Tasks, Calendar, Goals and Log pages, so its `resources` can be \
 empty. Study tools that aren't productivity apps (Anki, Desmos, a past \
 paper, a video) are fine.
 

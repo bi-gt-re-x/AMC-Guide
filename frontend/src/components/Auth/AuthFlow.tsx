@@ -257,7 +257,7 @@ export function AuthFlow({
       return;
     }
     if (emailTaken) {
-      say('That email already has a Summit account. Log in instead.');
+      say('That email already has an AMC Guide account. Log in instead.');
       return;
     }
     if (!passwordOk(password)) {
@@ -401,7 +401,7 @@ export function AuthFlow({
         </form>
         {googleBlock}
         <p className="auth-switch">
-          New to Summit?{' '}
+          New to AMC Guide?{' '}
           <button type="button" className="auth-link" onClick={() => go('create')}>
             Create an account
           </button>
@@ -439,7 +439,7 @@ export function AuthFlow({
           />
           {emailTaken && (
             <p className="auth-field-note is-bad" id="createEmailTaken" role="alert">
-              That email already has a Summit account.{' '}
+              That email already has an AMC Guide account.{' '}
               <button type="button" className="auth-inline-link" onClick={() => go('login')}>
                 Log in instead
               </button>

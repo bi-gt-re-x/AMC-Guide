@@ -13,7 +13,7 @@ export function ratingText(rating: number | string) {
 }
 
 /**
- * Difficulty on Summit's 1-12 scale (backend/amc/scale.py): a twelve-step meter
+ * Difficulty on AMC Guide's 1-12 scale (backend/amc/scale.py): a twelve-step meter
  * (half a step for .5) and, with `label`, the number. It is the AoPS
  * competition rating times 2: an AMC 10 runs from 2 to 8, an AMC 12 to 9 and
  * an AIME from 5 to 12, the hardest AIME problem.

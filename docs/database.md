@@ -1,6 +1,6 @@
 # Database
 
-Summit stores its data in a SQLite database at `data/summit.db`. It is git-
+AMC Guide stores its data in a SQLite database at `data/summit.db`. It is git-
 ignored, because it changes every time the app runs.
 
 The database is built from `data/sql/` — one `.sql` file per part of the app,

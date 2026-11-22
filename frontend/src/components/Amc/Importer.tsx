@@ -50,7 +50,7 @@ export function Importer({ contest, onSaved }: { contest: PastContest; onSaved: 
 
   return (
     <section className="am-card am-importer">
-      <div className="am-card-head"><h2>Bring this contest into Summit</h2></div>
+      <div className="am-card-head"><h2>Bring this contest into AMC Guide</h2></div>
       <ol className="am-steps">
         <li>
           Open the{' '}

@@ -241,7 +241,7 @@ export default function Problem() {
             {(result || revealed || seenBefore) && (
               p.official && !p.solution?.length ? (
                 <p className="am-muted" style={{ margin: '16px 0 0', fontSize: 13, lineHeight: 1.6 }}>
-                  Official problem: no Summit write-up yet.{' '}
+                  Official problem: no AMC Guide write-up yet.{' '}
                   {p.aops_url && <a className="am-link" href={p.aops_url} target="_blank" rel="noreferrer">Solutions on AoPS ↗</a>}
                 </p>
               ) : (

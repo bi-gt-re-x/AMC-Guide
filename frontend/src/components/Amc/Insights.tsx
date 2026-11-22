@@ -1,7 +1,7 @@
 /**
  * Insights: the smart analytics (backend/amc/smart.py) and the AI coach on top.
  *
- * The numbers need no key: an ability estimate on Summit's 1-12 scale (12 is
+ * The numbers need no key: an ability estimate on AMC Guide's 1-12 scale (12 is
  * the hardest AIME problem), weighted toward recent answers; a predicted score
  * with a range, the chance of reaching the goal, and what the clock costs at
  * the student's own pace; topics ranked by the points they would add; mistake

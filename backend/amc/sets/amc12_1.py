@@ -1,5 +1,5 @@
-"""Summit Mock AMC 12 · Set 1. Problems 9, 11, 13, 15, 17, 18, 20 and 21 are
-shared with Summit Mock AMC 10 · Set 1."""
+"""AMC Guide Mock AMC 12 · Set 1. Problems 9, 11, 13, 15, 17, 18, 20 and 21 are
+shared with AMC Guide Mock AMC 10 · Set 1."""
 from backend.amc.sets import P, S
 
 PROBLEMS = [

@@ -1,4 +1,4 @@
--- log — the Log page: a private journal, and what Summit learns from it.
+-- log — the Log page: a private journal, and what AMC Guide learns from it.
 --
 -- Written by backend/api/journal.py. `log_entries` is what the account wrote,
 -- as written. `log_insights` is what backend/tracking/journal.py read out of

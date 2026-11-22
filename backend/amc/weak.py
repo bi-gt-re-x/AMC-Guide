@@ -1,5 +1,5 @@
 """The weak-topics bank on the Review page: twelve problems from the topics the
-account does worst in, drawn from the official papers, and from the Summit and
+account does worst in, drawn from the official papers, and from the AMC Guide and
 Step mocks too when the reader asks for them.
 
 **Weak** means *missed*. A topic comes first when the student has got its

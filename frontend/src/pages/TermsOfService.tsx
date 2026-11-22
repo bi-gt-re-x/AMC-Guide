@@ -10,7 +10,7 @@
  *
  * Every factual claim matches the code, as the privacy policy's do (see the
  * note at the top of PrivacyPolicy.tsx). **It is a careful draft, not legal
- * advice**, and should be read by a lawyer before Summit is offered widely.
+ * advice**, and should be read by a lawyer before AMC Guide is offered widely.
  *
  * The words are data; LegalDocument draws them.
  */
@@ -28,7 +28,7 @@ const SECTIONS: LegalSection[] = [
     body: [
       <>
         These Terms of Service (the "Terms") are a binding agreement between you and the people
-        who run Summit ("Summit", "we", "us" or "our"). They cover your use of the Summit website,
+        who run AMC Guide ("AMC Guide", "we", "us" or "our"). They cover your use of the AMC Guide website,
         web app and every feature and service in it (together, the "Service"). Our {privacy}{' '}
         explains how we handle your information, and it's part of these Terms.
       </>,
@@ -38,12 +38,12 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: 'eligibility',
-    title: 'Who can use Summit',
+    title: 'Who can use AMC Guide',
     body: [
       {
         list: [
-          <><strong>You must be at least 13 years old.</strong> Summit isn't meant for children under 13, and we don't knowingly let them make accounts. If we learn that an account belongs to someone under 13, we will delete it.</>,
-          <><strong>If you're under 18</strong> (or under the age of majority where you live), you may only use Summit with the permission of a parent or legal guardian, who must read and agree to these Terms for you. If you're a parent or guardian and you allow your child to use Summit, you agree to these Terms for them and are responsible for their use of it.</>,
+          <><strong>You must be at least 13 years old.</strong> AMC Guide isn't meant for children under 13, and we don't knowingly let them make accounts. If we learn that an account belongs to someone under 13, we will delete it.</>,
+          <><strong>If you're under 18</strong> (or under the age of majority where you live), you may only use AMC Guide with the permission of a parent or legal guardian, who must read and agree to these Terms for you. If you're a parent or guardian and you allow your child to use AMC Guide, you agree to these Terms for them and are responsible for their use of it.</>,
           'You must not be barred from using services like this one under the laws that apply to you.',
           'If your country sets a higher age for agreeing to online services or to the handling of personal data, that higher age applies to you.',
         ],
@@ -58,7 +58,7 @@ const SECTIONS: LegalSection[] = [
         list: [
           <><strong>Accurate details.</strong> Give your real name and an email address you own and can read. Keep them up to date.</>,
           <><strong>Confirm your email.</strong> We send a confirmation link to the address you sign up with. Until you follow it, some parts of the Service may be limited, and we may delete accounts that are never confirmed.</>,
-          <><strong>One account per email.</strong> Each email address, and each inbox, can belong to only one Summit account. Variations that reach the same inbox (for example adding "+something" before the @, or moving the dots in a Gmail address) count as the same address.</>,
+          <><strong>One account per email.</strong> Each email address, and each inbox, can belong to only one AMC Guide account. Variations that reach the same inbox (for example adding "+something" before the @, or moving the dots in a Gmail address) count as the same address.</>,
           <><strong>A strong password, kept secret.</strong> New passwords must meet the rules shown on the sign-up form. Don't share your password or use one you use anywhere else. We will never ask for your password by email.</>,
           <><strong>Your responsibility.</strong> You are responsible for everything that happens under your account, unless it happened because of our own failure to protect it. If you think someone else has used your account, tell us right away at {mail}.</>,
           <><strong>One person, one account.</strong> Accounts are personal. Don't sell, transfer or lend yours, and don't make accounts with automated tools.</>,
@@ -69,25 +69,25 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: 'service',
-    title: 'What Summit provides',
+    title: 'What AMC Guide provides',
     body: [
-      'Summit is a study and productivity tracker. It lets you keep tasks, goals and checkpoints, a calendar, Spaces and a private Log, and it turns your activity into streaks, XP, levels, achievements, analytics and suggestions such as recommended study sessions and when to schedule them.',
-      'Summit is free. There are no paid plans, subscriptions, ads or in-app purchases. If we ever introduce paid features, we will tell you first, and nothing you already have will be charged for without your clear agreement.',
-      'Summit is still being built. We may add, change, limit or remove features at any time, including how XP, streaks, levels and analytics are worked out. We will try to give notice of changes that matter, but we can\'t promise that every number you see today will carry over unchanged.',
+      'AMC Guide is a study and productivity tracker. It lets you keep tasks, goals and checkpoints, a calendar, Spaces and a private Log, and it turns your activity into streaks, XP, levels, achievements, analytics and suggestions such as recommended study sessions and when to schedule them.',
+      'AMC Guide is free. There are no paid plans, subscriptions, ads or in-app purchases. If we ever introduce paid features, we will tell you first, and nothing you already have will be charged for without your clear agreement.',
+      'AMC Guide is still being built. We may add, change, limit or remove features at any time, including how XP, streaks, levels and analytics are worked out. We will try to give notice of changes that matter, but we can\'t promise that every number you see today will carry over unchanged.',
     ],
   },
   {
     id: 'content',
     title: 'Your content',
     body: [
-      '"Your content" means everything you put into Summit: task titles and notes, goals, calendar events, notes, Spaces, Log entries, ratings, settings, answers you give about yourself, and anything else you type or upload.',
+      '"Your content" means everything you put into AMC Guide: task titles and notes, goals, calendar events, notes, Spaces, Log entries, ratings, settings, answers you give about yourself, and anything else you type or upload.',
       {
         list: [
           <><strong>You own it.</strong> We don't claim ownership of your content.</>,
           <><strong>The permission you give us.</strong> So that we can run the Service, you give us a worldwide, non-exclusive, royalty-free license to store, copy, process, analyze and display your content, only as needed to provide, protect and improve the Service for you. This includes sending parts of it to the AI providers described in our {privacy} when you use a feature that needs them. This license ends when you delete the content or your account, except for copies we must keep by law.</>,
-          <><strong>Your responsibility for it.</strong> You confirm that you have the right to put your content into Summit and that it doesn't break any law or anyone else's rights.</>,
+          <><strong>Your responsibility for it.</strong> You confirm that you have the right to put your content into AMC Guide and that it doesn't break any law or anyone else's rights.</>,
           <><strong>Keep your own copies.</strong> Settings lets you export your data. We work to keep your content safe, but you are responsible for keeping any backups you need.</>,
-          <><strong>Private by design.</strong> Your content isn't shown to other users. Summit never ranks or compares you against other people.</>,
+          <><strong>Private by design.</strong> Your content isn't shown to other users. AMC Guide never ranks or compares you against other people.</>,
         ],
       },
     ],
@@ -100,7 +100,7 @@ const SECTIONS: LegalSection[] = [
       {
         list: [
           <><strong>Suggestions, not instructions.</strong> AI output is generated automatically from your own records. It can be wrong, out of date, incomplete or unsuitable for you. Use your own judgment before acting on it.</>,
-          <><strong>Not professional advice.</strong> Nothing Summit produces is academic, medical, mental-health, legal, financial or other professional advice, and it isn't an official grade, score or assessment of anything.</>,
+          <><strong>Not professional advice.</strong> Nothing AMC Guide produces is academic, medical, mental-health, legal, financial or other professional advice, and it isn't an official grade, score or assessment of anything.</>,
           <><strong>Outside links.</strong> Suggested resources may link to other websites. We try to suggest only free, reputable sites, but we don't control them and aren't responsible for them.</>,
           <><strong>Don't misuse it.</strong> Don't try to make the AI features produce harmful, illegal or abusive content, extract other people's information, or get around their limits.</>,
           <><strong>Usage limits.</strong> AI features cost money to run, so we limit how often they can be used and may change or switch them off.</>,
@@ -112,8 +112,8 @@ const SECTIONS: LegalSection[] = [
     id: 'wellbeing',
     title: 'Health, safety and study habits',
     body: [
-      'Summit may suggest focus sessions, study schedules, breaks and, for some subjects, physical practice or exercise. You decide whether a suggestion is right for you. Take breaks, sleep, and stop any activity that causes pain or discomfort. Check with a doctor or a qualified coach before starting new physical training, especially if you have a health condition.',
-      'Streaks, XP and analytics are there to help and motivate you. If tracking your work starts to feel stressful, step back. Summit is meant to serve you, not the other way around.',
+      'AMC Guide may suggest focus sessions, study schedules, breaks and, for some subjects, physical practice or exercise. You decide whether a suggestion is right for you. Take breaks, sleep, and stop any activity that causes pain or discomfort. Check with a doctor or a qualified coach before starting new physical training, especially if you have a health condition.',
+      'Streaks, XP and analytics are there to help and motivate you. If tracking your work starts to feel stressful, step back. AMC Guide is meant to serve you, not the other way around.',
     ],
   },
   {
@@ -152,7 +152,7 @@ const SECTIONS: LegalSection[] = [
     id: 'feedback',
     title: 'Feedback',
     body: [
-      'If you send us ideas, suggestions or other feedback, you agree that we may use them freely to improve Summit, without owing you anything. We are grateful for them all the same.',
+      'If you send us ideas, suggestions or other feedback, you agree that we may use them freely to improve AMC Guide, without owing you anything. We are grateful for them all the same.',
     ],
   },
   {
@@ -172,7 +172,7 @@ const SECTIONS: LegalSection[] = [
   },
   {
     id: 'termination',
-    title: 'Ending your use of Summit',
+    title: 'Ending your use of AMC Guide',
     body: [
       {
         list: [
@@ -205,7 +205,7 @@ const SECTIONS: LegalSection[] = [
     body: [
       <>
         <strong>
-          To the fullest extent the law allows, Summit and the people who build and run it will
+          To the fullest extent the law allows, AMC Guide and the people who build and run it will
           not be liable for any indirect, incidental, special, consequential or punitive damages,
           or for any loss of data, progress, XP, streaks, grades, opportunities, profits or
           goodwill, arising from or related to your use of, or inability to use, the Service,
@@ -218,7 +218,7 @@ const SECTIONS: LegalSection[] = [
           (a) the amount you paid us to use the Service in the 12 months before the claim, or
           (b) 50 US dollars.
         </strong>{' '}
-        Because Summit is free, that is normally 50 US dollars.
+        Because AMC Guide is free, that is normally 50 US dollars.
       </>,
       'Nothing in these Terms limits liability that the law doesn\'t allow to be limited, such as liability for fraud, for death or personal injury caused by negligence, or your rights as a consumer that can\'t be waived.',
     ],
@@ -227,7 +227,7 @@ const SECTIONS: LegalSection[] = [
     id: 'indemnity',
     title: 'Your responsibility to us',
     body: [
-      'To the extent the law allows, you agree to defend and compensate Summit and the people who run it for any claims, losses and reasonable costs (including legal fees) that come from your content, your breach of these Terms, or your misuse of the Service. We will tell you about any such claim and let you take part in responding to it.',
+      'To the extent the law allows, you agree to defend and compensate AMC Guide and the people who run it for any claims, losses and reasonable costs (including legal fees) that come from your content, your breach of these Terms, or your misuse of the Service. We will tell you about any such claim and let you take part in responding to it.',
     ],
   },
   {
@@ -235,11 +235,11 @@ const SECTIONS: LegalSection[] = [
     title: 'Disputes and governing law',
     body: [
       <>
-        <strong>Talk to us first.</strong> If you have a problem with Summit, email {mail} and
+        <strong>Talk to us first.</strong> If you have a problem with AMC Guide, email {mail} and
         describe it. Most problems can be solved this way. Please give us 30 days to try before
         starting any formal claim, and we will do the same for you.
       </>,
-      'These Terms are governed by the laws of the United States and of the state in which Summit\'s operator lives, without regard to conflict-of-law rules. Any claim that isn\'t resolved informally will be brought in the state or federal courts serving that location, or in a small claims court where you live if your claim qualifies.',
+      'These Terms are governed by the laws of the United States and of the state in which AMC Guide\'s operator lives, without regard to conflict-of-law rules. Any claim that isn\'t resolved informally will be brought in the state or federal courts serving that location, or in a small claims court where you live if your claim qualifies.',
       'If you live in the European Union, the United Kingdom or another place whose consumer laws give you the right to bring a claim in your own country\'s courts, or to the protection of its mandatory laws, nothing in these Terms takes that right away.',
     ],
   },
@@ -285,15 +285,15 @@ export default function TermsOfService() {
       title="Terms of Service"
       effective="October 17, 2026"
       intro={[
-        'Please read these Terms carefully. They explain the rules for using Summit, what you can expect from us, what we expect from you, and the limits on our responsibility.',
+        'Please read these Terms carefully. They explain the rules for using AMC Guide, what you can expect from us, what we expect from you, and the limits on our responsibility.',
       ]}
       summary={[
         'You need to be 13 or older, and under 18 you need a parent or guardian\'s OK.',
         'One account per person and per email address. Keep your password to yourself.',
-        'What you write in Summit is yours. We only use it to run Summit for you.',
+        'What you write in AMC Guide is yours. We only use it to run AMC Guide for you.',
         'AI suggestions can be wrong. They aren\'t professional advice.',
         'Don\'t break, overload or try to get into anything that isn\'t yours.',
-        'Summit is free and provided as is, and our liability is limited.',
+        'AMC Guide is free and provided as is, and our liability is limited.',
         'You can delete your account any time in Settings.',
       ]}
       sections={SECTIONS}
