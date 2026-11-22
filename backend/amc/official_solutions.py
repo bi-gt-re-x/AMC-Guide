@@ -14,7 +14,7 @@ on its answer.
 Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
 10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
 Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, the
-2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, the 2016 AMC 10A and 10B, and the 2015 AMC 10A and 10B. A problem whose numbers are only in a picture the
+2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, the 2016 AMC 10A and 10B, the 2015 AMC 10A and 10B, and the 2014 AMC 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -7271,6 +7271,266 @@ SOLUTIONS = {
             r'$5 + 3 + 1 + 1 = 10$. The answer is $\textbf{(B) }10$.',
         ],
         'trap': r'Counting $(a, b, c)$ in every order. The question fixes $a \le b \le c$.',
+    },
+    # ------------------------------------------------------------------ 2014 AMC 10B
+    '2014-amc-10b-1': {
+        'topics': ['linear-equations', 'word-problems'],
+        'answer': 'C',
+        'insight': r'One more nickel would even things up, so she has one more penny than nickels.',
+        'steps': [
+            r'$n + (n + 1) = 13$ gives $6$ nickels and $7$ pennies.',
+            r'$6 \cdot 5 + 7 = 37$ cents. The answer is $\textbf{(C) } 37$.',
+        ],
+        'trap': r'Swapping the counts, $7$ nickels and $6$ pennies, which gives $41$.',
+    },
+    '2014-amc-10b-2': {
+        'topics': ['exponents'],
+        'answer': 'E',
+        'insight': r'Both the top and the bottom are twice something, so the $2$s cancel.',
+        'steps': [
+            r'$\frac{2 \cdot 2^3}{2 \cdot 2^{-3}} = \frac{2^3}{2^{-3}} = 2^6$.',
+            r'That is $64$. The answer is $\textbf{(E) } 64$.',
+        ],
+        'trap': r'Reading $2^{-3}$ as $-2^3$. A negative exponent makes a reciprocal, not a negative number.',
+    },
+    '2014-amc-10b-3': {
+        'topics': ['decimals-fractions', 'linear-equations'],
+        'answer': 'E',
+        'insight': r'The gravel and dirt make $\frac13 + \frac15 = \frac{8}{15}$ of the trip, so the $20$ miles are the other $\frac{7}{15}$.',
+        'steps': [
+            r'$\frac{7}{15}d = 20$ gives $d = \frac{300}{7}$.',
+            r'(As a check, $\frac{100}{7} + 20 + \frac{60}{7} = \frac{300}{7}$.) The answer is $\textbf{(E) } \frac{300}{7}$.',
+        ],
+        'trap': r'Treating the dirt road as one-fifth of what is left after the gravel, not of the whole trip.',
+    },
+    '2014-amc-10b-4': {
+        'topics': ['linear-equations', 'word-problems'],
+        'answer': 'B',
+        'insight': r'Write Calvin = $2 \times$ Susie and gather muffins on one side and bananas on the other.',
+        'steps': [
+            r'$2(4m + 3b) = 2m + 16b$ gives $6m = 10b$.',
+            r'So $m = \frac53 b$. The answer is $\textbf{(B) } \frac{5}{3}$.',
+        ],
+        'trap': r"Doubling Calvin's bill instead of Susie's, which gives $3b = 32b$ and no sensible price.",
+    },
+    '2014-amc-10b-5': {
+        'topics': ['linear-equations', 'area'],
+        'answer': 'A',
+        'insight': r'Panes $2x$ wide and $5x$ tall. Across there are $4$ panes and $5$ borders, down $2$ panes and $3$ borders.',
+        'steps': [
+            r'Width $8x + 10$, height $10x + 6$. The window is square, so $8x + 10 = 10x + 6$ and $x = 2$.',
+            r'The side is $8 \cdot 2 + 10 = 26$. The answer is $\textbf{(A)}\ 26$.',
+        ],
+        'trap': r'Counting $4$ borders across (only the gaps between panes) and forgetting the two outside edges.',
+    },
+    '2014-amc-10b-6': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'C',
+        'insight': r'Price the balloons in pairs: a pair costs $1 + \frac23 = \frac53$ of a regular balloon.',
+        'steps': [
+            r'He has the price of $30$ balloons, which buys $30 \div \frac53 = 18$ pairs.',
+            r'That is $36$ balloons. The answer is $\textbf{(C) } 36$.',
+        ],
+        'trap': r'Taking $\frac13$ off every balloon, which gives $45$; only every second one is cheaper.',
+    },
+    '2014-amc-10b-7': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'A',
+        'insight': r'"Greater than $B$" measures the increase against $B$.',
+        'steps': [
+            r'$A = B\left(1 + \frac{x}{100}\right)$, so $\frac{x}{100} = \frac{A - B}{B}$.',
+            r'$x = 100\left(\frac{A - B}{B}\right)$. The answer is $\textbf{(A) } 100\left(\frac{A-B}{B}\right)$.',
+        ],
+        'trap': r'Dividing the increase by $A$, which is "$B$ is $x\%$ less than $A$" instead.',
+    },
+    '2014-amc-10b-8': {
+        'topics': ['word-problems', 'arithmetic'],
+        'answer': 'E',
+        'insight': r'Convert everything: $3$ minutes is $180$ seconds, which is $\frac{180}{t}$ stretches of $t$ seconds.',
+        'steps': [
+            r'In $180$ seconds the truck goes $\frac{180}{t} \cdot \frac{b}{6} = \frac{30b}{t}$ feet.',
+            r'In yards that is $\frac{10b}{t}$. The answer is $\textbf{(E) } \frac{10b}{t}$.',
+        ],
+        'trap': r'Stopping at feet and answering $\frac{30b}{t}$.',
+    },
+    '2014-amc-10b-9': {
+        'topics': ['decimals-fractions', 'linear-equations'],
+        'answer': 'A',
+        'insight': r'Multiply the top and bottom of the given fraction by $wz$.',
+        'steps': [
+            r'$\frac{\frac1w + \frac1z}{\frac1w - \frac1z} = \frac{z + w}{z - w} = 2014$.',
+            r'$\frac{w + z}{w - z}$ has the bottom negated, so it is $-2014$. The answer is $\textbf{(A) } -2014$.',
+        ],
+        'trap': r'Assuming the two fractions are equal and answering $2014$. The denominator flips sign.',
+    },
+    '2014-amc-10b-10': {
+        'topics': ['digits-bases', 'casework'],
+        'answer': 'C',
+        'insight': r'Read the columns: the tens give $C + D$ ending in $D$, so $C = 0$, and then no column carries.',
+        'steps': [
+            r'With $C = 0$, the units, hundreds and ten-thousands all say $A + B = D$, and the thousands say $B + 0 = B$.',
+            r'$A$ and $B$ are different leading digits, so $D = A + B$ is anything from $1 + 2 = 3$ to $9$.',
+            r'That is $7$ values. The answer is $\textbf{(C) }7$.',
+        ],
+        'trap': r'Allowing $D$ from $1$ or $2$ upward, forgetting that $A$ and $B$ are distinct and non-zero.',
+    },
+    '2014-amc-10b-11': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'C',
+        'insight': r'Successive discounts multiply what is left: work out the fraction paid each time.',
+        'steps': [
+            r'$0.85^2 = 0.7225$, $0.9^3 = 0.729$ and $0.75 \cdot 0.95 = 0.7125$: discounts of $27.75\%$, $27.1\%$ and $28.75\%$.',
+            r'A single discount must beat all three, so $n > 28.75$ and the least integer is $29$. The answer is $\textbf{(C)}\ 29$.',
+        ],
+        'trap': r'Adding the discounts, $30\%$ each, instead of multiplying what is left, and answering $31$.',
+    },
+    '2014-amc-10b-12': {
+        'topics': ['factors-divisors'],
+        'answer': 'C',
+        'insight': r'The fifth largest divisor is the number divided by its fifth smallest divisor.',
+        'steps': [
+            r'$2{,}014{,}000{,}000 = 2014 \cdot 10^6 = 2^7 \cdot 5^6 \cdot 19 \cdot 53$, whose smallest divisors are $1, 2, 4, 5, 8$.',
+            r'So the fifth largest is $\frac{2{,}014{,}000{,}000}{8} = 251{,}750{,}000$. The answer is $\textbf{(C)}\ 251,750,000$.',
+        ],
+        'trap': r'Skipping $5$ in the small divisors and dividing by $16$, which gives $125{,}875{,}000$.',
+    },
+    '2014-amc-10b-13': {
+        'topics': ['polygons', 'triangles'],
+        'answer': 'B',
+        'insight': r'$A$, $B$ and $C$ are all $2$ from the centre and $120^\circ$ apart, so $ABC$ is equilateral.',
+        'steps': [
+            r'An equilateral triangle with circumradius $2$ has side $2\sqrt3$.',
+            r'Its area is $\frac{\sqrt3}{4}(2\sqrt3)^2 = 3\sqrt3$. The answer is $\textbf{(B) } 3\sqrt{3}$.',
+        ],
+        'trap': r'Taking the side as $2$, the distance to a vertex, and getting $\sqrt3$.',
+    },
+    '2014-amc-10b-14': {
+        'topics': ['digits-bases', 'divisibility'],
+        'answer': 'D',
+        'insight': r'$cba - abc = 99(c - a)$, and this must be a multiple of $55$.',
+        'steps': [
+            r'$99(c - a)$ divisible by $55$ needs $5 \mid c - a$, and the reading went up, so $c = a + 5$.',
+            r'$a \ge 1$, $c \ge 6$ and $a + b + c \le 7$ force $a = 1$, $b = 0$, $c = 6$ (from $106$ to $601$ in $9$ hours).',
+            r'$1 + 0 + 36 = 37$. The answer is $\textbf{(D) } 37$.',
+        ],
+        'trap': r'Looking for $cba - abc = 55$ exactly, a one-hour trip, which no digits allow.',
+    },
+    '2014-amc-10b-15': {
+        'topics': ['right-triangles', 'area'],
+        'answer': 'A',
+        'insight': r'The rays leave $D$ at $30^\circ$ and $60^\circ$ above $DC$, and both meet $AB$ at height $CB$.',
+        'steps': [
+            r'With $CB = 1$ and $DC = 2$: $AE = \cot 60^\circ = \frac{1}{\sqrt3}$ and $AF = \cot 30^\circ = \sqrt3$, so $EF = \frac{2}{\sqrt3}$.',
+            r'$[DEF] = \frac12 \cdot \frac{2}{\sqrt3} \cdot 1 = \frac{\sqrt3}{3}$, and the rectangle is $2$.',
+            r'The ratio is $\frac{\sqrt3}{6}$. The answer is $\textbf{(A)}\ \ \frac{\sqrt{3}}{6}$.',
+        ],
+        'trap': r'Assuming the trisectors cut $AB$ into equal pieces. $AE = \frac{1}{\sqrt3}$ is much shorter than $EF = \frac{2}{\sqrt3}$.',
+    },
+    '2014-amc-10b-16': {
+        'topics': ['probability', 'basic-counting'],
+        'answer': 'B',
+        'insight': r'Count "exactly three alike" and "all four alike" separately.',
+        'steps': [
+            r'Exactly three: $6$ values for the three, $5$ for the odd die, $4$ places for it: $120$. All four: $6$.',
+            r'$\frac{126}{6^4} = \frac{126}{1296} = \frac{7}{72}$. The answer is $\textbf{(B) } \frac{7}{72}$.',
+        ],
+        'trap': r'Forgetting which die is the odd one out, which leaves $\frac{36}{1296} = \frac{1}{36}$.',
+    },
+    '2014-amc-10b-17': {
+        'topics': ['exponents', 'divisibility'],
+        'answer': 'D',
+        'insight': r'$4^{501} = 2^{1002}$, so pull out $2^{1002}$ and factor what is left as a difference of squares.',
+        'steps': [
+            r'$10^{1002} - 4^{501} = 2^{1002}(5^{1002} - 1) = 2^{1002}(5^{501} - 1)(5^{501} + 1)$.',
+            r'$5^{501} - 1$ is divisible by $4$ but not $8$ ($5^{501} \equiv 5 \pmod 8$), and $5^{501} + 1 \equiv 6 \pmod 8$ has one factor of $2$.',
+            r'$1002 + 2 + 1 = 1005$. The answer is $\textbf{(D) } 2^{1005}$.',
+        ],
+        'trap': r'Stopping at the $2^{1002}$ in front, or counting only one factor of $2$ in $5^{1002} - 1$.',
+    },
+    '2014-amc-10b-18': {
+        'topics': ['statistics', 'inequalities'],
+        'answer': 'E',
+        'insight': r'The total is $110$. Make the other ten as small as the median and the unique mode allow.',
+        'steps': [
+            r'With three $8$s, other values may appear twice: $1, 1, 8, 8, 8, 9, 9, 10, 10, 11$ adds to $75$, leaving $35$.',
+            r'Two $8$s forces everything else distinct ($1, 2, 3, 8, 8, 9, 10, 11, 12, 13$, total $77$, leaving $33$). Four $8$s pushes up the values above the median ($1, 8, 8, 8, 8, 9, 9, 9, 10, 10$, total $80$, leaving $30$).',
+            r'The largest possible value is $35$. The answer is $\textbf{(E) } 35$.',
+        ],
+        'trap': r'Using just two $8$s and stopping at $33$. A third $8$ lets the small values repeat.',
+    },
+    '2014-amc-10b-19': {
+        'topics': ['geometric-probability', 'circles'],
+        'answer': 'D',
+        'insight': r'A chord of the outer circle meets the inner one when its central angle is more than $120^\circ$, since its distance from the centre is $2\cos\frac{\theta}{2}$.',
+        'steps': [
+            r'$2\cos\frac{\theta}{2} < 1$ means $\frac{\theta}{2} > 60^\circ$, so $\theta > 120^\circ$.',
+            r'Fix the first point. The central angle to the second is spread evenly from $0^\circ$ to $180^\circ$, so the chance is $\frac{60}{180} = \frac13$. The answer is $\textbf{(D) }\frac{1}{3}$.',
+        ],
+        'trap': r'Comparing areas or radii and answering $\frac14$ or $\frac12$. Only the angle between the points matters.',
+    },
+    '2014-amc-10b-20': {
+        'topics': ['polynomials', 'inequalities'],
+        'answer': 'C',
+        'insight': r'It factors as $(x^2 - 1)(x^2 - 50)$, negative when $x^2$ is strictly between $1$ and $50$.',
+        'steps': [
+            r'$1 < x^2 < 50$ for $|x| = 2, 3, 4, 5, 6, 7$.',
+            r'Each gives two integers, $12$ in all. The answer is $\textbf{(C) } 12$.',
+        ],
+        'trap': r'Counting only positive $x$ and answering $6$, or letting $x^2 = 1$ count.',
+    },
+    '2014-amc-10b-21': {
+        'topics': ['quadrilaterals', 'right-triangles'],
+        'answer': 'B',
+        'insight': r'Drop heights from $C$ and $D$. The two legs stick out $p$ and $q$ beyond $CD$, with $p + q = 33 - 21 = 12$ and the same height.',
+        'steps': [
+            r'$q^2 - p^2 = 196 - 100 = 96$ and $q + p = 12$, so $q - p = 8$: $p = 2$, $q = 10$, and the height is $\sqrt{96}$.',
+            r'With $A = (0, 0)$ and $AD = 10$: $D = (2, \sqrt{96})$ and $C = (23, \sqrt{96})$.',
+            r'$AC = \sqrt{23^2 + 96} = \sqrt{625} = 25$, shorter than $BD = \sqrt{31^2 + 96}$. The answer is $\textbf{(B) } 25$.',
+        ],
+        'trap': r'Assuming the trapezoid is isosceles with overhangs of $6$ each. The legs differ, so the overhangs do too.',
+    },
+    '2014-amc-10b-22': {
+        'topics': ['circles', 'right-triangles'],
+        'answer': 'B',
+        'insight': r'The circle sits at the centre and touches each semicircle on the line to its centre: $r$ is that distance minus $\frac12$.',
+        'steps': [
+            r'With the square from $-1$ to $1$, a semicircle on the bottom has centre $\left(\frac12, -1\right)$ and radius $\frac12$.',
+            r'Its centre is $\sqrt{\frac14 + 1} = \frac{\sqrt5}{2}$ from the middle, so $r = \frac{\sqrt5}{2} - \frac12 = \frac{\sqrt5 - 1}{2}$. The answer is $\textbf{(B) } \dfrac{\sqrt5-1}2$.',
+        ],
+        'trap': r'Measuring to the midpoint of a side instead of a semicircle centre, which gives $1 - \frac12 = \frac12$.',
+    },
+    '2014-amc-10b-23': {
+        'topics': ['solid-geometry', 'quadratics'],
+        'answer': 'E',
+        'insight': r'The slant side is tangent to the sphere, so it is $R + r$ long (two tangent lengths), and the height is $2\sqrt{Rr}$.',
+        'steps': [
+            r'$h^2 = (R + r)^2 - (R - r)^2 = 4Rr$, so the sphere has radius $\rho = \sqrt{Rr}$.',
+            r'$\frac{\pi h}{3}(R^2 + Rr + r^2) = 2 \cdot \frac43 \pi \rho^3$ with $h = 2\rho$ gives $R^2 + Rr + r^2 = 4\rho^2 = 4Rr$.',
+            r'So $R^2 - 3Rr + r^2 = 0$ and $\frac{R}{r} = \frac{3 + \sqrt5}{2}$. The answer is $\textbf{(E) } \dfrac{3+\sqrt5}2$.',
+        ],
+        'trap': r'Taking the smaller root, $\frac{3 - \sqrt5}{2}$, which is less than $1$. The bottom base is the larger one.',
+    },
+    '2014-amc-10b-24': {
+        'topics': ['combinations', 'casework'],
+        'answer': 'B',
+        'insight': r'A run of consecutive numbers and the rest of the circle are both runs, with sums $n$ and $15 - n$. Single numbers give $1$ to $5$, so only $6$ and $7$ need checking.',
+        'steps': [
+            r'$1$ to $5$ are single numbers, $10$ to $15$ are their complements, and $8$, $9$ are the complements of $7$, $6$.',
+            r'A circle is bad when no run sums to $6$ (no $1,5$ or $2,4$ side by side, no run $1,2,3$) or none sums to $7$ (no $2,5$ or $3,4$ side by side, no run $1,2,4$).',
+            r'Of the $\frac{4!}{2} = 12$ circles, only $1, 2, 5, 3, 4$ (no $6$) and $1, 3, 2, 4, 5$ (no $7$) fail. The answer is $\textbf{(B) } 2$.',
+        ],
+        'trap': r'Counting rotations and reflections as different circles, which multiplies the bad ones by $10$.',
+    },
+    '2014-amc-10b-25': {
+        'topics': ['probability', 'recursion'],
+        'answer': 'C',
+        'insight': r'From pad $5$ the frog is equally likely to go either way, by symmetry, so it escapes from there with probability $\frac12$.',
+        'steps': [
+            r'Let $p_N$ be the chance of escaping from pad $N$, with $p_0 = 0$. Then $p_N = \frac{N}{10}p_{N-1} + \left(1 - \frac{N}{10}\right)p_{N+1}$.',
+            r'Solving forward from $p_1$: $p_2 = \frac{10}{9}p_1$, $p_3 = \frac{41}{36}p_1$, $p_4 = \frac{145}{126}p_1$, $p_5 = \frac{73}{63}p_1$.',
+            r'$\frac{73}{63}p_1 = \frac12$ gives $p_1 = \frac{63}{146}$. The answer is $\textbf{(C) } \frac{63}{146}$.',
+        ],
+        'trap': r'Guessing $\frac12$ from the symmetry. That is the answer from pad $5$, not pad $1$.',
     },
 }
 
