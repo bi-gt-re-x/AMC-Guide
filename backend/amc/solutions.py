@@ -2,9 +2,9 @@ r"""Difficulty ratings and step-by-step solutions for the problem bank.
 
 ## Ratings: the AoPS competition scale
 
-Every problem carries `rating`, on the 1-10 scale the AoPS wiki uses for
-contest problems (AoPS Wiki: Competition ratings), in half points. That is the
-one number the site shows ("3.5/10"). Where a problem number sits on a typical
+Every problem is rated on the scale the AoPS wiki uses for contest problems
+(AoPS Wiki: Competition ratings), in half points; the site shows it times 2,
+on its 1-12 scale ("7/12" for an AoPS 3.5). Where a problem number sits on a typical
 real paper (backend/amc/official.py `RATING_BY_NUMBER`, used for imported
 official problems):
 
@@ -21,8 +21,8 @@ Step Mock problems rate below their position: the mocks are a little gentler
 than real papers at the top end, and the ratings say so.
 
 `RATINGS` below are on the AoPS scale, the way they were judged. The bank
-converts each to Summit's 1-10 scale (backend/amc/scale.py, where 10 is the
-hardest AIME problem) as it loads, and `difficulty` (1-5) is derived from that
+converts each to Summit's 1-12 scale (backend/amc/scale.py: twice the AoPS
+rating, so 12 is the hardest AIME problem) as it loads, and `difficulty` (1-5) is derived from that
 (`tier`) so the filters and the score projection keep working.
 
 ## Solutions
@@ -52,7 +52,7 @@ RATINGS = {
 
 
 def tier(rating):
-    """The 1-5 difficulty the rest of the site uses, from a Summit 1-10 rating
+    """The 1-5 difficulty the rest of the site uses, from a Summit 1-12 rating
     (backend/amc/scale.py)."""
     from backend.amc.scale import tier as scale_tier
     return scale_tier(rating)

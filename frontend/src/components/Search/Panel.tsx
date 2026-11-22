@@ -8,7 +8,9 @@
  * results on /search. ⌘K / Ctrl+K focuses the field from anywhere (Topbar).
  *
  * Requests wait for typing to settle and a stale answer is dropped, so a fast
- * typist sees results for what is in the box, not for what was in it.
+ * typist sees results for what is in the box, not for what was in it. Answers
+ * are kept for the page's life (the last few dozen), so backspacing to a query
+ * already asked, or typing it again, shows its results at once with no request.
  */
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -17,6 +19,15 @@ import '@/styles/search.css';
 
 const PER_GROUP = 5;
 const SETTLE_MS = 160;
+/** How many recent answers to keep, keyed by the trimmed, lower-cased query. */
+const KEEP = 40;
+const answers = new Map<string, SearchResults>();
+
+function remember(key: string, reply: SearchResults) {
+  answers.delete(key);
+  answers.set(key, reply);
+  if (answers.size > KEEP) answers.delete(answers.keys().next().value as string);
+}
 const LIST_ID = 'sf-matches';
 const optionId = (hit: Hit) => `sf-option-${hit.key.replace(/[^\w-]/g, '-')}`;
 
@@ -81,11 +92,19 @@ export const SearchField = forwardRef<SearchFieldHandle, SearchFieldProps>(funct
       setResults(null);
       return undefined;
     }
+    const key = needle.toLowerCase();
+    const known = answers.get(key);
+    if (known) {
+      setResults({ ...known, query: needle });
+      return undefined;
+    }
     const timer = window.setTimeout(() => {
       void amc
         .search(needle, PER_GROUP)
         .then((reply) => {
-          if (mine === ticket.current && reply.success) setResults(reply);
+          if (!reply.success) return;
+          remember(key, reply);
+          if (mine === ticket.current) setResults(reply);
         })
         .catch(() => {});
     }, SETTLE_MS);

@@ -59,10 +59,13 @@ describe('the rail', () => {
     expect(prep.getByRole('link', { name: /Review/ })).toHaveAttribute('href', '/review');
     expect(prep.getByRole('link', { name: /Study Plan/ })).toHaveAttribute('href', '/study-plan');
     const practiceLinks: [string, string][] = [['Problems', '/problems'], ['Topics', '/topics'],
-      ['Mock Contests', '/mock-contests'], ['Past Contests', '/contests'], ['Posts', '/posts'], ['Search', '/search']];
+      ['Mock Contests', '/mock-contests'], ['Past Contests', '/contests']];
     for (const [name, href] of practiceLinks) {
       expect(practice.getByRole('link', { name: new RegExp(name) })).toHaveAttribute('href', href);
     }
+    // Search is the top bar's job, and Posts is reached by its address.
+    expect(practice.queryByRole('link', { name: /Posts/ })).toBeNull();
+    expect(practice.queryByRole('link', { name: /^Search/ })).toBeNull();
   });
 
   it('shows how many reviews are due, and the solved count in the foot', async () => {

@@ -14,6 +14,7 @@ from pydantic import BaseModel
 from backend.amc import catalog, coach, engine, insights, store, weak
 from backend.amc import official
 from backend.amc import problems as pb
+from backend.amc.scale import TOP
 from backend.api.guard import current_username
 from backend.api.reply import fail, ok
 from backend.config.settings import amc_importers
@@ -35,6 +36,11 @@ def _context(user):
     return attempts, reviews, hist, review_by_id
 
 
+#: How much of a statement a problem row shows: room for three lines on a
+#: wide window, where the row wraps instead of cutting at one.
+PREVIEW = 360
+
+
 def _summary(_user, pid, hist, review_by_id):
     p = pb.get(pid)
     topic = catalog.TOPIC_BY_ID[p['topic']]
@@ -44,7 +50,7 @@ def _summary(_user, pid, hist, review_by_id):
         'id': pid, 'level': p['level'], 'topic': p['topic'], 'topic_name': topic['name'],
         'category': topic['category'], 'difficulty': p['difficulty'], 'rating': p.get('rating'),
         'technique_name': catalog.technique_name(p['technique']),
-        'preview': engine.plain(p['statement'])[:160],
+        'preview': engine.plain(p['statement'])[:PREVIEW],
         'source': '{} #{}'.format(sources[0]['name'], sources[0]['number']) if sources else (
             'AI practice' if p.get('ai') else 'Drill'),
         'short': catalog.short_label(pid),
@@ -246,10 +252,10 @@ def list_problems(level: str = '', category: str = '', topic: str = '', difficul
     else:
         rows.sort(key=lambda r: _source_rank(r['id']))
     counts = {s: 0 for s in ('new', 'solved', 'missed', 'review')}
-    rating_counts = {str(n): 0 for n in range(1, 11)}
+    rating_counts = {str(n): 0 for n in range(1, TOP + 1)}
     for p in pb.all_problems():
         counts[engine.status_of(p['id'], hist, review_by_id)] += 1
-        rating_counts[str(min(10, max(1, int(p['rating']))))] += 1
+        rating_counts[str(min(TOP, max(1, int(p['rating']))))] += 1
     everything = pb.all_problems()
     kinds = {'summit': 0, 'step': 0, 'official': 0, 'ai': 0}
     years = {}
@@ -354,7 +360,17 @@ def review_queue(username: str = Depends(current_username)):
     today = _today()
     _, reviews, hist, review_by_id = _context(username)
     views = [_review_view(r, hist, review_by_id, today) for r in reviews if pb.get(r['problem_id'])]
-    due = sorted([v for v in views if v['review_status'] == 'active' and v['is_due']], key=lambda v: v['due'])
+    # Weakest first: what is due goes in order of how much of its topic the
+    # student has missed (backend/amc/weak.py's measure), then how often this
+    # problem itself was missed, then oldest due. "Start review" walks it so.
+    tstats = engine.topic_stats(hist, review_by_id)
+    for v in views:
+        s = tstats[v['topic']]
+        missed = s['attempted'] - s['first_right']
+        v.update(topic_missed=missed, topic_tried=s['attempted'],
+                 topic_weakness=round((missed + 1) / (s['attempted'] + 2), 3) if s['attempted'] else 0)
+    due = sorted([v for v in views if v['review_status'] == 'active' and v['is_due']],
+                 key=lambda v: (-v['topic_weakness'], -v['misses'], v['due'], v['stage'], v['id']))
     upcoming = sorted([v for v in views if v['review_status'] == 'active' and not v['is_due']], key=lambda v: v['due'])
     mastered = sorted([v for v in views if v['review_status'] == 'mastered'], key=lambda v: v['id'])
     # How many come due on each of the next 14 days.
@@ -384,7 +400,7 @@ def review_weak(mocks: int = 0, draw: int = 0, username: str = Depends(current_u
         row = _summary(username, p['id'], hist, review_by_id)
         row.update(weak_topic=tid, weak_topic_name=catalog.TOPIC_BY_ID[tid]['name'], chance=round(chance, 2))
         problems.append(row)
-    topics = [{k: t[k] for k in ('id', 'name', 'attempted', 'first_right', 'accuracy', 'in_review', 'picked')}
+    topics = [{k: t[k] for k in ('id', 'name', 'attempted', 'first_right', 'missed', 'accuracy', 'in_review', 'picked')}
               for t in out['topics']]
     return ok(target=target, mocks=bool(mocks), draw=max(0, int(draw)), size=weak.SIZE,
               topics=topics, problems=problems, pool=out['pool'])
@@ -560,7 +576,7 @@ def _gradable(contest_id):
 
 def _mock_difficulty(mock):
     """How hard a mock plays against a real paper of its level: the mean of its
-    problems' own ratings and of a real paper's, on Summit's 1-10 scale."""
+    problems' own ratings and of a real paper's, on Summit's 1-12 scale."""
     from backend.amc.scale import SCALE_BY_NUMBER
     ratings = [pb.get(pid)['rating'] for pid in mock['problems'] if pb.get(pid)]
     real = SCALE_BY_NUMBER[mock['level']]

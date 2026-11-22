@@ -444,7 +444,7 @@ def _by_rating(ids):
 # scale (backend/amc/solutions.py).
 MOCKS = [
     {'id': 'step-mock-10', 'name': 'Step Mock AMC 10', 'level': 'AMC 10',
-     'blurb': '25 problems in 75 minutes, rated 1 to 3.5.',
+     'blurb': '25 problems in 75 minutes, rated 2 to 7.',
      'problems': _by_rating([
          'step-10-01', 'step-10-03', 'step-10-04', 'step-10-05', 'step-10-08', 'step-10-18',
          'step-10-06', 'step-10-09', 'step-10-10', 'step-10-11', 'step-10-12', 'step-10-13', 'step-10-15',
@@ -454,7 +454,7 @@ MOCKS = [
          'step-10-26', 'step-10-28', 'step-10-27',
      ])},
     {'id': 'step-mock-12', 'name': 'Step Mock AMC 12', 'level': 'AMC 12',
-     'blurb': '25 problems in 75 minutes, rated 1.5 to 4.',
+     'blurb': '25 problems in 75 minutes, rated 2 to 8.',
      'problems': _by_rating([
          'step-12-01', 'step-12-02', 'step-12-03', 'step-12-05', 'step-12-17', 'step-12-18',
          'step-10-16', 'step-10-20', 'step-10-22',
@@ -464,7 +464,7 @@ MOCKS = [
          'step-12-13', 'step-12-16', 'step-12-14',
      ])},
     {'id': 'step-mock-aime', 'name': 'Step Mock AIME', 'level': 'AIME',
-     'blurb': '15 problems in 3 hours, rated 1.5 to 4.5. Answers are 0 to 999.',
+     'blurb': '15 problems in 3 hours, rated 3 to 9. Answers are 0 to 999.',
      'problems': _by_rating([
          'step-aime-05', 'step-aime-06', 'step-aime-10', 'step-aime-01', 'step-aime-04', 'step-aime-08',
          'step-aime-09', 'step-aime-11', 'step-aime-12', 'step-aime-13', 'step-aime-14', 'step-aime-15',
@@ -479,9 +479,9 @@ from backend.amc.sets import MOCKS as _SET_MOCKS  # noqa: E402
 
 for _m in _SET_MOCKS:
     _m['blurb'] = {
-        'AMC 10': '25 problems in 75 minutes, real AMC 10 difficulty from #1 to #25 (rated 1.5 to 6.5).',
-        'AMC 12': '25 problems in 75 minutes, real AMC 12 difficulty (rated 1.5 to 7.5). Shares 8 problems with AMC 10 Set {}.'.format(_m['set']),
-        'AIME': '15 problems in 3 hours, real AIME difficulty (rated 4 to 10). Answers are 0 to 999.',
+        'AMC 10': '25 problems in 75 minutes, real AMC 10 difficulty from #1 to #25 (rated 2 to 8).',
+        'AMC 12': '25 problems in 75 minutes, real AMC 12 difficulty (rated 2 to 9). Shares 8 problems with AMC 10 Set {}.'.format(_m['set']),
+        'AIME': '15 problems in 3 hours, real AIME difficulty (rated 5 to 12). Answers are 0 to 999.',
     }[_m['level']]
 MOCKS = MOCKS + _SET_MOCKS
 MOCK_BY_ID = {m['id']: m for m in MOCKS}

@@ -2,8 +2,8 @@ r"""Smart analytics: a model of the student, not just counts.
 
 ## Ability on the problems' own scale
 
-Every problem carries a Summit 1-10 rating (backend/amc/scale.py: the AoPS
-rating times 10/6, so an AMC 10 #1 is a 1.5 and the hardest AIME problem a 10). We model the chance of solving a problem
+Every problem carries a Summit 1-12 rating (backend/amc/scale.py: the AoPS
+rating times 2, so an AMC 10 #1 is a 2 and the hardest AIME problem a 12). We model the chance of solving a problem
 of rating r at the first try as
 
     P(r) = 1 / (1 + exp(SLOPE * (r - theta)))
@@ -37,7 +37,7 @@ moves away only as evidence comes in.
 * **The reachable part of a paper**: up to which number the student is more
   likely right than wrong.
 * **Points at stake by topic**: how many points on their contest it would add
-  to bring each weak topic up to their overall level (or a point above it, for
+  to bring each weak topic up to their overall level (or 1.2 points above it, for
   a topic already there), from how often the topic appears and where on the
   paper. The focus list is sorted by it.
 * **What to do next**: unsolved problems in those topics that they get right
@@ -61,13 +61,14 @@ from backend.amc.scale import SCALE_BY_NUMBER
 
 #: Bumped whenever the model or its scale changes, so a cached AI reading of
 #: the old numbers (backend/api/amc_ai.py) is not shown beside the new ones.
-MODEL_VERSION = 'summit-scale-2'
-#: Logistic slope per Summit rating point (1.6 per AoPS point, rescaled).
-SLOPE = 0.96
+MODEL_VERSION = 'summit-scale-3'
+#: Logistic slope per Summit rating point (1.6 per AoPS point, halved).
+SLOPE = 0.8
 #: Prior on a new student: about an AMC 10 #8-10 (AoPS 2), give or take a lot.
-PRIOR_MEAN = 3.3
-PRIOR_SD = 2.45
-TOPIC_SD = 1.3
+#: These, and every gap in rating points below, are in Summit points (AoPS x 2).
+PRIOR_MEAN = 4.0
+PRIOR_SD = 2.95
+TOPIC_SD = 1.55
 #: Days for an answer's weight to halve, and the least weight an old answer keeps.
 HALF_LIFE = 45
 MIN_WEIGHT = 0.3
@@ -195,14 +196,14 @@ def pace_model(hist, theta):
             continue
         xs.append(p['rating'] - theta)
         ys.append(math.log(secs))
-    prior_a, prior_b, k = math.log(PACE['AMC 10']), 0.25, 6.0
+    prior_a, prior_b, k = math.log(PACE['AMC 10']), 0.21, 6.0
     n = len(xs)
     if n < 3:
         return prior_a, prior_b, n
     mx, my = sum(xs) / n, sum(ys) / n
     sxx = sum((x - mx) ** 2 for x in xs)
     b = (sum((x - mx) * (y - my) for x, y in zip(xs, ys)) / sxx) if sxx > 1e-9 else prior_b
-    b = max(0.0, min(0.8, b))
+    b = max(0.0, min(0.67, b))
     a = my - b * mx
     # Shrink toward the prior: k pseudo-answers at contest pace.
     a = (n * a + k * prior_a) / (n + k)
@@ -243,11 +244,11 @@ def _timed(theta, level, model):
 # ---------------------------------------------------------------------------
 def _topic_points(level, theta, topic_theta, weight, total_weight):
     """Points on a `level` paper from raising one topic's ability from
-    `topic_theta` to the overall level (or one point above, if it is already
+    `topic_theta` to the overall level (or 1.2 points above, if it is already
     there). A topic of weight w is about w / total_weight of the paper, spread
     over its positions in proportion."""
-    target = max(theta, topic_theta + 1) if topic_theta is not None else theta
-    current = topic_theta if topic_theta is not None else theta - 0.5
+    target = max(theta, topic_theta + 1.2) if topic_theta is not None else theta
+    current = topic_theta if topic_theta is not None else theta - 0.6
     table = SCALE_BY_NUMBER[level]
     share = weight / total_weight
     worth = 1 if level == 'AIME' else 6
@@ -277,7 +278,7 @@ def _patterns(attempts, hist, theta, level, mock_check):
             continue
         secs = int(a.get('seconds') or 0)
         pace_here = 720 if p['level'] == 'AIME' else 180
-        if not a['correct'] and p['rating'] <= theta - 1.6:
+        if not a['correct'] and p['rating'] <= theta - 1.9:
             careless.append(pid)
         if secs > 2 * pace_here:
             slow.append(pid)
@@ -463,7 +464,7 @@ def analyze(attempts, hist, review_by_id, mocks, plan, today=None):
             techniques.append({'id': tid, 'name': catalog.technique_name(tid), 'answered': len(pts), 'theta': th})
     techniques.sort(key=lambda r: r['theta'])
 
-    focus = sorted([t for t in topics if t['relevant'] and (t['theta'] is None or t['theta'] < theta + 0.5)],
+    focus = sorted([t for t in topics if t['relevant'] and (t['theta'] is None or t['theta'] < theta + 0.6)],
                    key=lambda t: (-t['points'], t['name']))[:5]
     strong = sorted([t for t in topics if t['theta'] is not None and t['answered'] >= 2 and t['theta'] >= theta],
                     key=lambda t: -t['theta'])[:4]
@@ -475,12 +476,12 @@ def analyze(attempts, hist, review_by_id, mocks, plan, today=None):
         'level': level, 'goal': goal, 'answered': n,
         'confident': n >= 15,
         'theta': theta, 'se': se,
-        'band': '{:g}–{:g}'.format(max(1, round((theta - se) * 2) / 2), min(10, round((theta + se) * 2) / 2)),
+        'band': '{:g}–{:g}'.format(max(1, round((theta - se) * 2) / 2), min(12, round((theta + se) * 2) / 2)),
         'contests': contests,
         'pace': {'timed_answers': timed_n,
                  'at_level': round(seconds_for(pace, theta, theta, level)),
-                 'easy': round(seconds_for(pace, theta, theta - 2, level)),
-                 'hard': round(seconds_for(pace, theta, theta + 2, level)),
+                 'easy': round(seconds_for(pace, theta, theta - 2.4, level)),
+                 'hard': round(seconds_for(pace, theta, theta + 2.4, level)),
                  'contest': PACE[level]},
         'topics': [t for t in topics if t['answered'] or t['relevant']],
         'techniques': techniques[:12],
@@ -501,13 +502,13 @@ def ai_brief(stats, plan):
     lines = [
         'Contest: {}. Goal: {}.'.format(stats['level'], stats['goal']),
         'First-try answers so far: {}.'.format(stats['answered']),
-        'Ability estimate on Summit\'s 1-10 scale (an AMC 10 #1 is 1.5, 10 = hardest AIME problem; the rating solved '
+        'Ability estimate on Summit\'s 1-12 scale (the AoPS rating times 2: an AMC 10 #1 is 2, 12 = hardest AIME problem; the rating solved '
         'half the time, recent answers weighted more): {} ± {}.'.format(stats['theta'], stats['se']),
         'Predicted score: {} untimed (80% range {}-{}); {} with their own pace in the time limit (reaching #{} of {}); '
         'chance of reaching {}: {}%. More likely right than wrong up to #{}.'.format(
             c['expected'], c['low'], c['high'], c['timed'], c['reached'], c['count'], c['target'],
             round(100 * (c['chance'] or 0)), c['reach']),
-        'Pace: about {}s on a problem at their level, {}s two points easier, {}s two points harder (contest pace {}s; '
+        'Pace: about {}s on a problem at their level, {}s 2.4 points easier, {}s 2.4 points harder (contest pace {}s; '
         'from {} timed answers).'.format(pace['at_level'], pace['easy'], pace['hard'], pace['contest'],
                                          pace['timed_answers']),
         'Weekly ability trend (oldest first): {}.'.format(', '.join(str(w['theta']) for w in stats['trend'] if w['theta'] is not None) or 'none yet'),

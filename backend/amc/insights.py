@@ -13,9 +13,9 @@ from backend.amc import catalog, engine
 from backend.amc import official
 from backend.amc import problems as pb
 
-#: The AoPS-scale buckets the analytics page groups answers by.
-#: Whole points of Summit's 1-10 scale (backend/amc/scale.py).
-RATING_BUCKETS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
+#: The buckets the analytics page groups answers by:
+#: Whole points of Summit's 1-12 scale (backend/amc/scale.py).
+RATING_BUCKETS = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12]
 #: Seconds a problem may take at contest pace.
 PACE = {'AMC 10': 180, 'AMC 12': 180, 'AIME': 720}
 
@@ -104,7 +104,7 @@ def recent_performance(attempts, mocks, today):
 # What appears on each contest
 # ---------------------------------------------------------------------------
 #: Written for this site from the contests' published formats and the AoPS
-#: competition ratings, given on Summit's 1-10 scale (backend/amc/scale.py).
+#: competition ratings, given on Summit's 1-12 scale (backend/amc/scale.py).
 #: Shares are approximate for a typical recent paper.
 GUIDE = {
     'AMC 10': {
@@ -115,13 +115,13 @@ GUIDE = {
                    'the 2019 10A and 108 on the 10B.',
         'shares': {'algebra': 30, 'geometry': 25, 'counting': 20, 'number-theory': 20, 'misc': 5},
         'sections': [
-            {'range': '1–10', 'rating': '1.5–3.5', 'minutes': 20,
+            {'range': '1–10', 'rating': '2–4', 'minutes': 20,
              'what': 'Arithmetic, percents, rates, short word problems, easy counting and area. Go fast and '
                      'don’t make careless mistakes.'},
-            {'range': '11–20', 'rating': '3.5–5', 'minutes': 35,
+            {'range': '11–20', 'rating': '4–6', 'minutes': 35,
              'what': 'Casework, similar triangles, remainders, systems of equations, simple probability. Most '
                      'qualifying scores are won or lost here.'},
-            {'range': '21–25', 'rating': '5–6.5', 'minutes': 20,
+            {'range': '21–25', 'rating': '6–8', 'minutes': 20,
              'what': 'Harder counting and probability, number theory, geometry that needs an extra line. Try the '
                      'one or two that look familiar.'},
         ],
@@ -134,12 +134,12 @@ GUIDE = {
                    '2019 12A and 94.5 on the 12B.',
         'shares': {'algebra': 35, 'geometry': 25, 'counting': 18, 'number-theory': 17, 'misc': 5},
         'sections': [
-            {'range': '1–10', 'rating': '1.5–3.5', 'minutes': 20,
+            {'range': '1–10', 'rating': '2–4', 'minutes': 20,
              'what': 'Like the middle of the AMC 10: word problems, quick counting, ratios, coordinates.'},
-            {'range': '11–20', 'rating': '3.5–6', 'minutes': 35,
+            {'range': '11–20', 'rating': '4–7', 'minutes': 35,
              'what': 'Logs, trig, complex numbers and sequences on top of the usual topics. Know the identities '
                      'well.'},
-            {'range': '21–25', 'rating': '6–7.5', 'minutes': 20,
+            {'range': '21–25', 'rating': '7–9', 'minutes': 20,
              'what': 'Polynomial roots, roots of unity, 3D and trig geometry, hard counting. About as hard as the '
                      'early AIME.'},
         ],
@@ -151,11 +151,11 @@ GUIDE = {
         'qualify': 'USAJMO and USAMO use AMC score + 10 × AIME score. The cutoff changes every year.',
         'shares': {'geometry': 28, 'algebra': 25, 'counting': 25, 'number-theory': 22, 'misc': 0},
         'sections': [
-            {'range': '1–5', 'rating': '4–6', 'minutes': 50,
+            {'range': '1–5', 'rating': '5–7', 'minutes': 50,
              'what': 'Like the end of the AMC, with no answer choices: counting, digits, geometry.'},
-            {'range': '6–10', 'rating': '6.5–8.5', 'minutes': 70,
+            {'range': '6–10', 'rating': '8–10', 'minutes': 70,
              'what': 'Two or three steps each. Mods, recursion, coordinates or trig.'},
-            {'range': '11–15', 'rating': '8.5–10', 'minutes': 60,
+            {'range': '11–15', 'rating': '10–12', 'minutes': 60,
              'what': 'Very hard. Bijections, polynomials, complex numbers, hard geometry. Solving one is a good '
                      'result.'},
         ],
@@ -204,7 +204,7 @@ def _bucket(rating):
 
 
 def by_rating(attempts, hist):
-    """First-try accuracy and time by whole point of Summit's 1-10 rating."""
+    """First-try accuracy and time by whole point of Summit's 1-12 rating."""
     rows = {b: {'rating': b, 'attempted': 0, 'first_right': 0, 'seconds': []} for b in RATING_BUCKETS}
     first_seconds = {}
     for a in attempts:

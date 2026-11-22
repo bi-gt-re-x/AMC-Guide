@@ -13,7 +13,7 @@ Each entry:
     level       'AMC 10' | 'AMC 12' | 'AIME' (the hardest contest it is written for)
     topic       primary topic id (catalog.TOPICS), plus `also` for secondary ones
     technique   one of catalog.TECHNIQUES
-    rating      Summit 1-10 rating (backend/amc/scale.py; `aops` keeps the AoPS
+    rating      Summit 1-12 rating (backend/amc/scale.py; `aops` keeps the AoPS
                 competition rating it came from), and difficulty (1-5) derived from it —
                 both set from solutions.py at the end of this file
     statement   text, inline math in $...$
@@ -619,7 +619,7 @@ PROBLEMS = [
 ]
 
 # Ratings (judged on the AoPS scale) and step-by-step solutions live beside the
-# bank (backend/amc/solutions.py). Each rating is put on Summit's 1-10 scale
+# bank (backend/amc/solutions.py). Each rating is put on Summit's 1-12 scale
 # (backend/amc/scale.py) and the 1-5 difficulty derived from it, so the two can
 # never disagree.
 from backend.amc.scale import to_scale  # noqa: E402

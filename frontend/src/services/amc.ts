@@ -15,7 +15,7 @@ export interface ProblemSummary {
   topic_name: string;
   category: CategoryId;
   difficulty: number;
-  /** AoPS competition-scale rating (1-10). */
+  /** Summit's 1-12 rating: the AoPS competition rating times 2. */
   rating?: number | null;
   technique_name: string;
   preview: string;
@@ -46,7 +46,7 @@ export interface Problem {
   technique: string;
   technique_name: string;
   difficulty: number;
-  /** Summit's 1-10 rating: the AoPS rating times 10/6 (an AMC 10 #1 is 1.5, the hardest AIME problem 10). */
+  /** Summit's 1-12 rating: the AoPS rating times 2 (an AMC 10 #1 is 2, the hardest AIME problem 12). */
   rating?: number | null;
   /** The AoPS competition rating it comes from. */
   aops?: number | null;
@@ -80,6 +80,9 @@ export interface ReviewItem extends ProblemSummary {
   misses: number;
   overdue: boolean;
   is_due: boolean;
+  /** Its topic: problems missed first time, and tried, by this account. */
+  topic_missed: number;
+  topic_tried: number;
 }
 
 export interface Category {
@@ -453,6 +456,8 @@ export interface WeakBank {
   size: number;
   topics: {
     id: string; name: string; attempted: number; first_right: number;
+    /** Problems in the topic got wrong first time. */
+    missed: number;
     accuracy: number | null; in_review: number; picked: number;
   }[];
   problems: WeakProblem[];
@@ -476,7 +481,7 @@ export interface MockContest extends Format {
   set: number | null;
   attempts: number;
   best: number | null;
-  /** Mean rating of its problems against a real paper's, on the 1-10 scale. */
+  /** Mean rating of its problems against a real paper's, on the 1-12 scale. */
   difficulty?: MockDifficulty | null;
 }
 
@@ -836,6 +841,9 @@ export const amc = {
 };
 
 /** Fired when an answer, a mock or a plan change moves the dashboard's numbers. */
+/** The top of Summit's rating scale (backend/amc/scale.py): the AoPS rating times 2, so 12 is the hardest AIME problem. */
+export const RATING_TOP = 12;
+
 export const AMC_CHANGED = 'summit:amc-changed';
 
 export function announceAmcChanged(): void {

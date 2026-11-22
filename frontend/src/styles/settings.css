@@ -47,11 +47,12 @@ html[data-theme="dark"] .st-page {
     color-scheme: dark;
 }
 
-/* With nothing beside it the page would run the full width of a wide window,
-   and a label at one edge with its control at the other is hard to follow. */
+/* The page runs the full width beside the rail, like every other page. Each
+   row's text keeps its own reading measure (`.st-row-text`), so a label still
+   sits near its control. */
 .st-shell {
-    display: flex; flex-direction: column; gap: var(--space-6);
-    width: 100%; max-width: 1080px; margin-inline: auto;
+    display: flex; flex-direction: column; gap: var(--space-8);
+    width: 100%;
     min-width: 0;
 }
 .st-quiet { color: var(--st-muted); }

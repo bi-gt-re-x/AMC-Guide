@@ -35,7 +35,7 @@ AMC 12 and AIME. A problem must be new: never copy or lightly reword a real
 MAA problem. It must have exactly one correct answer, be solvable by hand in
 the time a real problem at that position takes, and need no diagram.
 
-Difficulty uses the AoPS 1-10 scale: AMC 10 problems run from 1 (#1-4) to 4
+Difficulty uses the AoPS competition rating scale: AMC 10 problems run from 1 (#1-4) to 4
 (#25), AMC 12 from 1 to 4.5, AIME from 2.5 (#1) to 6 (#14-15). Match the target
 rating honestly: a 1 is a quick computation, a 3 needs a real idea, a 5 needs
 two ideas put together.
@@ -122,7 +122,7 @@ def _brief(level, topic, technique, rating, like):
         'Topic: {} ({}).'.format(t['name'], t['summary']),
         'Technique it should reward: {} ({}).'.format(catalog.technique_name(technique),
                                                         catalog.TECHNIQUE_IDEA.get(technique, '')),
-        'Target difficulty: {} on the AoPS 1-10 scale.'.format(rating),
+        'Target difficulty: {} on the AoPS competition rating scale.'.format(rating),
     ]
     if like:
         lines.append('Write a new problem in the same spirit as this one, with different numbers and a '
@@ -148,7 +148,7 @@ def create(user, level, topic, technique='', rating=None, like=None):
         raise CreateFailed('No such topic.')
     if technique not in catalog.TECHNIQUE_FAMILY:
         technique = 'direct-computation'
-    # `rating` is on Summit's 1-10 scale; the writer is told the AoPS rating,
+    # `rating` is on Summit's 1-12 scale; the writer is told the AoPS rating,
     # which is the scale it knows, and that is what is stored.
     lo, hi = {'AMC 10': (1, 4), 'AMC 12': (1, 4.5), 'AIME': (2.5, 6)}[level]
     aops = to_aops(rating) if isinstance(rating, (int, float)) else (lo + hi) / 2

@@ -14,7 +14,9 @@
  * a folded rail doesn't swing open and shut on load.
  *
  * The destinations are the AMC prep site's: Dashboard, Review, Study Plan,
- * Analytics, Problems, Topics, Past Contests and Search. Review carries a count of what
+ * Analytics, Problems, Topics, Mock Contests and Past Contests. Search lives in
+ * the top bar (its full results page, /search, is still there for the bar's
+ * "all results" link), and Posts is reached by its address. Review carries a count of what
  * is due today, and the foot shows how much of the problem bank is solved —
  * both read the dashboard's numbers through hooks/useAmcSummary, one request
  * for the whole chrome.
@@ -178,28 +180,6 @@ export const TABS: Tab[] = [
         <path d="M8 21h8M12 17v4" />
         <path d="M7 4h10v5a5 5 0 0 1-10 0Z" />
         <path d="M17 6h3a3 3 0 0 1-3 4M7 6H4a3 3 0 0 0 3 4" />
-      </svg>
-    ),
-  },
-  {
-    to: '/posts',
-    label: 'Posts',
-    section: 'practice',
-    icon: (
-      <svg {...stroke}>
-        <path d="M4 20h4L19 9l-4-4L4 16Z" />
-        <path d="m13.5 6.5 4 4" />
-      </svg>
-    ),
-  },
-  {
-    to: '/search',
-    label: 'Search',
-    section: 'practice',
-    icon: (
-      <svg {...stroke}>
-        <circle cx="11" cy="11" r="7" />
-        <path d="m20 20-3.5-3.5" />
       </svg>
     ),
   },

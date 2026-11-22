@@ -118,10 +118,10 @@ def test_contest_pages(client, today):
     assert [m['id'] for m in listing['mocks'] if m['family'] == 'summit'][:2] == ['mock-10-1', 'mock-10-2']
     summit = client.get('/api/amc/contests/mock-12-3').json()
     assert [p['number'] for p in summit['problems']] == list(range(1, 26))
-    # Each problem carries its own rating on Summit's 1-10 scale (from the review in
+    # Each problem carries its own rating on Summit's 1-12 scale (from the review in
     # backend/amc/sets/ratings.py), not its slot's: this set's #25 is an AoPS 3.5.
     ratings = [p['rating'] for p in summit['problems']]
-    assert all(1 <= r <= 10 for r in ratings) and ratings[0] == 1.5 and ratings[-1] == 6
+    assert all(1 <= r <= 12 for r in ratings) and ratings[0] == 2 and ratings[-1] == 7
 
 
 def test_logging_a_past_contest(client, today):
@@ -159,6 +159,24 @@ def test_search_finds_problems_topics_and_contests(client, today):
     assert {c['name'] for c in body['contests']} >= {'2019 AIME I', '2019 AIME II'}
     assert client.get('/api/amc/search', params={'q': 'review'}).json()['pages'][0]['to'] == '/review'
 
+
+
+def test_search_puts_a_topic_match_first_and_finds_pages_off_the_rail(client, today):
+    # A problem in the Circles topic outranks one that only mentions a circle.
+    first = client.get('/api/amc/search', params={'q': 'circles'}).json()['problems'][0]
+    assert first['topic_name'] == 'Circles'
+    # Posts is no longer in the rail, so the top bar has to find it.
+    assert client.get('/api/amc/search', params={'q': 'posts'}).json()['pages'][0]['to'] == '/posts'
+
+
+def test_search_builds_its_index_once(client, today, monkeypatch):
+    from backend.amc import engine
+    client.get('/api/amc/search', params={'q': 'warm'})
+    calls = []
+    monkeypatch.setattr(engine, 'plain', lambda text: calls.append(text) or text)
+    for q in ('circles', 'probability', '2019 aime'):
+        assert client.get('/api/amc/search', params={'q': q}).json()['success']
+    assert calls == []    # no statement is turned into text again per query
 
 def test_accounts_are_separate(client, stranger, today):
     client.post('/api/amc/problems/step-10-04/attempt', json={'answer': 'A'})
@@ -265,6 +283,47 @@ def test_weak_topics_bank_follows_misses_and_skips_the_review_log(client, today)
     assert not picked & set(missed)   # already in the error log
     assert any(p['weak_topic'] == topic for p in body['problems'])
 
+
+
+def _wrong(pid):
+    return 'A' if BY_ID[pid]['answer'] != 'A' else 'B'
+
+
+def test_a_topic_never_missed_is_not_a_weakness(client, today):
+    # One problem right in a topic: it drops below every untried topic, so a
+    # perfect record never shows up as "weak" for lack of other answers.
+    solved = BY_ID['step-10-01']
+    client.post('/api/amc/problems/step-10-01/attempt', json={'answer': solved['answer']})
+    body = client.get('/api/amc/review/weak', params={'mocks': 1}).json()
+    assert solved['topic'] not in [t['id'] for t in body['topics']]
+
+
+def test_the_most_missed_topic_gets_the_biggest_share(client, today):
+    topic = BY_ID['step-10-04']['topic']
+    missed = [p['id'] for p in BY_ID.values() if p['topic'] == topic and p['level'] == 'AMC 10'][:3]
+    for pid in missed:
+        client.post('/api/amc/problems/{}/attempt'.format(pid), json={'answer': _wrong(pid)})
+    body = client.get('/api/amc/review/weak', params={'mocks': 1}).json()
+    per_topic = {}
+    for p in body['problems']:
+        per_topic[p['weak_topic']] = per_topic.get(p['weak_topic'], 0) + 1
+    assert body['topics'][0]['id'] == topic
+    assert per_topic[topic] == max(per_topic.values()) > 3 and min(per_topic.values()) >= 2
+
+
+def test_due_reviews_come_weakest_topic_first(client, today):
+    # Three misses in one topic, one in another, all due on the same day: the
+    # topic missed most leads the queue whatever order they were missed in.
+    first = 'step-10-01'
+    heavy = BY_ID['step-10-04']['topic']
+    assert BY_ID[first]['topic'] != heavy
+    client.post('/api/amc/problems/{}/attempt'.format(first), json={'answer': _wrong(first)})
+    for pid in [p['id'] for p in BY_ID.values() if p['topic'] == heavy and p['level'] == 'AMC 10'][:3]:
+        client.post('/api/amc/problems/{}/attempt'.format(pid), json={'answer': _wrong(pid)})
+    today['day'] += timedelta(days=3)
+    due = client.get('/api/amc/review').json()['due']
+    assert len(due) == 4 and due[0]['topic'] == heavy and due[-1]['id'] == first
+    assert due[0]['topic_missed'] == 3 and due[0]['topic_tried'] == 3
 
 def test_weak_topics_bank_without_mocks_is_official_only(client, today):
     body = client.get('/api/amc/review/weak').json()

@@ -48,7 +48,7 @@ const FLOATERS = [
 const STEPS = [
   {
     n: '01', title: 'Practice',
-    body: 'Hundreds of problems, each rated from 1 to 10 (an AMC 10 #1 is a 1.5, the hardest AIME problem a 10) and tagged by topic and technique. Pick by problem number, year, topic or method.',
+    body: 'Hundreds of problems, each rated from 1 to 12 (the AoPS rating times 2: an AMC 10 #1 is a 2, the hardest AIME problem a 12) and tagged by topic and technique. Pick by problem number, year, topic or method.',
   },
   {
     n: '02', title: 'Review',
@@ -60,14 +60,14 @@ const STEPS = [
   },
   {
     n: '04', title: 'Read the numbers',
-    body: 'Your level on the 1–10 scale, a predicted score with a range, your chance of the AIME cutoff, and exactly which topics are worth the most points.',
+    body: 'Your level on the 1–12 scale, a predicted score with a range, your chance of the AIME cutoff, and exactly which topics are worth the most points.',
   },
 ];
 
 const MOCKS = [
-  { name: 'AMC 10', problems: 25, time: '75 min', sets: 5, note: 'Algebra, counting, number theory and geometry, ramping from 1.5 to 6.5 on the scale.', tone: 'sage' },
+  { name: 'AMC 10', problems: 25, time: '75 min', sets: 5, note: 'Algebra, counting, number theory and geometry, ramping from 2 to 8 on the scale.', tone: 'sage' },
   { name: 'AMC 12', problems: 25, time: '75 min', sets: 5, note: 'Shares eight problems with its AMC 10, then adds logs, trig and complex numbers.', tone: 'clay' },
-  { name: 'AIME', problems: 15, time: '3 hours', sets: 5, note: 'Integer answers 000–999. Fifteen problems from 4 up to 10.', tone: 'slate' },
+  { name: 'AIME', problems: 15, time: '3 hours', sets: 5, note: 'Integer answers 000–999. Fifteen problems from 5 up to 12.', tone: 'slate' },
 ];
 
 const COACH = [
@@ -255,7 +255,7 @@ function SampleProblem() {
         given={checked ? pick : undefined}
       />
       <div className="am-answer-bar">
-        <span className="am-muted" style={{ fontSize: 13 }}>Rated 2/10 · Factors &amp; Divisors</span>
+        <span className="am-muted" style={{ fontSize: 13 }}>Rated 3/12 · Factors &amp; Divisors</span>
         {checked ? (
           <button type="button" className="am-btn" onClick={() => { setPick(''); setChecked(false); }}>Reset</button>
         ) : (
@@ -283,20 +283,20 @@ function Marquee({ items, reverse = false }: { items: string[]; reverse?: boolea
   );
 }
 
-/** The 1-10 scale, filling as it arrives, with where each contest sits on it. */
+/** The 1-12 scale, filling as it arrives, with where each contest sits on it. */
 function ScaleDemo() {
   const [ref, seen] = useInView<HTMLDivElement>();
   const marks = [
-    { at: 1.5, label: 'AMC 10 #1' }, { at: 4, label: 'AMC 10 #15' }, { at: 6.5, label: 'AMC 12 #23' },
-    { at: 10, label: 'AIME #15' },
+    { at: 2, label: 'AMC 10 #1' }, { at: 5, label: 'AMC 10 #15' }, { at: 8, label: 'AMC 12 #23' },
+    { at: 12, label: 'AIME #15' },
   ];
   return (
     <div ref={ref} className={`lp-scale${seen ? ' is-in' : ''}`}>
       <div className="lp-scale-bar"><i /></div>
-      <div className="lp-scale-ticks">{Array.from({ length: 10 }, (_, i) => <span key={i}>{i + 1}</span>)}</div>
+      <div className="lp-scale-ticks">{Array.from({ length: 12 }, (_, i) => <span key={i}>{i + 1}</span>)}</div>
       <div className="lp-scale-marks">
         {marks.map((m, i) => (
-          <span key={m.label} style={{ left: `${((m.at - 1) / 9) * 100}%`, '--d': `${400 + i * 220}ms` } as CSSProperties}>
+          <span key={m.label} style={{ left: `${((m.at - 1) / 11) * 100}%`, '--d': `${400 + i * 220}ms` } as CSSProperties}>
             {m.label}
           </span>
         ))}
@@ -505,7 +505,7 @@ export default function Landing() {
           <div className="lp-bento">
             <Reveal className="lp-tile lp-tile-wide" delay={0}>
               <h3>Every problem on one scale</h3>
-              <p>Ratings from 1 to 10, where 10 is the hardest AIME problem: the AoPS scale, which tops out at 6, times 10/6.</p>
+              <p>Ratings from 1 to 12, where 12 is the hardest AIME problem: the AoPS scale, which tops out at 6, times 2.</p>
               <ScaleDemo />
             </Reveal>
             <Reveal className="lp-tile" delay={100}>

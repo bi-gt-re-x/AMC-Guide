@@ -16,6 +16,8 @@
     --am-hover: #EFEEE8;
     --am-line: #EAE8E3;
     --am-line-soft: #F0EEE9;
+    /* The rule between problem rows: dark enough to read as a line. */
+    --am-rule: #DDD9D0;
     --am-ink: #2A2C2A;
     --am-body: #54564F;
     --am-muted: #7A7A76;
@@ -37,13 +39,16 @@
     --am-radius: 16px;
     /* Flat: cards are set apart by the ground and a hairline, not a shadow. */
     --am-shadow: none;
-    /* The room between the bands of a page, and inside a card. */
-    --am-gap: var(--space-8);
-    --am-pad: clamp(var(--space-6), 2.4vw, var(--space-8));
+    /* The room between the bands of a page, and inside a card. Generous,
+       because the page itself runs the full width beside the rail: the space
+       a centred 1180px column used to leave down both sides of a wide window
+       now goes between and inside the cards instead. */
+    --am-gap: clamp(var(--space-8), 2.6vw, var(--space-12));
+    --am-pad: clamp(var(--space-6), 2.2vw, var(--space-10));
 
-    width: min(100%, 1180px);
-    margin: 0 auto;
-    padding: var(--space-10) var(--space-8) var(--space-16);
+    width: 100%;
+    margin: 0;
+    padding: var(--space-6) clamp(var(--space-6), 2.4vw, var(--space-12)) var(--space-16);
     box-sizing: border-box;
     color: var(--am-ink);
     font-size: var(--text-md);
@@ -57,6 +62,7 @@ html[data-theme="dark"] .amc-page {
     --am-hover: #222a35;
     --am-line: var(--color-line);
     --am-line-soft: var(--color-line-soft);
+    --am-rule: var(--color-line);
     --am-ink: var(--color-ink);
     --am-body: #c3ccd8;
     --am-muted: var(--color-ink-muted);
@@ -125,7 +131,7 @@ html:not([data-skin]):not([data-theme="dark"]):has(.amc-page) .hm-ambient {
 /* ---- Cards and grids ----------------------------------------------------- */
 .am-card {
     background: var(--am-card);
-    border: 1px solid var(--am-line-soft);
+    border: 1px solid var(--am-line);
     border-radius: var(--am-radius);
     box-shadow: var(--am-shadow);
     padding: var(--am-pad);
@@ -324,14 +330,16 @@ html[data-theme="dark"] .am-chip.is-on { background: var(--am-sage); border-colo
 .am-empty p { margin: 0; max-width: 46ch; line-height: 1.5; }
 
 /* ---- Problem rows ------------------------------------------------------------ */
+/* Each row is a small card of its own: room around it, and room inside for up
+   to three lines of the problem rather than one cut short. */
 .am-rows { display: grid; grid-template-columns: minmax(0, 1fr); gap: 0; border: 1px solid var(--am-line); border-radius: var(--am-radius); overflow: hidden; background: var(--am-card); }
 .am-row {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    gap: var(--space-4);
-    padding: var(--space-4);
-    border-top: 1px solid var(--am-line-soft);
+    gap: var(--space-6);
+    padding: var(--space-5) var(--space-6);
+    border-top: 1px solid var(--am-rule);
     text-decoration: none;
     color: inherit;
     transition: background .12s;
@@ -339,20 +347,23 @@ html[data-theme="dark"] .am-chip.is-on { background: var(--am-sage); border-colo
 .am-row:first-child { border-top: 0; }
 .am-row:hover { background: var(--am-hover); }
 .am-row-main { flex: 1 1 auto; min-width: 0; }
-.am-row-head { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-sm); flex-wrap: wrap; }
+.am-row-head { display: flex; align-items: center; gap: var(--space-2); font-size: var(--text-md); flex-wrap: wrap; }
 .am-row-head strong { font-weight: 600; }
 .am-row-preview {
-    margin: 4px 0 0;
+    margin: var(--space-2) 0 0;
+    max-width: 120ch;
     color: var(--am-body);
-    font-size: var(--text-sm);
-    white-space: nowrap;
+    font-size: var(--text-md);
+    line-height: 1.6;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 3;
+    line-clamp: 3;
     overflow: hidden;
-    text-overflow: ellipsis;
 }
 .am-row-side { display: flex; align-items: center; gap: var(--space-3); flex: none; }
 @media (max-width: 640px) {
-    .am-row { flex-direction: column; align-items: flex-start; }
-    .am-row-preview { white-space: normal; }
+    .am-row { flex-direction: column; align-items: flex-start; gap: var(--space-3); padding: var(--space-4); }
 }
 
 /* ---- Problem page ------------------------------------------------------------ */
@@ -847,9 +858,10 @@ mark.am-hl { background: var(--am-warn-soft); color: inherit; border-radius: 3px
     .am-nav-row > .am-btn { flex: 1 1 0; padding: 0 var(--space-2); min-width: 0; }
     .am-nav-row > span:empty { display: none; }
 }
-/* Wide monitors: use more of the width rather than a narrow column. */
+/* Wide monitors: the page still fills the width beside the rail (no cap, which
+   left an empty band down the right), with a slightly deeper gutter. */
 @media (min-width: 1440px) {
-    .amc-page { width: min(100%, 1600px); padding-inline: var(--space-12); }
+    .amc-page { padding-inline: var(--space-12); }
 }
 
 /* ---- Study plan: intake and the AI coach -------------------------------- */
@@ -1124,7 +1136,12 @@ mark.am-hl { background: var(--am-warn-soft); color: inherit; border-radius: 3px
 /* Lists inside a card are part of the card: no second border around them. */
 .am-card .am-rows { border: 0; border-radius: 0; background: none; overflow: visible; }
 .am-card .am-row { padding-left: 0; padding-right: 0; }
-.am-card .am-row:first-child { border-top: 0; padding-top: 0; }
+.am-card .am-row:first-child { border-top: 0; padding-top: var(--space-2); }
+/* A row with a note under it is wrapped, so the rule goes between wrappers. */
+.am-row-wrap + .am-row-wrap { border-top: 1px solid var(--am-rule); }
+.am-row-wrap > .am-row { border-top: 0; }
+.am-row-note { margin: 0; padding: 0 var(--space-6) var(--space-4); color: var(--am-muted); font-size: 13px; font-style: italic; }
+.am-review-when { display: grid; gap: 4px; justify-items: end; font-size: 12px; text-align: right; }
 .am-card .am-row:hover { background: none; }
 .am-card .am-row:hover strong { text-decoration: underline; }
 @media (max-width: 640px) {
@@ -1193,7 +1210,7 @@ html[data-theme="dark"] .am-bubble.is-filled { background: var(--am-sage); borde
 .am-bubble-int.is-filled { color: var(--am-ink); border-color: var(--am-sage); background: var(--am-sage-soft); }
 
 /* Problems: a chooser down the left, results on the right. */
-.am-browse { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: var(--space-5); align-items: start; }
+.am-browse { display: grid; grid-template-columns: 280px minmax(0, 1fr); gap: var(--am-gap); align-items: start; }
 .am-browse-side { position: sticky; top: calc(var(--topnav-h, 0px) + 16px); max-height: calc(100vh - var(--topnav-h, 0px) - 32px); overflow-y: auto; border: 1px solid var(--am-line); border-radius: var(--am-radius); background: var(--am-card); }
 .am-browse-fold > summary { display: none; }
 .am-browse-main { min-width: 0; }
@@ -1479,9 +1496,9 @@ html[data-theme="dark"] .am-predict-tag { color: #0d1117; }
 .am-weak { margin-bottom: var(--am-gap); }
 .am-weak-actions { display: flex; flex-wrap: wrap; align-items: center; gap: var(--space-2); }
 .am-weak-toggle { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; color: var(--am-body); cursor: pointer; }
-.am-weak-topics { list-style: none; margin: 0 0 var(--space-4); padding: 0; display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-4); }
-.am-weak-topics li { display: inline-flex; align-items: center; gap: 8px; font-size: 12px; }
-.am-section-head { margin: var(--space-6) 0 var(--space-4); }
+.am-weak-topics { list-style: none; margin: 0 0 var(--space-6); padding: 0 0 var(--space-5); border-bottom: 1px solid var(--am-rule); display: flex; flex-wrap: wrap; gap: var(--space-3) var(--space-6); }
+.am-weak-topics li { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; }
+.am-section-head { margin: var(--space-4) 0 var(--space-6); }
 .am-link-btn { background: none; border: 0; padding: 0; cursor: pointer; font: inherit; }
 @media (max-width: 640px) {
     .am-weak .am-card-head { flex-direction: column; align-items: flex-start; }

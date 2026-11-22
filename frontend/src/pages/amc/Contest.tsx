@@ -2,7 +2,7 @@
  * One contest. A Step Mock shows its format, your past sittings, and the
  * button that starts the clock. An imported official paper is shown whole, in
  * problem order like its AoPS wiki page, each problem with its choices, topic,
- * 1-10 rating and links to answer it here.
+ * 1-12 rating and links to answer it here.
  *
  * An official paper also shows where you stand on it (a tile per problem:
  * right first time, put right later, still open, untouched) and, closed until
@@ -20,7 +20,7 @@
 import { useState, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useNotice, ErrorState, Loading } from '@/components';
-import { CategoryDot, DiagramNote, Difficulty, PageHeader, Solution, StatusPill } from '@/components/Amc/bits';
+import { CategoryDot, DiagramNote, Difficulty, PageHeader, ratingText, Solution, StatusPill } from '@/components/Amc/bits';
 import { MathText } from '@/components/Amc/MathText';
 import { Importer } from '@/components/Amc/Importer';
 import { useApi, useDocumentTitle } from '@/hooks';
@@ -361,7 +361,7 @@ export default function Contest() {
             : c.blurb}
         </p>
         {!official && c.difficulty && (
-          <p className="am-mock-vs" title={`Average problem ${c.difficulty.average}/10; a real ${c.level} averages ${c.difficulty.real}/10`}>
+          <p className="am-mock-vs" title={`Average problem ${ratingText(c.difficulty.average)}; a real ${c.level} averages ${ratingText(c.difficulty.real)}`}>
             {versusReal(c.difficulty, c.level)}. Its ratings are each problem's own, so your analytics are not inflated by it.
           </p>
         )}

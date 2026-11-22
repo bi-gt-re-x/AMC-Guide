@@ -1,7 +1,7 @@
 /**
  * Insights: the smart analytics (backend/amc/smart.py) and the AI coach on top.
  *
- * The numbers need no key: an ability estimate on Summit's 1-10 scale (10 is
+ * The numbers need no key: an ability estimate on Summit's 1-12 scale (12 is
  * the hardest AIME problem), weighted toward recent answers; a predicted score
  * with a range, the chance of reaching the goal, and what the clock costs at
  * the student's own pace; topics ranked by the points they would add; mistake
@@ -14,10 +14,10 @@ import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
 import { Bars } from './Charts';
-import { CategoryDot, Empty, Meter } from './bits';
+import { CategoryDot, Empty, Meter, ratingText } from './bits';
 import { MathText } from './MathText';
 import { useApi } from '@/hooks';
-import { amc, pct, type Diagnosis, type Level, type SmartStats } from '@/services/amc';
+import { amc, pct, RATING_TOP, type Diagnosis, type Level, type SmartStats } from '@/services/amc';
 
 const LEVELS: Level[] = ['AMC 10', 'AMC 12', 'AIME'];
 const MAX: Record<Level, number> = { 'AMC 10': 150, 'AMC 12': 150, AIME: 15 };
@@ -179,7 +179,7 @@ export function Insights() {
       <dl className="am-stats">
         <div className="am-stat">
           <dt>Your level</dt>
-          <dd className="am-stat-value">{lv(s.theta)}<small style={{ fontSize: 14 }}> / 10</small></dd>
+          <dd className="am-stat-value">{lv(s.theta)}<small style={{ fontSize: 14 }}> / {RATING_TOP}</small></dd>
           <dd className="am-stat-hint">likely {s.band} · the rating you solve half the time, where 10 is the hardest AIME problem</dd>
         </div>
         <div className="am-stat">
@@ -208,7 +208,7 @@ export function Insights() {
               {s.next_problems.map((p) => (
                 <li key={p.id}>
                   <Link className="am-link" to={`/problems/${p.id}`}>{p.short}</Link>
-                  <span className="am-muted">{p.topic_name} · {p.rating}/10 · {pct(p.chance)} chance you get it</span>
+                  <span className="am-muted">{p.topic_name} · {ratingText(p.rating)} · {pct(p.chance)} chance you get it</span>
                 </li>
               ))}
             </ul>

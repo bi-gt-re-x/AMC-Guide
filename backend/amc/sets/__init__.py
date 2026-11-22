@@ -3,7 +3,7 @@ this site in the shape of the real papers.
 
 Each set is a full paper in real problem order: problem n is written for the
 place problem n takes on a real contest. Its rating is its own, from a review
-against real papers (backend/amc/sets/ratings.py), on Summit's 1-10 scale
+against real papers (backend/amc/sets/ratings.py), on Summit's 1-12 scale
 (backend/amc/scale.py); `slot` keeps the AoPS rating of the place it was
 written for, so a mock can say how it compares with a real paper. As on the real A and B papers, each AMC 12
 set shares eight problems with the AMC 10 set of the same number, moved up

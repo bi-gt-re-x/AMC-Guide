@@ -579,7 +579,7 @@ RATING_BANDS = {level: _bands(level) for level in RATING_BY_NUMBER}
 
 
 def rating_at(level, number):
-    """Summit's 1-10 rating for problem `number` of a `level` paper (backend/amc/scale.py)."""
+    """Summit's 1-12 rating for problem `number` of a `level` paper (backend/amc/scale.py)."""
     return _scale_rating_at(level, number)
 
 

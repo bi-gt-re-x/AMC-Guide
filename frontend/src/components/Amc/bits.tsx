@@ -4,26 +4,26 @@
  */
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { CATEGORY_TONE, type CategoryId, type Pill, type ProblemSummary, type Status } from '@/services/amc';
+import { CATEGORY_TONE, RATING_TOP, type CategoryId, type Pill, type ProblemSummary, type Status } from '@/services/amc';
 import { MathText } from './MathText';
 
-/** A rating as text: 3.5 → "3.5/10". */
-export function ratingText(rating: number) {
-  return `${rating}/10`;
+/** A rating as text: 7 → "7/12". */
+export function ratingText(rating: number | string) {
+  return `${rating}/${RATING_TOP}`;
 }
 
 /**
- * Difficulty on Summit's 1-10 scale (backend/amc/scale.py): a ten-step meter
+ * Difficulty on Summit's 1-12 scale (backend/amc/scale.py): a twelve-step meter
  * (half a step for .5) and, with `label`, the number. It is the AoPS
- * competition rating times 10/6: an AMC 10 runs from 1.5 to 6.5, an AMC 12 to
- * 7.5 and an AIME from 4 to 10, the hardest AIME problem.
+ * competition rating times 2: an AMC 10 runs from 2 to 8, an AMC 12 to 9 and
+ * an AIME from 5 to 12, the hardest AIME problem.
  */
 export function Difficulty({ value, rating, label = true }: { value: number; rating?: number | null; label?: boolean }) {
   const r = rating ?? value;
-  const text = `Rated ${r} out of 10, where 10 is the hardest AIME problem`;
+  const text = `Rated ${r} out of ${RATING_TOP}, where ${RATING_TOP} is the hardest AIME problem`;
   return (
     <span className="am-diff" title={text} aria-label={text}>
-      {Array.from({ length: 10 }, (_, i) => i + 1).map((n) => (
+      {Array.from({ length: RATING_TOP }, (_, i) => i + 1).map((n) => (
         <i key={n} className={n <= r ? 'on' : n - 0.5 === r ? 'half' : ''} />
       ))}
       {label && <span className="am-diff-num">{ratingText(r)}</span>}
@@ -325,7 +325,7 @@ export function ProblemPills({ pills, empty = 'No problems yet.' }: { pills: Pil
     <div className="am-pills">
       {pills.map((p) => (
         <Link key={p.id} to={`/problems/${p.id}`} className={`am-pill-link is-${p.status}`}
-              title={`${p.title} — ${STATUS_LABEL[p.status]}, rated ${p.rating ?? p.difficulty}/10`}>
+              title={`${p.title} — ${STATUS_LABEL[p.status]}, rated ${ratingText(p.rating ?? p.difficulty)}`}>
           <i className={`am-pill-diff d${p.difficulty}`} aria-hidden="true" />
           {p.short}
         </Link>

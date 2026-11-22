@@ -172,7 +172,7 @@ def test_past_contests_cover_every_sitting():
 def test_every_problem_has_an_aops_rating_and_a_matching_tier():
     from backend.amc.solutions import tier
     for p in PROBLEMS:
-        assert 1 <= p['rating'] <= 10 and (p['rating'] * 2) == int(p['rating'] * 2), p['id']
+        assert 1 <= p['rating'] <= 12 and p['rating'] == int(p['rating']), p['id']
         assert p['difficulty'] == tier(p['rating'])
 
 
@@ -194,12 +194,12 @@ def test_every_solution_is_steps_ending_on_the_answer():
             assert s.count('$') % 2 == 0 or '\\$' in s, (p['id'], s)
 
 
-def test_summit_scale_puts_the_hardest_aime_problem_at_ten():
+def test_summit_scale_puts_the_hardest_aime_problem_at_twelve():
     from backend.amc.scale import to_aops, to_scale
-    # The AoPS 0.5-6 scale times 10/6, to the nearest half.
+    # The AoPS 0.5-6 scale times 2: whole numbers from 1 to 12.
     aops = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5, 5.5, 6]
-    assert [to_scale(a) for a in aops] == [1, 1.5, 2.5, 3.5, 4, 5, 6, 6.5, 7.5, 8.5, 9, 10]
-    assert to_scale(0) == 1 and to_scale(9) == 10                   # clamped to the scale
+    assert [to_scale(a) for a in aops] == list(range(1, 13))
+    assert to_scale(0) == 1 and to_scale(9) == 12                   # clamped to the scale
     assert all(abs(to_scale(to_aops(r)) - r) < 1e-9 for r in [to_scale(a) for a in aops])
 
 
@@ -207,9 +207,9 @@ def test_official_positions_follow_the_aops_bands():
     from backend.amc import official
     from backend.amc.scale import aops_at
     assert [aops_at('AMC 10', n) for n in (1, 6, 11, 16, 21, 25)] == [1, 1.5, 2, 2.5, 3, 4]
-    assert [official.rating_at('AMC 10', n) for n in (1, 6, 11, 16, 21, 25)] == [1.5, 2.5, 3.5, 4, 5, 6.5]
-    assert [official.rating_at('AMC 12', n) for n in (1, 10, 20, 25)] == [1.5, 3.5, 6, 7.5]
-    assert [official.rating_at('AIME', n) for n in (1, 4, 7, 11, 15)] == [4, 6, 6.5, 8.5, 10]
+    assert [official.rating_at('AMC 10', n) for n in (1, 6, 11, 16, 21, 25)] == [2, 3, 4, 5, 6, 8]
+    assert [official.rating_at('AMC 12', n) for n in (1, 10, 20, 25)] == [2, 4, 7, 9]
+    assert [official.rating_at('AIME', n) for n in (1, 4, 7, 11, 15)] == [5, 7, 8, 10, 12]
     for level, table in official.RATING_BY_NUMBER.items():
         assert len(table) == {'AIME': 15}.get(level, 25)
         assert table == sorted(table), level            # never easier further in
@@ -218,7 +218,7 @@ def test_official_positions_follow_the_aops_bands():
 
 def test_every_rating_is_on_the_one_to_ten_scale():
     for p in PROBLEMS:
-        assert 1 <= p['rating'] <= 10 and p['rating'] * 2 == int(p['rating'] * 2), p['id']
+        assert 1 <= p['rating'] <= 12 and p['rating'] == int(p['rating']), p['id']
 
 
 def test_mocks_run_in_rating_order():

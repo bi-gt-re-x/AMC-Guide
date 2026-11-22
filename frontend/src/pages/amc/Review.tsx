@@ -1,15 +1,16 @@
 /**
  * Review, in two parts.
  *
- * **Weak topics**: twelve problems from the topics the account does worst in
- * (backend/amc/weak.py), from the official papers, and from the Summit and Step
- * mocks too when the box is ticked. "Start the 12" walks them on the problem
+ * **Weak topics**: twelve problems from the topics the account has missed most
+ * (backend/amc/weak.py), more of them from the worst, from the official papers,
+ * and from the Summit and Step mocks too when the box is ticked. "Start the 12" walks them on the problem
  * page (`?weak=1`); the set holds still for the day, "New set" draws another.
  *
  * **Wrong problems**: the error log. Every miss — practice, mock, or "show
  * solution" — comes back here after 3 days; a right answer on the day moves it
- * to 10, then 21, then out as mastered, and a wrong one starts it over. "Start
- * review" walks the due ones in order, each opened as a review.
+ * to 10, then 21, then out as mastered, and a wrong one starts it over. What is
+ * due comes weakest topic first (the server orders it), and "Start review"
+ * walks it in that order, each opened as a review.
  */
 import { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
@@ -42,7 +43,8 @@ function writeMocksChoice(on: boolean) {
 }
 
 function accuracyLabel(t: WeakBank['topics'][number]): string {
-  return t.attempted ? `${t.first_right}/${t.attempted} first try` : 'not tried yet';
+  if (!t.attempted) return 'not tried yet';
+  return t.missed ? `missed ${t.missed} of ${t.attempted}` : `${t.attempted} right, none missed`;
 }
 
 function WeakTopics() {
@@ -130,26 +132,29 @@ function WeakTopics() {
 
 type Tab = 'due' | 'upcoming' | 'mastered';
 
+/** Why a review sits where it does: how much of its topic has been missed. */
+function topicLine(item: ReviewItem): string {
+  const times = item.misses > 1 ? ` · missed ${item.misses}×` : '';
+  return item.topic_tried ? `topic: missed ${item.topic_missed} of ${item.topic_tried}${times}` : times.slice(3);
+}
+
 function Rows({ items, empty }: { items: ReviewItem[]; empty: { title: string; body: string } }) {
   if (!items.length) return <Empty title={empty.title}>{empty.body}</Empty>;
   return (
     <div className="am-rows">
       {items.map((item) => (
-        <div key={item.id}>
+        <div key={item.id} className="am-row-wrap">
           <ProblemRow
             problem={{ ...item }}
             extra={
-              <span style={{ display: 'grid', gap: 4, justifyItems: 'end', fontSize: 12 }} className="am-muted">
+              <span className="am-muted am-review-when">
                 <ReviewStage stage={item.stage} />
                 {item.review_status === 'mastered' ? 'mastered' : item.overdue ? `overdue · ${shortDate(item.due)}` : `due ${shortDate(item.due)}`}
+                {item.review_status !== 'mastered' && topicLine(item) && <span>{topicLine(item)}</span>}
               </span>
             }
           />
-          {item.note && (
-            <p className="am-muted" style={{ margin: 0, padding: '0 16px 12px', fontSize: 13, fontStyle: 'italic' }}>
-              “{item.note}”
-            </p>
-          )}
+          {item.note && <p className="am-row-note">“{item.note}”</p>}
         </div>
       ))}
     </div>
@@ -179,8 +184,8 @@ export default function Review() {
         ) : undefined}
       >
         <p>
-          Twelve problems from your weakest topics, then every problem you got wrong, brought back after{' '}
-          {data.intervals.join(', ')} days until you get it right three times.
+          Twelve problems from the topics you miss most, then every problem you got wrong, brought back after{' '}
+          {data.intervals.join(', ')} days until you get it right three times. What's due comes weakest topic first.
         </p>
       </PageHeader>
 

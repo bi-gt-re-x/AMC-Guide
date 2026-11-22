@@ -1,7 +1,7 @@
 /**
  * The problem bank, with a chooser down the left: source (Summit Mock sets,
  * Step problems, official papers), contest, mock set, year, problem number,
- * 1-10 rating, topic, technique and status. Every choice lives in the URL, so a
+ * 1-12 rating, topic, technique and status. Every choice lives in the URL, so a
  * filtered list can be bookmarked, shared, and linked to from the topic pages
  * and the plan. On a phone the chooser folds into a "Filters" panel.
  */
@@ -10,7 +10,7 @@ import { Link, useSearchParams } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
 import { Empty, PageHeader, ProblemRow } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
-import { amc, type ProblemFilters, type Status } from '@/services/amc';
+import { amc, RATING_TOP, type ProblemFilters, type Status } from '@/services/amc';
 import '@/styles/amc.css';
 
 const LEVELS = ['AMC 10', 'AMC 12', 'AIME'];
@@ -20,7 +20,7 @@ const STATUSES: { id: Status; label: string }[] = [
   { id: 'missed', label: 'Missed' },
   { id: 'review', label: 'In review' },
 ];
-const RATING_STEPS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+const RATING_STEPS = Array.from({ length: RATING_TOP }, (_, i) => String(i + 1));
 const KEYS: (keyof ProblemFilters)[] = ['source', 'level', 'mock', 'year', 'number', 'category', 'topic', 'rating',
   'difficulty', 'status', 'technique', 'q', 'sort'];
 const SOURCES: { id: string; label: string; kind: 'summit' | 'step' | 'official' | 'ai' }[] = [
@@ -168,15 +168,15 @@ export default function Problems() {
           ))}
         </div>
       </Group>
-      <Group title="Rating (1–10)">
-        <p className="am-choose-note">The AoPS rating times 10/6: an AMC 10 #1 is a 1.5, the hardest AIME problem a 10.</p>
+      <Group title={`Rating (1–${RATING_TOP})`}>
+        <p className="am-choose-note">The AoPS rating times 2: an AMC 10 #1 is a 2, the hardest AIME problem a {RATING_TOP}.</p>
         <div className="am-choose-numbers">
           {RATING_STEPS.map((r) => {
             const n = data.rating_counts[r] ?? 0;
             return (
               <button key={r} type="button" className={`am-choose-num${ratings.has(r) ? ' is-on' : ''}`}
                       aria-pressed={ratings.has(r)} disabled={n === 0 && !ratings.has(r)}
-                      title={`Rated ${r}${r === '10' ? '' : ` or ${r}.5`}: ${n} problems`} onClick={() => toggleRating(r)}>{r}</button>
+                      title={`Rated ${r}${r === String(RATING_TOP) ? '' : ` or ${r}.5`}: ${n} problems`} onClick={() => toggleRating(r)}>{r}</button>
             );
           })}
         </div>

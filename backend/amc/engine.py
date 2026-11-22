@@ -412,6 +412,7 @@ PAGES = [
     {'name': 'Study Plan', 'to': '/study-plan', 'words': 'study plan schedule weeks calendar goal'},
     {'name': 'Analytics', 'to': '/analytics', 'words': 'analytics performance accuracy trend stats cutoff format prepare goal'},
     {'name': 'Settings', 'to': '/settings', 'words': 'settings account preferences theme'},
+    {'name': 'Posts', 'to': '/posts', 'words': 'posts post write share problem test answer key'},
 ]
 
 
@@ -420,19 +421,78 @@ def _tokens(text):
 
 
 def _score(query_tokens, haystack, title=''):
+    """Points for a row matching every token: 3 a token in its title, 2 at the
+    start of a word, 1 anywhere; 0 when any token is missing. `haystack` and
+    `title` are lower case already when they come from the problem index."""
     hay = haystack.lower()
     head = title.lower()
     points = 0
     for tok in query_tokens:
         if tok in head:
             points += 3
-        elif re.search(r'\b' + re.escape(tok), hay):
-            points += 2
         elif tok in hay:
-            points += 1
+            points += 2 if _word_start(tok).search(hay) else 1
         else:
             return 0
     return points
+
+
+_WORD_START = {}
+
+
+def _word_start(tok):
+    """A pattern for `tok` at the start of a word, compiled once per token, not per problem."""
+    pattern = _WORD_START.get(tok)
+    if pattern is None:
+        if len(_WORD_START) > 512:
+            _WORD_START.clear()
+        pattern = _WORD_START[tok] = re.compile(r'\b' + re.escape(tok))
+    return pattern
+
+
+#: The problems' search text, built once and kept until the problem lists
+#: change. Building it means turning every statement's TeX into plain text,
+#: which is nearly all of a search's time, so doing it per keystroke made the
+#: top bar's search take a tenth of a second for every letter typed.
+_INDEX = {'key': None, 'rows': []}
+#: Each problem's row by id, with the statement it was built from: the imported
+#: papers reload every minute as a new list of the same problems, and rebuilding
+#: from these is a lookup each rather than a TeX conversion each.
+_ROWS = {}
+
+
+def _problem_index():
+    """[(title, haystack, row)] for every problem, lower-cased, cached against
+    the identity of the lists it was built from (the imported and AI problems
+    are cached lists that are replaced, not changed, when they reload)."""
+    key = (len(bank_of.bank.PROBLEMS), id(bank_of.official.all_problems()), id(bank_of.create.all_problems()))
+    if _INDEX['key'] != key:
+        rows = []
+        for p in bank_of.all_problems():
+            kept = _ROWS.get(p['id'])
+            if kept and kept[0] == (p['statement'], p['topic'], tuple(p['also']), p['technique']):
+                rows.append(kept[1])
+                continue
+            topic = catalog.TOPIC_BY_ID[p['topic']]
+            sources = catalog.sources(p['id'])
+            source = '{} #{}'.format(sources[0]['name'], sources[0]['number']) if sources else 'Drill'
+            text = plain(p['statement'])
+            # The subscripts and superscripts as plain digits too, so "a1" finds "a₁".
+            hay = ' '.join([p['id'], p['level'], text, text.translate(_DIGITS), topic['name'], p['topic'],
+                            catalog.technique_name(p['technique']),
+                            ' '.join(catalog.TOPIC_BY_ID[t]['name'] for t in p['also']),
+                            ' '.join('{} {}'.format(s['name'], s['number']) for s in sources)])
+            # Its title is where it comes from and what it is about, so "circles"
+            # puts a Circles problem above one that only mentions a circle, and
+            # "2016 AMC 10A 12" puts that problem first.
+            title = '{} {} {}'.format(source.replace('#', ''), topic['name'], p['id'])
+            row = (title.lower(), hay.lower(), {
+                'id': p['id'], 'level': p['level'], 'topic_name': topic['name'], 'difficulty': p['difficulty'],
+                'rating': p.get('rating'), 'preview': text[:140], 'source': source})
+            _ROWS[p['id']] = ((p['statement'], p['topic'], tuple(p['also']), p['technique']), row)
+            rows.append(row)
+        _INDEX.update(key=key, rows=rows)
+    return _INDEX['rows']
 
 
 def search(query, limit=20):
@@ -441,20 +501,10 @@ def search(query, limit=20):
     if not toks:
         return {'problems': [], 'topics': [], 'contests': [], 'pages': []}
     problems = []
-    for p in bank_of.all_problems():
-        topic = catalog.TOPIC_BY_ID[p['topic']]
-        sources = catalog.sources(p['id'])
-        text = plain(p['statement'])
-        # The subscripts and superscripts as plain digits too, so "a1" finds "a₁".
-        hay = ' '.join([p['id'], p['level'], text, text.translate(_DIGITS), topic['name'], p['topic'],
-                        catalog.technique_name(p['technique']),
-                        ' '.join(catalog.TOPIC_BY_ID[t]['name'] for t in p['also']),
-                        ' '.join('{} {}'.format(s['name'], s['number']) for s in sources)])
-        pts = _score(toks, hay, p['id'])
+    for title, hay, row in _problem_index():
+        pts = _score(toks, hay, title)
         if pts:
-            problems.append((pts, {'id': p['id'], 'level': p['level'], 'topic_name': topic['name'],
-                                   'difficulty': p['difficulty'], 'rating': p.get('rating'), 'preview': plain(p['statement'])[:140],
-                                   'source': '{} #{}'.format(sources[0]['name'], sources[0]['number']) if sources else 'Drill'}))
+            problems.append((pts, row))
     topics = []
     for t in catalog.TOPICS:
         pts = _score(toks, ' '.join([t['name'], t['summary'], ' '.join(t['ideas']), t['category'],
