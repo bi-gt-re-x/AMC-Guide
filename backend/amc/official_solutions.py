@@ -14,7 +14,7 @@ on its answer.
 Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
 10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
 Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, the
-2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, the 2016 AMC 10A and 10B, and the 2015 AMC 10A. A problem whose numbers are only in a picture the
+2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, the 2016 AMC 10A and 10B, and the 2015 AMC 10A and 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -7003,6 +7003,274 @@ SOLUTIONS = {
             r'$a + b + c = 26 + 1 + 32 = 59$. The answer is $\textbf{(A) }59$.',
         ],
         'trap': r'Forgetting the near points round the corner on the next side, which leaves $1 - \frac{3}{16} = \frac{13}{16}$ with no $\pi$ in it.',
+    },
+    # ------------------------------------------------------------------ 2015 AMC 10B
+    # 8 has pictures for choices; they are drawn in its figure, labelled (A) to (E).
+    '2015-amc-10b-1': {
+        'topics': ['exponents', 'arithmetic'],
+        'answer': 'C',
+        'insight': r'A negative exponent is a reciprocal, and an even power of $-2$ is positive.',
+        'steps': [
+            r'$(-2)^{-2} = \frac{1}{(-2)^2} = \frac14$.',
+            r'$2 - \frac14 = \frac74$. The answer is $\textbf{(C) } \dfrac{7}{4}$.',
+        ],
+        'trap': r'Reading $(-2)^{-2}$ as $-\frac14$ and answering $\frac94$.',
+    },
+    '2015-amc-10b-2': {
+        'topics': ['clocks-calendars', 'word-problems'],
+        'answer': 'B',
+        'insight': r'Two tasks took $1{:}00$ to $2{:}40$, so one task is half of $100$ minutes.',
+        'steps': [
+            r'Two tasks took $100$ minutes, so each takes $50$.',
+            r'The third ends $50$ minutes after $2{:}40$, at $3{:}30$. The answer is $\textbf{(B) }\text{3:30 PM}$.',
+        ],
+        'trap': r'Treating $1{:}00$ to $2{:}40$ as three tasks, or as $140$ minutes because of the $40$.',
+    },
+    '2015-amc-10b-3': {
+        'topics': ['linear-equations', 'casework'],
+        'answer': 'A',
+        'insight': r'$2a + 3b = 100$. Try $28$ as $a$ and as $b$; only one gives a whole number.',
+        'steps': [
+            r'If $a = 28$, then $3b = 44$, which is not a multiple of $3$.',
+            r'If $b = 28$, then $2a = 100 - 84 = 16$ and $a = 8$. The answer is $\textbf{(A) } 8$.',
+        ],
+        'trap': r'Trying only $a = 28$ and concluding the other number is $\frac{44}{3}$, then picking the nearest choice, $14$.',
+    },
+    '2015-amc-10b-4': {
+        'topics': ['decimals-fractions', 'word-problems'],
+        'answer': 'C',
+        'insight': r'Cut the pizza into $60$ slices so every share is a whole number.',
+        'steps': [
+            r'Alex $12$, Beth $20$, Cyril $15$, and Dan the rest: $60 - 47 = 13$.',
+            r'From most to least: Beth, Cyril, Dan, Alex. The answer is $\textbf{(C) } \text{Beth, Cyril, Dan, Alex}$.',
+        ],
+        'trap': r'Putting Dan last because he only got leftovers. His $\frac{13}{60}$ is more than the $\frac{12}{60}$ Alex ate.',
+    },
+    '2015-amc-10b-5': {
+        'topics': ['logic', 'word-problems'],
+        'answer': 'B',
+        'insight': r'Start from the one fixed place, Marta in $6$th, and follow the chain of clues.',
+        'steps': [
+            r'Marta $6$th puts Jack $5$th, so Todd is $3$rd and Rand $2$nd.',
+            r'Hikmet is $6$ places behind Rand: $8$th. (David is $10$th.) The answer is $\textbf{(B) } \text{Hikmet}$.',
+        ],
+        'trap': r'Reading "behind" as a smaller place number, which sends the chain the wrong way.',
+    },
+    '2015-amc-10b-6': {
+        'topics': ['logic', 'casework'],
+        'answer': 'E',
+        'insight': r'Tennis cannot follow running or swimming, so it must follow basketball (Monday) or golf (Wednesday).',
+        'steps': [
+            r'Tennis on Tuesday would leave Thursday to Sunday for three runs on no two days in a row, which four days in a row cannot hold. So tennis is on Thursday.',
+            r'The runs are on three of Tuesday, Friday, Saturday, Sunday with no two in a row: Tuesday, Friday and Sunday.',
+            r'Saturday is left for swimming. The answer is $\textbf{(E) } \text{Saturday}$.',
+        ],
+        'trap': r'Placing the runs on Tuesday, Thursday and Saturday, which looks neat but leaves tennis on a day after a run.',
+    },
+    '2015-amc-10b-7': {
+        'topics': ['functions', 'decimals-fractions'],
+        'answer': 'A',
+        'insight': r'The operation is not associative. Work out each side from the inside.',
+        'steps': [
+            r'$1 \diamond 2 = \frac12$, then $\frac12 \diamond 3 = \frac12 - \frac13 = \frac16$.',
+            r'$2 \diamond 3 = \frac53$, then $1 \diamond \frac53 = 1 - \frac35 = \frac25$.',
+            r'$\frac16 - \frac25 = \frac{5 - 12}{30} = -\frac{7}{30}$. The answer is $\textbf{(A) } -\dfrac{7}{30}$.',
+        ],
+        'trap': r'Assuming the grouping does not matter and answering $0$.',
+    },
+    '2015-amc-10b-8': {
+        'topics': ['transformations', 'coordinate-geometry'],
+        'answer': 'E',
+        'insight': r'Follow one point through all three moves. They combine into a single reflection.',
+        'steps': [
+            r'A quarter turn clockwise sends $(x, y)$ to $(y, -x)$. Reflecting in the $y$-axis gives $(-y, -x)$, and a half turn gives $(y, x)$.',
+            r'So the F is reflected in the line $y = x$: its stem along the $y$-axis from $(1,0)$ to $(0,5)$ goes to a stem along the $x$-axis, with the arms pointing up.',
+            r'That is figure (E). The answer is $\textbf{(E) }$.',
+        ],
+        'trap': r'Forgetting the half turn. The first two moves alone send $(x, y)$ to $(-y, -x)$, below and to the left of the origin.',
+    },
+    '2015-amc-10b-9': {
+        'topics': ['circles', 'area'],
+        'answer': 'B',
+        'insight': r'The fin is the quarter of the big circle with the right half of the small circle taken out.',
+        'steps': [
+            r'The quarter circle of radius $3$ has area $\frac{9\pi}{4}$.',
+            r'The small circle has area $\frac{9\pi}{4}$, and the half inside the quarter is $\frac{9\pi}{8}$.',
+            r'$\frac{9\pi}{4} - \frac{9\pi}{8} = \frac{9\pi}{8}$. The answer is $\textbf{(B) } \dfrac{9\pi}{8}$.',
+        ],
+        'trap': r'Removing the whole small circle, which gives $0$.',
+    },
+    '2015-amc-10b-10': {
+        'topics': ['parity', 'modular-arithmetic'],
+        'answer': 'C',
+        'insight': r'Count the factors for the sign; for the last digit, odd numbers times a multiple of $5$ end in $5$.',
+        'steps': [
+            r'The numbers are $-1, -3, \dots, -2013$: that is $1007$ of them, an odd count, so the product is negative.',
+            r'One factor is $-5$ and all are odd, so the product is an odd multiple of $5$ and ends in $5$.',
+            r'The answer is $\textbf{(C) }$, a negative number ending with a $5$.',
+        ],
+        'trap': r'Counting $1008$ factors by including $-2015$, which is not strictly greater than $-2015$, and calling it positive.',
+    },
+    '2015-amc-10b-11': {
+        'topics': ['probability', 'divisibility'],
+        'answer': 'B',
+        'insight': r'The digits come from $\{2, 3, 5, 7\}$, so there are $4 + 16 = 20$ numbers. A two-digit prime among them must end in $3$ or $7$.',
+        'steps': [
+            r'One digit: $2, 3, 5, 7$, all prime.',
+            r'Two digits ending in $3$ or $7$: $23, 27, 33, 37, 53, 57, 73, 77$. The primes are $23, 37, 53, 73$.',
+            r'That is $8$ primes out of $20$: $\frac25$. The answer is $\textbf{(B) } \dfrac{2}{5}$.',
+        ],
+        'trap': r'Counting $57 = 3 \cdot 19$ or $77 = 7 \cdot 11$ as prime.',
+    },
+    '2015-amc-10b-12': {
+        'topics': ['circles', 'coordinate-geometry'],
+        'answer': 'A',
+        'insight': r'Write the distance condition and the $x$ terms cancel.',
+        'steps': [
+            r'$(x - 5)^2 + (-x - 5)^2 \le 100$ gives $2x^2 + 50 \le 100$, so $x^2 \le 25$.',
+            r'The integers from $-5$ to $5$: $11$ of them. The answer is $\textbf{(A) } 11$.',
+        ],
+        'trap': r'Forgetting $x = 0$ or counting only $x$ from $-5$ to $4$.',
+    },
+    '2015-amc-10b-13': {
+        'topics': ['right-triangles', 'coordinate-geometry'],
+        'answer': 'E',
+        'insight': r'The triangle is a $5$-$12$-$13$ right triangle. Two altitudes are the legs.',
+        'steps': [
+            r'The intercepts are $(5, 0)$ and $(0, 12)$, so the legs are $5$ and $12$ and the hypotenuse $13$.',
+            r'The altitude to the hypotenuse is $\frac{5 \cdot 12}{13} = \frac{60}{13}$.',
+            r'$5 + 12 + \frac{60}{13} = \frac{281}{13}$. The answer is $\textbf{(E) } \dfrac{281}{13}$.',
+        ],
+        'trap': r'Using the hypotenuse, $13$, in place of the altitude to it.',
+    },
+    '2015-amc-10b-14': {
+        'topics': ['quadratics', 'inequalities'],
+        'answer': 'D',
+        'insight': r'Factor out $x - b$: the roots are $b$ and $\frac{a + c}{2}$.',
+        'steps': [
+            r'$(x - b)(x - a + x - c) = (x - b)(2x - a - c)$, so the roots add to $b + \frac{a + c}{2}$.',
+            r'$b$ counts double, so make $b = 9$ and $a, c = 8, 7$: $9 + 7.5 = 16.5$. The answer is $\textbf{(D) } 16.5$.',
+        ],
+        'trap': r'Making $a$ or $c$ the $9$, which gives at most $8 + \frac{9 + 7}{2} = 16$.',
+    },
+    '2015-amc-10b-15': {
+        'topics': ['diophantine', 'word-problems'],
+        'answer': 'B',
+        'insight': r'With $h$ horses and $c$ cows the town has $3h$ people, $9h$ ducks and $4c$ sheep: $13h + 5c$ in all.',
+        'steps': [
+            r'$47 - 13h$ for $h = 0, 1, 2, 3$ is $47, 34, 21, 8$, and none is a multiple of $5$.',
+            r'The others work: $41 = 26 + 15$, $59 = 39 + 20$, $61 = 26 + 35$, $66 = 26 + 40$. The answer is $\textbf{(B) } 47$.',
+        ],
+        'trap': r'Adding $1 + 3 + 3 = 7$ per horse instead of $13$, forgetting the ducks come $3$ per person.',
+    },
+    '2015-amc-10b-16': {
+        'topics': ['probability', 'factors-divisors'],
+        'answer': 'C',
+        'insight': r'Count the chains, Cal dividing Bill dividing Al, by the middle number, Bill.',
+        'steps': [
+            r'Bill $2$: Cal $1$, Al $4, 6, 8, 10$, so $4$. Bill $3$: Al $6$ or $9$, so $2$. Bill $4$: Cal $1$ or $2$, Al $8$, so $2$. Bill $5$: Al $10$, so $1$. Bill $1$ or above $5$ gives none.',
+            r'That is $9$ chains out of $10 \cdot 9 \cdot 8 = 720$ assignments: $\frac{1}{80}$. The answer is $\textbf{(C) } \dfrac{1}{80}$.',
+        ],
+        'trap': r'Dividing by $10^3 = 1000$ and answering $\frac{9}{1000}$. The three numbers must be different.',
+    },
+    '2015-amc-10b-17': {
+        'topics': ['solid-geometry'],
+        'answer': 'B',
+        'insight': r'The octahedron is two pyramids on a rhombus: the four side-face centres, with diagonals $5$ and $4$, at mid-height.',
+        'steps': [
+            r'The rhombus has area $\frac12 \cdot 5 \cdot 4 = 10$, and each pyramid has height $\frac32$.',
+            r'Volume $= 2 \cdot \frac13 \cdot 10 \cdot \frac32 = 10$, one sixth of the box. The answer is $\textbf{(B) } 10$.',
+        ],
+        'trap': r'Treating it as a regular octahedron, or taking half the box, $30$.',
+    },
+    '2015-amc-10b-18': {
+        'topics': ['expected-value', 'probability'],
+        'answer': 'D',
+        'insight': r'A coin ends tails only if all three tosses are tails.',
+        'steps': [
+            r'Each coin ends heads with probability $1 - \frac18 = \frac78$.',
+            r'By linearity the expected number is $64 \cdot \frac78 = 56$. The answer is $\textbf{(D) } 56$.',
+        ],
+        'trap': r'Counting heads after two tosses only: $64 \cdot \frac34 = 48$.',
+    },
+    '2015-amc-10b-19': {
+        'topics': ['right-triangles', 'circles'],
+        'answer': 'C',
+        'insight': r'The centre lies on the perpendicular bisectors of $XY$ and $ZW$, which are those of $AB$ and $AC$. They meet at the midpoint $M$ of $AB$.',
+        'steps': [
+            r'Put $C = (0,0)$, $A = (b, 0)$, $B = (0, a)$, with the square on $AC$ below: $W = (0, -b)$. The centre is $M = \left(\frac b2, \frac a2\right)$.',
+            r'$MX^2 = 6^2 + 12^2 = 180$ and $MW^2 = \frac{b^2}{4} + \left(\frac a2 + b\right)^2 = 36 + ab + b^2$, using $a^2 + b^2 = 144$.',
+            r'Setting them equal: $ab + b^2 = 144 = a^2 + b^2$, so $a = b = 6\sqrt2$.',
+            r'The perimeter is $12 + 12\sqrt2$. The answer is $\textbf{(C)}\ 12+12\sqrt{2}$.',
+        ],
+        'trap': r'Guessing a $30$-$60$-$90$ triangle from the $\sqrt3$ choices. The circle forces the legs equal.',
+    },
+    '2015-amc-10b-20': {
+        'topics': ['graph-theory', 'basic-counting'],
+        'answer': 'A',
+        'insight': r'Corners alternate in colour along a path, so after $7$ edges Erin is an odd distance away. Not next to the start means she ends at the opposite corner.',
+        'steps': [
+            r'From $000$ she has $3$ first moves and then $2$ second moves (the third neighbour is the far corner, which must come last).',
+            r'Say $000, 100, 110$. Each later corner has only one unused neighbour that is not the far corner: $010, 011, 001, 101$, then $111$.',
+            r'So there are $3 \cdot 2 = 6$ paths. The answer is $\textbf{(A) }\text{6}$.',
+        ],
+        'trap': r'Counting all $18$ paths through every corner, including the $12$ that end next to the start.',
+    },
+    '2015-amc-10b-21': {
+        'topics': ['floor-ceiling', 'inequalities'],
+        'answer': 'D',
+        'insight': r'Cozy takes $\lceil \frac n2 \rceil$ jumps and Dash $\lceil \frac n5 \rceil$. Their difference is about $\frac{3n}{10}$, so $n$ is near $63$.',
+        'steps': [
+            r'The difference lies between $\frac{3n}{10} - \frac45$ and $\frac{3n}{10} + \frac12$, so $19$ needs $62 \le n \le 66$.',
+            r'Checking: $62 \to 18$, $63 \to 19$, $64 \to 19$, $65 \to 20$, $66 \to 19$.',
+            r'$s = 63 + 64 + 66 = 193$, with digit sum $13$. The answer is $\textbf{(D) } 13$.',
+        ],
+        'trap': r'Solving $\frac n2 - \frac n5 = 19$ exactly and finding only $n = \frac{190}{3}$, or missing $66$.',
+    },
+    '2015-amc-10b-22': {
+        'topics': ['polygons', 'similar-triangles'],
+        'answer': 'D',
+        'insight': r'Every angle in the figure is a multiple of $36^\circ$, so it is full of isosceles triangles, and the side of the pentagon is the golden ratio $\varphi$ when $AG = 1$.',
+        'steps': [
+            r'In $\triangle AGB$ the angles at $A$ and $B$ are $36^\circ$, so $GB = AG = 1$. In $\triangle AEG$ the angles at $A$ and $G$ are $72^\circ$, so $EG = EA = t$, the side.',
+            r'$\triangle EAB \sim \triangle AGB$ (angles $36^\circ, 36^\circ, 108^\circ$), so $\frac{t + 1}{t} = \frac{t}{1}$: $t^2 = t + 1$ and $CD = t = \frac{1 + \sqrt5}{2}$.',
+            r'On $EB$: $EF = GB = 1$, so $FG = (t + 1) - 2 = t - 1$. On $AD$: $AF = 1$ and $AJ = AD - JD = (t + 1) - 1 = t$, and $JH \parallel DC$, so $JH = t \cdot \frac{t}{t + 1} = 1$.',
+            r'$FG + JH + CD = (t - 1) + 1 + t = 2t = 1 + \sqrt5$. The answer is $\textbf{(D) } 1+\sqrt5$.',
+        ],
+        'trap': r'Taking $JH$ as a side of the small pentagon. $J$ and $H$ are not neighbours, so $JH$ is one of its diagonals.',
+    },
+    '2015-amc-10b-23': {
+        'topics': ['factorials', 'floor-ceiling'],
+        'answer': 'B',
+        'insight': r'Below $25$, trailing zeros just count multiples of $5$. $(2n)!$ has about twice as many, so the third share has to come from $2n$ crossing an extra multiple of $5$ (or $25$).',
+        'steps': [
+            r'With $n = 5q + r$ and $2n < 25$: $3q = 2q + \lfloor \frac{2r}{5} \rfloor$, so $q = 1$ and $r \ge 3$: $n = 8, 9$.',
+            r'With $13 \le n \le 24$, $(2n)!$ gets an extra $5$ from $25$: $q = \lfloor \frac{2r}{5} \rfloor + 1 = 2$ with $r \ge 3$: $n = 13, 14$.',
+            r'$s = 8 + 9 + 13 + 14 = 44$, digit sum $8$. The answer is $\textbf{(B) }8$.',
+        ],
+        'trap': r'Missing $13$ and $14$ by forgetting that $25$ gives $(2n)!$ two fives.',
+    },
+    '2015-amc-10b-24': {
+        'topics': ['sequences-series', 'coordinate-geometry'],
+        'answer': 'D',
+        'insight': r'Aaron reaches the corner $(-k, -k)$ after filling the square from $-k$ to $k$ except the $2k$ points still ahead on the bottom row: that is $p_{4k^2 + 2k}$.',
+        'steps': [
+            r'Check: $p_6 = (-1, -1)$ and $p_{20} = (-2, -2)$. From there he walks east along $y = -k$ for $2k + 1$ steps.',
+            r'$k = 22$ gives $p_{1980} = (-22, -22)$, and $2015 - 1980 = 35$ steps east.',
+            r'$p_{2015} = (13, -22)$. The answer is $\textbf{(D) } (13,-22)$.',
+        ],
+        'trap': r'Mixing up which way he is walking on that side, and answering $(-22, -13)$ or $(22, -13)$.',
+    },
+    '2015-amc-10b-25': {
+        'topics': ['diophantine', 'solid-geometry'],
+        'answer': 'B',
+        'insight': r'$abc = 2(ab + bc + ca)$ divides to $\frac1a + \frac1b + \frac1c = \frac12$, and $a$ is smallest, so $3 \le a \le 6$.',
+        'steps': [
+            r'$a = 3$: $\frac1b + \frac1c = \frac16$ gives $(7, 42)$, $(8, 24)$, $(9, 18)$, $(10, 15)$, $(12, 12)$.',
+            r'$a = 4$: $\frac1b + \frac1c = \frac14$ gives $(5, 20)$, $(6, 12)$, $(8, 8)$. $a = 5$: $(5, 10)$. $a = 6$: $(6, 6)$.',
+            r'$5 + 3 + 1 + 1 = 10$. The answer is $\textbf{(B) }10$.',
+        ],
+        'trap': r'Counting $(a, b, c)$ in every order. The question fixes $a \le b \le c$.',
     },
 }
 
