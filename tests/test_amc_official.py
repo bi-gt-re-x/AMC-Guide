@@ -83,6 +83,20 @@ Which is true of $p$?
                               '$p=\\dfrac{1}{3}$', '$p>\\dfrac{1}{3}$']
     assert '<p' not in one['statement'] and 'align' not in one['statement']
 
+
+def test_a_full_stop_after_the_solution_link_is_dropped():
+    # 2015 AMC 10A #25 ends `[[2015 AMC 10A Problems/Problem 25|Solution]].`
+    src = r"""==Problem 1==
+What is <math>1+1</math>?
+
+<math>\textbf{(A) }1\qquad\textbf{(B) }2\qquad\textbf{(C) }3\qquad\textbf{(D) }4\qquad\textbf{(E) }5</math>
+
+[[2015 AMC 10A Problems/Problem 1|Solution]].
+"""
+    (one,) = official.parse_contest(src, 'AMC 10')
+    assert one['statement'] == 'What is $1+1$?'
+    assert one['choices'][4] == '$5$'
+
 def test_aime_has_no_choices():
     found = official.parse_contest('==Problem 1==\nFind <math>x</math>.\n==Problem 2==\nFind y.', 'AIME')
     assert found[0]['choices'] is None and found[0]['statement'] == 'Find $x$.'

@@ -107,7 +107,8 @@ def _clean_wiki(text):
     """Wiki markup that is not math, removed or reduced to its words."""
     text = re.sub(r'<!--.*?-->', '', text, flags=re.S)
     text = re.sub(r'\[\[(?:Image|File):[^\]]*\]\]', '', text, flags=re.I)
-    text = re.sub(r'\[\[[^\]|]*\|\s*Solution[^\]]*\]\]', '', text, flags=re.I)
+    # A full stop typed after the link goes with it (2015 AMC 10A #25).
+    text = re.sub(r'\[\[[^\]|]*\|\s*Solution[^\]]*\]\][ \t]*\.?', '', text, flags=re.I)
     text = re.sub(r'\[\[(?:[^\]|]*\|)?([^\]]*)\]\]', r'\1', text)
     text = re.sub(r'\[https?://\S+\s+([^\]]*)\]', r'\1', text)
     # Wiki bold and italics (`''word''`) go, but not inside math, where `P''`

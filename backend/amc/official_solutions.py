@@ -14,7 +14,7 @@ on its answer.
 Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
 10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
 Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, the
-2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, and the 2016 AMC 10A and 10B. A problem whose numbers are only in a picture the
+2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, the 2016 AMC 10A and 10B, and the 2015 AMC 10A. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -6742,6 +6742,267 @@ SOLUTIONS = {
             r'$1 \cdot 5 \cdot 3 = 15$. The answer is $\textbf{(A)}\ 15$.',
         ],
         'trap': r'Counting $3 \cdot 3$ pairs for the twos without requiring the maximum to be exactly $2$.',
+    },
+    # ------------------------------------------------------------------ 2015 AMC 10A
+    # 20 is the reworded problem (the original had no correct choice).
+    '2015-amc-10a-1': {
+        'topics': ['exponents', 'arithmetic'],
+        'answer': 'C',
+        'insight': r'Simplify the bracket first: $2^0 = 1$, so it is $1 - 1 + 25 + 0 = 25$.',
+        'steps': [
+            r'$(2^0 - 1 + 5^2 + 0)^{-1} = 25^{-1} = \frac{1}{25}$.',
+            r'Times $5$ that is $\frac15$. The answer is $\textbf{(C)}\ \frac{1}{5}$.',
+        ],
+        'trap': r'Taking $2^0 = 0$, or reading the exponent $-1$ as a minus sign, which leads to $-120$ or $-125$.',
+    },
+    '2015-amc-10a-2': {
+        'topics': ['linear-equations', 'word-problems'],
+        'answer': 'D',
+        'insight': r'If every tile were a triangle there would be $75$ edges. Each square adds one more.',
+        'steps': [
+            r'$25$ triangles would have $3 \cdot 25 = 75$ edges, $9$ short of $84$.',
+            r'Swapping a triangle for a square adds one edge, so there are $9$ squares. The answer is $\textbf{(D)}\ 9$.',
+        ],
+        'trap': r'Answering $16$, the number of triangles.',
+    },
+    '2015-amc-10a-3': {
+        'topics': ['sequences-series', 'basic-counting'],
+        'answer': 'D',
+        'insight': r'Count the horizontal toothpicks row by row; the vertical ones are the same picture turned over.',
+        'steps': [
+            r'For $n$ steps the horizontal rows hold $n, n, n - 1, \dots, 1$ toothpicks: $n + \frac{n(n + 1)}{2}$. The vertical ones are the same, so there are $n(n + 3)$ in all.',
+            r'That is $18$ for $n = 3$, as given, and $40$ for $n = 5$.',
+            r'She adds $40 - 18 = 22$. The answer is $\textbf{(D)}\ 22$.',
+        ],
+        'trap': r'Answering $40$, the whole $5$-step staircase, when the question asks how many to add.',
+    },
+    '2015-amc-10a-4': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'B',
+        'insight': r'Give Mia $1$ share. Then Sofia has $2$ and Pablo $6$, and they finish with $3$ each.',
+        'steps': [
+            r'Mia, Sofia and Pablo have $m$, $2m$ and $6m$, which is $9m$ in all, so each ends with $3m$.',
+            r'Sofia needs $m$ more, which is $\frac16$ of the $6m$ Pablo has. The answer is $\textbf{(B)}\ \frac{1}{6}$.',
+        ],
+        'trap': r'Giving the share of all the eggs Pablo hands over ($m$ out of $3m$, so $\frac13$) instead of the share of his eggs.',
+    },
+    '2015-amc-10a-5': {
+        'topics': ['statistics'],
+        'answer': 'E',
+        'insight': r'Compare the totals, not the averages: $15$ tests at $81$ against $14$ at $80$.',
+        'steps': [
+            r'The $14$ tests add to $14 \cdot 80 = 1120$ and all $15$ to $15 \cdot 81 = 1215$.',
+            r'Payton scored $1215 - 1120 = 95$. The answer is $\textbf{(E)}\ 95$.',
+        ],
+        'trap': r'Thinking one more test raises the average by $1$, so it must be $81$ or $82$. It has to lift all $15$ by a point: $80 + 15 = 95$.',
+    },
+    '2015-amc-10a-6': {
+        'topics': ['linear-equations', 'word-problems'],
+        'answer': 'B',
+        'insight': r'Write $a + b = 5(a - b)$ and collect the $a$s on one side.',
+        'steps': [
+            r'$a + b = 5a - 5b$ gives $6b = 4a$.',
+            r'So $\frac{a}{b} = \frac{6}{4} = \frac32$. The answer is $\textbf{(B)}\ \frac{3}{2}$.',
+        ],
+        'trap': r'Writing the condition the wrong way round, $5(a + b) = a - b$, which has no positive solution.',
+    },
+    '2015-amc-10a-7': {
+        'topics': ['sequences-series'],
+        'answer': 'B',
+        'insight': r'The number of terms is the number of steps plus one.',
+        'steps': [
+            r'From $13$ to $73$ is $60$, which is $20$ steps of $3$.',
+            r'$20$ steps join $21$ terms. The answer is $\textbf{(B)}\ 21$.',
+        ],
+        'trap': r'Answering $20$, the number of gaps between terms.',
+    },
+    '2015-amc-10a-8': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'B',
+        'insight': r'Let Claire be $c$ two years ago, so Pete was $3c$. Two years before that they were $c - 2$ and $3c - 2$.',
+        'steps': [
+            r'$3c - 2 = 4(c - 2)$ gives $c = 6$. Two years ago they were $6$ and $18$, so now Claire is $8$ and Pete $20$.',
+            r'In $x$ years, $20 + x = 2(8 + x)$ gives $x = 4$. The answer is $\textbf{(B)}\ 4$.',
+        ],
+        'trap': r'Treating $6$ and $18$ as their ages now, which gives $x = 6$.',
+    },
+    '2015-amc-10a-9': {
+        'topics': ['solid-geometry', 'word-problems'],
+        'answer': 'D',
+        'insight': r'Equal volumes mean $r^2 h$ is the same, and $1.1^2 = 1.21$.',
+        'steps': [
+            r'$\pi r^2 h_1 = \pi (1.1r)^2 h_2$, so $h_1 = 1.21\,h_2$.',
+            r'The first height is $21\%$ more than the second. The answer is $\textbf{(D)}$.',
+        ],
+        'trap': r'Choosing (C). The second height is $\frac{1}{1.21}$ of the first, which is about $17\%$ less, not $21\%$.',
+    },
+    '2015-amc-10a-10': {
+        'topics': ['permutations', 'casework'],
+        'answer': 'C',
+        'insight': r'$b$ may only stand next to $d$, and $c$ only next to $a$, so $b$ and $c$ must be at the ends.',
+        'steps': [
+            r'$b$ cannot touch $a$ or $c$, so it has at most one neighbour, $d$: it sits at an end with $d$ beside it. Likewise $c$ sits at an end with $a$ beside it.',
+            r'That leaves $bdac$ and its reverse $cadb$, and both work. The answer is $\textbf{(C)}\ 2$.',
+        ],
+        'trap': r'Finding $bdac$ and forgetting its reverse, $cadb$, which also works.',
+    },
+    '2015-amc-10a-11': {
+        'topics': ['right-triangles', 'area'],
+        'answer': 'C',
+        'insight': r'Sides $4x$ and $3x$ make a $3$-$4$-$5$ right triangle with the diagonal, so $d = 5x$.',
+        'steps': [
+            r'The area is $4x \cdot 3x = 12x^2$ and $d^2 = 25x^2$.',
+            r'So the area is $\frac{12}{25}d^2$. The answer is $\textbf{(C)}\ \frac{12}{25}$.',
+        ],
+        'trap': r'Taking the diagonal as $4x + 3x$. It is the hypotenuse, $\sqrt{(4x)^2 + (3x)^2} = 5x$.',
+    },
+    '2015-amc-10a-12': {
+        'topics': ['quadratics', 'coordinate-geometry'],
+        'answer': 'C',
+        'insight': r'Move $2x^2 y$ across and the left side is a perfect square: $(y - x^2)^2 = 1$.',
+        'steps': [
+            r'$y^2 - 2x^2 y + x^4 = 1$ means $y = x^2 + 1$ or $y = x^2 - 1$.',
+            r'For any $x$, including $\sqrt\pi$, the two $y$ values are $2$ apart. The answer is $\textbf{(C) }2$.',
+        ],
+        'trap': r'Substituting $x^2 = \pi$ and solving the quadratic in $y$ by formula, then losing the $\pi$ terms. They cancel in the difference.',
+    },
+    '2015-amc-10a-13': {
+        'topics': ['basic-counting', 'word-problems'],
+        'answer': 'C',
+        'insight': r'With at least one $5$-cent coin, every multiple of $5$ from $5$ cents up to the total can be made.',
+        'steps': [
+            r'With $t$ ten-cent coins and $12 - t$ five-cent ones, the total is $5(12 - t) + 10t = 5(12 + t)$ cents.',
+            r'So there are $12 + t$ values, and $12 + t = 17$ gives $t = 5$. The answer is $\textbf{(C) }5$.',
+        ],
+        'trap': r'Counting coin combinations instead of values. Many combinations give the same amount.',
+    },
+    '2015-amc-10a-14': {
+        'topics': ['circles', 'transformations'],
+        'answer': 'C',
+        'insight': r'Rolling round the outside, the disk turns by its angle of travel times $\frac{R + r}{r} = \frac{30}{10} = 3$.',
+        'steps': [
+            r"When the disk's centre has gone $\theta$ round the clock, the arrow has turned $3\theta$: the arc rolled adds $2\theta$ and going round the clock adds $\theta$.",
+            r"The arrow points up again when $3\theta = 360^\circ$, so $\theta = 120^\circ$, four hours on from $12$. The answer is $\textbf{(C) }\mathrm{4 o'clock}$.",
+        ],
+        'trap': r"Counting only the rolled arc, a turn of $2\theta$, which gives $\theta = 180^\circ$ and $6$ o'clock.",
+    },
+    '2015-amc-10a-15': {
+        'topics': ['diophantine', 'gcd-lcm'],
+        'answer': 'B',
+        'insight': r'Clear denominators and factor: the condition becomes $(x - 10)(y + 11) = -110$.',
+        'steps': [
+            r'$\frac{x + 1}{y + 1} = \frac{11x}{10y}$ gives $10xy + 10y = 11xy + 11x$, so $xy + 11x - 10y = 0$ and $(x - 10)(y + 11) = -110$.',
+            r'Since $y + 11 \ge 12$, $x = 10 - d$ with $d$ a divisor of $110$ below $10$: $d = 1, 2, 5$, giving $\frac{9}{99}$, $\frac{8}{44}$, $\frac{5}{11}$.',
+            r'Only $\frac{5}{11}$ is in lowest terms (and $\frac{6}{12} = \frac12 = 1.1 \cdot \frac{5}{11}$). The answer is $\textbf{(B) }1$.',
+        ],
+        'trap': r'Counting all three solutions. $\frac{9}{99}$ and $\frac{8}{44}$ are not in lowest terms, which the question requires.',
+    },
+    '2015-amc-10a-16': {
+        'topics': ['nonlinear-systems', 'quadratics'],
+        'answer': 'B',
+        'insight': r'Subtract the equations to get $x + y$, then add them to get $x^2 + y^2$.',
+        'steps': [
+            r'Subtracting: $y - x = (x - y)(x + y - 4)$. Since $x \ne y$, divide by $x - y$: $x + y - 4 = -1$, so $x + y = 3$.',
+            r'Adding: $x + y + 8 = x^2 + y^2 - 4(x + y) + 8$, so $x^2 + y^2 = 5(x + y) = 15$. The answer is $\textbf{(B) }15$.',
+        ],
+        'trap': r'Dividing by $x - y$ but dropping the sign, which gives $x + y = 5$ and $x^2 + y^2 = 25$.',
+    },
+    '2015-amc-10a-17': {
+        'topics': ['coordinate-geometry', 'triangles'],
+        'answer': 'D',
+        'insight': r'The given line rises at $30^\circ$ and $x = 1$ stands at $90^\circ$. The third line has to make $60^\circ$ with both, so it falls at $30^\circ$.',
+        'steps': [
+            r'The third line is $y = -\frac{\sqrt3}{3}x$. It meets $x = 1$ at $\left(1, -\frac{\sqrt3}{3}\right)$, and the given line meets $x = 1$ at $\left(1, 1 + \frac{\sqrt3}{3}\right)$.',
+            r'So a side is $1 + \frac{2\sqrt3}{3}$, and the perimeter is $3 + 2\sqrt3$. The answer is $\textbf{(D) }3+2\sqrt{3}$.',
+        ],
+        'trap': r'Taking the line through the origin to be horizontal or parallel to the given line. The triangle needs all three directions $60^\circ$ apart.',
+    },
+    '2015-amc-10a-18': {
+        'topics': ['digits-bases'],
+        'answer': 'E',
+        'insight': r'$1000 = 3 \cdot 256 + 14 \cdot 16 + 8$ is $\mathrm{3E8}$ in hex, and every three-digit hex number using only $0$ to $9$ with a leading $0$ to $3$ is below it.',
+        'steps': [
+            r'The largest candidate, $\mathrm{399}_{16} = 921$, is below $1000$, so the leading hex digit can be $0$ to $3$ and the other two $0$ to $9$: $4 \cdot 10 \cdot 10 = 400$ strings.',
+            r'Leaving out $000$, $n = 399$, with digit sum $21$. The answer is $\textbf{(E) }21$.',
+        ],
+        'trap': r'Stopping the leading hex digit at $2$ because $\mathrm{3}$ looks too big. $\mathrm{399}_{16}$ is only $921$.',
+    },
+    '2015-amc-10a-19': {
+        'topics': ['right-triangles', 'area'],
+        'answer': 'D',
+        'insight': r'The trisectors leave $C$ at $30^\circ$ and $60^\circ$, and by symmetry $CD = CE$. Find that length and use $\frac12 ab\sin C$.',
+        'steps': [
+            r'The legs are $5$. Put $C$ at the origin and $AB$ on $x + y = 5$. The point at angle $30^\circ$ and distance $r$ has $r(\cos 30^\circ + \sin 30^\circ) = 5$, so $r = \frac{10}{\sqrt3 + 1} = 5(\sqrt3 - 1)$.',
+            r'$[CDE] = \frac12 r^2 \sin 30^\circ = \frac{r^2}{4} = \frac{25(4 - 2\sqrt3)}{4} = \frac{50 - 25\sqrt3}{2}$. The answer is $\textbf{(D) }\dfrac{50-25\sqrt{3}}{2}$.',
+        ],
+        'trap': r'Assuming the trisectors cut $AB$ into three equal parts and answering $\frac{25}{6}$. Equal angles do not cut equal lengths.',
+    },
+    '2015-amc-10a-20': {
+        'topics': ['diophantine', 'factors-divisors'],
+        'answer': 'B',
+        'insight': r'Add $4$ and it factors: $A + P + 4 = lw + 2l + 2w + 4 = (l + 2)(w + 2)$.',
+        'steps': [
+            r'With $l, w \ge 1$, $A + P + 4$ must be a product of two factors each at least $3$.',
+            r'$104 = 8 \cdot 13$, $108 = 3 \cdot 36$, $110 = 10 \cdot 11$, $112 = 8 \cdot 14$, but $106 = 2 \cdot 53$ has no such split.',
+            r'So $A + P$ cannot be $102$. The answer is $\textbf{(B) }102$.',
+        ],
+        'trap': r'Testing values for $l$ and $w$ by hand and stopping early. The factoring turns it into one check per choice.',
+    },
+    '2015-amc-10a-21': {
+        'topics': ['solid-geometry', 'right-triangles'],
+        'answer': 'C',
+        'insight': r'$ABC$ and $ABD$ are both $3$-$4$-$5$ right triangles on $AB$, so their altitudes to $AB$ have the same foot and the same length $\frac{12}{5}$.',
+        'steps': [
+            r'In each, the altitude to the hypotenuse is $\frac{3 \cdot 4}{5} = \frac{12}{5}$ and its foot $H$ is $\frac{3^2}{5} = \frac95$ from $A$.',
+            r'$HC = HD = \frac{12}{5}$ and $CD = \frac{12}{5}\sqrt2$, so $\angle CHD = 90^\circ$. Then $DH$ is perpendicular to both $AB$ and $HC$, so to the plane $ABC$.',
+            r'Volume $= \frac13 \cdot 6 \cdot \frac{12}{5} = \frac{24}{5}$. The answer is $\textbf{(C) }\dfrac{24}5$.',
+        ],
+        'trap': r'Using $\frac{12}{5}\sqrt2$, the edge $CD$, as the height, which gives $\frac{24}{5}\sqrt2$.',
+    },
+    '2015-amc-10a-22': {
+        'topics': ['probability', 'recursion'],
+        'answer': 'A',
+        'insight': r'In a row of $n$ seats, the ways with no two neighbours standing follow Fibonacci: $2, 3, 5, 8, \dots$. Break the circle at one person.',
+        'steps': [
+            r'A row of $n$ has $F_{n+2}$ good patterns ($2, 3, 5, 8, 13, 21, 34$ for $n = 1$ to $7$).',
+            r'If person $1$ sits, the other $7$ form a row: $34$. If person $1$ stands, persons $2$ and $8$ sit and persons $3$ to $7$ form a row of $5$: $13$.',
+            r'That is $47$ of the $2^8 = 256$ outcomes. The answer is $\textbf{(A)}\dfrac{47}{256}$.',
+        ],
+        'trap': r'Treating the table as a row and answering $\frac{55}{256}$. That lets persons $1$ and $8$ both stand, though they sit side by side.',
+    },
+    '2015-amc-10a-23': {
+        'topics': ['quadratics', 'diophantine'],
+        'answer': 'C',
+        'insight': r'With roots $r$, $s$: $r + s = a$ and $rs = 2a$, so $rs - 2r - 2s = 0$, that is $(r - 2)(s - 2) = 4$.',
+        'steps': [
+            r'$(r - 2, s - 2)$ is $(1, 4)$, $(2, 2)$, $(-1, -4)$ or $(-2, -2)$, up to order.',
+            r'$a = r + s = (r - 2) + (s - 2) + 4$ is $9$, $8$, $-1$ or $0$.',
+            r'They add to $16$. The answer is $\textbf{(C) }16$.',
+        ],
+        'trap': r'Forgetting the negative factor pairs and answering $17$, or counting $(1, 4)$ and $(4, 1)$ as two values of $a$.',
+    },
+    '2015-amc-10a-24': {
+        'topics': ['quadrilaterals', 'diophantine'],
+        'answer': 'B',
+        'insight': r'$AB \parallel CD$, both perpendicular to $BC$. Dropping a perpendicular from $A$ to $CD$ gives a right triangle with legs $BC$ and $CD - 2$ and hypotenuse $AD = CD$.',
+        'steps': [
+            r'With $BC = x$ and $CD = AD = y$: $y^2 = x^2 + (y - 2)^2$, so $x^2 = 4(y - 1)$. Then $x = 2t$ is even and $y = t^2 + 1$.',
+            r'The perimeter is $2 + 2t + 2(t^2 + 1) = 2t^2 + 2t + 4 < 2015$, so $t^2 + t \le 1005$.',
+            r'$t = 31$ gives $992$ and $t = 32$ gives $1056$, so $t = 1, \dots, 31$. The answer is $\textbf{(B) }31$.',
+        ],
+        'trap': r'Allowing odd $x$, which doubles the count to about $62$. $x^2 = 4(y - 1)$ makes $x$ even.',
+    },
+    '2015-amc-10a-25': {
+        'topics': ['geometric-probability', 'circles'],
+        'answer': 'A',
+        'insight': r'Put the first point on the bottom side at distance $x \le \frac12$ from the left corner. Only its own side and the left side have points within $\frac12$.',
+        'steps': [
+            r'On its own side the near points fill a length of $x + \frac12$. On the left side they fill $\sqrt{\frac14 - x^2}$. The right side and the top are too far.',
+            r'Averaging over $x$ in $[0, \frac12]$: $2\int_0^{1/2} \left(x + \frac12\right)dx = \frac34$, and $2\int_0^{1/2} \sqrt{\frac14 - x^2}\,dx$ is twice a quarter circle of radius $\frac12$, $\frac{\pi}{8}$.',
+            r'Out of a perimeter of $4$, the chance of being closer than $\frac12$ is $\frac{3/4 + \pi/8}{4} = \frac{6 + \pi}{32}$. So the chance of at least $\frac12$ is $\frac{26 - \pi}{32}$.',
+            r'$a + b + c = 26 + 1 + 32 = 59$. The answer is $\textbf{(A) }59$.',
+        ],
+        'trap': r'Forgetting the near points round the corner on the next side, which leaves $1 - \frac{3}{16} = \frac{13}{16}$ with no $\pi$ in it.',
     },
 }
 

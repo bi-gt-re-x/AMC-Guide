@@ -13,6 +13,7 @@ KEY_2018_10B = 'ADBBDDDCDECCCDAEBDEBCCBCC'
 KEY_2017_10A = 'CDBBCBABCBDEDDCBDDCDDEBCA'
 KEY_2017_10B = 'BCEDDBCCDEDACDEABDEBDDCCE'
 KEY_2016_10A = 'BCCBDDDCDBDABCADACEBDDAEA'
+KEY_2015_10A = 'CDDBEBBBDCCCCCBBDEDBCACBA'
 KEY_2016_10B = 'DBDBDBCACDBDDDCEDEDCBACDA'
 KEY_2026_12A = 'ADACACACEBDECCACADDDDCDDB'
 
@@ -59,6 +60,10 @@ def test_the_2017_amc_10a_is_written_up_against_its_key():
 
 def test_the_2017_amc_10b_is_written_up_against_its_key():
     assert [SOLUTIONS['2017-amc-10b-%d' % n]['answer'] for n in range(1, 26)] == list(KEY_2017_10B)
+
+
+def test_the_2015_amc_10a_is_written_up_against_its_key():
+    assert [SOLUTIONS['2015-amc-10a-%d' % n]['answer'] for n in range(1, 26)] == list(KEY_2015_10A)
 
 
 def test_the_2016_amc_10a_is_written_up_against_its_key():
