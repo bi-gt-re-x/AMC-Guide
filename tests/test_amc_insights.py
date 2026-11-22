@@ -76,3 +76,21 @@ def test_analytics_page(client):
 
 def test_analytics_is_signed_in_only(anon):
     assert anon.get('/api/amc/analytics').status_code == 401
+
+
+def test_weeks_split_by_category_with_difficulty_and_test_score():
+    # Two answers this week in different categories, one reveal (not counted),
+    # and a mock scored this week: the chart's week carries all of it.
+    a, b = 'step-10-01', 'step-10-04'
+    attempts = [_row(a, True, 1), _row(b, False, 2), _row(a, False, 2, source='reveal')]
+    contest_id = next(cid for cid, m in catalog.MOCK_BY_ID.items() if m['level'] == 'AMC 10')
+    mock = {'id': 'm1', 'contest_id': contest_id, 'kind': 'mock', 'score': 75, 'at': TODAY.isoformat() + 'T10:00:00'}
+    weeks = insights.weekly(attempts, TODAY, 12, [mock])
+    assert len(weeks) == 12 and weeks[0]['answered'] == 0 and weeks[0]['by_category'] == {}
+    now = weeks[-1]
+    assert now['answered'] == 2 and now['correct'] == 1
+    cats = [catalog.TOPIC_BY_ID[insights.pb.get(p)['topic']]['category'] for p in (a, b)]
+    assert sum(now['by_category'].values()) == 2 and set(now['by_category']) == set(cats)
+    ratings = [insights.pb.get(p)['rating'] for p in (a, b)]
+    assert now['avg_rating'] == round(sum(ratings) / 2, 1)
+    assert now['score_share'] == 0.5   # 75 of 150

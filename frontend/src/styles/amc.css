@@ -1520,3 +1520,112 @@ html[data-theme="dark"] .am-predict-tag { color: #0d1117; }
 @media (prefers-reduced-motion: reduce) {
     .amc-page { animation: none; }
 }
+
+/* ---- Analytics charts (components/Amc/AnalyticsCharts.tsx) ---------------- */
+/* SVG drawn to the card's width; every colour is a token so dark mode follows. */
+.am-an-chart { margin: 0; position: relative; }
+.am-an-chart svg { display: block; overflow: visible; }
+/* Only the invisible per-column hit areas take the pointer, so a bar or line
+   drawn over a column never swallows its hover. */
+.am-an-chart svg * { pointer-events: none; }
+.am-an-chart svg .am-an-hit { pointer-events: all; }
+.am-an-grid { stroke: var(--am-line); stroke-width: 1; }
+.am-an-axis { fill: var(--am-muted); font-size: 11px; font-variant-numeric: tabular-nums; }
+.am-an-axis.is-faint { fill: var(--am-faint); font-size: 10px; }
+.am-an-axis.is-strong { fill: var(--am-ink); font-weight: 700; }
+.am-an-line { fill: none; stroke: var(--am-sage); stroke-width: 2.5; stroke-linecap: round; stroke-linejoin: round; }
+.am-an-line.is-accuracy { stroke: var(--am-ink); stroke-width: 2.25; }
+.am-an-line.is-difficulty { stroke: var(--am-warn); stroke-width: 2; stroke-dasharray: 5 5; }
+.am-an-pt { stroke: var(--am-card); stroke-width: 2; }
+.am-an-pt.is-accuracy { fill: var(--am-ink); }
+.am-an-pt.is-difficulty { fill: var(--am-warn); }
+.am-an-test { fill: var(--am-card); stroke: var(--am-bad); stroke-width: 2.25; }
+.am-an-dot { fill: var(--am-sage); stroke: var(--am-card); stroke-width: 2.5; transition: r .15s ease; }
+.am-an-dot.is-logged { fill: var(--am-card); stroke: var(--am-sage); }
+.am-an-dot.is-on { stroke-width: 3; }
+.am-an-dot-label { fill: var(--am-ink); font-family: var(--am-serif); font-size: 13px; font-weight: 600; }
+.am-an-guide { stroke: var(--am-faint); stroke-width: 1; stroke-dasharray: 3 3; }
+.am-an-ref { stroke-width: 1.5; stroke-dasharray: 6 5; }
+.am-an-ref.is-goal { stroke: var(--am-sage); }
+.am-an-ref.is-qualify { stroke: var(--am-warn); }
+.am-an-ref.is-reliable { stroke: var(--am-faint); }
+.am-an-ref-label { font-size: 11px; font-weight: 600; }
+.am-an-ref-label.is-goal { fill: var(--am-sage); }
+.am-an-ref-label.is-qualify { fill: var(--am-warn); }
+.am-an-ref-label.is-reliable { fill: var(--am-muted); }
+.am-an-hit { fill: transparent; cursor: pointer; outline: none; }
+.am-an-week.is-on .am-an-hit, .am-an-diff.is-on .am-an-hit { fill: var(--am-hover); }
+.am-an-hit:focus-visible { stroke: var(--am-sage); stroke-width: 1.5; }
+.am-an-stack { transition: opacity .15s ease; }
+.am-an-diff-bar { transition: opacity .15s ease; }
+.am-an-diff-empty { fill: var(--am-line); }
+
+.am-an-readout {
+    /* Room for two lines, so the readout does not push the page as it changes. */
+    min-height: 66px;
+    margin-top: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    border-radius: 10px;
+    background: var(--am-inset);
+    color: var(--am-body);
+    font-size: var(--text-sm);
+    line-height: 1.5;
+}
+.am-an-readout-cats { display: flex; flex-wrap: wrap; gap: var(--space-1) var(--space-4); margin-top: var(--space-1); }
+.am-an-readout-cats span { display: inline-flex; align-items: center; gap: 6px; }
+
+.am-an-sums {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: var(--space-4);
+    margin: 0 0 var(--space-6);
+    flex: 1;
+}
+.am-an-sum { margin: 0; }
+.am-an-sum dt { color: var(--am-muted); font-size: var(--text-xs); font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.am-an-sum dd { margin: var(--space-2) 0 0; display: flex; flex-direction: column; gap: 2px; }
+.am-an-sum strong { font-family: var(--am-serif); font-size: 28px; font-weight: 400; line-height: 1.1; }
+.am-an-sum span { font-size: var(--text-xs); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.am-an-trend.is-up { color: var(--am-good); font-weight: 600; }
+.am-an-trend.is-down { color: var(--am-bad); font-weight: 600; }
+.am-an-score-top { display: flex; align-items: flex-start; justify-content: space-between; gap: var(--space-4); flex-wrap: wrap; }
+
+.am-an-legend-row { display: flex; justify-content: space-between; align-items: center; gap: var(--space-4); flex-wrap: wrap; margin-top: var(--space-4); }
+.am-an-legend { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-5); margin: var(--space-4) 0 0; padding: 0; list-style: none; color: var(--am-muted); font-size: var(--text-xs); }
+.am-an-legend-row .am-an-legend { margin: 0; }
+.am-an-legend li { display: inline-flex; align-items: center; gap: 7px; }
+.am-an-key { display: inline-block; flex: none; }
+.am-an-key.is-block { width: 10px; height: 10px; border-radius: 3px; }
+.am-an-key.is-dot { width: 10px; height: 10px; border-radius: 50%; background: var(--am-sage); }
+.am-an-key.is-hollow { width: 10px; height: 10px; border-radius: 50%; border: 2px solid var(--am-sage); }
+.am-an-key.is-goal { width: 18px; border-top: 2px dashed var(--am-sage); }
+.am-an-key.is-qualify { width: 18px; border-top: 2px dashed var(--am-warn); }
+.am-an-toggles { display: flex; flex-wrap: wrap; gap: var(--space-2); }
+.am-an-toggle {
+    display: inline-flex; align-items: center; gap: 8px;
+    min-height: 32px; padding: 0 12px;
+    border: 1px solid var(--am-line); border-radius: 999px;
+    background: var(--am-card); color: var(--am-faint);
+    font: inherit; font-size: var(--text-xs); font-weight: 600; cursor: pointer;
+}
+.am-an-toggle.is-on { color: var(--am-ink); border-color: var(--am-card-line); }
+.am-an-toggle i { width: 16px; height: 0; border-top: 2.5px solid currentColor; opacity: .5; }
+.am-an-toggle.is-on.is-accuracy i { border-color: var(--am-ink); opacity: 1; }
+.am-an-toggle.is-on.is-difficulty i { border-top-style: dashed; border-color: var(--am-warn); opacity: 1; }
+.am-an-toggle.is-tests i { width: 9px; height: 9px; border: 2px solid currentColor; transform: rotate(45deg); }
+.am-an-toggle.is-on.is-tests i { border-color: var(--am-bad); opacity: 1; }
+
+.am-an-weak-list { list-style: none; margin: 0; padding: 0; display: grid; gap: var(--space-4); }
+.am-an-weak-list li { display: grid; grid-template-columns: 22px minmax(0, 1fr) auto; align-items: center; gap: var(--space-3); }
+.am-an-weak-rank { color: var(--am-faint); font-family: var(--am-serif); font-size: 18px; text-align: center; }
+.am-an-weak-main { display: grid; gap: 6px; min-width: 0; }
+.am-an-weak-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-2); font-size: var(--text-sm); }
+.am-an-weak-head .am-muted { font-size: var(--text-xs); white-space: nowrap; }
+.am-an-weak-name { color: var(--am-ink); font-weight: 500; display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
+.am-an-weak-misses { margin-top: var(--space-6); padding-top: var(--space-4); border-top: 1px solid var(--am-line); }
+.am-an-weak-go { font-size: var(--text-xs); white-space: nowrap; }
+/* By difficulty beside Weaknesses: the list gets enough room for a topic name
+   on one line, and the two cards end level. */
+.am-an-split { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); align-items: stretch; }
+@media (max-width: 1100px) { .am-an-split { grid-template-columns: minmax(0, 1fr); } }
+.am-mini-stats.am-an-weak-misses { grid-template-columns: repeat(3, minmax(0, 1fr)); }

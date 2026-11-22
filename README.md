@@ -46,7 +46,7 @@ review in `sets/ratings.py` found them easier, most of all the AIME sets.
 
 The AI layer (`backend/amc/ai.py`, endpoints in `backend/api/amc_ai.py`) uses
 **Grok** whenever `XAI_API_KEY` is set (model `GROK_MODEL`, default
-`grok-4-fast`), and otherwise Groq with `GROQ_API_KEY` (model `GROQ_MODEL`). It
+`grok-4.7`), and otherwise Groq with `GROQ_API_KEY` (model `GROQ_MODEL`). It
 powers the AI coach on Insights and the study plan, hints (three levels, never
 the answer), "Explain my mistake" after a wrong answer, and new problems:
 "More like this" or "Write me a new problem for my weakest topic"

@@ -228,14 +228,36 @@ def by_rating(attempts, hist):
     return out
 
 
-def weekly(attempts, today, weeks=8):
-    """Answers and accuracy for each of the last `weeks` weeks (oldest first)."""
+def weekly(attempts, today, weeks=8, mocks=()):
+    """Each of the last `weeks` weeks, oldest first: answers and accuracy, the
+    answers split by category, the average 1-12 rating of what was answered,
+    and the best contest score that week as a share of the paper's maximum."""
     out = []
     for back in range(weeks - 1, -1, -1):
         end = today - timedelta(days=7 * back)
-        w = _window(attempts, end - timedelta(days=6), end)
-        out.append({'start': (end - timedelta(days=6)).isoformat(), 'answered': w['answered'],
-                    'correct': w['correct'], 'accuracy': w['accuracy']})
+        start = end - timedelta(days=6)
+        w = _window(attempts, start, end)
+        lo, hi = start.isoformat(), end.isoformat()
+        by_category, ratings = {}, []
+        for a in _graded(a for a in attempts if lo <= a['at'][:10] <= hi):
+            p = pb.get(a['problem_id'])
+            if not p:
+                continue
+            cat = catalog.TOPIC_BY_ID[p['topic']]['category']
+            by_category[cat] = by_category.get(cat, 0) + 1
+            ratings.append(p['rating'])
+        scores = []
+        for m in mocks:
+            if lo <= m['at'][:10] <= hi:
+                point = _mock_point(m)
+                if point['max']:
+                    scores.append(point['score'] / point['max'])
+        out.append({'start': start.isoformat(), 'answered': w['answered'],
+                    'correct': w['correct'], 'accuracy': w['accuracy'],
+                    'minutes': w['minutes'], 'days': w['days'],
+                    'by_category': by_category,
+                    'avg_rating': round(sum(ratings) / len(ratings), 1) if ratings else None,
+                    'score_share': round(max(scores), 3) if scores else None})
     return out
 
 
@@ -405,7 +427,7 @@ def analytics(attempts, hist, review_by_id, reviews, mocks, plan, today):
             'categories': engine.category_stats(tstats),
             'ratings': rating_rows,
             'ceiling': ceiling(rating_rows),
-            'weeks': weekly(attempts, today),
+            'weeks': weekly(attempts, today, 12, mock_rows),
             'topics': topics,
             'recovery': recovery(attempts, hist),
             'mocks': [_mock_point(m) for m in reversed(mock_rows)],

@@ -339,6 +339,21 @@ export interface ContestGuide {
   key_topics: { id: string; name: string; category: string }[];
 }
 
+/** One week of the analytics page's performance chart (backend/amc/insights.py `weekly`). */
+export interface PerformanceWeek {
+  start: string;
+  answered: number;
+  correct: number;
+  accuracy: number | null;
+  minutes: number;
+  days: number;
+  by_category: Partial<Record<CategoryId, number>>;
+  /** Mean 1-12 rating of the problems answered that week. */
+  avg_rating: number | null;
+  /** The week's best contest score as a share of the paper's maximum. */
+  score_share: number | null;
+}
+
 export interface Analytics {
   target: Level;
   goal: number;
@@ -358,7 +373,7 @@ export interface Analytics {
     categories: Category[];
     ratings: RatingRow[];
     ceiling: number | null;
-    weeks: { start: string; answered: number; correct: number; accuracy: number | null }[];
+    weeks: PerformanceWeek[];
     topics: {
       id: string; name: string; category: string; weight: number; levels: Level[];
       attempted: number; problems: number; accuracy: number | null; mastery: number; review: number;

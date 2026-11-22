@@ -223,18 +223,23 @@ GROK_URL = 'https://api.x.ai/v1/chat/completions'
 # alongside Groq and Anthropic — the subject reading and the two goal prompts
 # need a shape held rather than asked for.
 #
-#   grok-4-fast    the default: cheap, long-context, and strong enough here
-#   grok-4         better on the part that is actually hard, several times the
-#                  price, and slower on a button somebody is waiting at
-#   grok-3-mini    when the goals are simple and the bill matters more
+#   grok-4.7       the default: xAI's current flagship, and the one its model
+#                  page documents as holding a structured-output schema,
+#                  which every prompt here sends. Reasons by default (effort
+#                  high); GROK_REASONING=low makes it quicker and cheaper.
+#   grok-4.3       cheaper, if its own model page lists structured outputs
+#
+# grok-4-fast, the old default, is no longer on xAI's models page (checked
+# 2026-11-22), so an install that left GROK_MODEL blank would have asked for a
+# model that is not served.
 #
 # `GET https://api.x.ai/v1/models` on the key lists what is actually being
 # served today, which is the only list worth trusting.
-GROK_MODEL = os.environ.get('GROK_MODEL') or 'grok-4-fast'
+GROK_MODEL = os.environ.get('GROK_MODEL') or 'grok-4.7'
 
 # No free-tier allowance to fit inside — this is a metered account, so unlike
 # `GROQ_MAX_TOKENS` this is a default rather than a cap and a caller asking for
-# more gets more. Generous because grok-4-fast reasons, and reasoning is billed
+# more gets more. Generous because grok-4.7 reasons, and reasoning is billed
 # against the completion: an answer that runs out mid-object comes back as
 # unparseable JSON rather than as a short one.
 GROK_MAX_TOKENS = 8000

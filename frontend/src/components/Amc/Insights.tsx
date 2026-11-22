@@ -60,7 +60,7 @@ function Forecast({ stats, level }: { stats: SmartStats; level: Level }) {
   );
 }
 
-function Coach({ initial, available, setup, label }: {
+export function Coach({ initial, available, setup, label }: {
   initial: Diagnosis | null; available: boolean; setup: string; label: string;
 }) {
   const [d, setD] = useState<Diagnosis | null>(initial);
@@ -136,7 +136,7 @@ function Coach({ initial, available, setup, label }: {
   );
 }
 
-function WriteProblem({ available }: { available: boolean }) {
+export function WriteProblem({ available }: { available: boolean }) {
   const navigate = useNavigate();
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
