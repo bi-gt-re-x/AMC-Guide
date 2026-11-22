@@ -28,6 +28,23 @@ def test_dashboard_starts_empty(client, today):
     assert body['plan'] is None
 
 
+def test_dashboard_weakest_topics_lead_with_misses_not_untried_topics(client, today):
+    # One miss in one topic, one right answer in another: the miss leads the
+    # card, the perfect topic is left off, and untried topics only fill in.
+    missed, solved = BY_ID['step-10-04'], BY_ID['step-10-01']
+    assert missed['topic'] != solved['topic']
+    wrong = 'A' if missed['answer'] != 'A' else 'B'
+    client.post('/api/amc/problems/step-10-04/attempt', json={'answer': wrong})
+    client.post('/api/amc/problems/step-10-01/attempt', json={'answer': solved['answer']})
+    weakest = client.get('/api/amc/dashboard').json()['weakest']
+    assert weakest[0]['id'] == missed['topic']
+    assert weakest[0]['attempted'] >= 1 and weakest[0]['accuracy'] < 1
+    assert solved['topic'] not in [t['id'] for t in weakest]
+    tried = [t['attempted'] > 0 for t in weakest]
+    assert tried == sorted(tried, reverse=True)   # every missed topic before any untried one
+    assert all(t['first_right'] < t['attempted'] for t in weakest if t['attempted'])
+
+
 def test_problem_hides_answer_until_attempted(client, today):
     body = client.get('/api/amc/problems/step-10-01').json()
     assert 'answer' not in body['problem'] and 'solution' not in body['problem']

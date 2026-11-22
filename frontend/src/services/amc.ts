@@ -262,7 +262,10 @@ export interface Dashboard {
   projected: Record<Level, number | null>;
   projection_min: number;
   categories: Category[];
-  weakest: { id: string; name: string; mastery: number; accuracy: number | null }[];
+  weakest: {
+    id: string; name: string; category: CategoryId; mastery: number; accuracy: number | null;
+    attempted: number; first_right: number;
+  }[];
   next_problem: ProblemSummary | null;
   performance: RecentPerformance;
   plan: null | {

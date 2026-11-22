@@ -1,12 +1,12 @@
 /**
- * The dashboard: where signing in lands. Today's plan, the next problem worth
- * doing, a projected score against the goal, how each category is going, and
- * how this week compares with last.
+ * The dashboard: where signing in lands. Today's plan, a projected score
+ * against the goal, how each category is going, the weakest topics, and how
+ * this week compares with last. The next problem is the header's button.
  */
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
-import { CategoryDot, Difficulty, Empty, Meter, PageHeader } from '@/components/Amc/bits';
+import { CategoryDot, Empty, Meter, PageHeader } from '@/components/Amc/bits';
 import { RecentPerformanceCard } from '@/components/Amc/Performance';
 import { useApi, useDocumentTitle } from '@/hooks';
 import { useNametag } from '@/hooks/useNametag';
@@ -199,22 +199,6 @@ export default function Dashboard() {
             )}
           </section>
 
-          {data.next_problem && (
-            <section className="am-card">
-              <div className="am-card-head">
-                <h2>Up next</h2>
-                <Link to={`/topics/${data.next_problem.topic}`}>{data.next_problem.topic_name}</Link>
-              </div>
-              <p style={{ margin: '0 0 12px', lineHeight: 1.6, color: 'var(--am-body)' }}>{data.next_problem.preview}</p>
-              <div className="am-nav-row" style={{ marginTop: 0, alignItems: 'center' }}>
-                <span className="am-muted" style={{ display: 'flex', gap: 10, alignItems: 'center', fontSize: 13 }}>
-                  {data.next_problem.source} <Difficulty value={data.next_problem.difficulty} rating={data.next_problem.rating} />
-                </span>
-                <Link className="am-btn am-btn-sage" to={`/problems/${data.next_problem.id}`}>Solve it</Link>
-              </div>
-            </section>
-          )}
-
           <RecentPerformanceCard data={data.performance} />
         </div>
 
@@ -244,17 +228,24 @@ export default function Dashboard() {
           <section className="am-card">
             <div className="am-card-head">
               <h2>Weakest topics</h2>
+              <Link to="/review">Review</Link>
             </div>
-            <ul className="am-list">
-              {data.weakest.map((t) => (
-                <li key={t.id}>
-                  <Link to={`/topics/${t.id}`} className="am-link" style={{ fontWeight: 500, color: 'var(--am-ink)' }}>
-                    {t.name}
-                  </Link>
-                  <span className="am-muted">{t.accuracy == null ? 'New' : pct(t.accuracy)}</span>
-                </li>
-              ))}
-            </ul>
+            {data.weakest.length ? (
+              <ul className="am-list am-topic-list">
+                {data.weakest.map((t) => (
+                  <li key={t.id}>
+                    <Link to={`/problems?topic=${t.id}`} className="am-link" style={{ fontWeight: 500, color: 'var(--am-ink)' }}>
+                      <CategoryDot category={t.category} /> {t.name}
+                    </Link>
+                    <span className="am-muted">
+                      {t.attempted ? `${t.first_right}/${t.attempted} · ${pct(t.accuracy)}` : 'Not tried'}
+                    </span>
+                  </li>
+                ))}
+              </ul>
+            ) : (
+              <p className="am-muted" style={{ margin: 0, fontSize: 13 }}>No misses yet in any topic.</p>
+            )}
           </section>
 
         </div>

@@ -104,6 +104,24 @@ def _review_view(row, hist, review_by_id, today):
 # ---------------------------------------------------------------------------
 # Dashboard
 # ---------------------------------------------------------------------------
+def _weakest_topics(relevant, tstats, n):
+    """The dashboard's weakest topics: the ones with a miss, lowest first-try
+    accuracy first (more misses breaking a tie), then untried ones by weight to
+    fill the list. Sorting by mastery alone put every untried topic at the top,
+    so the card listed topics never attempted rather than the ones going badly.
+    A topic with no misses yet is not weak, so it is left off."""
+    tried = sorted((t for t in relevant
+                    if tstats[t['id']]['attempted'] and tstats[t['id']]['first_right'] < tstats[t['id']]['attempted']),
+                   key=lambda t: (tstats[t['id']]['accuracy'],
+                                  -(tstats[t['id']]['attempted'] - tstats[t['id']]['first_right']),
+                                  -t['weight']))
+    untried = sorted((t for t in relevant if not tstats[t['id']]['attempted']), key=lambda t: -t['weight'])
+    return [{'id': t['id'], 'name': t['name'], 'category': t['category'],
+             'mastery': tstats[t['id']]['mastery'], 'accuracy': tstats[t['id']]['accuracy'],
+             'attempted': tstats[t['id']]['attempted'], 'first_right': tstats[t['id']]['first_right']}
+            for t in (tried + untried)[:n]]
+
+
 @router.get('/api/amc/dashboard')
 def dashboard(username: str = Depends(current_username)):
     today = _today()
@@ -160,8 +178,7 @@ def dashboard(username: str = Depends(current_username)):
         projected=projection,
         projection_min=engine.PROJECTION_MIN,
         categories=engine.category_stats(tstats),
-        weakest=[{'id': t['id'], 'name': t['name'], 'mastery': tstats[t['id']]['mastery'],
-                  'accuracy': tstats[t['id']]['accuracy']} for t in weakest[:4]],
+        weakest=_weakest_topics(relevant, tstats, 5),
         next_problem=next_problem,
         performance=insights.recent_performance(attempts, mocks, today),
         plan=plan_view,

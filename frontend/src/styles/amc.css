@@ -18,6 +18,10 @@
     --am-line-soft: #F0EEE9;
     /* The rule between problem rows: dark enough to read as a line. */
     --am-rule: #DDD9D0;
+    /* The border around every card and the rule over each stat tile: firmer
+       than a hairline, so each container reads as its own block. */
+    --am-card-line: #D2CDC1;
+    --am-card-line-width: 1.5px;
     --am-ink: #2A2C2A;
     --am-body: #54564F;
     --am-muted: #7A7A76;
@@ -63,6 +67,7 @@ html[data-theme="dark"] .amc-page {
     --am-line: var(--color-line);
     --am-line-soft: var(--color-line-soft);
     --am-rule: var(--color-line);
+    --am-card-line: #3A4452;
     --am-ink: var(--color-ink);
     --am-body: #c3ccd8;
     --am-muted: var(--color-ink-muted);
@@ -131,7 +136,7 @@ html:not([data-skin]):not([data-theme="dark"]):has(.amc-page) .hm-ambient {
 /* ---- Cards and grids ----------------------------------------------------- */
 .am-card {
     background: var(--am-card);
-    border: 1px solid var(--am-line);
+    border: var(--am-card-line-width) solid var(--am-card-line);
     border-radius: var(--am-radius);
     box-shadow: var(--am-shadow);
     padding: var(--am-pad);
@@ -187,7 +192,7 @@ html:not([data-skin]):not([data-theme="dark"]):has(.amc-page) .hm-ambient {
 .am-stat {
     background: none;
     border: 0;
-    border-top: 1px solid var(--am-line);
+    border-top: 2px solid var(--am-card-line);
     border-radius: 0;
     padding: var(--space-4) 0 0;
     margin: 0;
