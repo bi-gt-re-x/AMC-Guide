@@ -52,15 +52,37 @@ describe('Contest page lock', () => {
     expect(screen.queryByText('Practice one by one')).not.toBeInTheDocument();
     expect(screen.queryByText('Answer key')).not.toBeInTheDocument();
 
+    const saved = vi.spyOn(amc, 'unlock').mockResolvedValue({ success: true, unlocked: true });
     const unlock = screen.getByRole('button', { name: 'Unlock the problems' });
     expect(unlock).toBeDisabled();
     fireEvent.click(screen.getByRole('checkbox'));
     fireEvent.click(unlock);
 
     expect(screen.getByText('Andy rides north.')).toBeInTheDocument();
-    expect(localStorage.getItem('amc-unlocked:2025-amc-10a')).toBe('1');
+    // The unlock is the account's (table amc_unlocks), not this browser's.
+    expect(saved).toHaveBeenLastCalledWith('2025-amc-10a', true);
+    expect(localStorage.getItem('amc-unlocked:2025-amc-10a')).toBeNull();
     fireEvent.click(screen.getByRole('button', { name: 'Lock them again' }));
+    expect(saved).toHaveBeenLastCalledWith('2025-amc-10a', false);
     expect(screen.getByText('Locked until you sit it')).toBeInTheDocument();
+  });
+
+  it('opens a paper the account unlocked on another device', async () => {
+    vi.spyOn(amc, 'contest').mockResolvedValue({ success: true, ...detail([]), unlocked: true });
+    show();
+    expect(await screen.findByText('Andy rides north.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Lock them again' })).toBeInTheDocument();
+  });
+
+  it('locks the paper again when the server refuses the unlock', async () => {
+    vi.spyOn(amc, 'contest').mockResolvedValue({ success: true, ...detail([]) });
+    vi.spyOn(amc, 'unlock').mockResolvedValue({ success: false, message: 'Signed out.' });
+    show();
+    await screen.findByText('Locked until you sit it');
+    fireEvent.click(screen.getByRole('checkbox'));
+    fireEvent.click(screen.getByRole('button', { name: 'Unlock the problems' }));
+    expect(await screen.findByText('Locked until you sit it')).toBeInTheDocument();
+    expect(screen.queryByText('Andy rides north.')).not.toBeInTheDocument();
   });
 
   it('opens a paper that has been sat', async () => {

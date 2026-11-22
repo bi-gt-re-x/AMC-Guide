@@ -1,0 +1,103 @@
+{
+ "contests": [],
+ "pages": [],
+ "problems": [
+  {
+   "difficulty": 2,
+   "id": "step-10-12",
+   "level": "AMC 10",
+   "preview": "In triangle ABC, AB = 12. Point D lies on AB with AD = 4, and the line through D parallel to BC meets AC at E. The area of triangle ADE is 5",
+   "rating": 3.0,
+   "source": "Step Mock AMC 10 #11",
+   "topic_name": "Similar Triangles"
+  },
+  {
+   "difficulty": 4,
+   "id": "step-aime-12",
+   "level": "AIME",
+   "preview": "Triangle ABC has side lengths 13, 14 and 15. Let O and I be its circumcenter and incenter. Then OI\u00b2 = m/n in lowest terms. Find m + n.",
+   "rating": 6.0,
+   "source": "Step Mock AIME #9",
+   "topic_name": "Triangle Centers & Cevians"
+  },
+  {
+   "difficulty": 3,
+   "id": "step-drill-01",
+   "level": "AMC 10",
+   "preview": "Point P lies inside rectangle ABCD with PA = 3, PB = 4 and PC = 5. What is PD?",
+   "rating": 4.0,
+   "source": "Step Mock AMC 12 #14",
+   "topic_name": "Right Triangles & Pythagoras"
+  },
+  {
+   "difficulty": 2,
+   "id": "mock10-1-12",
+   "level": "AMC 10",
+   "preview": "A right triangle has legs of length 20 and 21. What is the length of the altitude to the hypotenuse?",
+   "rating": 3.0,
+   "source": "AMC Guide Mock AMC 10 \u00b7 Set 1 #12",
+   "topic_name": "Right Triangles & Pythagoras"
+  },
+  {
+   "difficulty": 2,
+   "id": "mock10-3-10",
+   "level": "AMC 10",
+   "preview": "A triangle has side lengths 13, 14 and 15. What is its area?",
+   "rating": 3.0,
+   "source": "AMC Guide Mock AMC 10 \u00b7 Set 3 #10",
+   "topic_name": "Triangles"
+  }
+ ],
+ "query": "triangle",
+ "success": true,
+ "topics": [
+  {
+   "category_name": "Counting & Probability",
+   "id": "binomial-coefficients",
+   "name": "Pascal's Triangle & Identities",
+   "summary": "Binomial coefficients and the identities between them."
+  },
+  {
+   "category_name": "Geometry",
+   "id": "triangles",
+   "name": "Triangles",
+   "summary": "Triangle inequality, centers, Heron's formula and the 13-14-15."
+  },
+  {
+   "category_name": "Geometry",
+   "id": "right-triangles",
+   "name": "Right Triangles & Pythagoras",
+   "summary": "Pythagorean triples, special triangles and distance."
+  },
+  {
+   "category_name": "Geometry",
+   "id": "similar-triangles",
+   "name": "Similar Triangles",
+   "summary": "Parallel lines, ratios and scaling of area and volume."
+  },
+  {
+   "category_name": "Geometry",
+   "id": "triangle-centers",
+   "name": "Triangle Centers & Cevians",
+   "summary": "Medians, angle bisectors, altitudes and the four centers."
+  },
+  {
+   "category_name": "Geometry",
+   "id": "polygons",
+   "name": "Polygons",
+   "summary": "Regular polygons, angle sums and hexagon decompositions."
+  },
+  {
+   "category_name": "Geometry",
+   "id": "angle-chasing",
+   "name": "Angles & Parallel Lines",
+   "summary": "Angle sums, parallel lines and isosceles triangles."
+  },
+  {
+   "category_name": "Geometry",
+   "id": "quadrilaterals",
+   "name": "Quadrilaterals",
+   "summary": "Rectangles, parallelograms, trapezoids, rhombi and kites."
+  }
+ ]
+}

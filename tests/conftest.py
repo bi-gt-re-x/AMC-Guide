@@ -186,6 +186,13 @@ def fresh_db(tmp_path, monkeypatch):
         with psycopg.connect(_TEST_PG, autocommit=True) as wipe:
             wipe.execute('DROP SCHEMA IF EXISTS public CASCADE')
             wipe.execute('CREATE SCHEMA public')
+    # The imported and AI-written problems are cached per database *address*.
+    # A SQLite run gets a new file path per test, so the key changes; a
+    # Postgres run reuses one URL, so without this a paper imported by one
+    # test was still "imported" in the next.
+    from backend.amc import create, official
+    official.forget()
+    create.forget()
     db._ensure_database()
     yield path
 

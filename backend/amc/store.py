@@ -166,5 +166,59 @@ def delete_plan(user):
     _write([('DELETE FROM amc_plans WHERE user_id = ?', (user,))])
 
 
+# -- Sittings in progress ---------------------------------------------------
+def sitting(user, contest_id):
+    """The account's timed contest in progress on this paper, or None."""
+    rows = _read('SELECT used, answers, flags, started_at, updated_at FROM amc_sittings '
+                 'WHERE user_id = ? AND contest_id = ?', (user, contest_id))
+    if not rows:
+        return None
+    row = rows[0]
+    answers = _json(row.get('answers'), {})
+    flags = _json(row.get('flags'), [])
+    return {
+        'used': float(row.get('used') or 0),
+        'answers': {str(k): str(v) for k, v in answers.items()} if isinstance(answers, dict) else {},
+        'flags': sorted({int(n) for n in flags if isinstance(n, int) or str(n).isdigit()})
+        if isinstance(flags, list) else [],
+        'started_at': row.get('started_at') or '',
+        'updated_at': row.get('updated_at') or '',
+    }
+
+
+def save_sitting(user, contest_id, used, answers, flags):
+    """Write the sitting as it stands, keeping when it was first started."""
+    now = _now()
+    existing = sitting(user, contest_id)
+    started = existing['started_at'] if existing and existing['started_at'] else now
+    _write([
+        ('DELETE FROM amc_sittings WHERE user_id = ? AND contest_id = ?', (user, contest_id)),
+        ('INSERT INTO amc_sittings (user_id, contest_id, used, answers, flags, started_at, updated_at) '
+         'VALUES (?, ?, ?, ?, ?, ?, ?)',
+         (user, contest_id, max(0.0, float(used or 0)), json.dumps(answers), json.dumps(flags), started, now)),
+    ])
+
+
+def clear_sitting_sql(user, contest_id):
+    return ('DELETE FROM amc_sittings WHERE user_id = ? AND contest_id = ?', (user, contest_id))
+
+
+def clear_sitting(user, contest_id):
+    _write([clear_sitting_sql(user, contest_id)])
+
+
+# -- Papers unlocked before a sitting ----------------------------------------
+def unlocked(user, contest_id):
+    return bool(_read('SELECT 1 FROM amc_unlocks WHERE user_id = ? AND contest_id = ?', (user, contest_id)))
+
+
+def set_unlocked(user, contest_id, on):
+    statements = [('DELETE FROM amc_unlocks WHERE user_id = ? AND contest_id = ?', (user, contest_id))]
+    if on:
+        statements.append(('INSERT INTO amc_unlocks (user_id, contest_id, at) VALUES (?, ?, ?)',
+                           (user, contest_id, _now())))
+    _write(statements)
+
+
 def write(statements):
     _write(statements)

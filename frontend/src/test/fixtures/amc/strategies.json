@@ -1,0 +1,974 @@
+{
+ "families": [
+  {
+   "blurb": "Ways to count without listing everything.",
+   "color": "green",
+   "id": "counting",
+   "name": "Counting strategies",
+   "problems": 105,
+   "solved": 19,
+   "techniques": [
+    {
+     "id": "multiplication-principle",
+     "idea": "Multiply independent choices; fill the most restricted slot first.",
+     "name": "Multiplication principle",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "step-10-08",
+       "rating": 2.0,
+       "short": "S10\u00b75",
+       "status": "solved",
+       "title": "Step Mock AMC 10 #5 \u00b7 How many three-digit positive integers have three distinct digits, all of which are odd?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-3-04",
+       "rating": 2.0,
+       "short": "M10-3\u00b74",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 3 #4 \u00b7 A restaurant offers 4 appetizers, 5 main courses and 3 desserts. A meal is one main course"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock12-4-06",
+       "rating": 2.0,
+       "short": "M12-4\u00b76",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 4 #6 \u00b7 How many 4-letter strings with no repeated letters can be made from A, B, C, D, E if the f"
+      },
+      {
+       "difficulty": 3,
+       "id": "mock10-5-20",
+       "rating": 4.0,
+       "short": "M10-5\u00b720",
+       "status": "new",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 5 #20 \u00b7 In how many ways can 3 identical rooks be placed on a 5 \u00d7 5 chessboard so that no two shar"
+      }
+     ],
+     "solved": 2,
+     "topics": [
+      {
+       "id": "basic-counting",
+       "name": "Counting Principles"
+      },
+      {
+       "id": "combinations",
+       "name": "Combinations & Stars and Bars"
+      },
+      {
+       "id": "permutations",
+       "name": "Permutations & Arrangements"
+      }
+     ]
+    },
+    {
+     "id": "casework",
+     "idea": "Split into disjoint cases that cover everything, then add.",
+     "name": "Casework",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "mock10-1-04",
+       "rating": 2.0,
+       "short": "M10-1\u00b74",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #4 \u00b7 How many positive integers less than 100 have digits whose product is 12?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-4-08",
+       "rating": 2.0,
+       "short": "M10-4\u00b78",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 4 #8 \u00b7 Two different numbers are drawn at random from {1, 2, 3, 4, 5}. What is the probability th"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock12-3-04",
+       "rating": 2.0,
+       "short": "M12-3\u00b74",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 3 #4 \u00b7 What is the sum of all real numbers x with |2x - 3| = 7?"
+      },
+      {
+       "difficulty": 2,
+       "id": "step-drill-08",
+       "rating": 3.0,
+       "short": "S10\u00b716",
+       "status": "review",
+       "title": "Step Mock AMC 10 #16 \u00b7 Each of three students is either a knight, who always tells the truth, or a knave, who alw"
+      },
+      {
+       "difficulty": 2,
+       "id": "mock10-1-09",
+       "rating": 3.0,
+       "short": "M10-1\u00b79",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #9 \u00b7 Two fair six-sided dice are rolled. What is the probability that the sum of the two number"
+      },
+      {
+       "difficulty": 2,
+       "id": "mock10-2-08",
+       "rating": 3.0,
+       "short": "M10-2\u00b78",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 2 #8 \u00b7 A fair coin is flipped 4 times. What is the probability that it shows more heads than tail"
+      }
+     ],
+     "solved": 6,
+     "topics": [
+      {
+       "id": "absolute-value",
+       "name": "Absolute Value"
+      },
+      {
+       "id": "combinations",
+       "name": "Combinations & Stars and Bars"
+      },
+      {
+       "id": "digits-bases",
+       "name": "Digits & Bases"
+      },
+      {
+       "id": "divisibility",
+       "name": "Divisibility & Primes"
+      },
+      {
+       "id": "functions",
+       "name": "Functions & Functional Equations"
+      },
+      {
+       "id": "lattice-paths",
+       "name": "Grid & Lattice Paths"
+      },
+      {
+       "id": "logarithms",
+       "name": "Logarithms"
+      },
+      {
+       "id": "logic",
+       "name": "Logic & Puzzles"
+      },
+      {
+       "id": "permutations",
+       "name": "Permutations & Arrangements"
+      },
+      {
+       "id": "probability",
+       "name": "Probability"
+      },
+      {
+       "id": "quadratics",
+       "name": "Quadratics"
+      },
+      {
+       "id": "statistics",
+       "name": "Mean, Median & Mode"
+      }
+     ]
+    },
+    {
+     "id": "complementary-counting",
+     "idea": "Count what you don\u2019t want and subtract from the total.",
+     "name": "Complementary counting",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "mock12-2-06",
+       "rating": 2.0,
+       "short": "M12-2\u00b76",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 2 #6 \u00b7 Two fair six-sided dice are rolled. What is the probability that the product of the number"
+      },
+      {
+       "difficulty": 2,
+       "id": "step-10-10",
+       "rating": 3.0,
+       "short": "S10\u00b79",
+       "status": "solved",
+       "title": "Step Mock AMC 10 #9 \u00b7 Two fair six-sided dice are rolled. What is the probability that the product of the two nu"
+      },
+      {
+       "difficulty": 2,
+       "id": "mock10-4-11",
+       "rating": 3.0,
+       "short": "M10-4\u00b711",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 4 #11 \u00b7 A committee of 4 is chosen from 6 boys and 5 girls. How many committees have at least 2 gi"
+      },
+      {
+       "difficulty": 2,
+       "id": "mock12-5-07",
+       "rating": 3.0,
+       "short": "M12-5\u00b77",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 5 #7 \u00b7 How many 3-element subsets of {1, 2, \u2026, 10} contain at least one even number?"
+      },
+      {
+       "difficulty": 3,
+       "id": "mock10-2-13",
+       "rating": 4.0,
+       "short": "M10-2\u00b713",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 2 #13 \u00b7 How many integers from 1 to 1000, inclusive, have at least one digit equal to 7?"
+      },
+      {
+       "difficulty": 3,
+       "id": "mock10-3-13",
+       "rating": 4.0,
+       "short": "M10-3\u00b713",
+       "status": "new",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 3 #13 \u00b7 In how many ways can 6 identical balls be put into 3 different boxes so that no box holds "
+      }
+     ],
+     "solved": 5,
+     "topics": [
+      {
+       "id": "casework",
+       "name": "Casework & Complements"
+      },
+      {
+       "id": "combinations",
+       "name": "Combinations & Stars and Bars"
+      },
+      {
+       "id": "digits-bases",
+       "name": "Digits & Bases"
+      },
+      {
+       "id": "permutations",
+       "name": "Permutations & Arrangements"
+      },
+      {
+       "id": "probability",
+       "name": "Probability"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "blurb": "Ways to simplify expressions and solve equations.",
+   "color": "blue",
+   "id": "algebraic",
+   "name": "Algebraic strategies",
+   "problems": 90,
+   "solved": 42,
+   "techniques": [
+    {
+     "id": "set-up-equations",
+     "idea": "Name the unknown, translate the words, solve.",
+     "name": "Set up equations",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "step-10-05",
+       "rating": 2.0,
+       "short": "S10\u00b74",
+       "status": "solved",
+       "title": "Step Mock AMC 10 #4 \u00b7 Ana is three times as old as Ben. In 12 years, Ana will be twice as old as Ben. How old is"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-1-05",
+       "rating": 2.0,
+       "short": "M10-1\u00b75",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #5 \u00b7 Ali has twice as many marbles as Bo. After Ali gives Bo 6 marbles, Bo has 4 more marbles t"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-3-02",
+       "rating": 2.0,
+       "short": "M10-3\u00b72",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 3 #2 \u00b7 A recipe uses 3 cups of flour for every 2 cups of sugar. A baker uses 15 cups of flour and"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-4-04",
+       "rating": 2.0,
+       "short": "M10-4\u00b74",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 4 #4 \u00b7 Pencils cost 15 cents each and pens cost 40 cents each. Mia buys 12 items for a total of $"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-4-05",
+       "rating": 2.0,
+       "short": "M10-4\u00b75",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 4 #5 \u00b7 A rectangle is three times as long as it is wide, and its perimeter is 48. What is its are"
+      },
+      {
+       "difficulty": 2,
+       "id": "mock10-2-05",
+       "rating": 3.0,
+       "short": "M10-2\u00b75",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 2 #5 \u00b7 In a club the ratio of boys to girls is 3 : 5. After 6 more boys join, there are equally m"
+      }
+     ],
+     "solved": 7,
+     "topics": [
+      {
+       "id": "area",
+       "name": "Area & Perimeter"
+      },
+      {
+       "id": "complex-numbers",
+       "name": "Complex Numbers"
+      },
+      {
+       "id": "digits-bases",
+       "name": "Digits & Bases"
+      },
+      {
+       "id": "linear-equations",
+       "name": "Linear Equations & Systems"
+      },
+      {
+       "id": "sequences-series",
+       "name": "Sequences & Series"
+      },
+      {
+       "id": "word-problems",
+       "name": "Rates, Ratios & Percents"
+      }
+     ]
+    },
+    {
+     "id": "substitution",
+     "idea": "Swap in a new variable or a cleverly chosen value.",
+     "name": "Substitution",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "mock10-1-08",
+       "rating": 2.0,
+       "short": "M10-1\u00b78",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #8 \u00b7 If 4^x = 9, what is the value of 8^x?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-3-08",
+       "rating": 2.0,
+       "short": "M10-3\u00b78",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 3 #8 \u00b7 What value of x satisfies 2^x + 3 = 4^x - 1?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-5-05",
+       "rating": 2.0,
+       "short": "M10-5\u00b75",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 5 #5 \u00b7 If 3x - 7 = 11, what is the value of 6x - 10?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock12-2-10",
+       "rating": 2.0,
+       "short": "M12-2\u00b710",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 2 #10 \u00b7 Let f(x) = (2x + 3)/(x - 1). What is f\u207b\u00b9(5)?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock12-3-08",
+       "rating": 2.0,
+       "short": "M12-3\u00b78",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 3 #8 \u00b7 If 2^a = 3 and 3^b = 8, what is ab?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock12-4-03",
+       "rating": 2.0,
+       "short": "M12-4\u00b73",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 4 #3 \u00b7 If 9^x = 27, what is x?"
+      }
+     ],
+     "solved": 11,
+     "topics": [
+      {
+       "id": "absolute-value",
+       "name": "Absolute Value"
+      },
+      {
+       "id": "exponents",
+       "name": "Exponents & Radicals"
+      },
+      {
+       "id": "functions",
+       "name": "Functions & Functional Equations"
+      },
+      {
+       "id": "linear-equations",
+       "name": "Linear Equations & Systems"
+      },
+      {
+       "id": "logarithms",
+       "name": "Logarithms"
+      },
+      {
+       "id": "word-problems",
+       "name": "Rates, Ratios & Percents"
+      }
+     ]
+    },
+    {
+     "id": "reciprocal-substitution",
+     "idea": "Flip x/(1+x)-style recursions into something linear.",
+     "name": "Reciprocal substitution",
+     "pills": [
+      {
+       "difficulty": 3,
+       "id": "step-12-07",
+       "rating": 4.0,
+       "short": "S12\u00b712",
+       "status": "new",
+       "title": "Step Mock AMC 12 #12 \u00b7 A sequence has a\u2081 = 1 and a\u2099\u208a\u2081 = (a\u2099)/(1 + a\u2099) for n \u2265 1. What is a\u2082\u2080\u2082\u2086?"
+      }
+     ],
+     "solved": 0,
+     "topics": [
+      {
+       "id": "sequences-series",
+       "name": "Sequences & Series"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "blurb": "Tools for remainders, divisors and digits.",
+   "color": "amber",
+   "id": "number",
+   "name": "Number theory strategies",
+   "problems": 44,
+   "solved": 7,
+   "techniques": [
+    {
+     "id": "prime-factorization",
+     "idea": "Factor into primes; count divisors exponent by exponent.",
+     "name": "Prime factorization",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "mock10-2-06",
+       "rating": 2.0,
+       "short": "M10-2\u00b76",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 2 #6 \u00b7 What is the sum of the distinct prime factors of 2310?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-5-07",
+       "rating": 2.0,
+       "short": "M10-5\u00b77",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 5 #7 \u00b7 What is gcd (84, 126) + operatorname lcm(84, 126)?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock12-3-03",
+       "rating": 2.0,
+       "short": "M12-3\u00b73",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 3 #3 \u00b7 How many positive divisors does 504 = 2\u00b3 \u00b7 3\u00b2 \u00b7 7 have?"
+      },
+      {
+       "difficulty": 3,
+       "id": "step-10-19",
+       "rating": 4.0,
+       "short": "S10\u00b717",
+       "status": "solved",
+       "title": "Step Mock AMC 10 #17 \u00b7 How many positive divisors of 2\u2074\u00b7 3\u00b3\u00b7 5\u00b2 are perfect squares?"
+      },
+      {
+       "difficulty": 3,
+       "id": "mock10-1-07",
+       "rating": 4.0,
+       "short": "M10-1\u00b77",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #7 \u00b7 What is the smallest positive integer n such that 3n is a perfect square and 2n is a perfe"
+      },
+      {
+       "difficulty": 3,
+       "id": "mock10-1-13",
+       "rating": 4.0,
+       "short": "M10-1\u00b713",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #13 \u00b7 How many positive divisors of 6\u2076 are multiples of 12?"
+      }
+     ],
+     "solved": 3,
+     "topics": [
+      {
+       "id": "divisibility",
+       "name": "Divisibility & Primes"
+      },
+      {
+       "id": "factors-divisors",
+       "name": "Factors & Divisor Counting"
+      },
+      {
+       "id": "gcd-lcm",
+       "name": "GCD & LCM"
+      },
+      {
+       "id": "perfect-powers",
+       "name": "Perfect Squares & Cubes"
+      },
+      {
+       "id": "probability",
+       "name": "Probability"
+      }
+     ]
+    },
+    {
+     "id": "residues",
+     "idea": "Only residues matter: check 0 to m-1.",
+     "name": "Residues",
+     "pills": [
+      {
+       "difficulty": 3,
+       "id": "mock10-2-17",
+       "rating": 4.0,
+       "short": "M10-2\u00b717",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 2 #17 \u00b7 For how many integers n with 1 \u2264 n \u2264 100 is n\u00b2 + n + 1 divisible by 7?"
+      },
+      {
+       "difficulty": 4,
+       "id": "step-drill-05",
+       "rating": 5.0,
+       "short": "S10\u00b721",
+       "status": "review",
+       "title": "Step Mock AMC 10 #21 \u00b7 For how many integers n with 1 \u2264 n \u2264 100 is n\u00b2 + 1 divisible by 65?"
+      },
+      {
+       "difficulty": 5,
+       "id": "step-aime-16",
+       "rating": 7.0,
+       "short": "AIME\u00b714",
+       "status": "new",
+       "title": "Step Mock AIME #14 \u00b7 Find the number of ordered pairs (a, b) of integers with 1 \u2264 a \u2264 50 and 1 \u2264 b \u2264 50 such th"
+      }
+     ],
+     "solved": 1,
+     "topics": [
+      {
+       "id": "modular-arithmetic",
+       "name": "Modular Arithmetic"
+      }
+     ]
+    },
+    {
+     "id": "cycles",
+     "idea": "Powers repeat mod m; find the period, reduce the exponent.",
+     "name": "Cycles",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "mock10-4-06",
+       "rating": 2.0,
+       "short": "M10-4\u00b76",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 4 #6 \u00b7 What is the units digit of 7\u00b2\u2070\u00b2\u2076?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock12-5-03",
+       "rating": 2.0,
+       "short": "M12-5\u00b73",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 5 #3 \u00b7 Today is Tuesday. What day of the week will it be 100 days from today?"
+      },
+      {
+       "difficulty": 2,
+       "id": "step-10-13",
+       "rating": 3.0,
+       "short": "S10\u00b712",
+       "status": "review",
+       "title": "Step Mock AMC 10 #12 \u00b7 What is the remainder when 3\u00b9\u2070\u2070 is divided by 7?"
+      },
+      {
+       "difficulty": 2,
+       "id": "step-drill-04",
+       "rating": 3.0,
+       "short": "S10\u00b715",
+       "status": "review",
+       "title": "Step Mock AMC 10 #15 \u00b7 What are the last two digits of 7\u00b2\u2070\u00b2\u2076?"
+      },
+      {
+       "difficulty": 2,
+       "id": "mock12-2-08",
+       "rating": 3.0,
+       "short": "M12-2\u00b78",
+       "status": "new",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 2 #8 \u00b7 What is i + i\u00b2 + i\u00b3 + \u22ef + i\u00b2\u2070\u00b2\u2076, where i = \u221a-1?"
+      },
+      {
+       "difficulty": 2,
+       "id": "mockaime-2-02",
+       "rating": 3.0,
+       "short": "MA-2\u00b72",
+       "status": "new",
+       "title": "AMC Guide Mock AIME \u00b7 Set 2 #2 \u00b7 Find the remainder when 7\u00b2\u2070\u00b2\u2076 is divided by 100."
+      }
+     ],
+     "solved": 2,
+     "topics": [
+      {
+       "id": "clocks-calendars",
+       "name": "Clocks, Calendars & Time"
+      },
+      {
+       "id": "complex-numbers",
+       "name": "Complex Numbers"
+      },
+      {
+       "id": "modular-arithmetic",
+       "name": "Modular Arithmetic"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "blurb": "Ways to set up a figure so the answer is easy to find.",
+   "color": "rose",
+   "id": "geometric",
+   "name": "Geometric strategies",
+   "problems": 47,
+   "solved": 9,
+   "techniques": [
+    {
+     "id": "similarity-ratios",
+     "idea": "Find similar triangles; lengths scale by k, areas by k\u00b2.",
+     "name": "Similarity ratios",
+     "pills": [
+      {
+       "difficulty": 2,
+       "id": "step-10-12",
+       "rating": 3.0,
+       "short": "S10\u00b711",
+       "status": "review",
+       "title": "Step Mock AMC 10 #11 \u00b7 In triangle ABC, AB = 12. Point D lies on AB with AD = 4, and the line through D parallel "
+      },
+      {
+       "difficulty": 2,
+       "id": "mock10-3-14",
+       "rating": 3.0,
+       "short": "M10-3\u00b714",
+       "status": "new",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 3 #14 \u00b7 A person 6 feet tall stands 15 feet from the base of a lamppost and casts a shadow 5 feet "
+      },
+      {
+       "difficulty": 4,
+       "id": "mock10-3-24",
+       "rating": 6.0,
+       "short": "M10-3\u00b724",
+       "status": "new",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 3 #24 \u00b7 A square is inscribed in a right triangle with legs 5 and 12 so that one side of the squar"
+      }
+     ],
+     "solved": 0,
+     "topics": [
+      {
+       "id": "right-triangles",
+       "name": "Right Triangles & Pythagoras"
+      },
+      {
+       "id": "similar-triangles",
+       "name": "Similar Triangles"
+      }
+     ]
+    },
+    {
+     "id": "coordinates",
+     "idea": "Put the figure on axes and compute.",
+     "name": "Coordinates",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "mock10-1-10",
+       "rating": 2.0,
+       "short": "M10-1\u00b710",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #10 \u00b7 The line through (1, 3) and (4, 9) crosses the x-axis at (a, 0). What is a?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock12-2-04",
+       "rating": 2.0,
+       "short": "M12-2\u00b74",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 2 #4 \u00b7 What is the distance from the origin to the midpoint of the segment joining (-3, 7) and (5"
+      },
+      {
+       "difficulty": 2,
+       "id": "step-12-05",
+       "rating": 3.0,
+       "short": "S12\u00b74",
+       "status": "review",
+       "title": "Step Mock AMC 12 #4 \u00b7 A cube has edge length 2. What is the distance from a vertex of the cube to the center of "
+      },
+      {
+       "difficulty": 3,
+       "id": "mockaime-4-02",
+       "rating": 4.0,
+       "short": "MA-4\u00b72",
+       "status": "new",
+       "title": "AMC Guide Mock AIME \u00b7 Set 4 #2 \u00b7 Triangle ABC has vertices A = (0, 0), B = (12, 0) and C = (0, 5). Let I be its incenter an"
+      },
+      {
+       "difficulty": 4,
+       "id": "mock10-1-15",
+       "rating": 5.0,
+       "short": "M10-1\u00b715",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #15 \u00b7 A circle passes through two adjacent vertices of a square with side length 8 and is tangen"
+      },
+      {
+       "difficulty": 4,
+       "id": "mock10-4-19",
+       "rating": 5.0,
+       "short": "M10-4\u00b719",
+       "status": "new",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 4 #19 \u00b7 Square ABCD has side length 10. Point P inside the square satisfies PA = 6 and PB = 8. Wha"
+      }
+     ],
+     "solved": 2,
+     "topics": [
+      {
+       "id": "circles",
+       "name": "Circles"
+      },
+      {
+       "id": "coordinate-geometry",
+       "name": "Coordinate Geometry"
+      },
+      {
+       "id": "geometric-probability",
+       "name": "Geometric Probability"
+      },
+      {
+       "id": "polygons",
+       "name": "Polygons"
+      },
+      {
+       "id": "right-triangles",
+       "name": "Right Triangles & Pythagoras"
+      },
+      {
+       "id": "solid-geometry",
+       "name": "3D Geometry"
+      },
+      {
+       "id": "triangle-centers",
+       "name": "Triangle Centers & Cevians"
+      },
+      {
+       "id": "triangles",
+       "name": "Triangles"
+      }
+     ]
+    },
+    {
+     "id": "shoelace",
+     "idea": "Area of a polygon straight from its vertex coordinates.",
+     "name": "Shoelace formula",
+     "pills": [
+      {
+       "difficulty": 2,
+       "id": "step-10-15",
+       "rating": 3.0,
+       "short": "S10\u00b713",
+       "status": "review",
+       "title": "Step Mock AMC 10 #13 \u00b7 What is the area of the triangle with vertices (0,0), (8,2) and (3,7)?"
+      },
+      {
+       "difficulty": 2,
+       "id": "mock10-5-12",
+       "rating": 3.0,
+       "short": "M10-5\u00b712",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 5 #12 \u00b7 What is the area of the triangle with vertices (0, 0), (7, 2) and (3, 8)?"
+      },
+      {
+       "difficulty": 2,
+       "id": "mock12-4-19",
+       "rating": 3.0,
+       "short": "M12-4\u00b719",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 4 #19 \u00b7 What is the area of the triangle whose vertices are the points on the parabola y = x\u00b2 with"
+      },
+      {
+       "difficulty": 2,
+       "id": "mockaime-2-05",
+       "rating": 3.0,
+       "short": "MA-2\u00b75",
+       "status": "new",
+       "title": "AMC Guide Mock AIME \u00b7 Set 2 #5 \u00b7 Square ABCD has side length 10. Point E lies on AB with AE = 2, and point F lies on BC wit"
+      }
+     ],
+     "solved": 1,
+     "topics": [
+      {
+       "id": "area",
+       "name": "Area & Perimeter"
+      },
+      {
+       "id": "coordinate-geometry",
+       "name": "Coordinate Geometry"
+      }
+     ]
+    }
+   ]
+  },
+  {
+   "blurb": "Habits that help in every topic.",
+   "color": "slate",
+   "id": "general",
+   "name": "General problem solving",
+   "problems": 64,
+   "solved": 44,
+   "techniques": [
+    {
+     "id": "small-cases",
+     "idea": "Try n = 1, 2, 3 and read off the pattern.",
+     "name": "Small cases",
+     "pills": [
+      {
+       "difficulty": 2,
+       "id": "step-10-09",
+       "rating": 3.0,
+       "short": "S10\u00b78",
+       "status": "solved",
+       "title": "Step Mock AMC 10 #8 \u00b7 What is the sum of the digits of 10\u00b2\u2070 - 20?"
+      }
+     ],
+     "solved": 1,
+     "topics": [
+      {
+       "id": "digits-bases",
+       "name": "Digits & Bases"
+      }
+     ]
+    },
+    {
+     "id": "graphing",
+     "idea": "Sketch both sides and count where they cross.",
+     "name": "Graphing",
+     "pills": [
+      {
+       "difficulty": 3,
+       "id": "mock10-2-14",
+       "rating": 4.0,
+       "short": "M10-2\u00b714",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 2 #14 \u00b7 What is the area of the region of points (x, y) with |x| + |y| \u2264 4 and y \u2265 1?"
+      },
+      {
+       "difficulty": 4,
+       "id": "step-12-13",
+       "rating": 6.0,
+       "short": "S12\u00b723",
+       "status": "new",
+       "title": "Step Mock AMC 12 #23 \u00b7 How many real numbers x satisfy sin x = x/30?"
+      }
+     ],
+     "solved": 1,
+     "topics": [
+      {
+       "id": "absolute-value",
+       "name": "Absolute Value"
+      },
+      {
+       "id": "trigonometry",
+       "name": "Trigonometry"
+      }
+     ]
+    },
+    {
+     "id": "bounding",
+     "idea": "Trap the answer between two estimates you can compute.",
+     "name": "Bounding",
+     "pills": [
+      {
+       "difficulty": 3,
+       "id": "mockaime-5-02",
+       "rating": 4.0,
+       "short": "MA-5\u00b72",
+       "status": "new",
+       "title": "AMC Guide Mock AIME \u00b7 Set 5 #2 \u00b7 A set of five different positive integers has mean 20 and median 18. Find the largest poss"
+      },
+      {
+       "difficulty": 4,
+       "id": "mock10-3-23",
+       "rating": 6.0,
+       "short": "M10-3\u00b723",
+       "status": "new",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 3 #23 \u00b7 Real numbers x, y and z satisfy x + y + z = 6 and xy + yz + zx = 9. What is the largest po"
+      },
+      {
+       "difficulty": 5,
+       "id": "step-12-16",
+       "rating": 7.0,
+       "short": "S12\u00b724",
+       "status": "new",
+       "title": "Step Mock AMC 12 #24 \u00b7 A sequence has a\u2081 = 1 and a\u2099\u208a\u2081 = a\u2099 + 1/(a\u2099) for n \u2265 1. Which of the following is closest "
+      },
+      {
+       "difficulty": 5,
+       "id": "mock10-2-24",
+       "rating": 7.0,
+       "short": "M10-2\u00b724",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 2 #24 \u00b7 How many ordered pairs (x, y) of integers satisfy x\u00b2 + xy + y\u00b2 = 49?"
+      },
+      {
+       "difficulty": 5,
+       "id": "mock10-4-25",
+       "rating": 7.0,
+       "short": "M10-4\u00b725",
+       "status": "new",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 4 #25 \u00b7 A knight on an infinite chessboard moves 2 squares in one direction and 1 square in a perp"
+      }
+     ],
+     "solved": 0,
+     "topics": [
+      {
+       "id": "diophantine",
+       "name": "Diophantine Equations"
+      },
+      {
+       "id": "games-strategy",
+       "name": "Games & Strategy"
+      },
+      {
+       "id": "inequalities",
+       "name": "Inequalities & Optimization"
+      },
+      {
+       "id": "sequences-series",
+       "name": "Sequences & Series"
+      },
+      {
+       "id": "statistics",
+       "name": "Mean, Median & Mode"
+      }
+     ]
+    }
+   ]
+  }
+ ],
+ "success": true,
+ "untagged": 0
+}

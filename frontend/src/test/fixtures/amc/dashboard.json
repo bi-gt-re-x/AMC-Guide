@@ -1,0 +1,359 @@
+{
+ "categories": [
+  {
+   "accuracy": 0.766,
+   "attempted": 107,
+   "blurb": "Equations, functions, sequences and polynomials.",
+   "color": "blue",
+   "id": "algebra",
+   "name": "Algebra",
+   "problems": 183,
+   "solved": 105
+  },
+  {
+   "accuracy": 0.465,
+   "attempted": 43,
+   "blurb": "Divisibility, primes, remainders and digits.",
+   "color": "amber",
+   "id": "number-theory",
+   "name": "Number Theory",
+   "problems": 126,
+   "solved": 43
+  },
+  {
+   "accuracy": 0.519,
+   "attempted": 52,
+   "blurb": "Casework, combinations, probability and expected value.",
+   "color": "green",
+   "id": "counting",
+   "name": "Counting & Probability",
+   "problems": 168,
+   "solved": 46
+  },
+  {
+   "accuracy": 0.39,
+   "attempted": 59,
+   "blurb": "Triangles, circles, area and coordinates.",
+   "color": "rose",
+   "id": "geometry",
+   "name": "Geometry",
+   "problems": 143,
+   "solved": 57
+  },
+  {
+   "accuracy": 0.462,
+   "attempted": 13,
+   "blurb": "Means, medians, logic puzzles and everything else.",
+   "color": "slate",
+   "id": "misc",
+   "name": "Logic, Statistics & Misc",
+   "problems": 15,
+   "solved": 13
+  }
+ ],
+ "goal": 120.0,
+ "last_mock": {
+  "at": "2026-11-17T17:15:00",
+  "blank": 5,
+  "contest_id": "mock-10-2",
+  "correct": 13,
+  "id": "9c07cfa5acdd43178b60a155e55941f7",
+  "kind": "mock",
+  "level": "AMC 10",
+  "max": 150,
+  "name": "AMC Guide Mock AMC 10 \u00b7 Set 2",
+  "note": "",
+  "score": 85.5,
+  "seconds": 4498,
+  "wrong": 7
+ },
+ "next_problem": {
+  "attempts": 0,
+  "category": "counting",
+  "contest_id": "mock-10-4",
+  "difficulty": 2,
+  "id": "mock10-4-18",
+  "level": "AMC 10",
+  "number": 18,
+  "official": false,
+  "preview": "In how many distinct ways can the letters of MISSISSIPPI be arranged?",
+  "rating": 3.0,
+  "short": "M10-4\u00b718",
+  "source": "AMC Guide Mock AMC 10 \u00b7 Set 4 #18",
+  "status": "new",
+  "technique": "overcounting",
+  "technique_name": "Overcounting",
+  "topic": "permutations",
+  "topic_name": "Permutations & Arrangements"
+ },
+ "performance": {
+  "days": [
+   {
+    "answered": 5,
+    "correct": 4,
+    "date": "2026-11-09"
+   },
+   {
+    "answered": 7,
+    "correct": 5,
+    "date": "2026-11-10"
+   },
+   {
+    "answered": 0,
+    "correct": 0,
+    "date": "2026-11-11"
+   },
+   {
+    "answered": 0,
+    "correct": 0,
+    "date": "2026-11-12"
+   },
+   {
+    "answered": 8,
+    "correct": 6,
+    "date": "2026-11-13"
+   },
+   {
+    "answered": 1,
+    "correct": 1,
+    "date": "2026-11-14"
+   },
+   {
+    "answered": 6,
+    "correct": 5,
+    "date": "2026-11-15"
+   },
+   {
+    "answered": 0,
+    "correct": 0,
+    "date": "2026-11-16"
+   },
+   {
+    "answered": 28,
+    "correct": 18,
+    "date": "2026-11-17"
+   },
+   {
+    "answered": 8,
+    "correct": 4,
+    "date": "2026-11-18"
+   },
+   {
+    "answered": 1,
+    "correct": 1,
+    "date": "2026-11-19"
+   },
+   {
+    "answered": 0,
+    "correct": 0,
+    "date": "2026-11-20"
+   },
+   {
+    "answered": 8,
+    "correct": 5,
+    "date": "2026-11-21"
+   },
+   {
+    "answered": 8,
+    "correct": 5,
+    "date": "2026-11-22"
+   }
+  ],
+  "last_week": {
+   "accuracy": 0.778,
+   "answered": 27,
+   "avg_seconds": 163,
+   "correct": 21,
+   "days": 5,
+   "hardest": {
+    "id": "mock10-1-25",
+    "rating": 7.0,
+    "short": "M10-1\u00b725"
+   },
+   "minutes": 73,
+   "revealed": 0
+  },
+  "mocks": [
+   {
+    "at": "2026-11-17T17:15:00",
+    "contest_id": "mock-10-2",
+    "id": "9c07cfa5acdd43178b60a155e55941f7",
+    "kind": "mock",
+    "level": "AMC 10",
+    "max": 150,
+    "name": "AMC Guide Mock AMC 10 \u00b7 Set 2",
+    "score": 85.5
+   },
+   {
+    "at": "2026-11-02T17:15:00",
+    "contest_id": "mock-10-1",
+    "id": "e416890ab6d94525990d8b3d07783e46",
+    "kind": "mock",
+    "level": "AMC 10",
+    "max": 150,
+    "name": "AMC Guide Mock AMC 10 \u00b7 Set 1",
+    "score": 64.5
+   },
+   {
+    "at": "2026-10-13T17:15:00",
+    "contest_id": "step-mock-10",
+    "id": "bb4f292b09904864a10aacf335262218",
+    "kind": "mock",
+    "level": "AMC 10",
+    "max": 150,
+    "name": "Step Mock AMC 10",
+    "score": 72.0
+   }
+  ],
+  "notes": [
+   {
+    "text": "Accuracy down 16 points from last week.",
+    "tone": "down"
+   },
+   {
+    "text": "More problems than last week (53 vs 27).",
+    "tone": "up"
+   },
+   {
+    "text": "Last AMC 10 score +21 from the one before.",
+    "tone": "up"
+   }
+  ],
+  "this_week": {
+   "accuracy": 0.623,
+   "answered": 53,
+   "avg_seconds": 171,
+   "correct": 33,
+   "days": 5,
+   "hardest": {
+    "id": "mock10-1-24",
+    "rating": 6.0,
+    "short": "M10-1\u00b724"
+   },
+   "minutes": 94,
+   "revealed": 0
+  }
+ },
+ "plan": {
+  "days_left": 347,
+  "exam_date": "2027-11-04",
+  "goal_score": 120.0,
+  "target": "AMC 10",
+  "today": [
+   {
+    "auto": false,
+    "done": true,
+    "key": "review",
+    "label": "Clear 15 due reviews",
+    "to": "/review"
+   },
+   {
+    "auto": false,
+    "done": false,
+    "key": "read",
+    "label": "Read the ideas for Right Triangles & Pythagoras",
+    "to": "/topics/right-triangles"
+   },
+   {
+    "auto": false,
+    "done": true,
+    "goal": 7,
+    "key": "practice",
+    "label": "Solve 7 problems in Right Triangles & Pythagoras",
+    "progress": 0,
+    "to": "/problems?topic=right-triangles"
+   }
+  ],
+  "week": {
+   "current": true,
+   "end": "2026-11-22",
+   "focus": [
+    {
+     "category": "geometry",
+     "id": "right-triangles",
+     "name": "Right Triangles & Pythagoras"
+    },
+    {
+     "category": "counting",
+     "id": "combinations",
+     "name": "Combinations & Stars and Bars"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 1,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2026-11-16"
+  }
+ },
+ "projected": {
+  "AIME": 0.7,
+  "AMC 10": 66.0,
+  "AMC 12": 61.5
+ },
+ "projection_min": 5,
+ "stats": {
+  "accuracy": 0.593,
+  "attempted": 172,
+  "due": 15,
+  "in_review": 54,
+  "mastered": 24,
+  "minutes": 686,
+  "mocks": 3,
+  "solved": 167,
+  "streak": 2,
+  "total": 350
+ },
+ "success": true,
+ "target": "AMC 10",
+ "weakest": [
+  {
+   "accuracy": 0.0,
+   "attempted": 3,
+   "category": "counting",
+   "first_right": 0,
+   "id": "permutations",
+   "mastery": 0.0,
+   "name": "Permutations & Arrangements"
+  },
+  {
+   "accuracy": 0.0,
+   "attempted": 1,
+   "category": "counting",
+   "first_right": 0,
+   "id": "lattice-paths",
+   "mastery": 0.0,
+   "name": "Grid & Lattice Paths"
+  },
+  {
+   "accuracy": 0.0,
+   "attempted": 1,
+   "category": "geometry",
+   "first_right": 0,
+   "id": "similar-triangles",
+   "mastery": 0.0,
+   "name": "Similar Triangles"
+  },
+  {
+   "accuracy": 0.0,
+   "attempted": 1,
+   "category": "algebra",
+   "first_right": 0,
+   "id": "inequalities",
+   "mastery": 0.0,
+   "name": "Inequalities & Optimization"
+  },
+  {
+   "accuracy": 0.0,
+   "attempted": 1,
+   "category": "algebra",
+   "first_right": 0,
+   "id": "floor-ceiling",
+   "mastery": 0.0,
+   "name": "Floor & Ceiling"
+  }
+ ]
+}

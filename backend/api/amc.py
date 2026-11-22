@@ -6,7 +6,7 @@ catalog.py; the rules are in backend/amc/engine.py; the account's rows are in
 backend/amc/store.py. Every endpoint answers for the signed-in account only.
 """
 from datetime import date, timedelta
-from typing import Dict, Optional, Union
+from typing import Dict, List, Optional, Union
 
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
@@ -657,7 +657,57 @@ def contest(contest_id: str, username: str = Depends(current_username)):
         info['imported'] = True
     else:
         info['difficulty'] = _mock_difficulty(gradable)
-    return ok(contest=info, problems=problems, history=mine, can_import=can_import(username))
+    return ok(contest=info, problems=problems, history=mine, can_import=can_import(username),
+              unlocked=c['kind'] == 'past' and store.unlocked(username, contest_id),
+              sitting=store.sitting(username, contest_id))
+
+
+class SittingBody(BaseModel):
+    used: float = 0
+    answers: Dict[str, Union[str, int, None]] = {}
+    flags: List[int] = []
+
+
+@router.put('/api/amc/contests/{contest_id}/sitting')
+def save_sitting(contest_id: str, body: SittingBody, username: str = Depends(current_username)):
+    """Keep a timed contest in progress, so a reload or another device resumes
+    it where its clock left off. The answer sheet is checked against the paper:
+    only its problem numbers, and only answers the bubble sheet could give."""
+    mock = _gradable(contest_id)
+    if not mock:
+        return fail('That contest cannot be sat here.')
+    count = len(mock['problems'])
+    limit = 60 * ((catalog.contest(contest_id) or {}).get('minutes') or 180)
+    answers = {}
+    for key, value in body.answers.items():
+        text = '' if value is None else str(value).strip().upper()
+        if not key.isdigit() or not 1 <= int(key) <= count or len(text) > 3:
+            return fail('That answer sheet does not fit this paper.')
+        if text:
+            answers[str(int(key))] = text
+    flags = sorted({n for n in body.flags if 1 <= n <= count})
+    store.save_sitting(username, contest_id, min(max(0.0, body.used), float(limit)), answers, flags)
+    return ok(sitting=store.sitting(username, contest_id))
+
+
+@router.delete('/api/amc/contests/{contest_id}/sitting')
+def discard_sitting(contest_id: str, username: str = Depends(current_username)):
+    """Leave a contest without handing it in: nothing is graded."""
+    store.clear_sitting(username, contest_id)
+    return ok()
+
+
+class UnlockBody(BaseModel):
+    on: bool = True
+
+
+@router.put('/api/amc/contests/{contest_id}/unlock')
+def unlock_contest(contest_id: str, body: UnlockBody, username: str = Depends(current_username)):
+    """Show an official paper's problems before sitting it (or lock it again)."""
+    if contest_id not in catalog.PAST_BY_ID:
+        return fail('Only an official paper is locked before a sitting.')
+    store.set_unlocked(username, contest_id, body.on)
+    return ok(unlocked=body.on)
 
 
 def _progress(h):
@@ -793,6 +843,8 @@ def submit(contest_id: str, body: SubmitBody, username: str = Depends(current_us
     mock_id, insert = store.mock_row(username, contest_id, 'mock', answers, graded['score'], graded['correct'],
                                      graded['wrong'], graded['blank'], body.seconds)
     statements.append(insert)
+    # Handed in: the sitting in progress is over.
+    statements.append(store.clear_sitting_sql(username, contest_id))
     store.write(statements)
     return ok(id=mock_id)
 

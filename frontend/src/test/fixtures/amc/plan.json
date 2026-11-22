@@ -1,0 +1,1706 @@
+{
+ "ai": {
+  "available": false,
+  "label": ""
+ },
+ "coverage": [
+  {
+   "category": "algebra",
+   "id": "absolute-value",
+   "mastery": 0.333,
+   "name": "Absolute Value",
+   "weight": 1
+  },
+  {
+   "category": "algebra",
+   "id": "arithmetic",
+   "mastery": 0.812,
+   "name": "Arithmetic & Fractions",
+   "weight": 2
+  },
+  {
+   "category": "algebra",
+   "id": "exponents",
+   "mastery": 0.65,
+   "name": "Exponents & Radicals",
+   "weight": 2
+  },
+  {
+   "category": "algebra",
+   "id": "floor-ceiling",
+   "mastery": 0.0,
+   "name": "Floor & Ceiling",
+   "weight": 1
+  },
+  {
+   "category": "algebra",
+   "id": "functions",
+   "mastery": 0.444,
+   "name": "Functions & Functional Equations",
+   "weight": 2
+  },
+  {
+   "category": "algebra",
+   "id": "graphs-transformations",
+   "mastery": 0.0,
+   "name": "Graphs & Transformations",
+   "weight": 2
+  },
+  {
+   "category": "algebra",
+   "id": "inequalities",
+   "mastery": 0.0,
+   "name": "Inequalities & Optimization",
+   "weight": 1
+  },
+  {
+   "category": "algebra",
+   "id": "linear-equations",
+   "mastery": 0.778,
+   "name": "Linear Equations & Systems",
+   "weight": 3
+  },
+  {
+   "category": "algebra",
+   "id": "nonlinear-systems",
+   "mastery": 0.167,
+   "name": "Nonlinear Systems",
+   "weight": 1
+  },
+  {
+   "category": "algebra",
+   "id": "quadratics",
+   "mastery": 0.304,
+   "name": "Quadratics",
+   "weight": 3
+  },
+  {
+   "category": "algebra",
+   "id": "word-problems",
+   "mastery": 0.684,
+   "name": "Rates, Ratios & Percents",
+   "weight": 3
+  },
+  {
+   "category": "algebra",
+   "id": "sequences-series",
+   "mastery": 0.318,
+   "name": "Sequences & Series",
+   "weight": 2
+  },
+  {
+   "category": "counting",
+   "id": "casework",
+   "mastery": 0.28,
+   "name": "Casework & Complements",
+   "weight": 3
+  },
+  {
+   "category": "counting",
+   "id": "combinations",
+   "mastery": 0.083,
+   "name": "Combinations & Stars and Bars",
+   "weight": 3
+  },
+  {
+   "category": "counting",
+   "id": "conditional-probability",
+   "mastery": 0,
+   "name": "Conditional Probability",
+   "weight": 1
+  },
+  {
+   "category": "counting",
+   "id": "basic-counting",
+   "mastery": 0.188,
+   "name": "Counting Principles",
+   "weight": 3
+  },
+  {
+   "category": "counting",
+   "id": "expected-value",
+   "mastery": 0.167,
+   "name": "Expected Value",
+   "weight": 1
+  },
+  {
+   "category": "counting",
+   "id": "geometric-probability",
+   "mastery": 0.25,
+   "name": "Geometric Probability",
+   "weight": 1
+  },
+  {
+   "category": "counting",
+   "id": "graph-theory",
+   "mastery": 0,
+   "name": "Graphs, Networks & Tournaments",
+   "weight": 1
+  },
+  {
+   "category": "counting",
+   "id": "lattice-paths",
+   "mastery": 0.0,
+   "name": "Grid & Lattice Paths",
+   "weight": 2
+  },
+  {
+   "category": "counting",
+   "id": "binomial-coefficients",
+   "mastery": 0.0,
+   "name": "Pascal's Triangle & Identities",
+   "weight": 1
+  },
+  {
+   "category": "counting",
+   "id": "permutations",
+   "mastery": 0.0,
+   "name": "Permutations & Arrangements",
+   "weight": 2
+  },
+  {
+   "category": "counting",
+   "id": "pigeonhole",
+   "mastery": 0,
+   "name": "Pigeonhole Principle",
+   "weight": 1
+  },
+  {
+   "category": "counting",
+   "id": "probability",
+   "mastery": 0.333,
+   "name": "Probability",
+   "weight": 3
+  },
+  {
+   "category": "counting",
+   "id": "recursion",
+   "mastery": 0.042,
+   "name": "Recursion & Patterns",
+   "weight": 2
+  },
+  {
+   "category": "geometry",
+   "id": "solid-geometry",
+   "mastery": 0.0,
+   "name": "3D Geometry",
+   "weight": 1
+  },
+  {
+   "category": "geometry",
+   "id": "angle-chasing",
+   "mastery": 0.5,
+   "name": "Angles & Parallel Lines",
+   "weight": 2
+  },
+  {
+   "category": "geometry",
+   "id": "area",
+   "mastery": 0.263,
+   "name": "Area & Perimeter",
+   "weight": 3
+  },
+  {
+   "category": "geometry",
+   "id": "area-ratios",
+   "mastery": 1.0,
+   "name": "Area Ratios & Mass Points",
+   "weight": 1
+  },
+  {
+   "category": "geometry",
+   "id": "circles",
+   "mastery": 0.211,
+   "name": "Circles",
+   "weight": 3
+  },
+  {
+   "category": "geometry",
+   "id": "coordinate-geometry",
+   "mastery": 0.19,
+   "name": "Coordinate Geometry",
+   "weight": 2
+  },
+  {
+   "category": "geometry",
+   "id": "polygons",
+   "mastery": 0.111,
+   "name": "Polygons",
+   "weight": 1
+  },
+  {
+   "category": "geometry",
+   "id": "quadrilaterals",
+   "mastery": 0.125,
+   "name": "Quadrilaterals",
+   "weight": 2
+  },
+  {
+   "category": "geometry",
+   "id": "right-triangles",
+   "mastery": 0.059,
+   "name": "Right Triangles & Pythagoras",
+   "weight": 3
+  },
+  {
+   "category": "geometry",
+   "id": "transformations",
+   "mastery": 0,
+   "name": "Rotations, Reflections & Symmetry",
+   "weight": 1
+  },
+  {
+   "category": "geometry",
+   "id": "similar-triangles",
+   "mastery": 0.0,
+   "name": "Similar Triangles",
+   "weight": 2
+  },
+  {
+   "category": "geometry",
+   "id": "triangle-centers",
+   "mastery": 0.0,
+   "name": "Triangle Centers & Cevians",
+   "weight": 2
+  },
+  {
+   "category": "geometry",
+   "id": "triangles",
+   "mastery": 0.308,
+   "name": "Triangles",
+   "weight": 3
+  },
+  {
+   "category": "misc",
+   "id": "clocks-calendars",
+   "mastery": 0.333,
+   "name": "Clocks, Calendars & Time",
+   "weight": 1
+  },
+  {
+   "category": "misc",
+   "id": "estimation",
+   "mastery": 0,
+   "name": "Estimation & Bounding",
+   "weight": 1
+  },
+  {
+   "category": "misc",
+   "id": "games-strategy",
+   "mastery": 0.0,
+   "name": "Games & Strategy",
+   "weight": 1
+  },
+  {
+   "category": "misc",
+   "id": "invariants",
+   "mastery": 0,
+   "name": "Invariants & Processes",
+   "weight": 1
+  },
+  {
+   "category": "misc",
+   "id": "logic",
+   "mastery": 0.5,
+   "name": "Logic & Puzzles",
+   "weight": 1
+  },
+  {
+   "category": "misc",
+   "id": "statistics",
+   "mastery": 0.444,
+   "name": "Mean, Median & Mode",
+   "weight": 2
+  },
+  {
+   "category": "misc",
+   "id": "data-graphs",
+   "mastery": 0,
+   "name": "Tables, Charts & Data",
+   "weight": 1
+  },
+  {
+   "category": "number-theory",
+   "id": "digits-bases",
+   "mastery": 0.053,
+   "name": "Digits & Bases",
+   "weight": 2
+  },
+  {
+   "category": "number-theory",
+   "id": "diophantine",
+   "mastery": 0.125,
+   "name": "Diophantine Equations",
+   "weight": 2
+  },
+  {
+   "category": "number-theory",
+   "id": "divisibility",
+   "mastery": 0.316,
+   "name": "Divisibility & Primes",
+   "weight": 3
+  },
+  {
+   "category": "number-theory",
+   "id": "factorials",
+   "mastery": 0.0,
+   "name": "Factorials & Trailing Zeros",
+   "weight": 1
+  },
+  {
+   "category": "number-theory",
+   "id": "factors-divisors",
+   "mastery": 0.037,
+   "name": "Factors & Divisor Counting",
+   "weight": 2
+  },
+  {
+   "category": "number-theory",
+   "id": "gcd-lcm",
+   "mastery": 0.143,
+   "name": "GCD & LCM",
+   "weight": 2
+  },
+  {
+   "category": "number-theory",
+   "id": "modular-arithmetic",
+   "mastery": 0.172,
+   "name": "Modular Arithmetic",
+   "weight": 3
+  },
+  {
+   "category": "number-theory",
+   "id": "parity",
+   "mastery": 0.5,
+   "name": "Parity",
+   "weight": 1
+  },
+  {
+   "category": "number-theory",
+   "id": "perfect-powers",
+   "mastery": 0.375,
+   "name": "Perfect Squares & Cubes",
+   "weight": 2
+  },
+  {
+   "category": "number-theory",
+   "id": "decimals-fractions",
+   "mastery": 0.0,
+   "name": "Repeating Decimals & Fractions",
+   "weight": 1
+  }
+ ],
+ "defaults": {
+  "dates": {
+   "AIME": "2027-02-05",
+   "AMC 10": "2027-11-05",
+   "AMC 12": "2027-11-05"
+  },
+  "goals": {
+   "AIME": 7,
+   "AMC 10": 100,
+   "AMC 12": 85
+  }
+ },
+ "plan": {
+  "checks": {
+   "2026-11-08": [
+    "practice",
+    "review"
+   ],
+   "2026-11-09": [
+    "practice",
+    "review"
+   ],
+   "2026-11-10": [
+    "practice",
+    "review"
+   ],
+   "2026-11-13": [
+    "practice",
+    "review"
+   ],
+   "2026-11-14": [
+    "practice",
+    "review"
+   ],
+   "2026-11-15": [
+    "practice",
+    "review"
+   ],
+   "2026-11-17": [
+    "practice",
+    "review"
+   ],
+   "2026-11-18": [
+    "practice",
+    "review"
+   ],
+   "2026-11-19": [
+    "practice",
+    "review"
+   ],
+   "2026-11-21": [
+    "practice",
+    "review"
+   ],
+   "2026-11-22": [
+    "practice",
+    "review"
+   ]
+  },
+  "coach": null,
+  "coach_at": "",
+  "coach_by": "",
+  "created_at": "2026-11-22T16:53:27",
+  "days_left": 347,
+  "details": {},
+  "exam_date": "2027-11-04",
+  "goal_score": 120.0,
+  "hours": 7,
+  "target": "AMC 10",
+  "updated_at": "2026-11-22T16:53:27"
+ },
+ "projected": 66.0,
+ "success": true,
+ "today": [
+  {
+   "auto": false,
+   "done": true,
+   "key": "review",
+   "label": "Clear 15 due reviews",
+   "to": "/review"
+  },
+  {
+   "auto": false,
+   "done": false,
+   "key": "read",
+   "label": "Read the ideas for Right Triangles & Pythagoras",
+   "to": "/topics/right-triangles"
+  },
+  {
+   "auto": false,
+   "done": true,
+   "goal": 7,
+   "key": "practice",
+   "label": "Solve 7 problems in Right Triangles & Pythagoras",
+   "progress": 0,
+   "to": "/problems?topic=right-triangles"
+  }
+ ],
+ "weeks": [
+  {
+   "current": true,
+   "end": "2026-11-22",
+   "focus": [
+    {
+     "category": "geometry",
+     "id": "right-triangles",
+     "name": "Right Triangles & Pythagoras"
+    },
+    {
+     "category": "counting",
+     "id": "combinations",
+     "name": "Combinations & Stars and Bars"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 1,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2026-11-16"
+  },
+  {
+   "current": false,
+   "end": "2026-11-29",
+   "focus": [
+    {
+     "category": "number-theory",
+     "id": "modular-arithmetic",
+     "name": "Modular Arithmetic"
+    },
+    {
+     "category": "counting",
+     "id": "basic-counting",
+     "name": "Counting Principles"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 2,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2026-11-23"
+  },
+  {
+   "current": false,
+   "end": "2026-12-06",
+   "focus": [
+    {
+     "category": "geometry",
+     "id": "circles",
+     "name": "Circles"
+    },
+    {
+     "category": "geometry",
+     "id": "area",
+     "name": "Area & Perimeter"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 3,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2026-11-30"
+  },
+  {
+   "current": false,
+   "end": "2026-12-13",
+   "focus": [
+    {
+     "category": "counting",
+     "id": "casework",
+     "name": "Casework & Complements"
+    },
+    {
+     "category": "algebra",
+     "id": "quadratics",
+     "name": "Quadratics"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 4,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2026-12-07"
+  },
+  {
+   "current": false,
+   "end": "2026-12-20",
+   "focus": [
+    {
+     "category": "geometry",
+     "id": "triangles",
+     "name": "Triangles"
+    },
+    {
+     "category": "number-theory",
+     "id": "divisibility",
+     "name": "Divisibility & Primes"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 5,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2026-12-14"
+  },
+  {
+   "current": false,
+   "end": "2026-12-27",
+   "focus": [
+    {
+     "category": "counting",
+     "id": "probability",
+     "name": "Probability"
+    },
+    {
+     "category": "algebra",
+     "id": "graphs-transformations",
+     "name": "Graphs & Transformations"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 6,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2026-12-21"
+  },
+  {
+   "current": false,
+   "end": "2027-01-03",
+   "focus": [
+    {
+     "category": "counting",
+     "id": "lattice-paths",
+     "name": "Grid & Lattice Paths"
+    },
+    {
+     "category": "counting",
+     "id": "permutations",
+     "name": "Permutations & Arrangements"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 7,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2026-12-28"
+  },
+  {
+   "current": false,
+   "end": "2027-01-10",
+   "focus": [
+    {
+     "category": "geometry",
+     "id": "similar-triangles",
+     "name": "Similar Triangles"
+    },
+    {
+     "category": "geometry",
+     "id": "triangle-centers",
+     "name": "Triangle Centers & Cevians"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 8,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2027-01-04"
+  },
+  {
+   "current": false,
+   "end": "2027-01-17",
+   "focus": [
+    {
+     "category": "number-theory",
+     "id": "factors-divisors",
+     "name": "Factors & Divisor Counting"
+    },
+    {
+     "category": "counting",
+     "id": "recursion",
+     "name": "Recursion & Patterns"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 9,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2027-01-11"
+  },
+  {
+   "current": false,
+   "end": "2027-01-24",
+   "focus": [
+    {
+     "category": "number-theory",
+     "id": "digits-bases",
+     "name": "Digits & Bases"
+    },
+    {
+     "category": "number-theory",
+     "id": "diophantine",
+     "name": "Diophantine Equations"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 10,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2027-01-18"
+  },
+  {
+   "current": false,
+   "end": "2027-01-31",
+   "focus": [
+    {
+     "category": "geometry",
+     "id": "quadrilaterals",
+     "name": "Quadrilaterals"
+    },
+    {
+     "category": "number-theory",
+     "id": "gcd-lcm",
+     "name": "GCD & LCM"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 11,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2027-01-25"
+  },
+  {
+   "current": false,
+   "end": "2027-02-07",
+   "focus": [
+    {
+     "category": "geometry",
+     "id": "coordinate-geometry",
+     "name": "Coordinate Geometry"
+    },
+    {
+     "category": "algebra",
+     "id": "sequences-series",
+     "name": "Sequences & Series"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 12,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2027-02-01"
+  },
+  {
+   "current": false,
+   "end": "2027-02-14",
+   "focus": [
+    {
+     "category": "number-theory",
+     "id": "perfect-powers",
+     "name": "Perfect Squares & Cubes"
+    },
+    {
+     "category": "algebra",
+     "id": "functions",
+     "name": "Functions & Functional Equations"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 13,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2027-02-08"
+  },
+  {
+   "current": false,
+   "end": "2027-02-21",
+   "focus": [
+    {
+     "category": "misc",
+     "id": "statistics",
+     "name": "Mean, Median & Mode"
+    },
+    {
+     "category": "geometry",
+     "id": "angle-chasing",
+     "name": "Angles & Parallel Lines"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 14,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2027-02-15"
+  },
+  {
+   "current": false,
+   "end": "2027-02-28",
+   "focus": [
+    {
+     "category": "algebra",
+     "id": "word-problems",
+     "name": "Rates, Ratios & Percents"
+    },
+    {
+     "category": "geometry",
+     "id": "solid-geometry",
+     "name": "3D Geometry"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 15,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2027-02-22"
+  },
+  {
+   "current": false,
+   "end": "2027-03-07",
+   "focus": [
+    {
+     "category": "counting",
+     "id": "conditional-probability",
+     "name": "Conditional Probability"
+    },
+    {
+     "category": "misc",
+     "id": "estimation",
+     "name": "Estimation & Bounding"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 16,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2027-03-01"
+  },
+  {
+   "current": false,
+   "end": "2027-03-14",
+   "focus": [
+    {
+     "category": "number-theory",
+     "id": "factorials",
+     "name": "Factorials & Trailing Zeros"
+    },
+    {
+     "category": "algebra",
+     "id": "floor-ceiling",
+     "name": "Floor & Ceiling"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 17,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2027-03-08"
+  },
+  {
+   "current": false,
+   "end": "2027-03-21",
+   "focus": [
+    {
+     "category": "misc",
+     "id": "games-strategy",
+     "name": "Games & Strategy"
+    },
+    {
+     "category": "counting",
+     "id": "graph-theory",
+     "name": "Graphs, Networks & Tournaments"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 18,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2027-03-15"
+  },
+  {
+   "current": false,
+   "end": "2027-03-28",
+   "focus": [
+    {
+     "category": "algebra",
+     "id": "inequalities",
+     "name": "Inequalities & Optimization"
+    },
+    {
+     "category": "misc",
+     "id": "invariants",
+     "name": "Invariants & Processes"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 19,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2027-03-22"
+  },
+  {
+   "current": false,
+   "end": "2027-04-04",
+   "focus": [
+    {
+     "category": "counting",
+     "id": "binomial-coefficients",
+     "name": "Pascal's Triangle & Identities"
+    },
+    {
+     "category": "counting",
+     "id": "pigeonhole",
+     "name": "Pigeonhole Principle"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Learn each focus topic, then do its easier problems untimed.",
+   "number": 20,
+   "past": false,
+   "phase": "Foundations",
+   "problems": 42,
+   "start": "2027-03-29"
+  },
+  {
+   "current": false,
+   "end": "2027-04-11",
+   "focus": [
+    {
+     "category": "number-theory",
+     "id": "decimals-fractions",
+     "name": "Repeating Decimals & Fractions"
+    },
+    {
+     "category": "geometry",
+     "id": "transformations",
+     "name": "Rotations, Reflections & Symmetry"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 21,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-04-05"
+  },
+  {
+   "current": false,
+   "end": "2027-04-18",
+   "focus": [
+    {
+     "category": "misc",
+     "id": "data-graphs",
+     "name": "Tables, Charts & Data"
+    },
+    {
+     "category": "geometry",
+     "id": "polygons",
+     "name": "Polygons"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 22,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-04-12"
+  },
+  {
+   "current": false,
+   "end": "2027-04-25",
+   "focus": [
+    {
+     "category": "counting",
+     "id": "expected-value",
+     "name": "Expected Value"
+    },
+    {
+     "category": "algebra",
+     "id": "nonlinear-systems",
+     "name": "Nonlinear Systems"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 23,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-04-19"
+  },
+  {
+   "current": false,
+   "end": "2027-05-02",
+   "focus": [
+    {
+     "category": "algebra",
+     "id": "linear-equations",
+     "name": "Linear Equations & Systems"
+    },
+    {
+     "category": "algebra",
+     "id": "exponents",
+     "name": "Exponents & Radicals"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 24,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-04-26"
+  },
+  {
+   "current": false,
+   "end": "2027-05-09",
+   "focus": [
+    {
+     "category": "counting",
+     "id": "geometric-probability",
+     "name": "Geometric Probability"
+    },
+    {
+     "category": "algebra",
+     "id": "absolute-value",
+     "name": "Absolute Value"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 25,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-05-03"
+  },
+  {
+   "current": false,
+   "end": "2027-05-16",
+   "focus": [
+    {
+     "category": "misc",
+     "id": "clocks-calendars",
+     "name": "Clocks, Calendars & Time"
+    },
+    {
+     "category": "misc",
+     "id": "logic",
+     "name": "Logic & Puzzles"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 26,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-05-10"
+  },
+  {
+   "current": false,
+   "end": "2027-05-23",
+   "focus": [
+    {
+     "category": "number-theory",
+     "id": "parity",
+     "name": "Parity"
+    },
+    {
+     "category": "algebra",
+     "id": "arithmetic",
+     "name": "Arithmetic & Fractions"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 27,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-05-17"
+  },
+  {
+   "current": false,
+   "end": "2027-05-30",
+   "focus": [
+    {
+     "category": "geometry",
+     "id": "area-ratios",
+     "name": "Area Ratios & Mass Points"
+    },
+    {
+     "category": "geometry",
+     "id": "right-triangles",
+     "name": "Right Triangles & Pythagoras"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 28,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-05-24"
+  },
+  {
+   "current": false,
+   "end": "2027-06-06",
+   "focus": [
+    {
+     "category": "counting",
+     "id": "combinations",
+     "name": "Combinations & Stars and Bars"
+    },
+    {
+     "category": "number-theory",
+     "id": "modular-arithmetic",
+     "name": "Modular Arithmetic"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 29,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-05-31"
+  },
+  {
+   "current": false,
+   "end": "2027-06-13",
+   "focus": [
+    {
+     "category": "counting",
+     "id": "basic-counting",
+     "name": "Counting Principles"
+    },
+    {
+     "category": "geometry",
+     "id": "circles",
+     "name": "Circles"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 30,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-06-07"
+  },
+  {
+   "current": false,
+   "end": "2027-06-20",
+   "focus": [
+    {
+     "category": "geometry",
+     "id": "area",
+     "name": "Area & Perimeter"
+    },
+    {
+     "category": "counting",
+     "id": "casework",
+     "name": "Casework & Complements"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 31,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-06-14"
+  },
+  {
+   "current": false,
+   "end": "2027-06-27",
+   "focus": [
+    {
+     "category": "algebra",
+     "id": "quadratics",
+     "name": "Quadratics"
+    },
+    {
+     "category": "geometry",
+     "id": "triangles",
+     "name": "Triangles"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 32,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-06-21"
+  },
+  {
+   "current": false,
+   "end": "2027-07-04",
+   "focus": [
+    {
+     "category": "number-theory",
+     "id": "divisibility",
+     "name": "Divisibility & Primes"
+    },
+    {
+     "category": "counting",
+     "id": "probability",
+     "name": "Probability"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 33,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-06-28"
+  },
+  {
+   "current": false,
+   "end": "2027-07-11",
+   "focus": [
+    {
+     "category": "algebra",
+     "id": "graphs-transformations",
+     "name": "Graphs & Transformations"
+    },
+    {
+     "category": "counting",
+     "id": "lattice-paths",
+     "name": "Grid & Lattice Paths"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 34,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-07-05"
+  },
+  {
+   "current": false,
+   "end": "2027-07-18",
+   "focus": [
+    {
+     "category": "counting",
+     "id": "permutations",
+     "name": "Permutations & Arrangements"
+    },
+    {
+     "category": "geometry",
+     "id": "similar-triangles",
+     "name": "Similar Triangles"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 35,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-07-12"
+  },
+  {
+   "current": false,
+   "end": "2027-07-25",
+   "focus": [
+    {
+     "category": "geometry",
+     "id": "triangle-centers",
+     "name": "Triangle Centers & Cevians"
+    },
+    {
+     "category": "number-theory",
+     "id": "factors-divisors",
+     "name": "Factors & Divisor Counting"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 36,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-07-19"
+  },
+  {
+   "current": false,
+   "end": "2027-08-01",
+   "focus": [
+    {
+     "category": "counting",
+     "id": "recursion",
+     "name": "Recursion & Patterns"
+    },
+    {
+     "category": "number-theory",
+     "id": "digits-bases",
+     "name": "Digits & Bases"
+    }
+   ],
+   "mock": false,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 37,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-07-26"
+  },
+  {
+   "current": false,
+   "end": "2027-08-08",
+   "focus": [
+    {
+     "category": "number-theory",
+     "id": "diophantine",
+     "name": "Diophantine Equations"
+    },
+    {
+     "category": "geometry",
+     "id": "quadrilaterals",
+     "name": "Quadrilaterals"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "Focus topics plus review. Aim for under 3 minutes on #1-15.",
+   "number": 38,
+   "past": false,
+   "phase": "Core",
+   "problems": 42,
+   "start": "2027-08-02"
+  },
+  {
+   "current": false,
+   "end": "2027-08-15",
+   "focus": [
+    {
+     "category": "number-theory",
+     "id": "gcd-lcm",
+     "name": "GCD & LCM"
+    },
+    {
+     "category": "geometry",
+     "id": "coordinate-geometry",
+     "name": "Coordinate Geometry"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "One timed mock, then work on what you missed.",
+   "number": 39,
+   "past": false,
+   "phase": "Contest mode",
+   "problems": 42,
+   "start": "2027-08-09"
+  },
+  {
+   "current": false,
+   "end": "2027-08-22",
+   "focus": [
+    {
+     "category": "algebra",
+     "id": "sequences-series",
+     "name": "Sequences & Series"
+    },
+    {
+     "category": "number-theory",
+     "id": "perfect-powers",
+     "name": "Perfect Squares & Cubes"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "One timed mock, then work on what you missed.",
+   "number": 40,
+   "past": false,
+   "phase": "Contest mode",
+   "problems": 42,
+   "start": "2027-08-16"
+  },
+  {
+   "current": false,
+   "end": "2027-08-29",
+   "focus": [
+    {
+     "category": "algebra",
+     "id": "functions",
+     "name": "Functions & Functional Equations"
+    },
+    {
+     "category": "misc",
+     "id": "statistics",
+     "name": "Mean, Median & Mode"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "One timed mock, then work on what you missed.",
+   "number": 41,
+   "past": false,
+   "phase": "Contest mode",
+   "problems": 42,
+   "start": "2027-08-23"
+  },
+  {
+   "current": false,
+   "end": "2027-09-05",
+   "focus": [
+    {
+     "category": "geometry",
+     "id": "angle-chasing",
+     "name": "Angles & Parallel Lines"
+    },
+    {
+     "category": "algebra",
+     "id": "word-problems",
+     "name": "Rates, Ratios & Percents"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "One timed mock, then work on what you missed.",
+   "number": 42,
+   "past": false,
+   "phase": "Contest mode",
+   "problems": 42,
+   "start": "2027-08-30"
+  },
+  {
+   "current": false,
+   "end": "2027-09-12",
+   "focus": [
+    {
+     "category": "geometry",
+     "id": "solid-geometry",
+     "name": "3D Geometry"
+    },
+    {
+     "category": "counting",
+     "id": "conditional-probability",
+     "name": "Conditional Probability"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "One timed mock, then work on what you missed.",
+   "number": 43,
+   "past": false,
+   "phase": "Contest mode",
+   "problems": 42,
+   "start": "2027-09-06"
+  },
+  {
+   "current": false,
+   "end": "2027-09-19",
+   "focus": [
+    {
+     "category": "misc",
+     "id": "estimation",
+     "name": "Estimation & Bounding"
+    },
+    {
+     "category": "number-theory",
+     "id": "factorials",
+     "name": "Factorials & Trailing Zeros"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "One timed mock, then work on what you missed.",
+   "number": 44,
+   "past": false,
+   "phase": "Contest mode",
+   "problems": 42,
+   "start": "2027-09-13"
+  },
+  {
+   "current": false,
+   "end": "2027-09-26",
+   "focus": [
+    {
+     "category": "algebra",
+     "id": "floor-ceiling",
+     "name": "Floor & Ceiling"
+    },
+    {
+     "category": "misc",
+     "id": "games-strategy",
+     "name": "Games & Strategy"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "One timed mock, then work on what you missed.",
+   "number": 45,
+   "past": false,
+   "phase": "Contest mode",
+   "problems": 42,
+   "start": "2027-09-20"
+  },
+  {
+   "current": false,
+   "end": "2027-10-03",
+   "focus": [
+    {
+     "category": "counting",
+     "id": "graph-theory",
+     "name": "Graphs, Networks & Tournaments"
+    },
+    {
+     "category": "algebra",
+     "id": "inequalities",
+     "name": "Inequalities & Optimization"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "One timed mock, then work on what you missed.",
+   "number": 46,
+   "past": false,
+   "phase": "Contest mode",
+   "problems": 42,
+   "start": "2027-09-27"
+  },
+  {
+   "current": false,
+   "end": "2027-10-10",
+   "focus": [
+    {
+     "category": "misc",
+     "id": "invariants",
+     "name": "Invariants & Processes"
+    },
+    {
+     "category": "counting",
+     "id": "binomial-coefficients",
+     "name": "Pascal's Triangle & Identities"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "One timed mock, then work on what you missed.",
+   "number": 47,
+   "past": false,
+   "phase": "Contest mode",
+   "problems": 42,
+   "start": "2027-10-04"
+  },
+  {
+   "current": false,
+   "end": "2027-10-17",
+   "focus": [
+    {
+     "category": "counting",
+     "id": "pigeonhole",
+     "name": "Pigeonhole Principle"
+    },
+    {
+     "category": "number-theory",
+     "id": "decimals-fractions",
+     "name": "Repeating Decimals & Fractions"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "One timed mock, then work on what you missed.",
+   "number": 48,
+   "past": false,
+   "phase": "Contest mode",
+   "problems": 42,
+   "start": "2027-10-11"
+  },
+  {
+   "current": false,
+   "end": "2027-10-24",
+   "focus": [
+    {
+     "category": "geometry",
+     "id": "transformations",
+     "name": "Rotations, Reflections & Symmetry"
+    },
+    {
+     "category": "misc",
+     "id": "data-graphs",
+     "name": "Tables, Charts & Data"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "One timed mock, then work on what you missed.",
+   "number": 49,
+   "past": false,
+   "phase": "Contest mode",
+   "problems": 42,
+   "start": "2027-10-18"
+  },
+  {
+   "current": false,
+   "end": "2027-10-31",
+   "focus": [
+    {
+     "category": "geometry",
+     "id": "polygons",
+     "name": "Polygons"
+    },
+    {
+     "category": "counting",
+     "id": "expected-value",
+     "name": "Expected Value"
+    }
+   ],
+   "mock": true,
+   "mock_done": false,
+   "note": "One timed mock, then work on what you missed.",
+   "number": 50,
+   "past": false,
+   "phase": "Contest mode",
+   "problems": 42,
+   "start": "2027-10-25"
+  },
+  {
+   "current": false,
+   "end": "2027-11-07",
+   "focus": [],
+   "mock": false,
+   "mock_done": false,
+   "note": "Light review only. Nothing new. Sleep well.",
+   "number": 51,
+   "past": false,
+   "phase": "Taper",
+   "problems": 0,
+   "start": "2027-11-01"
+  }
+ ]
+}

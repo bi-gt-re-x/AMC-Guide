@@ -17,7 +17,7 @@
  * answering any of its problems unlocks it for good; an unlock by hand is
  * remembered in this browser and can be undone.
  */
-import { useState, type ReactNode } from 'react';
+import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useNotice, ErrorState, Loading } from '@/components';
 import { CategoryDot, DiagramNote, Difficulty, PageHeader, ratingText, Solution, StatusPill } from '@/components/Amc/bits';
@@ -104,25 +104,6 @@ function KeyTable({ rows }: { rows: KeyRow[] }) {
   );
 }
 
-const UNLOCK_KEY = (id: string) => `amc-unlocked:${id}`;
-
-function readUnlocked(id: string): boolean {
-  try {
-    return localStorage.getItem(UNLOCK_KEY(id)) === '1';
-  } catch {
-    return false;
-  }
-}
-
-function writeUnlocked(id: string, on: boolean) {
-  try {
-    if (on) localStorage.setItem(UNLOCK_KEY(id), '1');
-    else localStorage.removeItem(UNLOCK_KEY(id));
-  } catch {
-    /* storage blocked: the unlock lasts until the page is left */
-  }
-}
-
 function LockIcon() {
   return (
     <svg viewBox="0 0 24 24" width="22" height="22" aria-hidden="true" fill="none" stroke="currentColor"
@@ -171,8 +152,10 @@ export default function Contest() {
   const [keyError, setKeyError] = useState('');
   const [keyOpen, setKeyOpen] = useState(false);
   const [shown, setShown] = useState<number[]>([]);
-  // Bumped when the reader unlocks or relocks by hand, so the page re-reads it.
-  const [, setUnlockTick] = useState(0);
+  // The reader's unlock or relock by hand, shown at once while the account
+  // (table amc_unlocks) is told; null until they touch it on this visit.
+  const [unlockedNow, setUnlockedNow] = useState<boolean | null>(null);
+  useEffect(() => setUnlockedNow(null), [contestId]);
 
   async function loadKey(): Promise<boolean> {
     if (key) return true;
@@ -321,9 +304,19 @@ export default function Contest() {
   const written = problems.filter((p) => p.has_solution).length;
   // Sat it, logged a score or answered one of its problems: nothing left to protect.
   const tried = data.history.length > 0 || problems.some((p) => p.progress !== 'new');
-  const unlockedByHand = official && !tried && readUnlocked(c.id);
+  const unlockedByHand = official && !tried && (unlockedNow ?? Boolean(data.unlocked));
   const locked = official && !tried && !unlockedByHand;
-  const setUnlocked = (on: boolean) => { writeUnlocked(c.id, on); setUnlockTick((n) => n + 1); };
+  const setUnlocked = (on: boolean) => {
+    setUnlockedNow(on);
+    const undo = (why: string) => {
+      setUnlockedNow(null);
+      notify(on ? 'Could not unlock the paper' : 'Could not lock the paper', { body: why, tone: 'bad' });
+    };
+    amc.unlock(c.id, on).then(
+      (reply) => { if (!reply.success) undo(reply.message); },
+      (cause: unknown) => undo(cause instanceof Error ? cause.message : 'Try again.'),
+    );
+  };
   const keyCard: ReactNode = official && !locked && (
     <section className="am-card">
       <div className="am-card-head">

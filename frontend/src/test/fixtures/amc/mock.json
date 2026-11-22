@@ -1,0 +1,912 @@
+{
+ "attempts": [
+  {
+   "at": "2026-10-13T17:15:00",
+   "blank": 4,
+   "contest_id": "step-mock-10",
+   "correct": 11,
+   "id": "bb4f292b09904864a10aacf335262218",
+   "kind": "mock",
+   "level": "AMC 10",
+   "max": 150,
+   "name": "Step Mock AMC 10",
+   "note": "",
+   "score": 72.0,
+   "seconds": 4234,
+   "wrong": 10
+  }
+ ],
+ "contest": {
+  "id": "step-mock-10",
+  "level": "AMC 10",
+  "name": "Step Mock AMC 10",
+  "official": false
+ },
+ "report": {
+  "bands": [
+   {
+    "correct": 4,
+    "label": "#1-5",
+    "lost": 6,
+    "total": 5
+   },
+   {
+    "correct": 3,
+    "label": "#6-10",
+    "lost": 12,
+    "total": 5
+   },
+   {
+    "correct": 1,
+    "label": "#11-15",
+    "lost": 24,
+    "total": 5
+   },
+   {
+    "correct": 2,
+    "label": "#16-20",
+    "lost": 18,
+    "total": 5
+   },
+   {
+    "correct": 1,
+    "label": "#21-25",
+    "lost": 18.0,
+    "total": 5
+   }
+  ],
+  "topics": [
+   {
+    "correct": 0,
+    "lost": 16.5,
+    "name": "Modular Arithmetic",
+    "topic": "modular-arithmetic",
+    "total": 3
+   },
+   {
+    "correct": 0,
+    "lost": 10.5,
+    "name": "Recursion & Patterns",
+    "topic": "recursion",
+    "total": 2
+   },
+   {
+    "correct": 0,
+    "lost": 6,
+    "name": "Coordinate Geometry",
+    "topic": "coordinate-geometry",
+    "total": 1
+   },
+   {
+    "correct": 0,
+    "lost": 6,
+    "name": "Digits & Bases",
+    "topic": "digits-bases",
+    "total": 1
+   },
+   {
+    "correct": 0,
+    "lost": 6,
+    "name": "Diophantine Equations",
+    "topic": "diophantine",
+    "total": 1
+   },
+   {
+    "correct": 0,
+    "lost": 6,
+    "name": "Linear Equations & Systems",
+    "topic": "linear-equations",
+    "total": 1
+   },
+   {
+    "correct": 0,
+    "lost": 6,
+    "name": "Logic & Puzzles",
+    "topic": "logic",
+    "total": 1
+   },
+   {
+    "correct": 0,
+    "lost": 6,
+    "name": "Quadratics",
+    "topic": "quadratics",
+    "total": 1
+   },
+   {
+    "correct": 0,
+    "lost": 6,
+    "name": "Similar Triangles",
+    "topic": "similar-triangles",
+    "total": 1
+   },
+   {
+    "correct": 0,
+    "lost": 4.5,
+    "name": "Permutations & Arrangements",
+    "topic": "permutations",
+    "total": 1
+   },
+   {
+    "correct": 2,
+    "lost": 4.5,
+    "name": "Probability",
+    "topic": "probability",
+    "total": 3
+   },
+   {
+    "correct": 1,
+    "lost": 0,
+    "name": "Combinations & Stars and Bars",
+    "topic": "combinations",
+    "total": 1
+   },
+   {
+    "correct": 1,
+    "lost": 0,
+    "name": "Counting Principles",
+    "topic": "basic-counting",
+    "total": 1
+   },
+   {
+    "correct": 1,
+    "lost": 0,
+    "name": "Divisibility & Primes",
+    "topic": "divisibility",
+    "total": 1
+   },
+   {
+    "correct": 1,
+    "lost": 0,
+    "name": "Exponents & Radicals",
+    "topic": "exponents",
+    "total": 1
+   },
+   {
+    "correct": 1,
+    "lost": 0,
+    "name": "Factors & Divisor Counting",
+    "topic": "factors-divisors",
+    "total": 1
+   },
+   {
+    "correct": 1,
+    "lost": 0,
+    "name": "Functions & Functional Equations",
+    "topic": "functions",
+    "total": 1
+   },
+   {
+    "correct": 1,
+    "lost": 0,
+    "name": "Mean, Median & Mode",
+    "topic": "statistics",
+    "total": 1
+   },
+   {
+    "correct": 1,
+    "lost": 0,
+    "name": "Rates, Ratios & Percents",
+    "topic": "word-problems",
+    "total": 1
+   },
+   {
+    "correct": 1,
+    "lost": 0,
+    "name": "Sequences & Series",
+    "topic": "sequences-series",
+    "total": 1
+   }
+  ]
+ },
+ "result": {
+  "at": "2026-10-13T17:15:00",
+  "blank": 4,
+  "contest_id": "step-mock-10",
+  "correct": 11,
+  "count": 25,
+  "id": "bb4f292b09904864a10aacf335262218",
+  "kind": "mock",
+  "level": "AMC 10",
+  "max": 150,
+  "minutes": 75,
+  "name": "Step Mock AMC 10",
+  "note": "",
+  "score": 72.0,
+  "scoring": "6 per correct, 1.5 per blank, 0 per wrong",
+  "seconds": 4234,
+  "wrong": 10
+ },
+ "rows": [
+  {
+   "answer": "D",
+   "choices": [
+    "$3$",
+    "$9$",
+    "$18$",
+    "$27$",
+    "$81$"
+   ],
+   "diagram": "",
+   "difficulty": 1,
+   "given": "D",
+   "insight": "Three equal terms add to $3$ times the term: $3\\cdot 3^k = 3^{k+1}$.",
+   "number": 1,
+   "problem_id": "step-10-01",
+   "rating": 2.0,
+   "result": "correct",
+   "solution": [
+    "The numerator is three equal terms: $3^2+3^2+3^2 = 3\\cdot 9 = 27$.",
+    "The denominator is three equal terms too: $3^{-1}+3^{-1}+3^{-1} = 3\\cdot\\frac{1}{3} = 1$.",
+    "So the value is $\\frac{27}{1} = 27$, and the answer is $\\textbf{(D)}\\ 27$."
+   ],
+   "statement": "What is the value of $\\dfrac{3^2+3^2+3^2}{3^{-1}+3^{-1}+3^{-1}}$?",
+   "topic": "exponents",
+   "topic_name": "Exponents & Radicals",
+   "trap": "Cancelling the threes and answering $\\dfrac{3^2}{3^{-1}}$ incorrectly as $3$ or $9$."
+  },
+  {
+   "answer": "E",
+   "choices": [
+    "$2$",
+    "$10$",
+    "$12$",
+    "$18$",
+    "$20$"
+   ],
+   "diagram": "",
+   "difficulty": 1,
+   "given": "E",
+   "insight": "Turn every mean into a sum first; sums subtract, means do not.",
+   "number": 2,
+   "problem_id": "step-10-03",
+   "rating": 2.0,
+   "result": "correct",
+   "solution": [
+    "A mean of $12$ over five numbers means they sum to $5 \\cdot 12 = 60$.",
+    "A mean of $10$ over the four that remain means they sum to $4 \\cdot 10 = 40$.",
+    "The removed number is the difference: $60 - 40 = 20$, so the answer is $\\textbf{(E)}\\ 20$."
+   ],
+   "statement": "The mean of five numbers is $12$. When one of the numbers is removed, the mean of the remaining four numbers is $10$. What number was removed?",
+   "topic": "statistics",
+   "topic_name": "Mean, Median & Mode",
+   "trap": "Subtracting the means: $12 - 10 = 2$."
+  },
+  {
+   "answer": "B",
+   "choices": [
+    "$85\\%$",
+    "$90\\%$",
+    "$95\\%$",
+    "$100\\%$",
+    "$105\\%$"
+   ],
+   "diagram": "",
+   "difficulty": 1,
+   "given": "B",
+   "insight": "Percent changes compose by multiplying factors, not by adding percents.",
+   "number": 3,
+   "problem_id": "step-10-04",
+   "rating": 2.0,
+   "result": "correct",
+   "solution": [
+    "Call the original price $P$. After a $20\\%$ increase it is $1.2P$.",
+    "A $25\\%$ decrease keeps $75\\%$ of that: $0.75 \\cdot 1.2P = 0.9P$.",
+    "So the final price is $90\\%$ of the original: $\\textbf{(B)}\\ 90\\%$."
+   ],
+   "statement": "The price of a jacket is increased by $20\\%$, and then the new price is decreased by $25\\%$. The final price is what percent of the original price?",
+   "topic": "word-problems",
+   "topic_name": "Rates, Ratios & Percents",
+   "trap": "Adding $+20\\%$ and $-25\\%$ to get $95\\%$."
+  },
+  {
+   "answer": "C",
+   "choices": [
+    "$24$",
+    "$30$",
+    "$36$",
+    "$42$",
+    "$48$"
+   ],
+   "diagram": "",
+   "difficulty": 1,
+   "given": "D",
+   "insight": "Add the same number of years to both people.",
+   "number": 4,
+   "problem_id": "step-10-05",
+   "rating": 2.0,
+   "result": "wrong",
+   "solution": [
+    "Let Ben be $b$ years old, so Ana is $3b$.",
+    "In $12$ years: $3b + 12 = 2(b + 12) = 2b + 24$, so $b = 12$.",
+    "Ana is $3 \\cdot 12 = 36$. (Check: in 12 years, $48 = 2 \\cdot 24$.) The answer is $\\textbf{(C)}\\ 36$."
+   ],
+   "statement": "Ana is three times as old as Ben. In $12$ years, Ana will be twice as old as Ben. How old is Ana now?",
+   "topic": "linear-equations",
+   "topic_name": "Linear Equations & Systems",
+   "trap": "Answering with Ben's age, $12$, which is not a choice, or forgetting to add $12$ to Ana."
+  },
+  {
+   "answer": "A",
+   "choices": [
+    "$60$",
+    "$75$",
+    "$100$",
+    "$120$",
+    "$125$"
+   ],
+   "diagram": "",
+   "difficulty": 1,
+   "given": "A",
+   "insight": "No odd digit is zero, so there is no leading-zero case to remove.",
+   "number": 5,
+   "problem_id": "step-10-08",
+   "rating": 2.0,
+   "result": "correct",
+   "solution": [
+    "The odd digits are $1, 3, 5, 7, 9$: five of them, and none is $0$.",
+    "Choose the hundreds digit ($5$ ways), then the tens ($4$ left), then the units ($3$ left).",
+    "That gives $5 \\cdot 4 \\cdot 3 = 60$ numbers, so the answer is $\\textbf{(A)}\\ 60$."
+   ],
+   "statement": "How many three-digit positive integers have three distinct digits, all of which are odd?",
+   "topic": "basic-counting",
+   "topic_name": "Counting Principles",
+   "trap": "Allowing repeats and answering $5^3 = 125$."
+  },
+  {
+   "answer": "C",
+   "choices": [
+    "$28$",
+    "$30$",
+    "$32$",
+    "$34$",
+    "$36$"
+   ],
+   "diagram": "",
+   "difficulty": 1,
+   "given": "C",
+   "insight": "An arithmetic sum is the number of terms times the average of the first and last.",
+   "number": 6,
+   "problem_id": "step-10-18",
+   "rating": 2.0,
+   "result": "correct",
+   "solution": [
+    "An arithmetic sum is the number of terms times the average of the first and last: $S_{10} = \\frac{10}{2}(a_1 + a_{10})$.",
+    "So $5(5 + a_{10}) = 185$, giving $5 + a_{10} = 37$ and $a_{10} = 32$.",
+    "(Check: the common difference is $3$, and $5 + 9 \\cdot 3 = 32$.) The answer is $\\textbf{(C)}\\ 32$."
+   ],
+   "statement": "The first term of an arithmetic sequence is $5$, and the sum of its first $10$ terms is $185$. What is the $10$th term?",
+   "topic": "sequences-series",
+   "topic_name": "Sequences & Series",
+   "trap": "Solving for the common difference ($3$) and stopping there."
+  },
+  {
+   "answer": "C",
+   "choices": [
+    "$34$",
+    "$37$",
+    "$40$",
+    "$43$",
+    "$46$"
+   ],
+   "diagram": "",
+   "difficulty": 1,
+   "given": "C",
+   "insight": "For \"exactly one of two\", subtract the overlap twice: once for each set it was counted in.",
+   "number": 7,
+   "problem_id": "step-10-06",
+   "rating": 2.0,
+   "result": "correct",
+   "solution": [
+    "Multiples of $3$ below $100$: $\\lfloor 99/3 \\rfloor = 33$.",
+    "Multiples of $5$ below $100$: $\\lfloor 99/5 \\rfloor = 19$.",
+    "Multiples of both, i.e. of $15$: $\\lfloor 99/15 \\rfloor = 6$.",
+    "Exactly one of the two: $(33 - 6) + (19 - 6) = 27 + 13 = 40$, so the answer is $\\textbf{(C)}\\ 40$."
+   ],
+   "statement": "How many positive integers less than $100$ are divisible by $3$ or by $5$, but not by both?",
+   "topic": "divisibility",
+   "topic_name": "Divisibility & Primes",
+   "trap": "Using ordinary inclusion-exclusion and answering $46$, which still counts the multiples of $15$."
+  },
+  {
+   "answer": "C",
+   "choices": [
+    "$162$",
+    "$168$",
+    "$170$",
+    "$171$",
+    "$180$"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "given": "E",
+   "insight": "Try $10^3 - 20$ and $10^4 - 20$ and read off the pattern.",
+   "number": 8,
+   "problem_id": "step-10-09",
+   "rating": 3.0,
+   "result": "wrong",
+   "solution": [
+    "$10^{20} - 1$ is twenty $9$s, and $10^{20} - 20 = (10^{20} - 1) - 19$.",
+    "Subtracting $19$ only changes the last two digits: $\\ldots 99 - 19 = \\ldots 80$. (Check with $10^4 - 20 = 9980$.)",
+    "So the number is eighteen $9$s followed by $8$ and $0$, with digit sum $18 \\cdot 9 + 8 = 170$.",
+    "The answer is $\\textbf{(C)}\\ 170$."
+   ],
+   "statement": "What is the sum of the digits of $10^{20} - 20$?",
+   "topic": "digits-bases",
+   "topic_name": "Digits & Bases",
+   "trap": "Miscounting the nines as $19$ or $20$."
+  },
+  {
+   "answer": "D",
+   "choices": [
+    "$\\frac{1}{3}$",
+    "$\\frac{4}{9}$",
+    "$\\frac{1}{2}$",
+    "$\\frac{5}{9}$",
+    "$\\frac{2}{3}$"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "given": "D",
+   "insight": "\"At least one\" is almost always easier through the complement.",
+   "number": 9,
+   "problem_id": "step-10-10",
+   "rating": 3.0,
+   "result": "correct",
+   "solution": [
+    "There are $6 \\cdot 6 = 36$ equally likely outcomes.",
+    "The product is not a multiple of $3$ exactly when neither die shows $3$ or $6$: $4 \\cdot 4 = 16$ outcomes.",
+    "So the probability it is a multiple of $3$ is $1 - \\frac{16}{36} = \\frac{20}{36} = \\frac{5}{9}$, answer $\\textbf{(D)}\\ \\frac{5}{9}$."
+   ],
+   "statement": "Two fair six-sided dice are rolled. What is the probability that the product of the two numbers rolled is a multiple of $3$?",
+   "topic": "probability",
+   "topic_name": "Probability",
+   "trap": "Adding $\\frac{1}{3} + \\frac{1}{3}$ and double-counting the case where both dice are multiples of $3$."
+  },
+  {
+   "answer": "C",
+   "choices": [
+    "$6$",
+    "$8$",
+    "$10$",
+    "$12$",
+    "$14$"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "given": "D",
+   "insight": "Vieta gives the sum for free; the difference pins down both roots.",
+   "number": 10,
+   "problem_id": "step-10-11",
+   "rating": 3.0,
+   "result": "wrong",
+   "solution": [
+    "By Vieta, the roots $r$ and $s$ satisfy $r + s = 7$ and $rs = k$.",
+    "With $r - s = 3$, adding and subtracting gives $r = 5$ and $s = 2$.",
+    "So $k = rs = 10$. (Check: $x^2 - 7x + 10 = (x-2)(x-5)$.) The answer is $\\textbf{(C)}\\ 10$."
+   ],
+   "statement": "The two roots of $x^2 - 7x + k = 0$ differ by $3$. What is $k$?",
+   "topic": "quadratics",
+   "topic_name": "Quadratics",
+   "trap": "Using $(r-s)^2 = 9$ but writing $(r+s)^2 - 2rs$ instead of $(r+s)^2 - 4rs$."
+  },
+  {
+   "answer": "D",
+   "choices": [
+    "$20$",
+    "$30$",
+    "$35$",
+    "$40$",
+    "$45$"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "given": "B",
+   "insight": "Areas of similar figures scale with the square of the length ratio.",
+   "number": 11,
+   "problem_id": "step-10-12",
+   "rating": 3.0,
+   "result": "wrong",
+   "solution": [
+    "$DE \\parallel BC$, so triangles $ADE$ and $ABC$ are similar (they share angle $A$ and have equal corresponding angles).",
+    "The ratio of similarity is $\\frac{AD}{AB} = \\frac{4}{12} = \\frac{1}{3}$, so areas are in ratio $\\frac{1}{9}$.",
+    "Then $[ABC] = 9 \\cdot 5 = 45$.",
+    "The quadrilateral is what is left: $45 - 5 = 40$, so the answer is $\\textbf{(D)}\\ 40$."
+   ],
+   "statement": "In triangle $ABC$, $AB = 12$. Point $D$ lies on $\\overline{AB}$ with $AD = 4$, and the line through $D$ parallel to $\\overline{BC}$ meets $\\overline{AC}$ at $E$. The area of triangle $ADE$ is $5$. What is the area of quadrilateral $DBCE$?",
+   "topic": "similar-triangles",
+   "topic_name": "Similar Triangles",
+   "trap": "Scaling area by the length ratio and getting $[ABC] = 15$; or answering $45$, the whole triangle."
+  },
+  {
+   "answer": "D",
+   "choices": [
+    "$1$",
+    "$2$",
+    "$3$",
+    "$4$",
+    "$5$"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "given": "B",
+   "insight": "Find the cycle length (here Fermat says it divides $6$), then reduce the exponent mod it.",
+   "number": 12,
+   "problem_id": "step-10-13",
+   "rating": 3.0,
+   "result": "wrong",
+   "solution": [
+    "Powers of $3$ modulo $7$ go $3, 2, 6, 4, 5, 1$, then repeat: the cycle has length $6$.",
+    "Since $100 = 6 \\cdot 16 + 4$, we have $3^{100} \\equiv 3^4 \\pmod 7$.",
+    "$3^4 = 81 = 77 + 4$, so the remainder is $4$: $\\textbf{(D)}\\ 4$."
+   ],
+   "statement": "What is the remainder when $3^{100}$ is divided by $7$?",
+   "topic": "modular-arithmetic",
+   "topic_name": "Modular Arithmetic",
+   "trap": "Reducing the exponent mod $7$ instead of mod $6$."
+  },
+  {
+   "answer": "D",
+   "choices": [
+    "$22$",
+    "$23$",
+    "$24$",
+    "$25$",
+    "$26$"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "given": "A",
+   "insight": "With one vertex at the origin, the area is $\\frac{1}{2}|x_1y_2 - x_2y_1|$.",
+   "number": 13,
+   "problem_id": "step-10-15",
+   "rating": 3.0,
+   "result": "wrong",
+   "solution": [
+    "With one vertex at the origin, the shoelace formula is Area $= \\frac{1}{2}\\lvert x_1 y_2 - x_2 y_1 \\rvert$.",
+    "Using $(8, 2)$ and $(3, 7)$: $\\frac{1}{2}\\lvert 8 \\cdot 7 - 3 \\cdot 2 \\rvert = \\frac{1}{2} \\cdot 50 = 25$.",
+    "The answer is $\\textbf{(D)}\\ 25$."
+   ],
+   "statement": "What is the area of the triangle with vertices $(0,0)$, $(8,2)$ and $(3,7)$?",
+   "topic": "coordinate-geometry",
+   "topic_name": "Coordinate Geometry",
+   "trap": "Forgetting the $\\frac{1}{2}$ and answering $50$, or a sign slip giving $31$."
+  },
+  {
+   "answer": "B",
+   "choices": [
+    "$6$",
+    "$10$",
+    "$15$",
+    "$20$",
+    "$28$"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "given": "B",
+   "insight": "\"At least one each\" becomes \"any amount\" after handing one to everybody.",
+   "number": 14,
+   "problem_id": "step-10-17",
+   "rating": 3.0,
+   "result": "correct",
+   "solution": [
+    "Give each child one candy first; $3$ candies remain, with no restriction left.",
+    "Distributing $3$ identical candies to $3$ children is a stars-and-bars count: $\\binom{3 + 2}{2} = 10$.",
+    "The answer is $\\textbf{(B)}\\ 10$."
+   ],
+   "statement": "In how many ways can $6$ identical candies be given to $3$ children so that every child gets at least one candy?",
+   "topic": "combinations",
+   "topic_name": "Combinations & Stars and Bars",
+   "trap": "Using $\\binom{6+2}{2} = 28$, which allows a child to get nothing."
+  },
+  {
+   "answer": "D",
+   "choices": [
+    "$01$",
+    "$07$",
+    "$43$",
+    "$49$",
+    "$93$"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "given": "C",
+   "insight": "Look for a small power that is 1 mod 100.",
+   "number": 15,
+   "problem_id": "step-drill-04",
+   "rating": 3.0,
+   "result": "wrong",
+   "solution": [
+    "$7^2 = 49$ and $7^4 = 2401 \\equiv 1 \\pmod{100}$.",
+    "$2026 = 4 \\cdot 506 + 2$, so $7^{2026} \\equiv 7^2 = 49 \\pmod{100}$.",
+    "The last two digits are $49$: $\\textbf{(D)}\\ 49$."
+   ],
+   "statement": "What are the last two digits of $7^{2026}$?",
+   "topic": "modular-arithmetic",
+   "topic_name": "Modular Arithmetic",
+   "trap": "Reducing $2026$ mod $10$ instead of mod $4$."
+  },
+  {
+   "answer": "B",
+   "choices": [
+    "$0$",
+    "$1$",
+    "$2$",
+    "$3$",
+    "cannot be determined"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "given": "E",
+   "insight": "Assume one speaker's type and chase consequences until a contradiction.",
+   "number": 16,
+   "problem_id": "step-drill-08",
+   "rating": 3.0,
+   "result": "wrong",
+   "solution": [
+    "Suppose Ava is a knight. Then Ben, who calls her a knave, is a knave, and since exactly one is a knave, Cal is a knight. But Cal claims to be the same type as Ben, which is false: a contradiction.",
+    "So Ava is a knave, Ben\u2019s statement is true, and Ben is a knight.",
+    "If Cal were a knight, Ava would be the only knave, making her statement true: impossible. So Cal is a knave, and indeed his claim (same type as Ben) is false.",
+    "Ava and Cal are knaves, so exactly one is a knight: $\\textbf{(B)}\\ 1$."
+   ],
+   "statement": "Each of three students is either a knight, who always tells the truth, or a knave, who always lies. Ava says, \"Exactly one of us is a knave.\" Ben says, \"Ava is a knave.\" Cal says, \"Ben and I are the same type.\" How many of the three are knights?",
+   "topic": "logic",
+   "topic_name": "Logic & Puzzles",
+   "trap": "Stopping at the first consistent-looking assignment without checking every statement."
+  },
+  {
+   "answer": "C",
+   "choices": [
+    "$8$",
+    "$10$",
+    "$12$",
+    "$16$",
+    "$18$"
+   ],
+   "diagram": "",
+   "difficulty": 3,
+   "given": "C",
+   "insight": "Count the choices for each prime exponent separately, then multiply.",
+   "number": 17,
+   "problem_id": "step-10-19",
+   "rating": 4.0,
+   "result": "correct",
+   "solution": [
+    "A divisor has the form $2^a 3^b 5^c$ with $0 \\le a \\le 4$, $0 \\le b \\le 3$, $0 \\le c \\le 2$.",
+    "It is a perfect square exactly when $a$, $b$, $c$ are all even.",
+    "That leaves $a \\in \\{0, 2, 4\\}$, $b \\in \\{0, 2\\}$, $c \\in \\{0, 2\\}$: $3 \\cdot 2 \\cdot 2 = 12$ choices.",
+    "The answer is $\\textbf{(C)}\\ 12$."
+   ],
+   "statement": "How many positive divisors of $2^4\\cdot 3^3\\cdot 5^2$ are perfect squares?",
+   "topic": "factors-divisors",
+   "topic_name": "Factors & Divisor Counting",
+   "trap": "Forgetting the exponent $0$ and answering $2\\cdot 1\\cdot 1$ style counts."
+  },
+  {
+   "answer": "C",
+   "choices": [
+    "$6$",
+    "$8$",
+    "$9$",
+    "$10$",
+    "$12$"
+   ],
+   "diagram": "",
+   "difficulty": 3,
+   "given": "E",
+   "insight": "Simon's Favorite Factoring Trick: add the constant that makes $xy - ax - by$ factor.",
+   "number": 18,
+   "problem_id": "step-10-21",
+   "rating": 4.0,
+   "result": "wrong",
+   "solution": [
+    "Multiply both sides by $6xy$: $6y + 6x = xy$, i.e. $xy - 6x - 6y = 0$.",
+    "Add $36$ to both sides to factor: $(x - 6)(y - 6) = 36$.",
+    "Both factors are greater than $-6$. If both were negative, each would be at least $-5$ and their product at most $25 < 36$, so both are positive.",
+    "Each positive divisor $d$ of $36$ gives one ordered pair ($x - 6 = d$, $y - 6 = \\frac{36}{d}$), and $36$ has $9$ divisors. The answer is $\\textbf{(C)}\\ 9$."
+   ],
+   "statement": "How many ordered pairs of positive integers $(x, y)$ satisfy $\\dfrac{1}{x} + \\dfrac{1}{y} = \\dfrac{1}{6}$?",
+   "topic": "diophantine",
+   "topic_name": "Diophantine Equations",
+   "trap": "Counting unordered pairs and answering $5$, or forgetting to rule out negative factor pairs."
+  },
+  {
+   "answer": "B",
+   "choices": [
+    "$-2$",
+    "$-1$",
+    "$0$",
+    "$1$",
+    "$2$"
+   ],
+   "diagram": "",
+   "difficulty": 3,
+   "given": "B",
+   "insight": "Substitute $\\frac{1}{x}$ for $x$ to get a second equation in the same two unknowns.",
+   "number": 19,
+   "problem_id": "step-10-25",
+   "rating": 4.0,
+   "result": "correct",
+   "solution": [
+    "Put $x = 2$: $f(2) + 2f\\!\\left(\\tfrac{1}{2}\\right) = 6$.",
+    "Put $x = \\tfrac{1}{2}$: $f\\!\\left(\\tfrac{1}{2}\\right) + 2f(2) = \\tfrac{3}{2}$.",
+    "Write $a = f(2)$, $b = f(\\tfrac{1}{2})$: $a + 2b = 6$ and $4a + 2b = 3$ (the second equation doubled). Subtracting, $3a = -3$.",
+    "So $f(2) = -1$ (and $f(\\tfrac12) = \\tfrac{7}{2}$ checks both equations). The answer is $\\textbf{(B)}\\ -1$."
+   ],
+   "statement": "A function $f$ satisfies $f(x) + 2f\\!\\left(\\frac{1}{x}\\right) = 3x$ for every nonzero real number $x$. What is $f(2)$?",
+   "topic": "functions",
+   "topic_name": "Functions & Functional Equations",
+   "trap": "Guessing $f(x) = x$ from the shape of the right-hand side."
+  },
+  {
+   "answer": "D",
+   "choices": [
+    "$89$",
+    "$128$",
+    "$143$",
+    "$144$",
+    "$233$"
+   ],
+   "diagram": "",
+   "difficulty": 3,
+   "given": "E",
+   "insight": "Split on whether the largest element is in the set.",
+   "number": 20,
+   "problem_id": "step-10-23",
+   "rating": 4.0,
+   "result": "wrong",
+   "solution": [
+    "Let $a_n$ count the subsets of $\\{1, \\ldots, n\\}$ with no two consecutive elements.",
+    "Either $n$ is left out ($a_{n-1}$ ways) or $n$ is in and $n - 1$ must be out ($a_{n-2}$ ways), so $a_n = a_{n-1} + a_{n-2}$.",
+    "Start from $a_1 = 2$ ($\\varnothing$, $\\{1\\}$) and $a_2 = 3$; then $5, 8, 13, 21, 34, 55, 89, 144$.",
+    "So $a_{10} = 144$ (the empty set included), answer $\\textbf{(D)}\\ 144$."
+   ],
+   "statement": "How many subsets of $\\{1, 2, 3, \\ldots, 10\\}$, including the empty set, contain no two consecutive integers?",
+   "topic": "recursion",
+   "topic_name": "Recursion & Patterns",
+   "trap": "Forgetting the empty set and answering $143$."
+  },
+  {
+   "answer": "C",
+   "choices": [
+    "$4$",
+    "$5$",
+    "$6$",
+    "$7$",
+    "$8$"
+   ],
+   "diagram": "",
+   "difficulty": 4,
+   "given": "",
+   "insight": "Split $65 = 5 \\cdot 13$: solve $n^2 \\equiv -1$ modulo each prime, then combine.",
+   "number": 21,
+   "problem_id": "step-drill-05",
+   "rating": 5.0,
+   "result": "blank",
+   "solution": [
+    "$65 = 5 \\cdot 13$, so we need $n^2 \\equiv -1$ modulo $5$ and modulo $13$.",
+    "Modulo $5$: squares of $0$-$4$ are $0, 1, 4, 4, 1$, so $n \\equiv 2$ or $3$.",
+    "Modulo $13$: $5^2 = 25 \\equiv -1$ and $8^2 = 64 \\equiv -1$, and a quadratic has at most two roots mod a prime, so $n \\equiv 5$ or $8$.",
+    "By CRT that is $2 \\cdot 2 = 4$ residues mod $65$: $n \\equiv 8, 18, 47, 57$. In $1$-$100$ these give $8, 18, 47, 57$ and $8 + 65 = 73$, $18 + 65 = 83$.",
+    "That is $6$ values, so the answer is $\\textbf{(C)}\\ 6$."
+   ],
+   "statement": "For how many integers $n$ with $1 \\le n \\le 100$ is $n^2 + 1$ divisible by $65$?",
+   "topic": "modular-arithmetic",
+   "topic_name": "Modular Arithmetic",
+   "trap": "Solving only modulo $5$ (which gives $40$) or only modulo $13$."
+  },
+  {
+   "answer": "C",
+   "choices": [
+    "$\\frac{1}{3}$",
+    "$\\frac{3}{8}$",
+    "$\\frac{5}{12}$",
+    "$\\frac{1}{2}$",
+    "$\\frac{7}{12}$"
+   ],
+   "diagram": "",
+   "difficulty": 4,
+   "given": "",
+   "insight": "Only the largest side can break the triangle inequality, so case on it.",
+   "number": 22,
+   "problem_id": "step-10-24",
+   "rating": 5.0,
+   "result": "blank",
+   "solution": [
+    "There are $\\binom{10}{3} = 120$ ways to choose the three numbers.",
+    "Order them $a < b < c$. Only the largest side can fail, so they form a triangle exactly when $a + b > c$.",
+    "Count pairs $a < b < c$ with $a + b > c$ for each $c$: $c = 4, 5, \\ldots, 10$ give $1, 2, 4, 6, 9, 12, 16$.",
+    "That is $50$ triangles, so the probability is $\\frac{50}{120} = \\frac{5}{12}$: $\\textbf{(C)}\\ \\frac{5}{12}$."
+   ],
+   "statement": "Three distinct integers are chosen at random from $\\{1, 2, \\ldots, 10\\}$. What is the probability that they are the side lengths of a triangle with positive area?",
+   "topic": "probability",
+   "topic_name": "Probability",
+   "trap": "Allowing $a + b = c$, which gives a degenerate triangle of zero area."
+  },
+  {
+   "answer": "C",
+   "choices": [
+    "$144$",
+    "$168$",
+    "$178$",
+    "$196$",
+    "$256$"
+   ],
+   "diagram": "",
+   "difficulty": 4,
+   "given": "",
+   "insight": "Read the string as runs of equal letters; every run has length 1 or 2.",
+   "number": 23,
+   "problem_id": "step-10-26",
+   "rating": 5.0,
+   "result": "blank",
+   "solution": [
+    "Split the string into runs of equal letters. No three consecutive identical letters means every run has length $1$ or $2$.",
+    "So the run lengths are an ordered list of $1$s and $2$s summing to $10$. If $c_n$ counts such lists for total $n$, then $c_n = c_{n-1} + c_{n-2}$ (the last run is $1$ or $2$) with $c_1 = 1$, $c_2 = 2$.",
+    "That gives $1, 2, 3, 5, 8, 13, 21, 34, 55, 89$, so $c_{10} = 89$.",
+    "The runs alternate letters, so the whole string is fixed once we choose the first letter: $2 \\cdot 89 = 178$. The answer is $\\textbf{(C)}\\ 178$."
+   ],
+   "statement": "How many strings of $10$ letters, each $A$ or $B$, contain no three consecutive identical letters?",
+   "topic": "recursion",
+   "topic_name": "Recursion & Patterns",
+   "trap": "Forgetting that the first letter can be $A$ or $B$, and answering $89$."
+  },
+  {
+   "answer": "C",
+   "choices": [
+    "$\\frac{21}{32}$",
+    "$\\frac{43}{64}$",
+    "$\\frac{85}{128}$",
+    "$\\frac{171}{256}$",
+    "$\\frac{2}{3}$"
+   ],
+   "diagram": "",
+   "difficulty": 4,
+   "given": "C",
+   "insight": "Every landing on $n$ comes from $n-1$ by a $1$ or from $n-2$ by a $2$, never both.",
+   "number": 24,
+   "problem_id": "step-10-28",
+   "rating": 5.0,
+   "result": "correct",
+   "solution": [
+    "Let $p_n$ be the probability that the frog ever lands on $n$. It lands on $n$ by jumping $1$ from $n-1$ or $2$ from $n-2$, and these are different last jumps, so $p_n = \\tfrac{1}{2} p_{n-1} + \\tfrac{1}{2} p_{n-2}$.",
+    "Start with $p_0 = 1$ (it starts there) and $p_1 = \\tfrac{1}{2}$ (only by a first jump of $1$).",
+    "Then $p_2 = \\tfrac{3}{4}$, $p_3 = \\tfrac{5}{8}$, $p_4 = \\tfrac{11}{16}$, $p_5 = \\tfrac{21}{32}$, $p_6 = \\tfrac{43}{64}$.",
+    "Finally $p_7 = \\tfrac{1}{2} \\cdot \\tfrac{43}{64} + \\tfrac{1}{2} \\cdot \\tfrac{21}{32} = \\tfrac{43 + 42}{128} = \\tfrac{85}{128}$: $\\textbf{(C)}\\ \\frac{85}{128}$."
+   ],
+   "statement": "A frog starts at $0$ on the number line. Each jump moves it forward $1$ or $2$ units, each with probability $\\frac{1}{2}$, independently. What is the probability that the frog lands on $7$ at some point?",
+   "topic": "probability",
+   "topic_name": "Probability",
+   "trap": "Using $\\left(\\frac{1}{2}\\right)^k$ for one particular route instead of adding over all routes."
+  },
+  {
+   "answer": "C",
+   "choices": [
+    "$72$",
+    "$84$",
+    "$90$",
+    "$96$",
+    "$120$"
+   ],
+   "diagram": "",
+   "difficulty": 5,
+   "given": "",
+   "insight": "Inclusion-exclusion over the five \"bad\" pairs; glued pairs that share a number form one longer block.",
+   "number": 25,
+   "problem_id": "step-10-27",
+   "rating": 7.0,
+   "result": "blank",
+   "solution": [
+    "Call the five pairs $\\{1,2\\}, \\{2,3\\}, \\ldots, \\{5,6\\}$ bad. Use inclusion-exclusion over which bad pairs are forced to be adjacent.",
+    "If a chosen set of $k$ pairs forms $j$ chains (pairs sharing a number join into one chain, like $2,3,4$), the chains act as single blocks: there are $6 - k$ blocks, and each chain can run up or down, giving $2^j (6-k)!$ arrangements.",
+    "Adding by size: $k = 0$: $720$. $k = 1$: $5 \\cdot 2 \\cdot 120 = 1200$. $k = 2$: $4$ touching pairs give $4 \\cdot 2 \\cdot 24 = 192$ and $6$ separate pairs give $6 \\cdot 4 \\cdot 24 = 576$, total $768$.",
+    "$k = 3$: one chain of three pairs ($3$ ways, $2 \\cdot 6$ each) $= 36$; a chain of two plus a separate pair ($6$ ways, $4 \\cdot 6$ each) $= 144$; three separate ($1$ way, $8 \\cdot 6$) $= 48$; total $228$. $k = 4$: $2 \\cdot 4 + 3 \\cdot 8 = 32$. $k = 5$: $2$.",
+    "So the count is $720 - 1200 + 768 - 228 + 32 - 2 = 90$: $\\textbf{(C)}\\ 90$."
+   ],
+   "statement": "In how many ways can the numbers $1, 2, 3, 4, 5, 6$ be arranged in a row so that no two consecutive integers (such as $3$ and $4$) are next to each other?",
+   "topic": "permutations",
+   "topic_name": "Permutations & Arrangements",
+   "trap": "Treating overlapping pairs like $\\{2,3\\}$ and $\\{3,4\\}$ as two separate blocks."
+  }
+ ],
+ "success": true
+}

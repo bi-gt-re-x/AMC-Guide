@@ -569,6 +569,20 @@ export interface ContestDetail {
   history: MockBrief[];
   /** Whether this account may import or remove the paper (only `temu`). */
   can_import: boolean;
+  /** An official paper this account unlocked by hand before sitting it. */
+  unlocked?: boolean;
+  /** The timed sitting in progress on this paper, kept on the account. */
+  sitting?: SittingState | null;
+}
+
+/** A timed contest in progress, as the server keeps it (table `amc_sittings`). */
+export interface SittingState {
+  /** Seconds of contest time used so far: only time spent on the sitting page. */
+  used: number;
+  answers: Record<string, string>;
+  flags: number[];
+  started_at?: string;
+  updated_at?: string;
 }
 
 export interface MockRow {
@@ -839,6 +853,11 @@ export const amc = {
   contestKey: (id: string) => get<{ key: KeyRow[]; written: number }>(`/api/amc/contests/${encodeURIComponent(id)}/key`),
   submit: (id: string, answers: Record<string, string>, seconds: number) =>
     post<{ id: string }>(`/api/amc/contests/${encodeURIComponent(id)}/submit`, { answers, seconds }),
+  saveSitting: (id: string, sitting: Pick<SittingState, 'used' | 'answers' | 'flags'>) =>
+    put<{ sitting: SittingState }>(`/api/amc/contests/${encodeURIComponent(id)}/sitting`, sitting),
+  discardSitting: (id: string) => del<object>(`/api/amc/contests/${encodeURIComponent(id)}/sitting`),
+  unlock: (id: string, on: boolean) =>
+    put<{ unlocked: boolean }>(`/api/amc/contests/${encodeURIComponent(id)}/unlock`, { on }),
   mock: (id: string) => get<MockResult>(`/api/amc/mocks/${encodeURIComponent(id)}`),
   deleteMock: (id: string) => del<object>(`/api/amc/mocks/${encodeURIComponent(id)}`),
   importContest: (id: string, problems: string, key: string, save: boolean) =>

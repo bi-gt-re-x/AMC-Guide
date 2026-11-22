@@ -155,3 +155,29 @@ CREATE TABLE IF NOT EXISTS amc_posts (
     updated_at  TEXT NOT NULL
 );
 CREATE INDEX IF NOT EXISTS amc_posts_created_idx ON amc_posts (created_at);
+
+-- A timed contest in progress (frontend/src/pages/amc/TakeMock.tsx): the
+-- answers and flags so far and the seconds of contest time used. One per
+-- account and contest; handing it in or leaving it deletes the row. Kept on
+-- the account rather than in the browser so a sitting resumes on any device.
+-- `answers` is JSON {"1": "C", ...}, `flags` a JSON list of problem numbers.
+CREATE TABLE IF NOT EXISTS amc_sittings (
+    user_id     TEXT NOT NULL REFERENCES users (username) ON DELETE CASCADE,
+    contest_id  TEXT NOT NULL,
+    used        REAL NOT NULL DEFAULT 0 CHECK (used >= 0),
+    answers     TEXT NOT NULL DEFAULT '{}',
+    flags       TEXT NOT NULL DEFAULT '[]',
+    started_at  TEXT NOT NULL,
+    updated_at  TEXT NOT NULL,
+    PRIMARY KEY (user_id, contest_id)
+);
+
+-- Official papers the account unlocked by hand before sitting them (the
+-- contest page's "Unlock the problems"). Sitting or answering a paper unlocks
+-- it anyway; this row is only for a read-through before any sitting.
+CREATE TABLE IF NOT EXISTS amc_unlocks (
+    user_id     TEXT NOT NULL REFERENCES users (username) ON DELETE CASCADE,
+    contest_id  TEXT NOT NULL,
+    at          TEXT NOT NULL,
+    PRIMARY KEY (user_id, contest_id)
+);

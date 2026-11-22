@@ -1,0 +1,1673 @@
+{
+ "contests": {
+  "AIME": {
+   "bands": [
+    {
+     "last": 1,
+     "rating": 5.0
+    },
+    {
+     "last": 3,
+     "rating": 6.0
+    },
+    {
+     "last": 5,
+     "rating": 7.0
+    },
+    {
+     "last": 7,
+     "rating": 8.0
+    },
+    {
+     "last": 9,
+     "rating": 9.0
+    },
+    {
+     "last": 11,
+     "rating": 10.0
+    },
+    {
+     "last": 13,
+     "rating": 11.0
+    },
+    {
+     "last": 15,
+     "rating": 12.0
+    }
+   ],
+   "count": 15,
+   "format": "15 problems in 3 hours. Every answer is a whole number from 0 to 999. One point each, and no penalty for wrong answers, so always answer.",
+   "key_topics": [
+    {
+     "category": "algebra",
+     "id": "quadratics",
+     "name": "Quadratics"
+    },
+    {
+     "category": "number-theory",
+     "id": "divisibility",
+     "name": "Divisibility & Primes"
+    },
+    {
+     "category": "number-theory",
+     "id": "modular-arithmetic",
+     "name": "Modular Arithmetic"
+    },
+    {
+     "category": "counting",
+     "id": "basic-counting",
+     "name": "Counting Principles"
+    },
+    {
+     "category": "counting",
+     "id": "combinations",
+     "name": "Combinations & Stars and Bars"
+    },
+    {
+     "category": "counting",
+     "id": "casework",
+     "name": "Casework & Complements"
+    },
+    {
+     "category": "counting",
+     "id": "probability",
+     "name": "Probability"
+    },
+    {
+     "category": "geometry",
+     "id": "triangles",
+     "name": "Triangles"
+    },
+    {
+     "category": "geometry",
+     "id": "right-triangles",
+     "name": "Right Triangles & Pythagoras"
+    },
+    {
+     "category": "geometry",
+     "id": "circles",
+     "name": "Circles"
+    },
+    {
+     "category": "geometry",
+     "id": "area",
+     "name": "Area & Perimeter"
+    }
+   ],
+   "level": "AIME",
+   "max": 15,
+   "measured": null,
+   "minutes": 180,
+   "qualify": "USAJMO and USAMO use AMC score + 10 \u00d7 AIME score. The cutoff changes every year.",
+   "scoring": "1 per correct; answers are integers 000-999",
+   "sections": [
+    {
+     "minutes": 50,
+     "range": "1\u20135",
+     "rating": "5\u20137",
+     "what": "Like the end of the AMC, with no answer choices: counting, digits, geometry."
+    },
+    {
+     "minutes": 70,
+     "range": "6\u201310",
+     "rating": "8\u201310",
+     "what": "Two or three steps each. Mods, recursion, coordinates or trig."
+    },
+    {
+     "minutes": 60,
+     "range": "11\u201315",
+     "rating": "10\u201312",
+     "what": "Very hard. Bijections, polynomials, complex numbers, hard geometry. Solving one is a good result."
+    }
+   ],
+   "shares": [
+    {
+     "id": "algebra",
+     "name": "Algebra",
+     "share": 25
+    },
+    {
+     "id": "number-theory",
+     "name": "Number Theory",
+     "share": 22
+    },
+    {
+     "id": "counting",
+     "name": "Counting & Probability",
+     "share": 25
+    },
+    {
+     "id": "geometry",
+     "name": "Geometry",
+     "share": 28
+    }
+   ],
+   "who": "By invitation, from AMC 10 and AMC 12 scores."
+  },
+  "AMC 10": {
+   "bands": [
+    {
+     "last": 4,
+     "rating": 2.0
+    },
+    {
+     "last": 9,
+     "rating": 3.0
+    },
+    {
+     "last": 14,
+     "rating": 4.0
+    },
+    {
+     "last": 18,
+     "rating": 5.0
+    },
+    {
+     "last": 21,
+     "rating": 6.0
+    },
+    {
+     "last": 24,
+     "rating": 7.0
+    },
+    {
+     "last": 25,
+     "rating": 8.0
+    }
+   ],
+   "count": 25,
+   "format": "25 multiple-choice problems in 75 minutes. 6 points for a right answer, 1.5 for a blank, 0 for a wrong one. No calculator.",
+   "key_topics": [
+    {
+     "category": "algebra",
+     "id": "linear-equations",
+     "name": "Linear Equations & Systems"
+    },
+    {
+     "category": "algebra",
+     "id": "word-problems",
+     "name": "Rates, Ratios & Percents"
+    },
+    {
+     "category": "algebra",
+     "id": "quadratics",
+     "name": "Quadratics"
+    },
+    {
+     "category": "number-theory",
+     "id": "divisibility",
+     "name": "Divisibility & Primes"
+    },
+    {
+     "category": "number-theory",
+     "id": "modular-arithmetic",
+     "name": "Modular Arithmetic"
+    },
+    {
+     "category": "counting",
+     "id": "basic-counting",
+     "name": "Counting Principles"
+    },
+    {
+     "category": "counting",
+     "id": "combinations",
+     "name": "Combinations & Stars and Bars"
+    },
+    {
+     "category": "counting",
+     "id": "casework",
+     "name": "Casework & Complements"
+    },
+    {
+     "category": "counting",
+     "id": "probability",
+     "name": "Probability"
+    },
+    {
+     "category": "geometry",
+     "id": "triangles",
+     "name": "Triangles"
+    },
+    {
+     "category": "geometry",
+     "id": "right-triangles",
+     "name": "Right Triangles & Pythagoras"
+    },
+    {
+     "category": "geometry",
+     "id": "circles",
+     "name": "Circles"
+    },
+    {
+     "category": "geometry",
+     "id": "area",
+     "name": "Area & Perimeter"
+    }
+   ],
+   "level": "AMC 10",
+   "max": 150,
+   "measured": null,
+   "minutes": 75,
+   "qualify": "Score 100 to qualify (fixed from 2026\u201327). It used to change each year, for example 103.5 on the 2019 10A and 108 on the 10B.",
+   "scoring": "6 per correct, 1.5 per blank, 0 per wrong",
+   "sections": [
+    {
+     "minutes": 20,
+     "range": "1\u201310",
+     "rating": "2\u20134",
+     "what": "Arithmetic, percents, rates, short word problems, easy counting and area. Go fast and don\u2019t make careless mistakes."
+    },
+    {
+     "minutes": 35,
+     "range": "11\u201320",
+     "rating": "4\u20136",
+     "what": "Casework, similar triangles, remainders, systems of equations, simple probability. Most qualifying scores are won or lost here."
+    },
+    {
+     "minutes": 20,
+     "range": "21\u201325",
+     "rating": "6\u20138",
+     "what": "Harder counting and probability, number theory, geometry that needs an extra line. Try the one or two that look familiar."
+    }
+   ],
+   "shares": [
+    {
+     "id": "algebra",
+     "name": "Algebra",
+     "share": 30
+    },
+    {
+     "id": "number-theory",
+     "name": "Number Theory",
+     "share": 20
+    },
+    {
+     "id": "counting",
+     "name": "Counting & Probability",
+     "share": 20
+    },
+    {
+     "id": "geometry",
+     "name": "Geometry",
+     "share": 25
+    },
+    {
+     "id": "misc",
+     "name": "Logic, Statistics & Misc",
+     "share": 5
+    }
+   ],
+   "who": "For grade 10 and below."
+  },
+  "AMC 12": {
+   "bands": [
+    {
+     "last": 3,
+     "rating": 2.0
+    },
+    {
+     "last": 8,
+     "rating": 3.0
+    },
+    {
+     "last": 12,
+     "rating": 4.0
+    },
+    {
+     "last": 16,
+     "rating": 5.0
+    },
+    {
+     "last": 19,
+     "rating": 6.0
+    },
+    {
+     "last": 22,
+     "rating": 7.0
+    },
+    {
+     "last": 24,
+     "rating": 8.0
+    },
+    {
+     "last": 25,
+     "rating": 9.0
+    }
+   ],
+   "count": 25,
+   "format": "25 multiple-choice problems in 75 minutes, scored like the AMC 10. The second half adds precalculus.",
+   "key_topics": [
+    {
+     "category": "algebra",
+     "id": "linear-equations",
+     "name": "Linear Equations & Systems"
+    },
+    {
+     "category": "algebra",
+     "id": "word-problems",
+     "name": "Rates, Ratios & Percents"
+    },
+    {
+     "category": "algebra",
+     "id": "quadratics",
+     "name": "Quadratics"
+    },
+    {
+     "category": "number-theory",
+     "id": "divisibility",
+     "name": "Divisibility & Primes"
+    },
+    {
+     "category": "number-theory",
+     "id": "modular-arithmetic",
+     "name": "Modular Arithmetic"
+    },
+    {
+     "category": "counting",
+     "id": "basic-counting",
+     "name": "Counting Principles"
+    },
+    {
+     "category": "counting",
+     "id": "combinations",
+     "name": "Combinations & Stars and Bars"
+    },
+    {
+     "category": "counting",
+     "id": "casework",
+     "name": "Casework & Complements"
+    },
+    {
+     "category": "counting",
+     "id": "probability",
+     "name": "Probability"
+    },
+    {
+     "category": "geometry",
+     "id": "triangles",
+     "name": "Triangles"
+    },
+    {
+     "category": "geometry",
+     "id": "right-triangles",
+     "name": "Right Triangles & Pythagoras"
+    },
+    {
+     "category": "geometry",
+     "id": "circles",
+     "name": "Circles"
+    },
+    {
+     "category": "geometry",
+     "id": "area",
+     "name": "Area & Perimeter"
+    }
+   ],
+   "level": "AMC 12",
+   "max": 150,
+   "measured": null,
+   "minutes": 75,
+   "qualify": "Score 85 to qualify (fixed from 2026\u201327). It used to change each year, for example 84 on the 2019 12A and 94.5 on the 12B.",
+   "scoring": "6 per correct, 1.5 per blank, 0 per wrong",
+   "sections": [
+    {
+     "minutes": 20,
+     "range": "1\u201310",
+     "rating": "2\u20134",
+     "what": "Like the middle of the AMC 10: word problems, quick counting, ratios, coordinates."
+    },
+    {
+     "minutes": 35,
+     "range": "11\u201320",
+     "rating": "4\u20137",
+     "what": "Logs, trig, complex numbers and sequences on top of the usual topics. Know the identities well."
+    },
+    {
+     "minutes": 20,
+     "range": "21\u201325",
+     "rating": "7\u20139",
+     "what": "Polynomial roots, roots of unity, 3D and trig geometry, hard counting. About as hard as the early AIME."
+    }
+   ],
+   "shares": [
+    {
+     "id": "algebra",
+     "name": "Algebra",
+     "share": 35
+    },
+    {
+     "id": "number-theory",
+     "name": "Number Theory",
+     "share": 17
+    },
+    {
+     "id": "counting",
+     "name": "Counting & Probability",
+     "share": 18
+    },
+    {
+     "id": "geometry",
+     "name": "Geometry",
+     "share": 25
+    },
+    {
+     "id": "misc",
+     "name": "Logic, Statistics & Misc",
+     "share": 5
+    }
+   ],
+   "who": "For grade 12 and below."
+  }
+ },
+ "days_left": 347,
+ "exam_date": "2027-11-04",
+ "goal": 120.0,
+ "has_plan": true,
+ "hours": 7,
+ "performance": {
+  "accuracy": 0.593,
+  "active_days": 39,
+  "attempted": 172,
+  "avg_seconds": 140,
+  "categories": [
+   {
+    "accuracy": 0.766,
+    "attempted": 107,
+    "blurb": "Equations, functions, sequences and polynomials.",
+    "color": "blue",
+    "id": "algebra",
+    "name": "Algebra",
+    "problems": 183,
+    "solved": 105
+   },
+   {
+    "accuracy": 0.465,
+    "attempted": 43,
+    "blurb": "Divisibility, primes, remainders and digits.",
+    "color": "amber",
+    "id": "number-theory",
+    "name": "Number Theory",
+    "problems": 126,
+    "solved": 43
+   },
+   {
+    "accuracy": 0.519,
+    "attempted": 52,
+    "blurb": "Casework, combinations, probability and expected value.",
+    "color": "green",
+    "id": "counting",
+    "name": "Counting & Probability",
+    "problems": 168,
+    "solved": 46
+   },
+   {
+    "accuracy": 0.39,
+    "attempted": 59,
+    "blurb": "Triangles, circles, area and coordinates.",
+    "color": "rose",
+    "id": "geometry",
+    "name": "Geometry",
+    "problems": 143,
+    "solved": 57
+   },
+   {
+    "accuracy": 0.462,
+    "attempted": 13,
+    "blurb": "Means, medians, logic puzzles and everything else.",
+    "color": "slate",
+    "id": "misc",
+    "name": "Logic, Statistics & Misc",
+    "problems": 15,
+    "solved": 13
+   }
+  ],
+  "ceiling": 2,
+  "minutes": 686,
+  "mocks": [
+   {
+    "at": "2026-10-13T17:15:00",
+    "contest_id": "step-mock-10",
+    "id": "bb4f292b09904864a10aacf335262218",
+    "kind": "mock",
+    "level": "AMC 10",
+    "max": 150,
+    "name": "Step Mock AMC 10",
+    "score": 72.0
+   },
+   {
+    "at": "2026-11-02T17:15:00",
+    "contest_id": "mock-10-1",
+    "id": "e416890ab6d94525990d8b3d07783e46",
+    "kind": "mock",
+    "level": "AMC 10",
+    "max": 150,
+    "name": "AMC Guide Mock AMC 10 \u00b7 Set 1",
+    "score": 64.5
+   },
+   {
+    "at": "2026-11-17T17:15:00",
+    "contest_id": "mock-10-2",
+    "id": "9c07cfa5acdd43178b60a155e55941f7",
+    "kind": "mock",
+    "level": "AMC 10",
+    "max": 150,
+    "name": "AMC Guide Mock AMC 10 \u00b7 Set 2",
+    "score": 85.5
+   }
+  ],
+  "projected": {
+   "AIME": 0.7,
+   "AMC 10": 66.0,
+   "AMC 12": 61.5
+  },
+  "projection_min": 5,
+  "ratings": [
+   {
+    "accuracy": null,
+    "attempted": 0,
+    "avg_seconds": null,
+    "first_right": 0,
+    "rating": 1
+   },
+   {
+    "accuracy": 0.735,
+    "attempted": 83,
+    "avg_seconds": 104,
+    "first_right": 61,
+    "rating": 2
+   },
+   {
+    "accuracy": 0.489,
+    "attempted": 47,
+    "avg_seconds": 138,
+    "first_right": 23,
+    "rating": 3
+   },
+   {
+    "accuracy": 0.48,
+    "attempted": 25,
+    "avg_seconds": 171,
+    "first_right": 12,
+    "rating": 4
+   },
+   {
+    "accuracy": 0.455,
+    "attempted": 11,
+    "avg_seconds": 211,
+    "first_right": 5,
+    "rating": 5
+   },
+   {
+    "accuracy": 0.25,
+    "attempted": 4,
+    "avg_seconds": 238,
+    "first_right": 1,
+    "rating": 6
+   },
+   {
+    "accuracy": 0.0,
+    "attempted": 2,
+    "avg_seconds": 264,
+    "first_right": 0,
+    "rating": 7
+   },
+   {
+    "accuracy": null,
+    "attempted": 0,
+    "avg_seconds": null,
+    "first_right": 0,
+    "rating": 8
+   },
+   {
+    "accuracy": null,
+    "attempted": 0,
+    "avg_seconds": null,
+    "first_right": 0,
+    "rating": 9
+   },
+   {
+    "accuracy": null,
+    "attempted": 0,
+    "avg_seconds": null,
+    "first_right": 0,
+    "rating": 10
+   },
+   {
+    "accuracy": null,
+    "attempted": 0,
+    "avg_seconds": null,
+    "first_right": 0,
+    "rating": 11
+   },
+   {
+    "accuracy": null,
+    "attempted": 0,
+    "avg_seconds": null,
+    "first_right": 0,
+    "rating": 12
+   }
+  ],
+  "recovery": {
+   "missed_first": 70,
+   "open": 5,
+   "recovered": 65,
+   "revealed": 4
+  },
+  "solved": 167,
+  "topics": [
+   {
+    "accuracy": 0.0,
+    "attempted": 3,
+    "category": "counting",
+    "id": "permutations",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.0,
+    "name": "Permutations & Arrangements",
+    "problems": 12,
+    "review": 4,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.0,
+    "attempted": 1,
+    "category": "algebra",
+    "id": "inequalities",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.0,
+    "name": "Inequalities & Optimization",
+    "problems": 7,
+    "review": 0,
+    "weight": 1
+   },
+   {
+    "accuracy": 0.0,
+    "attempted": 1,
+    "category": "algebra",
+    "id": "floor-ceiling",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.0,
+    "name": "Floor & Ceiling",
+    "problems": 4,
+    "review": 1,
+    "weight": 1
+   },
+   {
+    "accuracy": 0.0,
+    "attempted": 1,
+    "category": "number-theory",
+    "id": "factorials",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.0,
+    "name": "Factorials & Trailing Zeros",
+    "problems": 4,
+    "review": 1,
+    "weight": 1
+   },
+   {
+    "accuracy": 0.0,
+    "attempted": 1,
+    "category": "counting",
+    "id": "lattice-paths",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.0,
+    "name": "Grid & Lattice Paths",
+    "problems": 6,
+    "review": 1,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.0,
+    "attempted": 1,
+    "category": "geometry",
+    "id": "similar-triangles",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.0,
+    "name": "Similar Triangles",
+    "problems": 3,
+    "review": 1,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.0,
+    "attempted": 1,
+    "category": "geometry",
+    "id": "solid-geometry",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.0,
+    "name": "3D Geometry",
+    "problems": 8,
+    "review": 1,
+    "weight": 1
+   },
+   {
+    "accuracy": 0.111,
+    "attempted": 9,
+    "category": "number-theory",
+    "id": "factors-divisors",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.037,
+    "name": "Factors & Divisor Counting",
+    "problems": 27,
+    "review": 7,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.143,
+    "attempted": 7,
+    "category": "geometry",
+    "id": "trigonometry",
+    "levels": [
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.067,
+    "name": "Trigonometry",
+    "problems": 15,
+    "review": 3,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.167,
+    "attempted": 6,
+    "category": "number-theory",
+    "id": "digits-bases",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.053,
+    "name": "Digits & Bases",
+    "problems": 19,
+    "review": 4,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.167,
+    "attempted": 6,
+    "category": "counting",
+    "id": "recursion",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.042,
+    "name": "Recursion & Patterns",
+    "problems": 24,
+    "review": 6,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.2,
+    "attempted": 5,
+    "category": "geometry",
+    "id": "right-triangles",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.059,
+    "name": "Right Triangles & Pythagoras",
+    "problems": 17,
+    "review": 4,
+    "weight": 3
+   },
+   {
+    "accuracy": 0.333,
+    "attempted": 9,
+    "category": "counting",
+    "id": "basic-counting",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.188,
+    "name": "Counting Principles",
+    "problems": 16,
+    "review": 6,
+    "weight": 3
+   },
+   {
+    "accuracy": 0.333,
+    "attempted": 3,
+    "category": "algebra",
+    "id": "absolute-value",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.333,
+    "name": "Absolute Value",
+    "problems": 3,
+    "review": 0,
+    "weight": 1
+   },
+   {
+    "accuracy": 0.333,
+    "attempted": 3,
+    "category": "number-theory",
+    "id": "diophantine",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.125,
+    "name": "Diophantine Equations",
+    "problems": 8,
+    "review": 4,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.333,
+    "attempted": 3,
+    "category": "geometry",
+    "id": "polygons",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.111,
+    "name": "Polygons",
+    "problems": 9,
+    "review": 1,
+    "weight": 1
+   },
+   {
+    "accuracy": 0.333,
+    "attempted": 3,
+    "category": "misc",
+    "id": "clocks-calendars",
+    "levels": [
+     "AMC 10",
+     "AMC 12"
+    ],
+    "mastery": 0.333,
+    "name": "Clocks, Calendars & Time",
+    "problems": 3,
+    "review": 0,
+    "weight": 1
+   },
+   {
+    "accuracy": 0.364,
+    "attempted": 11,
+    "category": "geometry",
+    "id": "coordinate-geometry",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.19,
+    "name": "Coordinate Geometry",
+    "problems": 21,
+    "review": 6,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.375,
+    "attempted": 8,
+    "category": "counting",
+    "id": "combinations",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.083,
+    "name": "Combinations & Stars and Bars",
+    "problems": 36,
+    "review": 4,
+    "weight": 3
+   },
+   {
+    "accuracy": 0.417,
+    "attempted": 12,
+    "category": "geometry",
+    "id": "area",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.263,
+    "name": "Area & Perimeter",
+    "problems": 19,
+    "review": 5,
+    "weight": 3
+   },
+   {
+    "accuracy": 0.5,
+    "attempted": 8,
+    "category": "geometry",
+    "id": "circles",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.211,
+    "name": "Circles",
+    "problems": 19,
+    "review": 4,
+    "weight": 3
+   },
+   {
+    "accuracy": 0.5,
+    "attempted": 8,
+    "category": "misc",
+    "id": "statistics",
+    "levels": [
+     "AMC 10",
+     "AMC 12"
+    ],
+    "mastery": 0.444,
+    "name": "Mean, Median & Mode",
+    "problems": 9,
+    "review": 1,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.5,
+    "attempted": 2,
+    "category": "number-theory",
+    "id": "gcd-lcm",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.143,
+    "name": "GCD & LCM",
+    "problems": 7,
+    "review": 1,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.5,
+    "attempted": 2,
+    "category": "geometry",
+    "id": "angle-chasing",
+    "levels": [
+     "AMC 10",
+     "AMC 12"
+    ],
+    "mastery": 0.5,
+    "name": "Angles & Parallel Lines",
+    "problems": 2,
+    "review": 0,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.5,
+    "attempted": 2,
+    "category": "geometry",
+    "id": "quadrilaterals",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.125,
+    "name": "Quadrilaterals",
+    "problems": 8,
+    "review": 1,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.5,
+    "attempted": 2,
+    "category": "misc",
+    "id": "logic",
+    "levels": [
+     "AMC 10",
+     "AMC 12"
+    ],
+    "mastery": 0.5,
+    "name": "Logic & Puzzles",
+    "problems": 2,
+    "review": 1,
+    "weight": 1
+   },
+   {
+    "accuracy": 0.556,
+    "attempted": 9,
+    "category": "number-theory",
+    "id": "modular-arithmetic",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.172,
+    "name": "Modular Arithmetic",
+    "problems": 29,
+    "review": 4,
+    "weight": 3
+   },
+   {
+    "accuracy": 0.583,
+    "attempted": 12,
+    "category": "algebra",
+    "id": "quadratics",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.304,
+    "name": "Quadratics",
+    "problems": 23,
+    "review": 4,
+    "weight": 3
+   },
+   {
+    "accuracy": 0.636,
+    "attempted": 11,
+    "category": "algebra",
+    "id": "sequences-series",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.318,
+    "name": "Sequences & Series",
+    "problems": 22,
+    "review": 3,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.667,
+    "attempted": 6,
+    "category": "geometry",
+    "id": "triangles",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.308,
+    "name": "Triangles",
+    "problems": 13,
+    "review": 4,
+    "weight": 3
+   },
+   {
+    "accuracy": 0.714,
+    "attempted": 7,
+    "category": "algebra",
+    "id": "polynomials",
+    "levels": [
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.278,
+    "name": "Polynomials",
+    "problems": 18,
+    "review": 0,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.75,
+    "attempted": 4,
+    "category": "number-theory",
+    "id": "perfect-powers",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.375,
+    "name": "Perfect Squares & Cubes",
+    "problems": 8,
+    "review": 2,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.778,
+    "attempted": 9,
+    "category": "algebra",
+    "id": "linear-equations",
+    "levels": [
+     "AMC 10",
+     "AMC 12"
+    ],
+    "mastery": 0.778,
+    "name": "Linear Equations & Systems",
+    "problems": 9,
+    "review": 0,
+    "weight": 3
+   },
+   {
+    "accuracy": 0.778,
+    "attempted": 9,
+    "category": "counting",
+    "id": "casework",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.28,
+    "name": "Casework & Complements",
+    "problems": 25,
+    "review": 3,
+    "weight": 3
+   },
+   {
+    "accuracy": 0.786,
+    "attempted": 14,
+    "category": "counting",
+    "id": "probability",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.333,
+    "name": "Probability",
+    "problems": 33,
+    "review": 4,
+    "weight": 3
+   },
+   {
+    "accuracy": 0.8,
+    "attempted": 5,
+    "category": "algebra",
+    "id": "functions",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.444,
+    "name": "Functions & Functional Equations",
+    "problems": 9,
+    "review": 1,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.812,
+    "attempted": 16,
+    "category": "algebra",
+    "id": "word-problems",
+    "levels": [
+     "AMC 10",
+     "AMC 12"
+    ],
+    "mastery": 0.684,
+    "name": "Rates, Ratios & Percents",
+    "problems": 19,
+    "review": 0,
+    "weight": 3
+   },
+   {
+    "accuracy": 0.857,
+    "attempted": 7,
+    "category": "algebra",
+    "id": "logarithms",
+    "levels": [
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.6,
+    "name": "Logarithms",
+    "problems": 10,
+    "review": 1,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.857,
+    "attempted": 7,
+    "category": "number-theory",
+    "id": "divisibility",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.316,
+    "name": "Divisibility & Primes",
+    "problems": 19,
+    "review": 1,
+    "weight": 3
+   },
+   {
+    "accuracy": 0.867,
+    "attempted": 15,
+    "category": "algebra",
+    "id": "arithmetic",
+    "levels": [
+     "AMC 10",
+     "AMC 12"
+    ],
+    "mastery": 0.812,
+    "name": "Arithmetic & Fractions",
+    "problems": 16,
+    "review": 1,
+    "weight": 2
+   },
+   {
+    "accuracy": 0.929,
+    "attempted": 14,
+    "category": "algebra",
+    "id": "exponents",
+    "levels": [
+     "AMC 10",
+     "AMC 12"
+    ],
+    "mastery": 0.65,
+    "name": "Exponents & Radicals",
+    "problems": 20,
+    "review": 1,
+    "weight": 2
+   },
+   {
+    "accuracy": 1.0,
+    "attempted": 5,
+    "category": "algebra",
+    "id": "complex-numbers",
+    "levels": [
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.312,
+    "name": "Complex Numbers",
+    "problems": 16,
+    "review": 0,
+    "weight": 1
+   },
+   {
+    "accuracy": 1.0,
+    "attempted": 2,
+    "category": "number-theory",
+    "id": "parity",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.5,
+    "name": "Parity",
+    "problems": 4,
+    "review": 0,
+    "weight": 1
+   },
+   {
+    "accuracy": 1.0,
+    "attempted": 1,
+    "category": "algebra",
+    "id": "nonlinear-systems",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.167,
+    "name": "Nonlinear Systems",
+    "problems": 6,
+    "review": 1,
+    "weight": 1
+   },
+   {
+    "accuracy": 1.0,
+    "attempted": 1,
+    "category": "counting",
+    "id": "expected-value",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.167,
+    "name": "Expected Value",
+    "problems": 6,
+    "review": 1,
+    "weight": 1
+   },
+   {
+    "accuracy": 1.0,
+    "attempted": 1,
+    "category": "counting",
+    "id": "geometric-probability",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 0.25,
+    "name": "Geometric Probability",
+    "problems": 4,
+    "review": 0,
+    "weight": 1
+   },
+   {
+    "accuracy": 1.0,
+    "attempted": 1,
+    "category": "geometry",
+    "id": "area-ratios",
+    "levels": [
+     "AMC 10",
+     "AMC 12",
+     "AIME"
+    ],
+    "mastery": 1.0,
+    "name": "Area Ratios & Mass Points",
+    "problems": 1,
+    "review": 1,
+    "weight": 1
+   }
+  ],
+  "weeks": [
+   {
+    "accuracy": null,
+    "answered": 0,
+    "avg_rating": null,
+    "by_category": {},
+    "correct": 0,
+    "days": 0,
+    "minutes": 0,
+    "score_share": null,
+    "start": "2026-08-31"
+   },
+   {
+    "accuracy": null,
+    "answered": 0,
+    "avg_rating": null,
+    "by_category": {},
+    "correct": 0,
+    "days": 0,
+    "minutes": 0,
+    "score_share": null,
+    "start": "2026-09-07"
+   },
+   {
+    "accuracy": null,
+    "answered": 0,
+    "avg_rating": null,
+    "by_category": {},
+    "correct": 0,
+    "days": 0,
+    "minutes": 0,
+    "score_share": null,
+    "start": "2026-09-14"
+   },
+   {
+    "accuracy": 0.75,
+    "answered": 8,
+    "avg_rating": 2.0,
+    "by_category": {
+     "algebra": 4,
+     "geometry": 3,
+     "misc": 1
+    },
+    "correct": 6,
+    "days": 1,
+    "minutes": 13,
+    "score_share": null,
+    "start": "2026-09-21"
+   },
+   {
+    "accuracy": 0.862,
+    "answered": 29,
+    "avg_rating": 2.0,
+    "by_category": {
+     "algebra": 20,
+     "counting": 1,
+     "geometry": 7,
+     "misc": 1
+    },
+    "correct": 25,
+    "days": 5,
+    "minutes": 50,
+    "score_share": null,
+    "start": "2026-09-28"
+   },
+   {
+    "accuracy": 0.641,
+    "answered": 39,
+    "avg_rating": 2.3,
+    "by_category": {
+     "algebra": 13,
+     "counting": 6,
+     "geometry": 9,
+     "misc": 7,
+     "number-theory": 4
+    },
+    "correct": 25,
+    "days": 5,
+    "minutes": 76,
+    "score_share": null,
+    "start": "2026-10-05"
+   },
+   {
+    "accuracy": 0.7,
+    "answered": 70,
+    "avg_rating": 2.7,
+    "by_category": {
+     "algebra": 26,
+     "counting": 8,
+     "geometry": 18,
+     "misc": 8,
+     "number-theory": 10
+    },
+    "correct": 49,
+    "days": 5,
+    "minutes": 102,
+    "score_share": 0.48,
+    "start": "2026-10-12"
+   },
+   {
+    "accuracy": 0.69,
+    "answered": 42,
+    "avg_rating": 3.4,
+    "by_category": {
+     "algebra": 11,
+     "counting": 10,
+     "geometry": 14,
+     "misc": 1,
+     "number-theory": 6
+    },
+    "correct": 29,
+    "days": 4,
+    "minutes": 104,
+    "score_share": null,
+    "start": "2026-10-19"
+   },
+   {
+    "accuracy": 0.875,
+    "answered": 24,
+    "avg_rating": 3.2,
+    "by_category": {
+     "algebra": 3,
+     "counting": 3,
+     "geometry": 7,
+     "misc": 5,
+     "number-theory": 6
+    },
+    "correct": 21,
+    "days": 3,
+    "minutes": 59,
+    "score_share": null,
+    "start": "2026-10-26"
+   },
+   {
+    "accuracy": 0.705,
+    "answered": 61,
+    "avg_rating": 3.4,
+    "by_category": {
+     "algebra": 13,
+     "counting": 12,
+     "geometry": 18,
+     "misc": 2,
+     "number-theory": 16
+    },
+    "correct": 43,
+    "days": 6,
+    "minutes": 114,
+    "score_share": 0.43,
+    "start": "2026-11-02"
+   },
+   {
+    "accuracy": 0.778,
+    "answered": 27,
+    "avg_rating": 3.9,
+    "by_category": {
+     "algebra": 5,
+     "counting": 7,
+     "geometry": 9,
+     "number-theory": 6
+    },
+    "correct": 21,
+    "days": 5,
+    "minutes": 73,
+    "score_share": null,
+    "start": "2026-11-09"
+   },
+   {
+    "accuracy": 0.623,
+    "answered": 53,
+    "avg_rating": 3.7,
+    "by_category": {
+     "algebra": 11,
+     "counting": 12,
+     "geometry": 10,
+     "misc": 6,
+     "number-theory": 14
+    },
+    "correct": 33,
+    "days": 5,
+    "minutes": 94,
+    "score_share": 0.57,
+    "start": "2026-11-16"
+   }
+  ]
+ },
+ "prepare": {
+  "ceiling": 2,
+  "focus": [
+   {
+    "accuracy": 0.2,
+    "category": "geometry",
+    "id": "right-triangles",
+    "mastery": 0.059,
+    "name": "Right Triangles & Pythagoras",
+    "weight": 3
+   },
+   {
+    "accuracy": 0.375,
+    "category": "counting",
+    "id": "combinations",
+    "mastery": 0.083,
+    "name": "Combinations & Stars and Bars",
+    "weight": 3
+   },
+   {
+    "accuracy": 0.556,
+    "category": "number-theory",
+    "id": "modular-arithmetic",
+    "mastery": 0.172,
+    "name": "Modular Arithmetic",
+    "weight": 3
+   },
+   {
+    "accuracy": 0.333,
+    "category": "counting",
+    "id": "basic-counting",
+    "mastery": 0.188,
+    "name": "Counting Principles",
+    "weight": 3
+   },
+   {
+    "accuracy": 0.5,
+    "category": "geometry",
+    "id": "circles",
+    "mastery": 0.211,
+    "name": "Circles",
+    "weight": 3
+   }
+  ],
+  "gap": 54.0,
+  "goal": 120.0,
+  "need_rating": 6.0,
+  "phase": {
+   "name": "Foundation",
+   "text": "Learn new topics well. Speed comes later. Take a mock every 3 or 4 weeks.",
+   "weeks": 50
+  },
+  "reach": "You need to solve up to about #19 (AoPS 6). You are solid up to 2, so practice problems rated 3\u20136.",
+  "right_needed": 19,
+  "split": "19 right and 6 blank = 123 points. Each wrong answer costs 1.5 compared with a blank.",
+  "steps": [
+   {
+    "body": "Start with Right Triangles & Pythagoras, Combinations & Stars and Bars, Modular Arithmetic.",
+    "title": "Work on weak topics",
+    "to": "/topics/right-triangles"
+   },
+   {
+    "body": "Problems rated up to 6/10, until you get 80% right first try.",
+    "title": "Practice at your target level",
+    "to": "/problems?level=AMC+10&rating=3,4,5,6"
+   },
+   {
+    "body": "15 missed problems are due.",
+    "title": "Clear Review",
+    "to": "/review"
+   }
+  ],
+  "week": [
+   {
+    "hours": 3.1,
+    "what": "New problems"
+   },
+   {
+    "hours": 1.4,
+    "what": "Review"
+   },
+   {
+    "hours": 2.4,
+    "what": "Mocks and past papers"
+   }
+  ]
+ },
+ "success": true,
+ "target": "AMC 10"
+}

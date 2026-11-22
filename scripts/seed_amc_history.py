@@ -40,7 +40,7 @@ from backend.amc import catalog, engine, official, smart, store  # noqa: E402
 from backend.amc import problems as pb  # noqa: E402
 from backend.database.connection import connect  # noqa: E402
 
-TABLES = ('amc_attempts', 'amc_reviews', 'amc_mocks', 'amc_plans')
+TABLES = ('amc_attempts', 'amc_reviews', 'amc_mocks', 'amc_plans', 'amc_sittings', 'amc_unlocks')
 DAYS = 56
 # The level on the 1-10 scale, start to finish, and how each category sits
 # against it.

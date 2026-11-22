@@ -9,9 +9,11 @@
  * showing and its window has focus, and stops the moment you switch tabs, apps
  * or windows (the clock shows Paused), so time away is never charged.
  *
- * Answers, flags and the time used are kept in this browser's storage, so a
- * reload or an accidental back resumes the same sitting where its clock left
- * off; time with the page closed does not count either.
+ * Answers, flags and the time used are kept on the account (table
+ * `amc_sittings`, PUT /api/amc/contests/:id/sitting), so a reload, an
+ * accidental back or another device resumes the same sitting where its clock
+ * left off; time with the page closed does not count either. An answer or a
+ * flag is saved at once, the clock every few seconds and whenever it pauses.
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -19,26 +21,27 @@ import { useNotice, ErrorState, Loading } from '@/components';
 import { MathText } from '@/components/Amc/MathText';
 import { AnswerInput, DiagramNote, clock, useWindowActive, windowActive } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
-import { amc, announceAmcChanged } from '@/services/amc';
+import { amc, announceAmcChanged, type SittingState } from '@/services/amc';
 import '@/styles/amc.css';
 
-interface Sitting {
-  /** Seconds of contest time used so far: only time spent on this page. */
-  used: number;
-  answers: Record<string, string>;
-  flags: number[];
-}
+type Sitting = Pick<SittingState, 'used' | 'answers' | 'flags'>;
 
 const LETTERS = ['A', 'B', 'C', 'D', 'E'];
-const key = (id: string) => `amc-mock:${id}`;
+/** How often the clock is saved while it runs. Answers and flags save at once. */
+export const SAVE_EVERY_MS = 10_000;
 
-function readSitting(id: string): Sitting | null {
+/**
+ * A sitting this browser kept before sittings moved to the account. Read once
+ * so a contest in progress during the upgrade is not lost, then removed.
+ */
+const legacyKey = (id: string) => `amc-mock:${id}`;
+
+function takeLegacySitting(id: string): Sitting | null {
   try {
-    const raw = localStorage.getItem(key(id));
+    const raw = localStorage.getItem(legacyKey(id));
+    localStorage.removeItem(legacyKey(id));
     if (!raw) return null;
     const stored = JSON.parse(raw) as Partial<Sitting> & { started?: number };
-    // A sitting saved before the clock paused (a start time, not time used):
-    // carry it over with the wall-clock time since it began.
     const used = typeof stored.used === 'number'
       ? stored.used
       : typeof stored.started === 'number' ? Math.max(0, (Date.now() - stored.started) / 1000) : 0;
@@ -48,33 +51,64 @@ function readSitting(id: string): Sitting | null {
   }
 }
 
-function writeSitting(id: string, sitting: Sitting | null) {
-  try {
-    if (sitting) localStorage.setItem(key(id), JSON.stringify(sitting));
-    else localStorage.removeItem(key(id));
-  } catch {
-    /* storage blocked: the sitting still works, it just can't resume */
-  }
-}
-
 export default function TakeMock() {
   const { contestId = '' } = useParams();
   const navigate = useNavigate();
   const { data, error, loading, reload } = useApi(() => amc.contest(contestId), [contestId]);
 
-  const [sitting, setSitting] = useState<Sitting | null>(() => readSitting(contestId));
+  const [sitting, setSitting] = useState<Sitting | null>(null);
+  // Which contest's saved sitting has been read into `sitting`. Until then the
+  // page waits, so a sitting in progress never flashes its cover page.
+  const [hydratedFor, setHydratedFor] = useState('');
   useDocumentTitle(data ? `${data.contest.name}${sitting ? ' — in progress' : ''}` : 'Contest');
   const [at, setAt] = useState(1);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState('');
+  const [saveError, setSaveError] = useState(false);
   const submitted = useRef(false);
   const { notify, confirm } = useNotice();
   const active = useWindowActive();
   const running = Boolean(sitting) && active;
 
+  // Saving: the latest sitting, and the save in flight, so handing in or
+  // leaving waits for it and a late save can't bring a finished sitting back.
+  const latest = useRef<Sitting | null>(null);
+  latest.current = sitting;
+  const inFlight = useRef<Promise<unknown>>(Promise.resolve());
+  const persist = useCallback(() => {
+    const s = latest.current;
+    if (!s || submitted.current) return inFlight.current;
+    const body = { used: s.used, answers: s.answers, flags: s.flags };
+    inFlight.current = inFlight.current
+      .then(() => (submitted.current ? null : amc.saveSitting(contestId, body)))
+      .then((reply) => { if (reply) setSaveError(!reply.success); }, () => setSaveError(true));
+    return inFlight.current;
+  }, [contestId]);
+
   useEffect(() => {
-    if (sitting) writeSitting(contestId, sitting);
-  }, [contestId, sitting]);
+    if (!data || hydratedFor === contestId) return;
+    const saved = data.sitting ?? null;
+    const legacy = takeLegacySitting(contestId);
+    const start = saved ?? legacy;
+    setSitting(start ? { used: start.used, answers: start.answers, flags: start.flags } : null);
+    setHydratedFor(contestId);
+    if (!saved && legacy) void amc.saveSitting(contestId, legacy).catch(() => setSaveError(true));
+  }, [contestId, data, hydratedFor]);
+
+  // An answer or a flag is saved the moment it changes.
+  const answersKey = sitting ? JSON.stringify([sitting.answers, sitting.flags]) : '';
+  useEffect(() => {
+    if (answersKey && hydratedFor === contestId) void persist();
+  }, [answersKey, contestId, hydratedFor, persist]);
+  // The clock: every few seconds while it runs, and as soon as it pauses.
+  useEffect(() => {
+    if (!running) return undefined;
+    const id = window.setInterval(() => void persist(), SAVE_EVERY_MS);
+    return () => {
+      window.clearInterval(id);
+      void persist();
+    };
+  }, [running, persist]);
   // The clock: add the real time between ticks, but only while the reader is
   // here, and never more than a couple of seconds at once (a laptop waking from
   // sleep should not lose the time it slept).
@@ -102,9 +136,9 @@ export default function TakeMock() {
     setBusy(true);
     setMessage('');
     try {
+      await inFlight.current;
       const reply = await amc.submit(contestId, sitting.answers, Math.min(elapsed, minutes * 60));
       if (reply.success) {
-        writeSitting(contestId, null);
         announceAmcChanged();
         notify('Handed in', { body: 'Your paper is graded. Misses and blanks are in Review.' });
         navigate(`/mocks/${reply.id}`, { replace: true });
@@ -152,6 +186,7 @@ export default function TakeMock() {
 
   if (loading && !data) return <Loading label="Setting out your paper" />;
   if (error || !data) return <ErrorState message={error ?? 'Could not load this contest.'} onRetry={reload} />;
+  if (hydratedFor !== contestId) return <Loading label="Setting out your paper" />;
   if (!data.problems.length) {
     return (
       <div className="amc-page">
@@ -226,7 +261,18 @@ export default function TakeMock() {
       danger: true,
     });
     if (!yes) return;
-    writeSitting(contestId, null);
+    submitted.current = true;
+    try {
+      await inFlight.current;
+      const reply = await amc.discardSitting(contestId);
+      if (!reply.success) throw new Error(reply.message);
+    } catch (cause) {
+      submitted.current = false;
+      notify('Could not discard the contest', {
+        body: cause instanceof Error ? cause.message : 'Try again.', tone: 'bad',
+      });
+      return;
+    }
     notify('Contest discarded', { tone: 'info' });
     navigate(back);
   };
@@ -249,6 +295,9 @@ export default function TakeMock() {
         </div>
       </div>
       {message && <p className="am-error">{message}</p>}
+      {saveError && !message && (
+        <p className="am-error" role="status">Not saved to your account yet. Your answers are kept on this page; check your connection.</p>
+      )}
 
       <div className="am-exam">
         <article className="am-card am-exam-paper">

@@ -1,0 +1,1082 @@
+{
+ "can_import": false,
+ "contest": {
+  "blurb": "25 problems in 75 minutes, rated 2 to 7.",
+  "count": 25,
+  "difficulty": {
+   "average": 3.4,
+   "real": 4.4,
+   "vs_real": -1.0
+  },
+  "family": "step",
+  "id": "step-mock-10",
+  "kind": "mock",
+  "level": "AMC 10",
+  "max": 150,
+  "minutes": 75,
+  "name": "Step Mock AMC 10",
+  "scoring": "6 per correct, 1.5 per blank, 0 per wrong",
+  "set": null
+ },
+ "history": [
+  {
+   "at": "2026-10-13T17:15:00",
+   "blank": 4,
+   "contest_id": "step-mock-10",
+   "correct": 11,
+   "id": "bb4f292b09904864a10aacf335262218",
+   "kind": "mock",
+   "level": "AMC 10",
+   "max": 150,
+   "name": "Step Mock AMC 10",
+   "note": "",
+   "score": 72.0,
+   "seconds": 4234,
+   "wrong": 10
+  }
+ ],
+ "problems": [
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "arithmetic",
+     "name": "Arithmetic & Fractions"
+    }
+   ],
+   "aops": 1,
+   "aops_url": null,
+   "category": "algebra",
+   "category_name": "Algebra",
+   "choices": [
+    "$3$",
+    "$9$",
+    "$18$",
+    "$27$",
+    "$81$"
+   ],
+   "diagram": "",
+   "difficulty": 1,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-01",
+   "level": "AMC 10",
+   "number": 1,
+   "official": false,
+   "progress": "first",
+   "rating": 2.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 1
+    }
+   ],
+   "statement": "What is the value of $\\dfrac{3^2+3^2+3^2}{3^{-1}+3^{-1}+3^{-1}}$?",
+   "status": "solved",
+   "technique": "direct-computation",
+   "technique_name": "Direct computation",
+   "topic": "exponents",
+   "topic_name": "Exponents & Radicals"
+  },
+  {
+   "ai": false,
+   "also": [],
+   "aops": 1,
+   "aops_url": null,
+   "category": "misc",
+   "category_name": "Logic, Statistics & Misc",
+   "choices": [
+    "$2$",
+    "$10$",
+    "$12$",
+    "$18$",
+    "$20$"
+   ],
+   "diagram": "",
+   "difficulty": 1,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-03",
+   "level": "AMC 10",
+   "number": 2,
+   "official": false,
+   "progress": "first",
+   "rating": 2.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 2
+    }
+   ],
+   "statement": "The mean of five numbers is $12$. When one of the numbers is removed, the mean of the remaining four numbers is $10$. What number was removed?",
+   "status": "solved",
+   "technique": "direct-computation",
+   "technique_name": "Direct computation",
+   "topic": "statistics",
+   "topic_name": "Mean, Median & Mode"
+  },
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "arithmetic",
+     "name": "Arithmetic & Fractions"
+    }
+   ],
+   "aops": 1,
+   "aops_url": null,
+   "category": "algebra",
+   "category_name": "Algebra",
+   "choices": [
+    "$85\\%$",
+    "$90\\%$",
+    "$95\\%$",
+    "$100\\%$",
+    "$105\\%$"
+   ],
+   "diagram": "",
+   "difficulty": 1,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-04",
+   "level": "AMC 10",
+   "number": 3,
+   "official": false,
+   "progress": "first",
+   "rating": 2.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 3
+    }
+   ],
+   "statement": "The price of a jacket is increased by $20\\%$, and then the new price is decreased by $25\\%$. The final price is what percent of the original price?",
+   "status": "solved",
+   "technique": "direct-computation",
+   "technique_name": "Direct computation",
+   "topic": "word-problems",
+   "topic_name": "Rates, Ratios & Percents"
+  },
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "word-problems",
+     "name": "Rates, Ratios & Percents"
+    }
+   ],
+   "aops": 1,
+   "aops_url": null,
+   "category": "algebra",
+   "category_name": "Algebra",
+   "choices": [
+    "$24$",
+    "$30$",
+    "$36$",
+    "$42$",
+    "$48$"
+   ],
+   "diagram": "",
+   "difficulty": 1,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-05",
+   "level": "AMC 10",
+   "number": 4,
+   "official": false,
+   "progress": "fixed",
+   "rating": 2.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 4
+    }
+   ],
+   "statement": "Ana is three times as old as Ben. In $12$ years, Ana will be twice as old as Ben. How old is Ana now?",
+   "status": "solved",
+   "technique": "set-up-equations",
+   "technique_name": "Set up equations",
+   "topic": "linear-equations",
+   "topic_name": "Linear Equations & Systems"
+  },
+  {
+   "ai": false,
+   "also": [],
+   "aops": 1,
+   "aops_url": null,
+   "category": "counting",
+   "category_name": "Counting & Probability",
+   "choices": [
+    "$60$",
+    "$75$",
+    "$100$",
+    "$120$",
+    "$125$"
+   ],
+   "diagram": "",
+   "difficulty": 1,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-08",
+   "level": "AMC 10",
+   "number": 5,
+   "official": false,
+   "progress": "first",
+   "rating": 2.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 5
+    }
+   ],
+   "statement": "How many three-digit positive integers have three distinct digits, all of which are odd?",
+   "status": "solved",
+   "technique": "multiplication-principle",
+   "technique_name": "Multiplication principle",
+   "topic": "basic-counting",
+   "topic_name": "Counting Principles"
+  },
+  {
+   "ai": false,
+   "also": [],
+   "aops": 1,
+   "aops_url": null,
+   "category": "algebra",
+   "category_name": "Algebra",
+   "choices": [
+    "$28$",
+    "$30$",
+    "$32$",
+    "$34$",
+    "$36$"
+   ],
+   "diagram": "",
+   "difficulty": 1,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-18",
+   "level": "AMC 10",
+   "number": 6,
+   "official": false,
+   "progress": "first",
+   "rating": 2.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 6
+    }
+   ],
+   "statement": "The first term of an arithmetic sequence is $5$, and the sum of its first $10$ terms is $185$. What is the $10$th term?",
+   "status": "solved",
+   "technique": "known-formula",
+   "technique_name": "Known formula",
+   "topic": "sequences-series",
+   "topic_name": "Sequences & Series"
+  },
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "casework",
+     "name": "Casework & Complements"
+    }
+   ],
+   "aops": 1,
+   "aops_url": null,
+   "category": "number-theory",
+   "category_name": "Number Theory",
+   "choices": [
+    "$34$",
+    "$37$",
+    "$40$",
+    "$43$",
+    "$46$"
+   ],
+   "diagram": "",
+   "difficulty": 1,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-06",
+   "level": "AMC 10",
+   "number": 7,
+   "official": false,
+   "progress": "first",
+   "rating": 2.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 7
+    }
+   ],
+   "statement": "How many positive integers less than $100$ are divisible by $3$ or by $5$, but not by both?",
+   "status": "solved",
+   "technique": "inclusion-exclusion",
+   "technique_name": "Inclusion exclusion",
+   "topic": "divisibility",
+   "topic_name": "Divisibility & Primes"
+  },
+  {
+   "ai": false,
+   "also": [],
+   "aops": 1.5,
+   "aops_url": null,
+   "category": "number-theory",
+   "category_name": "Number Theory",
+   "choices": [
+    "$162$",
+    "$168$",
+    "$170$",
+    "$171$",
+    "$180$"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-09",
+   "level": "AMC 10",
+   "number": 8,
+   "official": false,
+   "progress": "fixed",
+   "rating": 3.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 8
+    }
+   ],
+   "statement": "What is the sum of the digits of $10^{20} - 20$?",
+   "status": "solved",
+   "technique": "small-cases",
+   "technique_name": "Small cases",
+   "topic": "digits-bases",
+   "topic_name": "Digits & Bases"
+  },
+  {
+   "ai": false,
+   "also": [],
+   "aops": 1.5,
+   "aops_url": null,
+   "category": "counting",
+   "category_name": "Counting & Probability",
+   "choices": [
+    "$\\frac{1}{3}$",
+    "$\\frac{4}{9}$",
+    "$\\frac{1}{2}$",
+    "$\\frac{5}{9}$",
+    "$\\frac{2}{3}$"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-10",
+   "level": "AMC 10",
+   "number": 9,
+   "official": false,
+   "progress": "first",
+   "rating": 3.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 9
+    }
+   ],
+   "statement": "Two fair six-sided dice are rolled. What is the probability that the product of the two numbers rolled is a multiple of $3$?",
+   "status": "solved",
+   "technique": "complementary-counting",
+   "technique_name": "Complementary counting",
+   "topic": "probability",
+   "topic_name": "Probability"
+  },
+  {
+   "ai": false,
+   "also": [],
+   "aops": 1.5,
+   "aops_url": null,
+   "category": "algebra",
+   "category_name": "Algebra",
+   "choices": [
+    "$6$",
+    "$8$",
+    "$10$",
+    "$12$",
+    "$14$"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-11",
+   "level": "AMC 10",
+   "number": 10,
+   "official": false,
+   "progress": "fixed",
+   "rating": 3.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 10
+    }
+   ],
+   "statement": "The two roots of $x^2 - 7x + k = 0$ differ by $3$. What is $k$?",
+   "status": "solved",
+   "technique": "vieta",
+   "technique_name": "Vieta's formulas",
+   "topic": "quadratics",
+   "topic_name": "Quadratics"
+  },
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "area",
+     "name": "Area & Perimeter"
+    }
+   ],
+   "aops": 1.5,
+   "aops_url": null,
+   "category": "geometry",
+   "category_name": "Geometry",
+   "choices": [
+    "$20$",
+    "$30$",
+    "$35$",
+    "$40$",
+    "$45$"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-12",
+   "level": "AMC 10",
+   "number": 11,
+   "official": false,
+   "progress": "fixed",
+   "rating": 3.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 11
+    }
+   ],
+   "statement": "In triangle $ABC$, $AB = 12$. Point $D$ lies on $\\overline{AB}$ with $AD = 4$, and the line through $D$ parallel to $\\overline{BC}$ meets $\\overline{AC}$ at $E$. The area of triangle $ADE$ is $5$. What is the area of quadrilateral $DBCE$?",
+   "status": "review",
+   "technique": "similarity-ratios",
+   "technique_name": "Similarity ratios",
+   "topic": "similar-triangles",
+   "topic_name": "Similar Triangles"
+  },
+  {
+   "ai": false,
+   "also": [],
+   "aops": 1.5,
+   "aops_url": null,
+   "category": "number-theory",
+   "category_name": "Number Theory",
+   "choices": [
+    "$1$",
+    "$2$",
+    "$3$",
+    "$4$",
+    "$5$"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-13",
+   "level": "AMC 10",
+   "number": 12,
+   "official": false,
+   "progress": "fixed",
+   "rating": 3.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 12
+    }
+   ],
+   "statement": "What is the remainder when $3^{100}$ is divided by $7$?",
+   "status": "review",
+   "technique": "cycles",
+   "technique_name": "Cycles",
+   "topic": "modular-arithmetic",
+   "topic_name": "Modular Arithmetic"
+  },
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "area",
+     "name": "Area & Perimeter"
+    }
+   ],
+   "aops": 1.5,
+   "aops_url": null,
+   "category": "geometry",
+   "category_name": "Geometry",
+   "choices": [
+    "$22$",
+    "$23$",
+    "$24$",
+    "$25$",
+    "$26$"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-15",
+   "level": "AMC 10",
+   "number": 13,
+   "official": false,
+   "progress": "fixed",
+   "rating": 3.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 13
+    }
+   ],
+   "statement": "What is the area of the triangle with vertices $(0,0)$, $(8,2)$ and $(3,7)$?",
+   "status": "review",
+   "technique": "shoelace",
+   "technique_name": "Shoelace formula",
+   "topic": "coordinate-geometry",
+   "topic_name": "Coordinate Geometry"
+  },
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "basic-counting",
+     "name": "Counting Principles"
+    }
+   ],
+   "aops": 1.5,
+   "aops_url": null,
+   "category": "counting",
+   "category_name": "Counting & Probability",
+   "choices": [
+    "$6$",
+    "$10$",
+    "$15$",
+    "$20$",
+    "$28$"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-17",
+   "level": "AMC 10",
+   "number": 14,
+   "official": false,
+   "progress": "first",
+   "rating": 3.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 14
+    }
+   ],
+   "statement": "In how many ways can $6$ identical candies be given to $3$ children so that every child gets at least one candy?",
+   "status": "solved",
+   "technique": "stars-and-bars",
+   "technique_name": "Stars and bars",
+   "topic": "combinations",
+   "topic_name": "Combinations & Stars and Bars"
+  },
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "exponents",
+     "name": "Exponents & Radicals"
+    }
+   ],
+   "aops": 1.5,
+   "aops_url": null,
+   "category": "number-theory",
+   "category_name": "Number Theory",
+   "choices": [
+    "$01$",
+    "$07$",
+    "$43$",
+    "$49$",
+    "$93$"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-drill-04",
+   "level": "AMC 10",
+   "number": 15,
+   "official": false,
+   "progress": "fixed",
+   "rating": 3.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 15
+    }
+   ],
+   "statement": "What are the last two digits of $7^{2026}$?",
+   "status": "review",
+   "technique": "cycles",
+   "technique_name": "Cycles",
+   "topic": "modular-arithmetic",
+   "topic_name": "Modular Arithmetic"
+  },
+  {
+   "ai": false,
+   "also": [],
+   "aops": 1.5,
+   "aops_url": null,
+   "category": "misc",
+   "category_name": "Logic, Statistics & Misc",
+   "choices": [
+    "$0$",
+    "$1$",
+    "$2$",
+    "$3$",
+    "cannot be determined"
+   ],
+   "diagram": "",
+   "difficulty": 2,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-drill-08",
+   "level": "AMC 10",
+   "number": 16,
+   "official": false,
+   "progress": "fixed",
+   "rating": 3.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 16
+    }
+   ],
+   "statement": "Each of three students is either a knight, who always tells the truth, or a knave, who always lies. Ava says, \"Exactly one of us is a knave.\" Ben says, \"Ava is a knave.\" Cal says, \"Ben and I are the same type.\" How many of the three are knights?",
+   "status": "review",
+   "technique": "casework",
+   "technique_name": "Casework",
+   "topic": "logic",
+   "topic_name": "Logic & Puzzles"
+  },
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "perfect-powers",
+     "name": "Perfect Squares & Cubes"
+    }
+   ],
+   "aops": 2,
+   "aops_url": null,
+   "category": "number-theory",
+   "category_name": "Number Theory",
+   "choices": [
+    "$8$",
+    "$10$",
+    "$12$",
+    "$16$",
+    "$18$"
+   ],
+   "diagram": "",
+   "difficulty": 3,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-19",
+   "level": "AMC 10",
+   "number": 17,
+   "official": false,
+   "progress": "first",
+   "rating": 4.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 17
+    }
+   ],
+   "statement": "How many positive divisors of $2^4\\cdot 3^3\\cdot 5^2$ are perfect squares?",
+   "status": "solved",
+   "technique": "prime-factorization",
+   "technique_name": "Prime factorization",
+   "topic": "factors-divisors",
+   "topic_name": "Factors & Divisor Counting"
+  },
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "factors-divisors",
+     "name": "Factors & Divisor Counting"
+    }
+   ],
+   "aops": 2,
+   "aops_url": null,
+   "category": "number-theory",
+   "category_name": "Number Theory",
+   "choices": [
+    "$6$",
+    "$8$",
+    "$9$",
+    "$10$",
+    "$12$"
+   ],
+   "diagram": "",
+   "difficulty": 3,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-21",
+   "level": "AMC 10",
+   "number": 18,
+   "official": false,
+   "progress": "fixed",
+   "rating": 4.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 18
+    }
+   ],
+   "statement": "How many ordered pairs of positive integers $(x, y)$ satisfy $\\dfrac{1}{x} + \\dfrac{1}{y} = \\dfrac{1}{6}$?",
+   "status": "review",
+   "technique": "factoring-trick",
+   "technique_name": "Simon's factoring trick",
+   "topic": "diophantine",
+   "topic_name": "Diophantine Equations"
+  },
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "linear-equations",
+     "name": "Linear Equations & Systems"
+    }
+   ],
+   "aops": 2,
+   "aops_url": null,
+   "category": "algebra",
+   "category_name": "Algebra",
+   "choices": [
+    "$-2$",
+    "$-1$",
+    "$0$",
+    "$1$",
+    "$2$"
+   ],
+   "diagram": "",
+   "difficulty": 3,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-25",
+   "level": "AMC 10",
+   "number": 19,
+   "official": false,
+   "progress": "first",
+   "rating": 4.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 19
+    }
+   ],
+   "statement": "A function $f$ satisfies $f(x) + 2f\\!\\left(\\frac{1}{x}\\right) = 3x$ for every nonzero real number $x$. What is $f(2)$?",
+   "status": "solved",
+   "technique": "substitution",
+   "technique_name": "Substitution",
+   "topic": "functions",
+   "topic_name": "Functions & Functional Equations"
+  },
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "basic-counting",
+     "name": "Counting Principles"
+    }
+   ],
+   "aops": 2,
+   "aops_url": null,
+   "category": "counting",
+   "category_name": "Counting & Probability",
+   "choices": [
+    "$89$",
+    "$128$",
+    "$143$",
+    "$144$",
+    "$233$"
+   ],
+   "diagram": "",
+   "difficulty": 3,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-23",
+   "level": "AMC 10",
+   "number": 20,
+   "official": false,
+   "progress": "fixed",
+   "rating": 4.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 20
+    }
+   ],
+   "statement": "How many subsets of $\\{1, 2, 3, \\ldots, 10\\}$, including the empty set, contain no two consecutive integers?",
+   "status": "review",
+   "technique": "recursion",
+   "technique_name": "Recursion",
+   "topic": "recursion",
+   "topic_name": "Recursion & Patterns"
+  },
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "quadratics",
+     "name": "Quadratics"
+    }
+   ],
+   "aops": 2.5,
+   "aops_url": null,
+   "category": "number-theory",
+   "category_name": "Number Theory",
+   "choices": [
+    "$4$",
+    "$5$",
+    "$6$",
+    "$7$",
+    "$8$"
+   ],
+   "diagram": "",
+   "difficulty": 4,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-drill-05",
+   "level": "AMC 10",
+   "number": 21,
+   "official": false,
+   "progress": "first",
+   "rating": 5.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 21
+    }
+   ],
+   "statement": "For how many integers $n$ with $1 \\le n \\le 100$ is $n^2 + 1$ divisible by $65$?",
+   "status": "review",
+   "technique": "residues",
+   "technique_name": "Residues",
+   "topic": "modular-arithmetic",
+   "topic_name": "Modular Arithmetic"
+  },
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "triangles",
+     "name": "Triangles"
+    },
+    {
+     "id": "casework",
+     "name": "Casework & Complements"
+    }
+   ],
+   "aops": 2.5,
+   "aops_url": null,
+   "category": "counting",
+   "category_name": "Counting & Probability",
+   "choices": [
+    "$\\frac{1}{3}$",
+    "$\\frac{3}{8}$",
+    "$\\frac{5}{12}$",
+    "$\\frac{1}{2}$",
+    "$\\frac{7}{12}$"
+   ],
+   "diagram": "",
+   "difficulty": 4,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-24",
+   "level": "AMC 10",
+   "number": 22,
+   "official": false,
+   "progress": "first",
+   "rating": 5.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 22
+    }
+   ],
+   "statement": "Three distinct integers are chosen at random from $\\{1, 2, \\ldots, 10\\}$. What is the probability that they are the side lengths of a triangle with positive area?",
+   "status": "review",
+   "technique": "casework",
+   "technique_name": "Casework",
+   "topic": "probability",
+   "topic_name": "Probability"
+  },
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "basic-counting",
+     "name": "Counting Principles"
+    }
+   ],
+   "aops": 2.5,
+   "aops_url": null,
+   "category": "counting",
+   "category_name": "Counting & Probability",
+   "choices": [
+    "$144$",
+    "$168$",
+    "$178$",
+    "$196$",
+    "$256$"
+   ],
+   "diagram": "",
+   "difficulty": 4,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-26",
+   "level": "AMC 10",
+   "number": 23,
+   "official": false,
+   "progress": "fixed",
+   "rating": 5.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 23
+    }
+   ],
+   "statement": "How many strings of $10$ letters, each $A$ or $B$, contain no three consecutive identical letters?",
+   "status": "review",
+   "technique": "recursion",
+   "technique_name": "Recursion",
+   "topic": "recursion",
+   "topic_name": "Recursion & Patterns"
+  },
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "recursion",
+     "name": "Recursion & Patterns"
+    }
+   ],
+   "aops": 2.5,
+   "aops_url": null,
+   "category": "counting",
+   "category_name": "Counting & Probability",
+   "choices": [
+    "$\\frac{21}{32}$",
+    "$\\frac{43}{64}$",
+    "$\\frac{85}{128}$",
+    "$\\frac{171}{256}$",
+    "$\\frac{2}{3}$"
+   ],
+   "diagram": "",
+   "difficulty": 4,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-28",
+   "level": "AMC 10",
+   "number": 24,
+   "official": false,
+   "progress": "first",
+   "rating": 5.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 24
+    }
+   ],
+   "statement": "A frog starts at $0$ on the number line. Each jump moves it forward $1$ or $2$ units, each with probability $\\frac{1}{2}$, independently. What is the probability that the frog lands on $7$ at some point?",
+   "status": "solved",
+   "technique": "recursion",
+   "technique_name": "Recursion",
+   "topic": "probability",
+   "topic_name": "Probability"
+  },
+  {
+   "ai": false,
+   "also": [
+    {
+     "id": "casework",
+     "name": "Casework & Complements"
+    }
+   ],
+   "aops": 3.5,
+   "aops_url": null,
+   "category": "counting",
+   "category_name": "Counting & Probability",
+   "choices": [
+    "$72$",
+    "$84$",
+    "$90$",
+    "$96$",
+    "$120$"
+   ],
+   "diagram": "",
+   "difficulty": 5,
+   "format": "choice",
+   "has_solution": true,
+   "id": "step-10-27",
+   "level": "AMC 10",
+   "number": 25,
+   "official": false,
+   "progress": "fixed",
+   "rating": 7.0,
+   "sources": [
+    {
+     "contest": "step-mock-10",
+     "name": "Step Mock AMC 10",
+     "number": 25
+    }
+   ],
+   "statement": "In how many ways can the numbers $1, 2, 3, 4, 5, 6$ be arranged in a row so that no two consecutive integers (such as $3$ and $4$) are next to each other?",
+   "status": "review",
+   "technique": "inclusion-exclusion",
+   "technique_name": "Inclusion exclusion",
+   "topic": "permutations",
+   "topic_name": "Permutations & Arrangements"
+  }
+ ],
+ "sitting": null,
+ "success": true,
+ "unlocked": false
+}

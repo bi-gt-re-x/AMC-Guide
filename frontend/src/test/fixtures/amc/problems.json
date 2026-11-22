@@ -1,0 +1,1851 @@
+{
+ "categories": [
+  {
+   "blurb": "Equations, functions, sequences and polynomials.",
+   "color": "blue",
+   "id": "algebra",
+   "name": "Algebra"
+  },
+  {
+   "blurb": "Divisibility, primes, remainders and digits.",
+   "color": "amber",
+   "id": "number-theory",
+   "name": "Number Theory"
+  },
+  {
+   "blurb": "Casework, combinations, probability and expected value.",
+   "color": "green",
+   "id": "counting",
+   "name": "Counting & Probability"
+  },
+  {
+   "blurb": "Triangles, circles, area and coordinates.",
+   "color": "rose",
+   "id": "geometry",
+   "name": "Geometry"
+  },
+  {
+   "blurb": "Means, medians, logic puzzles and everything else.",
+   "color": "slate",
+   "id": "misc",
+   "name": "Logic, Statistics & Misc"
+  }
+ ],
+ "counts": {
+  "missed": 0,
+  "new": 175,
+  "review": 54,
+  "solved": 121
+ },
+ "families": [
+  {
+   "id": "counting",
+   "name": "Counting strategies",
+   "techniques": [
+    {
+     "id": "multiplication-principle",
+     "name": "Multiplication principle"
+    },
+    {
+     "id": "casework",
+     "name": "Casework"
+    },
+    {
+     "id": "complementary-counting",
+     "name": "Complementary counting"
+    },
+    {
+     "id": "inclusion-exclusion",
+     "name": "Inclusion exclusion"
+    },
+    {
+     "id": "stars-and-bars",
+     "name": "Stars and bars"
+    },
+    {
+     "id": "bijection",
+     "name": "Bijection"
+    },
+    {
+     "id": "recursion",
+     "name": "Recursion"
+    },
+    {
+     "id": "reflection",
+     "name": "Reflection"
+    },
+    {
+     "id": "states",
+     "name": "States"
+    },
+    {
+     "id": "linearity-of-expectation",
+     "name": "Linearity of expectation"
+    },
+    {
+     "id": "geometric-probability",
+     "name": "Geometric probability"
+    },
+    {
+     "id": "conditional-probability",
+     "name": "Conditional probability"
+    },
+    {
+     "id": "pigeonhole",
+     "name": "Pigeonhole"
+    },
+    {
+     "id": "hockey-stick",
+     "name": "Hockey stick identity"
+    },
+    {
+     "id": "symmetry",
+     "name": "Symmetry"
+    },
+    {
+     "id": "burnside",
+     "name": "Burnside's lemma"
+    },
+    {
+     "id": "generating-functions",
+     "name": "Generating functions"
+    },
+    {
+     "id": "overcounting",
+     "name": "Overcounting"
+    }
+   ]
+  },
+  {
+   "id": "algebraic",
+   "name": "Algebraic strategies",
+   "techniques": [
+    {
+     "id": "set-up-equations",
+     "name": "Set up equations"
+    },
+    {
+     "id": "substitution",
+     "name": "Substitution"
+    },
+    {
+     "id": "reciprocal-substitution",
+     "name": "Reciprocal substitution"
+    },
+    {
+     "id": "vieta",
+     "name": "Vieta's formulas"
+    },
+    {
+     "id": "symmetric-sums",
+     "name": "Symmetric sums"
+    },
+    {
+     "id": "factoring-trick",
+     "name": "Simon's factoring trick"
+    },
+    {
+     "id": "squaring",
+     "name": "Squaring"
+    },
+    {
+     "id": "telescoping",
+     "name": "Telescoping"
+    },
+    {
+     "id": "am-gm",
+     "name": "AM-GM"
+    },
+    {
+     "id": "repeated-squaring",
+     "name": "Repeated squaring"
+    },
+    {
+     "id": "roots-of-unity",
+     "name": "Roots of unity"
+    },
+    {
+     "id": "completing-the-square",
+     "name": "Completing the square"
+    },
+    {
+     "id": "difference-of-squares",
+     "name": "Difference of squares"
+    },
+    {
+     "id": "cauchy-schwarz",
+     "name": "Cauchy-Schwarz"
+    },
+    {
+     "id": "binomial-theorem",
+     "name": "Binomial theorem"
+    },
+    {
+     "id": "trig-identities",
+     "name": "Trig identities"
+    },
+    {
+     "id": "polar-form",
+     "name": "Polar form"
+    },
+    {
+     "id": "remainder-theorem",
+     "name": "Remainder theorem"
+    },
+    {
+     "id": "rational-root-theorem",
+     "name": "Rational root theorem"
+    },
+    {
+     "id": "newton-sums",
+     "name": "Newton's sums"
+    },
+    {
+     "id": "floor-splitting",
+     "name": "Floor splitting"
+    },
+    {
+     "id": "clearing-denominators",
+     "name": "Clearing denominators"
+    }
+   ]
+  },
+  {
+   "id": "number",
+   "name": "Number theory strategies",
+   "techniques": [
+    {
+     "id": "prime-factorization",
+     "name": "Prime factorization"
+    },
+    {
+     "id": "residues",
+     "name": "Residues"
+    },
+    {
+     "id": "cycles",
+     "name": "Cycles"
+    },
+    {
+     "id": "orders",
+     "name": "Orders"
+    },
+    {
+     "id": "chinese-remainder",
+     "name": "Chinese remainder theorem"
+    },
+    {
+     "id": "euler-phi",
+     "name": "Euler's totient"
+    },
+    {
+     "id": "legendre",
+     "name": "Legendre's formula"
+    },
+    {
+     "id": "divisibility-rules",
+     "name": "Divisibility rules"
+    },
+    {
+     "id": "euclidean-algorithm",
+     "name": "Euclidean algorithm"
+    },
+    {
+     "id": "fermat-little",
+     "name": "Fermat's little theorem"
+    },
+    {
+     "id": "lifting-the-exponent",
+     "name": "Lifting the exponent"
+    },
+    {
+     "id": "wilson",
+     "name": "Wilson's theorem"
+    },
+    {
+     "id": "parity",
+     "name": "Parity"
+    },
+    {
+     "id": "base-conversion",
+     "name": "Base conversion"
+    },
+    {
+     "id": "sum-of-divisors",
+     "name": "Sum of divisors"
+    }
+   ]
+  },
+  {
+   "id": "geometric",
+   "name": "Geometric strategies",
+   "techniques": [
+    {
+     "id": "similarity-ratios",
+     "name": "Similarity ratios"
+    },
+    {
+     "id": "coordinates",
+     "name": "Coordinates"
+    },
+    {
+     "id": "shoelace",
+     "name": "Shoelace formula"
+    },
+    {
+     "id": "decomposition",
+     "name": "Decomposition"
+    },
+    {
+     "id": "british-flag",
+     "name": "British flag theorem"
+    },
+    {
+     "id": "angle-chasing",
+     "name": "Angle chasing"
+    },
+    {
+     "id": "pythagorean-theorem",
+     "name": "Pythagorean theorem"
+    },
+    {
+     "id": "law-of-cosines",
+     "name": "Law of cosines"
+    },
+    {
+     "id": "law-of-sines",
+     "name": "Law of sines"
+    },
+    {
+     "id": "power-of-a-point",
+     "name": "Power of a point"
+    },
+    {
+     "id": "inscribed-angle",
+     "name": "Inscribed angle"
+    },
+    {
+     "id": "angle-bisector-theorem",
+     "name": "Angle bisector theorem"
+    },
+    {
+     "id": "stewart",
+     "name": "Stewart's theorem"
+    },
+    {
+     "id": "heron",
+     "name": "Heron's formula"
+    },
+    {
+     "id": "ptolemy",
+     "name": "Ptolemy's theorem"
+    },
+    {
+     "id": "mass-points",
+     "name": "Mass points"
+    },
+    {
+     "id": "area-ratios",
+     "name": "Area ratios"
+    },
+    {
+     "id": "picks-theorem",
+     "name": "Pick's theorem"
+    },
+    {
+     "id": "reflect-figure",
+     "name": "Reflect the figure"
+    },
+    {
+     "id": "rotate-figure",
+     "name": "Rotate the figure"
+    },
+    {
+     "id": "complex-coordinates",
+     "name": "Complex coordinates"
+    },
+    {
+     "id": "auxiliary-lines",
+     "name": "Auxiliary lines"
+    },
+    {
+     "id": "trig-area",
+     "name": "Area from \u00bdab sin C"
+    }
+   ]
+  },
+  {
+   "id": "general",
+   "name": "General problem solving",
+   "techniques": [
+    {
+     "id": "small-cases",
+     "name": "Small cases"
+    },
+    {
+     "id": "graphing",
+     "name": "Graphing"
+    },
+    {
+     "id": "bounding",
+     "name": "Bounding"
+    },
+    {
+     "id": "pairing",
+     "name": "Pairing"
+    },
+    {
+     "id": "rates",
+     "name": "Rates"
+    },
+    {
+     "id": "known-formula",
+     "name": "Known formula"
+    },
+    {
+     "id": "direct-computation",
+     "name": "Direct computation"
+    },
+    {
+     "id": "working-backwards",
+     "name": "Working backwards"
+    },
+    {
+     "id": "plug-in-choices",
+     "name": "Plug in choices"
+    },
+    {
+     "id": "invariants",
+     "name": "Invariants"
+    },
+    {
+     "id": "extremal-principle",
+     "name": "Extremal principle"
+    },
+    {
+     "id": "wlog",
+     "name": "Without loss of generality"
+    },
+    {
+     "id": "make-a-table",
+     "name": "Make a table"
+    },
+    {
+     "id": "estimation",
+     "name": "Estimation"
+    }
+   ]
+  }
+ ],
+ "kinds": {
+  "ai": 0,
+  "official": 0,
+  "step": 65,
+  "summit": 285
+ },
+ "mocks": [
+  {
+   "family": "step",
+   "id": "step-mock-10",
+   "level": "AMC 10",
+   "name": "Step Mock AMC 10",
+   "set": null
+  },
+  {
+   "family": "step",
+   "id": "step-mock-12",
+   "level": "AMC 12",
+   "name": "Step Mock AMC 12",
+   "set": null
+  },
+  {
+   "family": "step",
+   "id": "step-mock-aime",
+   "level": "AIME",
+   "name": "Step Mock AIME",
+   "set": null
+  },
+  {
+   "family": "summit",
+   "id": "mock-10-1",
+   "level": "AMC 10",
+   "name": "AMC Guide Mock AMC 10 \u00b7 Set 1",
+   "set": 1
+  },
+  {
+   "family": "summit",
+   "id": "mock-10-2",
+   "level": "AMC 10",
+   "name": "AMC Guide Mock AMC 10 \u00b7 Set 2",
+   "set": 2
+  },
+  {
+   "family": "summit",
+   "id": "mock-10-3",
+   "level": "AMC 10",
+   "name": "AMC Guide Mock AMC 10 \u00b7 Set 3",
+   "set": 3
+  },
+  {
+   "family": "summit",
+   "id": "mock-10-4",
+   "level": "AMC 10",
+   "name": "AMC Guide Mock AMC 10 \u00b7 Set 4",
+   "set": 4
+  },
+  {
+   "family": "summit",
+   "id": "mock-10-5",
+   "level": "AMC 10",
+   "name": "AMC Guide Mock AMC 10 \u00b7 Set 5",
+   "set": 5
+  },
+  {
+   "family": "summit",
+   "id": "mock-12-1",
+   "level": "AMC 12",
+   "name": "AMC Guide Mock AMC 12 \u00b7 Set 1",
+   "set": 1
+  },
+  {
+   "family": "summit",
+   "id": "mock-12-2",
+   "level": "AMC 12",
+   "name": "AMC Guide Mock AMC 12 \u00b7 Set 2",
+   "set": 2
+  },
+  {
+   "family": "summit",
+   "id": "mock-12-3",
+   "level": "AMC 12",
+   "name": "AMC Guide Mock AMC 12 \u00b7 Set 3",
+   "set": 3
+  },
+  {
+   "family": "summit",
+   "id": "mock-12-4",
+   "level": "AMC 12",
+   "name": "AMC Guide Mock AMC 12 \u00b7 Set 4",
+   "set": 4
+  },
+  {
+   "family": "summit",
+   "id": "mock-12-5",
+   "level": "AMC 12",
+   "name": "AMC Guide Mock AMC 12 \u00b7 Set 5",
+   "set": 5
+  },
+  {
+   "family": "summit",
+   "id": "mock-aime-1",
+   "level": "AIME",
+   "name": "AMC Guide Mock AIME \u00b7 Set 1",
+   "set": 1
+  },
+  {
+   "family": "summit",
+   "id": "mock-aime-2",
+   "level": "AIME",
+   "name": "AMC Guide Mock AIME \u00b7 Set 2",
+   "set": 2
+  },
+  {
+   "family": "summit",
+   "id": "mock-aime-3",
+   "level": "AIME",
+   "name": "AMC Guide Mock AIME \u00b7 Set 3",
+   "set": 3
+  },
+  {
+   "family": "summit",
+   "id": "mock-aime-4",
+   "level": "AIME",
+   "name": "AMC Guide Mock AIME \u00b7 Set 4",
+   "set": 4
+  },
+  {
+   "family": "summit",
+   "id": "mock-aime-5",
+   "level": "AIME",
+   "name": "AMC Guide Mock AIME \u00b7 Set 5",
+   "set": 5
+  }
+ ],
+ "official": 0,
+ "problems": [
+  {
+   "attempts": 1,
+   "category": "algebra",
+   "contest_id": "step-mock-10",
+   "difficulty": 1,
+   "id": "step-10-01",
+   "level": "AMC 10",
+   "number": 1,
+   "official": false,
+   "preview": "What is the value of (3\u00b2+3\u00b2+3\u00b2)/(3\u207b\u00b9+3\u207b\u00b9+3\u207b\u00b9)?",
+   "rating": 2.0,
+   "short": "S10\u00b71",
+   "source": "Step Mock AMC 10 #1",
+   "status": "solved",
+   "technique": "direct-computation",
+   "technique_name": "Direct computation",
+   "topic": "exponents",
+   "topic_name": "Exponents & Radicals"
+  },
+  {
+   "attempts": 1,
+   "category": "misc",
+   "contest_id": "step-mock-10",
+   "difficulty": 1,
+   "id": "step-10-03",
+   "level": "AMC 10",
+   "number": 2,
+   "official": false,
+   "preview": "The mean of five numbers is 12. When one of the numbers is removed, the mean of the remaining four numbers is 10. What number was removed?",
+   "rating": 2.0,
+   "short": "S10\u00b72",
+   "source": "Step Mock AMC 10 #2",
+   "status": "solved",
+   "technique": "direct-computation",
+   "technique_name": "Direct computation",
+   "topic": "statistics",
+   "topic_name": "Mean, Median & Mode"
+  },
+  {
+   "attempts": 1,
+   "category": "algebra",
+   "contest_id": "step-mock-10",
+   "difficulty": 1,
+   "id": "step-10-04",
+   "level": "AMC 10",
+   "number": 3,
+   "official": false,
+   "preview": "The price of a jacket is increased by 20%, and then the new price is decreased by 25%. The final price is what percent of the original price?",
+   "rating": 2.0,
+   "short": "S10\u00b73",
+   "source": "Step Mock AMC 10 #3",
+   "status": "solved",
+   "technique": "direct-computation",
+   "technique_name": "Direct computation",
+   "topic": "word-problems",
+   "topic_name": "Rates, Ratios & Percents"
+  },
+  {
+   "attempts": 4,
+   "category": "algebra",
+   "contest_id": "step-mock-10",
+   "difficulty": 1,
+   "id": "step-10-05",
+   "level": "AMC 10",
+   "number": 4,
+   "official": false,
+   "preview": "Ana is three times as old as Ben. In 12 years, Ana will be twice as old as Ben. How old is Ana now?",
+   "rating": 2.0,
+   "short": "S10\u00b74",
+   "source": "Step Mock AMC 10 #4",
+   "status": "solved",
+   "technique": "set-up-equations",
+   "technique_name": "Set up equations",
+   "topic": "linear-equations",
+   "topic_name": "Linear Equations & Systems"
+  },
+  {
+   "attempts": 1,
+   "category": "counting",
+   "contest_id": "step-mock-10",
+   "difficulty": 1,
+   "id": "step-10-08",
+   "level": "AMC 10",
+   "number": 5,
+   "official": false,
+   "preview": "How many three-digit positive integers have three distinct digits, all of which are odd?",
+   "rating": 2.0,
+   "short": "S10\u00b75",
+   "source": "Step Mock AMC 10 #5",
+   "status": "solved",
+   "technique": "multiplication-principle",
+   "technique_name": "Multiplication principle",
+   "topic": "basic-counting",
+   "topic_name": "Counting Principles"
+  },
+  {
+   "attempts": 1,
+   "category": "algebra",
+   "contest_id": "step-mock-10",
+   "difficulty": 1,
+   "id": "step-10-18",
+   "level": "AMC 10",
+   "number": 6,
+   "official": false,
+   "preview": "The first term of an arithmetic sequence is 5, and the sum of its first 10 terms is 185. What is the 10th term?",
+   "rating": 2.0,
+   "short": "S10\u00b76",
+   "source": "Step Mock AMC 10 #6",
+   "status": "solved",
+   "technique": "known-formula",
+   "technique_name": "Known formula",
+   "topic": "sequences-series",
+   "topic_name": "Sequences & Series"
+  },
+  {
+   "attempts": 1,
+   "category": "number-theory",
+   "contest_id": "step-mock-10",
+   "difficulty": 1,
+   "id": "step-10-06",
+   "level": "AMC 10",
+   "number": 7,
+   "official": false,
+   "preview": "How many positive integers less than 100 are divisible by 3 or by 5, but not by both?",
+   "rating": 2.0,
+   "short": "S10\u00b77",
+   "source": "Step Mock AMC 10 #7",
+   "status": "solved",
+   "technique": "inclusion-exclusion",
+   "technique_name": "Inclusion exclusion",
+   "topic": "divisibility",
+   "topic_name": "Divisibility & Primes"
+  },
+  {
+   "attempts": 4,
+   "category": "number-theory",
+   "contest_id": "step-mock-10",
+   "difficulty": 2,
+   "id": "step-10-09",
+   "level": "AMC 10",
+   "number": 8,
+   "official": false,
+   "preview": "What is the sum of the digits of 10\u00b2\u2070 - 20?",
+   "rating": 3.0,
+   "short": "S10\u00b78",
+   "source": "Step Mock AMC 10 #8",
+   "status": "solved",
+   "technique": "small-cases",
+   "technique_name": "Small cases",
+   "topic": "digits-bases",
+   "topic_name": "Digits & Bases"
+  },
+  {
+   "attempts": 1,
+   "category": "counting",
+   "contest_id": "step-mock-10",
+   "difficulty": 2,
+   "id": "step-10-10",
+   "level": "AMC 10",
+   "number": 9,
+   "official": false,
+   "preview": "Two fair six-sided dice are rolled. What is the probability that the product of the two numbers rolled is a multiple of 3?",
+   "rating": 3.0,
+   "short": "S10\u00b79",
+   "source": "Step Mock AMC 10 #9",
+   "status": "solved",
+   "technique": "complementary-counting",
+   "technique_name": "Complementary counting",
+   "topic": "probability",
+   "topic_name": "Probability"
+  },
+  {
+   "attempts": 4,
+   "category": "algebra",
+   "contest_id": "step-mock-10",
+   "difficulty": 2,
+   "id": "step-10-11",
+   "level": "AMC 10",
+   "number": 10,
+   "official": false,
+   "preview": "The two roots of x\u00b2 - 7x + k = 0 differ by 3. What is k?",
+   "rating": 3.0,
+   "short": "S10\u00b710",
+   "source": "Step Mock AMC 10 #10",
+   "status": "solved",
+   "technique": "vieta",
+   "technique_name": "Vieta's formulas",
+   "topic": "quadratics",
+   "topic_name": "Quadratics"
+  },
+  {
+   "attempts": 4,
+   "category": "geometry",
+   "contest_id": "step-mock-10",
+   "difficulty": 2,
+   "id": "step-10-12",
+   "level": "AMC 10",
+   "number": 11,
+   "official": false,
+   "preview": "In triangle ABC, AB = 12. Point D lies on AB with AD = 4, and the line through D parallel to BC meets AC at E. The area of triangle ADE is 5. What is the area of quadrilateral DBCE?",
+   "rating": 3.0,
+   "short": "S10\u00b711",
+   "source": "Step Mock AMC 10 #11",
+   "status": "review",
+   "technique": "similarity-ratios",
+   "technique_name": "Similarity ratios",
+   "topic": "similar-triangles",
+   "topic_name": "Similar Triangles"
+  },
+  {
+   "attempts": 3,
+   "category": "number-theory",
+   "contest_id": "step-mock-10",
+   "difficulty": 2,
+   "id": "step-10-13",
+   "level": "AMC 10",
+   "number": 12,
+   "official": false,
+   "preview": "What is the remainder when 3\u00b9\u2070\u2070 is divided by 7?",
+   "rating": 3.0,
+   "short": "S10\u00b712",
+   "source": "Step Mock AMC 10 #12",
+   "status": "review",
+   "technique": "cycles",
+   "technique_name": "Cycles",
+   "topic": "modular-arithmetic",
+   "topic_name": "Modular Arithmetic"
+  },
+  {
+   "attempts": 5,
+   "category": "geometry",
+   "contest_id": "step-mock-10",
+   "difficulty": 2,
+   "id": "step-10-15",
+   "level": "AMC 10",
+   "number": 13,
+   "official": false,
+   "preview": "What is the area of the triangle with vertices (0,0), (8,2) and (3,7)?",
+   "rating": 3.0,
+   "short": "S10\u00b713",
+   "source": "Step Mock AMC 10 #13",
+   "status": "review",
+   "technique": "shoelace",
+   "technique_name": "Shoelace formula",
+   "topic": "coordinate-geometry",
+   "topic_name": "Coordinate Geometry"
+  },
+  {
+   "attempts": 1,
+   "category": "counting",
+   "contest_id": "step-mock-10",
+   "difficulty": 2,
+   "id": "step-10-17",
+   "level": "AMC 10",
+   "number": 14,
+   "official": false,
+   "preview": "In how many ways can 6 identical candies be given to 3 children so that every child gets at least one candy?",
+   "rating": 3.0,
+   "short": "S10\u00b714",
+   "source": "Step Mock AMC 10 #14",
+   "status": "solved",
+   "technique": "stars-and-bars",
+   "technique_name": "Stars and bars",
+   "topic": "combinations",
+   "topic_name": "Combinations & Stars and Bars"
+  },
+  {
+   "attempts": 3,
+   "category": "number-theory",
+   "contest_id": "step-mock-10",
+   "difficulty": 2,
+   "id": "step-drill-04",
+   "level": "AMC 10",
+   "number": 15,
+   "official": false,
+   "preview": "What are the last two digits of 7\u00b2\u2070\u00b2\u2076?",
+   "rating": 3.0,
+   "short": "S10\u00b715",
+   "source": "Step Mock AMC 10 #15",
+   "status": "review",
+   "technique": "cycles",
+   "technique_name": "Cycles",
+   "topic": "modular-arithmetic",
+   "topic_name": "Modular Arithmetic"
+  },
+  {
+   "attempts": 3,
+   "category": "misc",
+   "contest_id": "step-mock-10",
+   "difficulty": 2,
+   "id": "step-drill-08",
+   "level": "AMC 10",
+   "number": 16,
+   "official": false,
+   "preview": "Each of three students is either a knight, who always tells the truth, or a knave, who always lies. Ava says, \"Exactly one of us is a knave.\" Ben says, \"Ava is a knave.\" Cal says, \"Ben and I are the same type.\" How many of the three are knights?",
+   "rating": 3.0,
+   "short": "S10\u00b716",
+   "source": "Step Mock AMC 10 #16",
+   "status": "review",
+   "technique": "casework",
+   "technique_name": "Casework",
+   "topic": "logic",
+   "topic_name": "Logic & Puzzles"
+  },
+  {
+   "attempts": 1,
+   "category": "number-theory",
+   "contest_id": "step-mock-10",
+   "difficulty": 3,
+   "id": "step-10-19",
+   "level": "AMC 10",
+   "number": 17,
+   "official": false,
+   "preview": "How many positive divisors of 2\u2074\u00b7 3\u00b3\u00b7 5\u00b2 are perfect squares?",
+   "rating": 4.0,
+   "short": "S10\u00b717",
+   "source": "Step Mock AMC 10 #17",
+   "status": "solved",
+   "technique": "prime-factorization",
+   "technique_name": "Prime factorization",
+   "topic": "factors-divisors",
+   "topic_name": "Factors & Divisor Counting"
+  },
+  {
+   "attempts": 4,
+   "category": "number-theory",
+   "contest_id": "step-mock-10",
+   "difficulty": 3,
+   "id": "step-10-21",
+   "level": "AMC 10",
+   "number": 18,
+   "official": false,
+   "preview": "How many ordered pairs of positive integers (x, y) satisfy 1/x + 1/y = 1/6?",
+   "rating": 4.0,
+   "short": "S10\u00b718",
+   "source": "Step Mock AMC 10 #18",
+   "status": "review",
+   "technique": "factoring-trick",
+   "technique_name": "Simon's factoring trick",
+   "topic": "diophantine",
+   "topic_name": "Diophantine Equations"
+  },
+  {
+   "attempts": 1,
+   "category": "algebra",
+   "contest_id": "step-mock-10",
+   "difficulty": 3,
+   "id": "step-10-25",
+   "level": "AMC 10",
+   "number": 19,
+   "official": false,
+   "preview": "A function f satisfies f(x) + 2f (1/x ) = 3x for every nonzero real number x. What is f(2)?",
+   "rating": 4.0,
+   "short": "S10\u00b719",
+   "source": "Step Mock AMC 10 #19",
+   "status": "solved",
+   "technique": "substitution",
+   "technique_name": "Substitution",
+   "topic": "functions",
+   "topic_name": "Functions & Functional Equations"
+  },
+  {
+   "attempts": 4,
+   "category": "counting",
+   "contest_id": "step-mock-10",
+   "difficulty": 3,
+   "id": "step-10-23",
+   "level": "AMC 10",
+   "number": 20,
+   "official": false,
+   "preview": "How many subsets of {1, 2, 3, \u2026, 10}, including the empty set, contain no two consecutive integers?",
+   "rating": 4.0,
+   "short": "S10\u00b720",
+   "source": "Step Mock AMC 10 #20",
+   "status": "review",
+   "technique": "recursion",
+   "technique_name": "Recursion",
+   "topic": "recursion",
+   "topic_name": "Recursion & Patterns"
+  },
+  {
+   "attempts": 2,
+   "category": "number-theory",
+   "contest_id": "step-mock-10",
+   "difficulty": 4,
+   "id": "step-drill-05",
+   "level": "AMC 10",
+   "number": 21,
+   "official": false,
+   "preview": "For how many integers n with 1 \u2264 n \u2264 100 is n\u00b2 + 1 divisible by 65?",
+   "rating": 5.0,
+   "short": "S10\u00b721",
+   "source": "Step Mock AMC 10 #21",
+   "status": "review",
+   "technique": "residues",
+   "technique_name": "Residues",
+   "topic": "modular-arithmetic",
+   "topic_name": "Modular Arithmetic"
+  },
+  {
+   "attempts": 2,
+   "category": "counting",
+   "contest_id": "step-mock-10",
+   "difficulty": 4,
+   "id": "step-10-24",
+   "level": "AMC 10",
+   "number": 22,
+   "official": false,
+   "preview": "Three distinct integers are chosen at random from {1, 2, \u2026, 10}. What is the probability that they are the side lengths of a triangle with positive area?",
+   "rating": 5.0,
+   "short": "S10\u00b722",
+   "source": "Step Mock AMC 10 #22",
+   "status": "review",
+   "technique": "casework",
+   "technique_name": "Casework",
+   "topic": "probability",
+   "topic_name": "Probability"
+  },
+  {
+   "attempts": 3,
+   "category": "counting",
+   "contest_id": "step-mock-10",
+   "difficulty": 4,
+   "id": "step-10-26",
+   "level": "AMC 10",
+   "number": 23,
+   "official": false,
+   "preview": "How many strings of 10 letters, each A or B, contain no three consecutive identical letters?",
+   "rating": 5.0,
+   "short": "S10\u00b723",
+   "source": "Step Mock AMC 10 #23",
+   "status": "review",
+   "technique": "recursion",
+   "technique_name": "Recursion",
+   "topic": "recursion",
+   "topic_name": "Recursion & Patterns"
+  },
+  {
+   "attempts": 1,
+   "category": "counting",
+   "contest_id": "step-mock-10",
+   "difficulty": 4,
+   "id": "step-10-28",
+   "level": "AMC 10",
+   "number": 24,
+   "official": false,
+   "preview": "A frog starts at 0 on the number line. Each jump moves it forward 1 or 2 units, each with probability 1/2, independently. What is the probability that the frog lands on 7 at some point?",
+   "rating": 5.0,
+   "short": "S10\u00b724",
+   "source": "Step Mock AMC 10 #24",
+   "status": "solved",
+   "technique": "recursion",
+   "technique_name": "Recursion",
+   "topic": "probability",
+   "topic_name": "Probability"
+  },
+  {
+   "attempts": 7,
+   "category": "counting",
+   "contest_id": "step-mock-10",
+   "difficulty": 5,
+   "id": "step-10-27",
+   "level": "AMC 10",
+   "number": 25,
+   "official": false,
+   "preview": "In how many ways can the numbers 1, 2, 3, 4, 5, 6 be arranged in a row so that no two consecutive integers (such as 3 and 4) are next to each other?",
+   "rating": 7.0,
+   "short": "S10\u00b725",
+   "source": "Step Mock AMC 10 #25",
+   "status": "review",
+   "technique": "inclusion-exclusion",
+   "technique_name": "Inclusion exclusion",
+   "topic": "permutations",
+   "topic_name": "Permutations & Arrangements"
+  },
+  {
+   "attempts": 0,
+   "category": "geometry",
+   "contest_id": "step-mock-12",
+   "difficulty": 2,
+   "id": "step-10-16",
+   "level": "AMC 10",
+   "number": 7,
+   "official": false,
+   "preview": "A circle is inscribed in a right triangle with legs 8 and 15. What is the radius of the circle?",
+   "rating": 3.0,
+   "short": "S12\u00b77",
+   "source": "Step Mock AMC 12 #7",
+   "status": "new",
+   "technique": "known-formula",
+   "technique_name": "Known formula",
+   "topic": "circles",
+   "topic_name": "Circles"
+  },
+  {
+   "attempts": 1,
+   "category": "counting",
+   "contest_id": "step-mock-12",
+   "difficulty": 2,
+   "id": "step-10-20",
+   "level": "AMC 10",
+   "number": 8,
+   "official": false,
+   "preview": "A point is chosen uniformly at random inside a square of side length 2. What is the probability that it lies within distance 1 of at least one vertex of the square?",
+   "rating": 3.0,
+   "short": "S12\u00b78",
+   "source": "Step Mock AMC 12 #8",
+   "status": "solved",
+   "technique": "geometric-probability",
+   "technique_name": "Geometric probability",
+   "topic": "geometric-probability",
+   "topic_name": "Geometric Probability"
+  },
+  {
+   "attempts": 0,
+   "category": "geometry",
+   "contest_id": "step-mock-12",
+   "difficulty": 2,
+   "id": "step-10-22",
+   "level": "AMC 10",
+   "number": 9,
+   "official": false,
+   "preview": "A regular hexagon has side length 2. What is the area of the triangle formed by joining every other vertex of the hexagon?",
+   "rating": 3.0,
+   "short": "S12\u00b79",
+   "source": "Step Mock AMC 12 #9",
+   "status": "new",
+   "technique": "decomposition",
+   "technique_name": "Decomposition",
+   "topic": "polygons",
+   "topic_name": "Polygons"
+  },
+  {
+   "attempts": 0,
+   "category": "geometry",
+   "contest_id": "step-mock-12",
+   "difficulty": 3,
+   "id": "step-drill-01",
+   "level": "AMC 10",
+   "number": 14,
+   "official": false,
+   "preview": "Point P lies inside rectangle ABCD with PA = 3, PB = 4 and PC = 5. What is PD?",
+   "rating": 4.0,
+   "short": "S12\u00b714",
+   "source": "Step Mock AMC 12 #14",
+   "status": "new",
+   "technique": "british-flag",
+   "technique_name": "British flag theorem",
+   "topic": "right-triangles",
+   "topic_name": "Right Triangles & Pythagoras"
+  },
+  {
+   "attempts": 0,
+   "category": "number-theory",
+   "contest_id": "step-mock-12",
+   "difficulty": 3,
+   "id": "step-drill-02",
+   "level": "AMC 10",
+   "number": 15,
+   "official": false,
+   "preview": "How many positive integers less than 1000 have digits that sum to 10?",
+   "rating": 4.0,
+   "short": "S12\u00b715",
+   "source": "Step Mock AMC 12 #15",
+   "status": "new",
+   "technique": "stars-and-bars",
+   "technique_name": "Stars and bars",
+   "topic": "digits-bases",
+   "topic_name": "Digits & Bases"
+  }
+ ],
+ "rating_counts": {
+  "1": 0,
+  "10": 2,
+  "11": 0,
+  "12": 0,
+  "2": 85,
+  "3": 70,
+  "4": 66,
+  "5": 50,
+  "6": 39,
+  "7": 25,
+  "8": 9,
+  "9": 4
+ },
+ "success": true,
+ "techniques": [
+  {
+   "id": "multiplication-principle",
+   "name": "Multiplication principle"
+  },
+  {
+   "id": "casework",
+   "name": "Casework"
+  },
+  {
+   "id": "complementary-counting",
+   "name": "Complementary counting"
+  },
+  {
+   "id": "inclusion-exclusion",
+   "name": "Inclusion exclusion"
+  },
+  {
+   "id": "stars-and-bars",
+   "name": "Stars and bars"
+  },
+  {
+   "id": "bijection",
+   "name": "Bijection"
+  },
+  {
+   "id": "recursion",
+   "name": "Recursion"
+  },
+  {
+   "id": "reflection",
+   "name": "Reflection"
+  },
+  {
+   "id": "states",
+   "name": "States"
+  },
+  {
+   "id": "linearity-of-expectation",
+   "name": "Linearity of expectation"
+  },
+  {
+   "id": "geometric-probability",
+   "name": "Geometric probability"
+  },
+  {
+   "id": "conditional-probability",
+   "name": "Conditional probability"
+  },
+  {
+   "id": "pigeonhole",
+   "name": "Pigeonhole"
+  },
+  {
+   "id": "hockey-stick",
+   "name": "Hockey stick identity"
+  },
+  {
+   "id": "symmetry",
+   "name": "Symmetry"
+  },
+  {
+   "id": "burnside",
+   "name": "Burnside's lemma"
+  },
+  {
+   "id": "generating-functions",
+   "name": "Generating functions"
+  },
+  {
+   "id": "overcounting",
+   "name": "Overcounting"
+  },
+  {
+   "id": "set-up-equations",
+   "name": "Set up equations"
+  },
+  {
+   "id": "substitution",
+   "name": "Substitution"
+  },
+  {
+   "id": "reciprocal-substitution",
+   "name": "Reciprocal substitution"
+  },
+  {
+   "id": "vieta",
+   "name": "Vieta's formulas"
+  },
+  {
+   "id": "symmetric-sums",
+   "name": "Symmetric sums"
+  },
+  {
+   "id": "factoring-trick",
+   "name": "Simon's factoring trick"
+  },
+  {
+   "id": "squaring",
+   "name": "Squaring"
+  },
+  {
+   "id": "telescoping",
+   "name": "Telescoping"
+  },
+  {
+   "id": "am-gm",
+   "name": "AM-GM"
+  },
+  {
+   "id": "repeated-squaring",
+   "name": "Repeated squaring"
+  },
+  {
+   "id": "roots-of-unity",
+   "name": "Roots of unity"
+  },
+  {
+   "id": "completing-the-square",
+   "name": "Completing the square"
+  },
+  {
+   "id": "difference-of-squares",
+   "name": "Difference of squares"
+  },
+  {
+   "id": "cauchy-schwarz",
+   "name": "Cauchy-Schwarz"
+  },
+  {
+   "id": "binomial-theorem",
+   "name": "Binomial theorem"
+  },
+  {
+   "id": "trig-identities",
+   "name": "Trig identities"
+  },
+  {
+   "id": "polar-form",
+   "name": "Polar form"
+  },
+  {
+   "id": "remainder-theorem",
+   "name": "Remainder theorem"
+  },
+  {
+   "id": "rational-root-theorem",
+   "name": "Rational root theorem"
+  },
+  {
+   "id": "newton-sums",
+   "name": "Newton's sums"
+  },
+  {
+   "id": "floor-splitting",
+   "name": "Floor splitting"
+  },
+  {
+   "id": "clearing-denominators",
+   "name": "Clearing denominators"
+  },
+  {
+   "id": "prime-factorization",
+   "name": "Prime factorization"
+  },
+  {
+   "id": "residues",
+   "name": "Residues"
+  },
+  {
+   "id": "cycles",
+   "name": "Cycles"
+  },
+  {
+   "id": "orders",
+   "name": "Orders"
+  },
+  {
+   "id": "chinese-remainder",
+   "name": "Chinese remainder theorem"
+  },
+  {
+   "id": "euler-phi",
+   "name": "Euler's totient"
+  },
+  {
+   "id": "legendre",
+   "name": "Legendre's formula"
+  },
+  {
+   "id": "divisibility-rules",
+   "name": "Divisibility rules"
+  },
+  {
+   "id": "euclidean-algorithm",
+   "name": "Euclidean algorithm"
+  },
+  {
+   "id": "fermat-little",
+   "name": "Fermat's little theorem"
+  },
+  {
+   "id": "lifting-the-exponent",
+   "name": "Lifting the exponent"
+  },
+  {
+   "id": "wilson",
+   "name": "Wilson's theorem"
+  },
+  {
+   "id": "parity",
+   "name": "Parity"
+  },
+  {
+   "id": "base-conversion",
+   "name": "Base conversion"
+  },
+  {
+   "id": "sum-of-divisors",
+   "name": "Sum of divisors"
+  },
+  {
+   "id": "similarity-ratios",
+   "name": "Similarity ratios"
+  },
+  {
+   "id": "coordinates",
+   "name": "Coordinates"
+  },
+  {
+   "id": "shoelace",
+   "name": "Shoelace formula"
+  },
+  {
+   "id": "decomposition",
+   "name": "Decomposition"
+  },
+  {
+   "id": "british-flag",
+   "name": "British flag theorem"
+  },
+  {
+   "id": "angle-chasing",
+   "name": "Angle chasing"
+  },
+  {
+   "id": "pythagorean-theorem",
+   "name": "Pythagorean theorem"
+  },
+  {
+   "id": "law-of-cosines",
+   "name": "Law of cosines"
+  },
+  {
+   "id": "law-of-sines",
+   "name": "Law of sines"
+  },
+  {
+   "id": "power-of-a-point",
+   "name": "Power of a point"
+  },
+  {
+   "id": "inscribed-angle",
+   "name": "Inscribed angle"
+  },
+  {
+   "id": "angle-bisector-theorem",
+   "name": "Angle bisector theorem"
+  },
+  {
+   "id": "stewart",
+   "name": "Stewart's theorem"
+  },
+  {
+   "id": "heron",
+   "name": "Heron's formula"
+  },
+  {
+   "id": "ptolemy",
+   "name": "Ptolemy's theorem"
+  },
+  {
+   "id": "mass-points",
+   "name": "Mass points"
+  },
+  {
+   "id": "area-ratios",
+   "name": "Area ratios"
+  },
+  {
+   "id": "picks-theorem",
+   "name": "Pick's theorem"
+  },
+  {
+   "id": "reflect-figure",
+   "name": "Reflect the figure"
+  },
+  {
+   "id": "rotate-figure",
+   "name": "Rotate the figure"
+  },
+  {
+   "id": "complex-coordinates",
+   "name": "Complex coordinates"
+  },
+  {
+   "id": "auxiliary-lines",
+   "name": "Auxiliary lines"
+  },
+  {
+   "id": "trig-area",
+   "name": "Area from \u00bdab sin C"
+  },
+  {
+   "id": "small-cases",
+   "name": "Small cases"
+  },
+  {
+   "id": "graphing",
+   "name": "Graphing"
+  },
+  {
+   "id": "bounding",
+   "name": "Bounding"
+  },
+  {
+   "id": "pairing",
+   "name": "Pairing"
+  },
+  {
+   "id": "rates",
+   "name": "Rates"
+  },
+  {
+   "id": "known-formula",
+   "name": "Known formula"
+  },
+  {
+   "id": "direct-computation",
+   "name": "Direct computation"
+  },
+  {
+   "id": "working-backwards",
+   "name": "Working backwards"
+  },
+  {
+   "id": "plug-in-choices",
+   "name": "Plug in choices"
+  },
+  {
+   "id": "invariants",
+   "name": "Invariants"
+  },
+  {
+   "id": "extremal-principle",
+   "name": "Extremal principle"
+  },
+  {
+   "id": "wlog",
+   "name": "Without loss of generality"
+  },
+  {
+   "id": "make-a-table",
+   "name": "Make a table"
+  },
+  {
+   "id": "estimation",
+   "name": "Estimation"
+  }
+ ],
+ "topics": [
+  {
+   "category": "algebra",
+   "id": "linear-equations",
+   "name": "Linear Equations & Systems"
+  },
+  {
+   "category": "algebra",
+   "id": "word-problems",
+   "name": "Rates, Ratios & Percents"
+  },
+  {
+   "category": "algebra",
+   "id": "exponents",
+   "name": "Exponents & Radicals"
+  },
+  {
+   "category": "algebra",
+   "id": "quadratics",
+   "name": "Quadratics"
+  },
+  {
+   "category": "algebra",
+   "id": "functions",
+   "name": "Functions & Functional Equations"
+  },
+  {
+   "category": "algebra",
+   "id": "polynomials",
+   "name": "Polynomials"
+  },
+  {
+   "category": "algebra",
+   "id": "sequences-series",
+   "name": "Sequences & Series"
+  },
+  {
+   "category": "algebra",
+   "id": "inequalities",
+   "name": "Inequalities & Optimization"
+  },
+  {
+   "category": "algebra",
+   "id": "logarithms",
+   "name": "Logarithms"
+  },
+  {
+   "category": "algebra",
+   "id": "complex-numbers",
+   "name": "Complex Numbers"
+  },
+  {
+   "category": "algebra",
+   "id": "arithmetic",
+   "name": "Arithmetic & Fractions"
+  },
+  {
+   "category": "algebra",
+   "id": "absolute-value",
+   "name": "Absolute Value"
+  },
+  {
+   "category": "algebra",
+   "id": "floor-ceiling",
+   "name": "Floor & Ceiling"
+  },
+  {
+   "category": "algebra",
+   "id": "nonlinear-systems",
+   "name": "Nonlinear Systems"
+  },
+  {
+   "category": "algebra",
+   "id": "graphs-transformations",
+   "name": "Graphs & Transformations"
+  },
+  {
+   "category": "algebra",
+   "id": "binomial-theorem",
+   "name": "Binomial Theorem"
+  },
+  {
+   "category": "number-theory",
+   "id": "divisibility",
+   "name": "Divisibility & Primes"
+  },
+  {
+   "category": "number-theory",
+   "id": "factors-divisors",
+   "name": "Factors & Divisor Counting"
+  },
+  {
+   "category": "number-theory",
+   "id": "modular-arithmetic",
+   "name": "Modular Arithmetic"
+  },
+  {
+   "category": "number-theory",
+   "id": "digits-bases",
+   "name": "Digits & Bases"
+  },
+  {
+   "category": "number-theory",
+   "id": "gcd-lcm",
+   "name": "GCD & LCM"
+  },
+  {
+   "category": "number-theory",
+   "id": "diophantine",
+   "name": "Diophantine Equations"
+  },
+  {
+   "category": "number-theory",
+   "id": "factorials",
+   "name": "Factorials & Trailing Zeros"
+  },
+  {
+   "category": "number-theory",
+   "id": "perfect-powers",
+   "name": "Perfect Squares & Cubes"
+  },
+  {
+   "category": "number-theory",
+   "id": "decimals-fractions",
+   "name": "Repeating Decimals & Fractions"
+  },
+  {
+   "category": "number-theory",
+   "id": "parity",
+   "name": "Parity"
+  },
+  {
+   "category": "counting",
+   "id": "basic-counting",
+   "name": "Counting Principles"
+  },
+  {
+   "category": "counting",
+   "id": "permutations",
+   "name": "Permutations & Arrangements"
+  },
+  {
+   "category": "counting",
+   "id": "combinations",
+   "name": "Combinations & Stars and Bars"
+  },
+  {
+   "category": "counting",
+   "id": "casework",
+   "name": "Casework & Complements"
+  },
+  {
+   "category": "counting",
+   "id": "probability",
+   "name": "Probability"
+  },
+  {
+   "category": "counting",
+   "id": "expected-value",
+   "name": "Expected Value"
+  },
+  {
+   "category": "counting",
+   "id": "recursion",
+   "name": "Recursion & Patterns"
+  },
+  {
+   "category": "counting",
+   "id": "binomial-coefficients",
+   "name": "Pascal's Triangle & Identities"
+  },
+  {
+   "category": "counting",
+   "id": "lattice-paths",
+   "name": "Grid & Lattice Paths"
+  },
+  {
+   "category": "counting",
+   "id": "pigeonhole",
+   "name": "Pigeonhole Principle"
+  },
+  {
+   "category": "counting",
+   "id": "conditional-probability",
+   "name": "Conditional Probability"
+  },
+  {
+   "category": "counting",
+   "id": "geometric-probability",
+   "name": "Geometric Probability"
+  },
+  {
+   "category": "counting",
+   "id": "graph-theory",
+   "name": "Graphs, Networks & Tournaments"
+  },
+  {
+   "category": "counting",
+   "id": "symmetry-counting",
+   "name": "Symmetry & Colourings"
+  },
+  {
+   "category": "geometry",
+   "id": "triangles",
+   "name": "Triangles"
+  },
+  {
+   "category": "geometry",
+   "id": "right-triangles",
+   "name": "Right Triangles & Pythagoras"
+  },
+  {
+   "category": "geometry",
+   "id": "similar-triangles",
+   "name": "Similar Triangles"
+  },
+  {
+   "category": "geometry",
+   "id": "circles",
+   "name": "Circles"
+  },
+  {
+   "category": "geometry",
+   "id": "area",
+   "name": "Area & Perimeter"
+  },
+  {
+   "category": "geometry",
+   "id": "polygons",
+   "name": "Polygons"
+  },
+  {
+   "category": "geometry",
+   "id": "coordinate-geometry",
+   "name": "Coordinate Geometry"
+  },
+  {
+   "category": "geometry",
+   "id": "solid-geometry",
+   "name": "3D Geometry"
+  },
+  {
+   "category": "geometry",
+   "id": "trigonometry",
+   "name": "Trigonometry"
+  },
+  {
+   "category": "geometry",
+   "id": "angle-chasing",
+   "name": "Angles & Parallel Lines"
+  },
+  {
+   "category": "geometry",
+   "id": "quadrilaterals",
+   "name": "Quadrilaterals"
+  },
+  {
+   "category": "geometry",
+   "id": "triangle-centers",
+   "name": "Triangle Centers & Cevians"
+  },
+  {
+   "category": "geometry",
+   "id": "area-ratios",
+   "name": "Area Ratios & Mass Points"
+  },
+  {
+   "category": "geometry",
+   "id": "cyclic-quadrilaterals",
+   "name": "Cyclic Quadrilaterals & Ptolemy"
+  },
+  {
+   "category": "geometry",
+   "id": "conics",
+   "name": "Conics"
+  },
+  {
+   "category": "geometry",
+   "id": "transformations",
+   "name": "Rotations, Reflections & Symmetry"
+  },
+  {
+   "category": "misc",
+   "id": "statistics",
+   "name": "Mean, Median & Mode"
+  },
+  {
+   "category": "misc",
+   "id": "logic",
+   "name": "Logic & Puzzles"
+  },
+  {
+   "category": "misc",
+   "id": "clocks-calendars",
+   "name": "Clocks, Calendars & Time"
+  },
+  {
+   "category": "misc",
+   "id": "games-strategy",
+   "name": "Games & Strategy"
+  },
+  {
+   "category": "misc",
+   "id": "invariants",
+   "name": "Invariants & Processes"
+  },
+  {
+   "category": "misc",
+   "id": "data-graphs",
+   "name": "Tables, Charts & Data"
+  },
+  {
+   "category": "misc",
+   "id": "estimation",
+   "name": "Estimation & Bounding"
+  }
+ ],
+ "total": 350,
+ "years": []
+}

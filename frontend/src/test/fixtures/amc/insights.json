@@ -1,0 +1,1225 @@
+{
+ "ai": {
+  "available": false,
+  "label": "",
+  "limit": 80,
+  "provider": "",
+  "setup": "Add XAI_API_KEY (Grok) to .env and restart the server to turn on the AI coach, hints and problem writing. GROQ_API_KEY works too.",
+  "used_today": 0
+ },
+ "diagnosis": null,
+ "diagnosis_at": null,
+ "stats": {
+  "answered": 168,
+  "band": "3.5\u20134",
+  "confident": true,
+  "contests": {
+   "AIME": {
+    "chance": 0.0,
+    "count": 15,
+    "expected": 0.7,
+    "high": 2.0,
+    "low": 0.0,
+    "reach": 0,
+    "reached": 8,
+    "speed_cost": 0.0,
+    "target": 7,
+    "timed": 0.7
+   },
+   "AMC 10": {
+    "chance": 0.0,
+    "count": 25,
+    "expected": 65.8,
+    "high": 82.5,
+    "low": 52.5,
+    "reach": 9,
+    "reached": 25,
+    "speed_cost": 0.0,
+    "target": 120.0,
+    "timed": 65.8
+   },
+   "AMC 12": {
+    "chance": 0.034,
+    "count": 25,
+    "expected": 61.7,
+    "high": 73.5,
+    "low": 49.5,
+    "reach": 8,
+    "reached": 25,
+    "speed_cost": 0.0,
+    "target": 85,
+    "timed": 61.7
+   }
+  },
+  "focus": [
+   {
+    "answered": 12,
+    "category": "geometry",
+    "id": "area",
+    "name": "Area & Perimeter",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 5,
+    "se": 0.82,
+    "theta": 2.63,
+    "weight": 3
+   },
+   {
+    "answered": 8,
+    "category": "geometry",
+    "id": "circles",
+    "name": "Circles",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 4,
+    "se": 0.98,
+    "theta": 3.6,
+    "weight": 3
+   },
+   {
+    "answered": 8,
+    "category": "counting",
+    "id": "combinations",
+    "name": "Combinations & Stars and Bars",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 3,
+    "se": 0.95,
+    "theta": 2.83,
+    "weight": 3
+   },
+   {
+    "answered": 9,
+    "category": "counting",
+    "id": "basic-counting",
+    "name": "Counting Principles",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 3,
+    "se": 0.96,
+    "theta": 2.74,
+    "weight": 3
+   },
+   {
+    "answered": 7,
+    "category": "number-theory",
+    "id": "divisibility",
+    "name": "Divisibility & Primes",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 6,
+    "se": 1.04,
+    "theta": 4.13,
+    "weight": 3
+   }
+  ],
+  "goal": 120.0,
+  "level": "AMC 10",
+  "mock_check": {
+   "gap": -2.7,
+   "recent": [
+    {
+     "contest": "mock-10-2",
+     "expected": 73.1,
+     "score": 85.5
+    },
+    {
+     "contest": "mock-10-1",
+     "expected": 74.1,
+     "score": 64.5
+    },
+    {
+     "contest": "step-mock-10",
+     "expected": 83.0,
+     "score": 72.0
+    }
+   ],
+   "taken": 3
+  },
+  "mocks": {
+   "blank_rate": 0.213,
+   "by_fifth": [
+    0.867,
+    0.6,
+    0.333,
+    0.333,
+    0.067
+   ],
+   "scores": [
+    {
+     "at": "2026-10-13",
+     "contest": "step-mock-10",
+     "score": 72.0
+    },
+    {
+     "at": "2026-11-02",
+     "contest": "mock-10-1",
+     "score": 64.5
+    },
+    {
+     "at": "2026-11-17",
+     "contest": "mock-10-2",
+     "score": 85.5
+    }
+   ],
+   "taken": 3
+  },
+  "next_problems": [
+   {
+    "chance": 0.61,
+    "id": "step-10-16",
+    "rating": 3.0,
+    "short": "S12\u00b77",
+    "topic": "circles",
+    "topic_name": "Circles"
+   },
+   {
+    "chance": 0.61,
+    "id": "step-10-22",
+    "rating": 3.0,
+    "short": "S12\u00b79",
+    "topic": "polygons",
+    "topic_name": "Polygons"
+   },
+   {
+    "chance": 0.41,
+    "id": "mock10-3-11",
+    "rating": 4.0,
+    "short": "M10-3\u00b711",
+    "topic": "gcd-lcm",
+    "topic_name": "GCD & LCM"
+   },
+   {
+    "chance": 0.41,
+    "id": "mock10-3-13",
+    "rating": 4.0,
+    "short": "M10-3\u00b713",
+    "topic": "combinations",
+    "topic_name": "Combinations & Stars and Bars"
+   },
+   {
+    "chance": 0.41,
+    "id": "mock10-3-18",
+    "rating": 4.0,
+    "short": "M10-3\u00b718",
+    "topic": "circles",
+    "topic_name": "Circles"
+   },
+   {
+    "chance": 0.41,
+    "id": "mock10-3-07",
+    "rating": 4.0,
+    "short": "M10-3\u00b77",
+    "topic": "divisibility",
+    "topic_name": "Divisibility & Primes"
+   },
+   {
+    "chance": 0.41,
+    "id": "mock10-5-11",
+    "rating": 4.0,
+    "short": "M10-5\u00b711",
+    "topic": "combinations",
+    "topic_name": "Combinations & Stars and Bars"
+   },
+   {
+    "chance": 0.24,
+    "id": "mock10-3-19",
+    "rating": 5.0,
+    "short": "M10-3\u00b719",
+    "topic": "casework",
+    "topic_name": "Casework & Complements"
+   }
+  ],
+  "pace": {
+   "at_level": 148,
+   "contest": 180,
+   "easy": 86,
+   "hard": 255,
+   "timed_answers": 109
+  },
+  "patterns": [
+   {
+    "count": 1,
+    "kind": "rushed",
+    "problems": [
+     {
+      "id": "mock12-5-03",
+      "rating": 2.0,
+      "short": "M12-5\u00b73",
+      "topic": "clocks-calendars"
+     }
+    ],
+    "text": "1 wrong answer came in under a quarter of contest pace. Slow down and check."
+   },
+   {
+    "count": 4,
+    "kind": "revealed",
+    "problems": [
+     {
+      "id": "mock12-3-04",
+      "rating": 2.0,
+      "short": "M12-3\u00b74",
+      "topic": "absolute-value"
+     },
+     {
+      "id": "mock12-5-04",
+      "rating": 2.0,
+      "short": "M12-5\u00b74",
+      "topic": "word-problems"
+     },
+     {
+      "id": "mock10-4-10",
+      "rating": 3.0,
+      "short": "M10-4\u00b710",
+      "topic": "absolute-value"
+     },
+     {
+      "id": "mock10-4-13",
+      "rating": 4.0,
+      "short": "M10-4\u00b713",
+      "topic": "factorials"
+     }
+    ],
+    "text": "4 solutions opened before trying. Try for five minutes first."
+   }
+  ],
+  "review_due": 15,
+  "se": 0.28,
+  "strong": [
+   {
+    "answered": 14,
+    "category": "counting",
+    "id": "probability",
+    "name": "Probability",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 11,
+    "se": 0.84,
+    "theta": 4.92,
+    "weight": 3
+   },
+   {
+    "answered": 9,
+    "category": "counting",
+    "id": "casework",
+    "name": "Casework & Complements",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 7,
+    "se": 0.99,
+    "theta": 4.77,
+    "weight": 3
+   },
+   {
+    "answered": 5,
+    "category": "algebra",
+    "id": "complex-numbers",
+    "name": "Complex Numbers",
+    "points": 0,
+    "priority": 0,
+    "relevant": false,
+    "right": 5,
+    "se": 1.2,
+    "theta": 4.66,
+    "weight": 1
+   },
+   {
+    "answered": 4,
+    "category": "number-theory",
+    "id": "perfect-powers",
+    "name": "Perfect Squares & Cubes",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 3,
+    "se": 1.14,
+    "theta": 4.53,
+    "weight": 2
+   }
+  ],
+  "techniques": [
+   {
+    "answered": 5,
+    "id": "cycles",
+    "name": "Cycles",
+    "theta": 2.37
+   },
+   {
+    "answered": 7,
+    "id": "prime-factorization",
+    "name": "Prime factorization",
+    "theta": 2.46
+   },
+   {
+    "answered": 2,
+    "id": "decomposition",
+    "name": "Decomposition",
+    "theta": 2.46
+   },
+   {
+    "answered": 4,
+    "id": "trig-identities",
+    "name": "Trig identities",
+    "theta": 2.67
+   },
+   {
+    "answered": 3,
+    "id": "remainder-theorem",
+    "name": "Remainder theorem",
+    "theta": 2.8
+   },
+   {
+    "answered": 3,
+    "id": "shoelace",
+    "name": "Shoelace formula",
+    "theta": 2.99
+   },
+   {
+    "answered": 4,
+    "id": "coordinates",
+    "name": "Coordinates",
+    "theta": 3.24
+   },
+   {
+    "answered": 3,
+    "id": "stars-and-bars",
+    "name": "Stars and bars",
+    "theta": 3.25
+   },
+   {
+    "answered": 3,
+    "id": "multiplication-principle",
+    "name": "Multiplication principle",
+    "theta": 3.26
+   },
+   {
+    "answered": 5,
+    "id": "recursion",
+    "name": "Recursion",
+    "theta": 3.26
+   },
+   {
+    "answered": 6,
+    "id": "pythagorean-theorem",
+    "name": "Pythagorean theorem",
+    "theta": 3.34
+   },
+   {
+    "answered": 2,
+    "id": "symmetric-sums",
+    "name": "Symmetric sums",
+    "theta": 3.42
+   }
+  ],
+  "theta": 3.56,
+  "topics": [
+   {
+    "answered": 9,
+    "category": "algebra",
+    "id": "linear-equations",
+    "name": "Linear Equations & Systems",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 7,
+    "se": 1.0,
+    "theta": 4.12,
+    "weight": 3
+   },
+   {
+    "answered": 15,
+    "category": "algebra",
+    "id": "word-problems",
+    "name": "Rates, Ratios & Percents",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 13,
+    "se": 0.94,
+    "theta": 4.26,
+    "weight": 3
+   },
+   {
+    "answered": 14,
+    "category": "algebra",
+    "id": "exponents",
+    "name": "Exponents & Radicals",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 13,
+    "se": 1.02,
+    "theta": 4.48,
+    "weight": 2
+   },
+   {
+    "answered": 11,
+    "category": "algebra",
+    "id": "quadratics",
+    "name": "Quadratics",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 7,
+    "se": 0.85,
+    "theta": 3.96,
+    "weight": 3
+   },
+   {
+    "answered": 5,
+    "category": "algebra",
+    "id": "functions",
+    "name": "Functions & Functional Equations",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 4,
+    "se": 1.14,
+    "theta": 4.0,
+    "weight": 2
+   },
+   {
+    "answered": 7,
+    "category": "algebra",
+    "id": "polynomials",
+    "name": "Polynomials",
+    "points": 0,
+    "priority": 0,
+    "relevant": false,
+    "right": 5,
+    "se": 1.06,
+    "theta": 3.88,
+    "weight": 2
+   },
+   {
+    "answered": 11,
+    "category": "algebra",
+    "id": "sequences-series",
+    "name": "Sequences & Series",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 7,
+    "se": 0.84,
+    "theta": 3.9,
+    "weight": 2
+   },
+   {
+    "answered": 1,
+    "category": "algebra",
+    "id": "inequalities",
+    "name": "Inequalities & Optimization",
+    "points": 0.2,
+    "priority": 0.2,
+    "relevant": true,
+    "right": 0,
+    "se": 1.45,
+    "theta": 2.98,
+    "weight": 1
+   },
+   {
+    "answered": 7,
+    "category": "algebra",
+    "id": "logarithms",
+    "name": "Logarithms",
+    "points": 0,
+    "priority": 0,
+    "relevant": false,
+    "right": 6,
+    "se": 1.12,
+    "theta": 4.06,
+    "weight": 2
+   },
+   {
+    "answered": 5,
+    "category": "algebra",
+    "id": "complex-numbers",
+    "name": "Complex Numbers",
+    "points": 0,
+    "priority": 0,
+    "relevant": false,
+    "right": 5,
+    "se": 1.2,
+    "theta": 4.66,
+    "weight": 1
+   },
+   {
+    "answered": 14,
+    "category": "algebra",
+    "id": "arithmetic",
+    "name": "Arithmetic & Fractions",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 13,
+    "se": 1.03,
+    "theta": 4.48,
+    "weight": 2
+   },
+   {
+    "answered": 1,
+    "category": "algebra",
+    "id": "absolute-value",
+    "name": "Absolute Value",
+    "points": 0.2,
+    "priority": 0.2,
+    "relevant": true,
+    "right": 1,
+    "se": 1.33,
+    "theta": 4.33,
+    "weight": 1
+   },
+   {
+    "answered": 1,
+    "category": "algebra",
+    "id": "floor-ceiling",
+    "name": "Floor & Ceiling",
+    "points": 0.2,
+    "priority": 0.2,
+    "relevant": true,
+    "right": 0,
+    "se": 1.4,
+    "theta": 3.22,
+    "weight": 1
+   },
+   {
+    "answered": 1,
+    "category": "algebra",
+    "id": "nonlinear-systems",
+    "name": "Nonlinear Systems",
+    "points": 0.2,
+    "priority": 0.2,
+    "relevant": true,
+    "right": 1,
+    "se": 1.47,
+    "theta": 3.73,
+    "weight": 1
+   },
+   {
+    "answered": 0,
+    "category": "algebra",
+    "id": "graphs-transformations",
+    "name": "Graphs & Transformations",
+    "points": 0.2,
+    "priority": 0.2,
+    "relevant": true,
+    "right": 0,
+    "se": null,
+    "theta": null,
+    "weight": 2
+   },
+   {
+    "answered": 7,
+    "category": "number-theory",
+    "id": "divisibility",
+    "name": "Divisibility & Primes",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 6,
+    "se": 1.04,
+    "theta": 4.13,
+    "weight": 3
+   },
+   {
+    "answered": 8,
+    "category": "number-theory",
+    "id": "factors-divisors",
+    "name": "Factors & Divisor Counting",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 1,
+    "se": 1.02,
+    "theta": 2.04,
+    "weight": 2
+   },
+   {
+    "answered": 9,
+    "category": "number-theory",
+    "id": "modular-arithmetic",
+    "name": "Modular Arithmetic",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 5,
+    "se": 0.9,
+    "theta": 3.87,
+    "weight": 3
+   },
+   {
+    "answered": 6,
+    "category": "number-theory",
+    "id": "digits-bases",
+    "name": "Digits & Bases",
+    "points": 0.3,
+    "priority": 0.3,
+    "relevant": true,
+    "right": 1,
+    "se": 1.0,
+    "theta": 2.44,
+    "weight": 2
+   },
+   {
+    "answered": 2,
+    "category": "number-theory",
+    "id": "gcd-lcm",
+    "name": "GCD & LCM",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 1,
+    "se": 1.42,
+    "theta": 3.66,
+    "weight": 2
+   },
+   {
+    "answered": 3,
+    "category": "number-theory",
+    "id": "diophantine",
+    "name": "Diophantine Equations",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 1,
+    "se": 1.23,
+    "theta": 3.83,
+    "weight": 2
+   },
+   {
+    "answered": 0,
+    "category": "number-theory",
+    "id": "factorials",
+    "name": "Factorials & Trailing Zeros",
+    "points": 0.1,
+    "priority": 0.1,
+    "relevant": true,
+    "right": 0,
+    "se": null,
+    "theta": null,
+    "weight": 1
+   },
+   {
+    "answered": 4,
+    "category": "number-theory",
+    "id": "perfect-powers",
+    "name": "Perfect Squares & Cubes",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 3,
+    "se": 1.14,
+    "theta": 4.53,
+    "weight": 2
+   },
+   {
+    "answered": 0,
+    "category": "number-theory",
+    "id": "decimals-fractions",
+    "name": "Repeating Decimals & Fractions",
+    "points": 0.1,
+    "priority": 0.1,
+    "relevant": true,
+    "right": 0,
+    "se": null,
+    "theta": null,
+    "weight": 1
+   },
+   {
+    "answered": 2,
+    "category": "number-theory",
+    "id": "parity",
+    "name": "Parity",
+    "points": 0.2,
+    "priority": 0.2,
+    "relevant": true,
+    "right": 2,
+    "se": 1.41,
+    "theta": 3.89,
+    "weight": 1
+   },
+   {
+    "answered": 9,
+    "category": "counting",
+    "id": "basic-counting",
+    "name": "Counting Principles",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 3,
+    "se": 0.96,
+    "theta": 2.74,
+    "weight": 3
+   },
+   {
+    "answered": 3,
+    "category": "counting",
+    "id": "permutations",
+    "name": "Permutations & Arrangements",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 0,
+    "se": 1.29,
+    "theta": 2.51,
+    "weight": 2
+   },
+   {
+    "answered": 8,
+    "category": "counting",
+    "id": "combinations",
+    "name": "Combinations & Stars and Bars",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 3,
+    "se": 0.95,
+    "theta": 2.83,
+    "weight": 3
+   },
+   {
+    "answered": 9,
+    "category": "counting",
+    "id": "casework",
+    "name": "Casework & Complements",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 7,
+    "se": 0.99,
+    "theta": 4.77,
+    "weight": 3
+   },
+   {
+    "answered": 14,
+    "category": "counting",
+    "id": "probability",
+    "name": "Probability",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 11,
+    "se": 0.84,
+    "theta": 4.92,
+    "weight": 3
+   },
+   {
+    "answered": 1,
+    "category": "counting",
+    "id": "expected-value",
+    "name": "Expected Value",
+    "points": 0.2,
+    "priority": 0.2,
+    "relevant": true,
+    "right": 1,
+    "se": 1.32,
+    "theta": 4.65,
+    "weight": 1
+   },
+   {
+    "answered": 6,
+    "category": "counting",
+    "id": "recursion",
+    "name": "Recursion & Patterns",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 1,
+    "se": 1.12,
+    "theta": 3.17,
+    "weight": 2
+   },
+   {
+    "answered": 0,
+    "category": "counting",
+    "id": "binomial-coefficients",
+    "name": "Pascal's Triangle & Identities",
+    "points": 0.1,
+    "priority": 0.1,
+    "relevant": true,
+    "right": 0,
+    "se": null,
+    "theta": null,
+    "weight": 1
+   },
+   {
+    "answered": 1,
+    "category": "counting",
+    "id": "lattice-paths",
+    "name": "Grid & Lattice Paths",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 0,
+    "se": 1.45,
+    "theta": 3.37,
+    "weight": 2
+   },
+   {
+    "answered": 0,
+    "category": "counting",
+    "id": "pigeonhole",
+    "name": "Pigeonhole Principle",
+    "points": 0.1,
+    "priority": 0.1,
+    "relevant": true,
+    "right": 0,
+    "se": null,
+    "theta": null,
+    "weight": 1
+   },
+   {
+    "answered": 0,
+    "category": "counting",
+    "id": "conditional-probability",
+    "name": "Conditional Probability",
+    "points": 0.1,
+    "priority": 0.1,
+    "relevant": true,
+    "right": 0,
+    "se": null,
+    "theta": null,
+    "weight": 1
+   },
+   {
+    "answered": 1,
+    "category": "counting",
+    "id": "geometric-probability",
+    "name": "Geometric Probability",
+    "points": 0.2,
+    "priority": 0.2,
+    "relevant": true,
+    "right": 1,
+    "se": 1.43,
+    "theta": 3.88,
+    "weight": 1
+   },
+   {
+    "answered": 0,
+    "category": "counting",
+    "id": "graph-theory",
+    "name": "Graphs, Networks & Tournaments",
+    "points": 0.1,
+    "priority": 0.1,
+    "relevant": true,
+    "right": 0,
+    "se": null,
+    "theta": null,
+    "weight": 1
+   },
+   {
+    "answered": 6,
+    "category": "geometry",
+    "id": "triangles",
+    "name": "Triangles",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 4,
+    "se": 1.06,
+    "theta": 4.36,
+    "weight": 3
+   },
+   {
+    "answered": 5,
+    "category": "geometry",
+    "id": "right-triangles",
+    "name": "Right Triangles & Pythagoras",
+    "points": 0.5,
+    "priority": 0.5,
+    "relevant": true,
+    "right": 1,
+    "se": 1.1,
+    "theta": 2.5,
+    "weight": 3
+   },
+   {
+    "answered": 1,
+    "category": "geometry",
+    "id": "similar-triangles",
+    "name": "Similar Triangles",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 0,
+    "se": 1.41,
+    "theta": 3.03,
+    "weight": 2
+   },
+   {
+    "answered": 8,
+    "category": "geometry",
+    "id": "circles",
+    "name": "Circles",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 4,
+    "se": 0.98,
+    "theta": 3.6,
+    "weight": 3
+   },
+   {
+    "answered": 12,
+    "category": "geometry",
+    "id": "area",
+    "name": "Area & Perimeter",
+    "points": 0.6,
+    "priority": 0.6,
+    "relevant": true,
+    "right": 5,
+    "se": 0.82,
+    "theta": 2.63,
+    "weight": 3
+   },
+   {
+    "answered": 3,
+    "category": "geometry",
+    "id": "polygons",
+    "name": "Polygons",
+    "points": 0.2,
+    "priority": 0.2,
+    "relevant": true,
+    "right": 1,
+    "se": 1.26,
+    "theta": 2.67,
+    "weight": 1
+   },
+   {
+    "answered": 11,
+    "category": "geometry",
+    "id": "coordinate-geometry",
+    "name": "Coordinate Geometry",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 4,
+    "se": 0.85,
+    "theta": 2.79,
+    "weight": 2
+   },
+   {
+    "answered": 1,
+    "category": "geometry",
+    "id": "solid-geometry",
+    "name": "3D Geometry",
+    "points": 0.2,
+    "priority": 0.2,
+    "relevant": true,
+    "right": 0,
+    "se": 1.4,
+    "theta": 2.99,
+    "weight": 1
+   },
+   {
+    "answered": 7,
+    "category": "geometry",
+    "id": "trigonometry",
+    "name": "Trigonometry",
+    "points": 0,
+    "priority": 0,
+    "relevant": false,
+    "right": 1,
+    "se": 1.04,
+    "theta": 2.09,
+    "weight": 2
+   },
+   {
+    "answered": 2,
+    "category": "geometry",
+    "id": "angle-chasing",
+    "name": "Angles & Parallel Lines",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 1,
+    "se": 1.27,
+    "theta": 3.52,
+    "weight": 2
+   },
+   {
+    "answered": 2,
+    "category": "geometry",
+    "id": "quadrilaterals",
+    "name": "Quadrilaterals",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 1,
+    "se": 1.24,
+    "theta": 3.52,
+    "weight": 2
+   },
+   {
+    "answered": 0,
+    "category": "geometry",
+    "id": "triangle-centers",
+    "name": "Triangle Centers & Cevians",
+    "points": 0.2,
+    "priority": 0.2,
+    "relevant": true,
+    "right": 0,
+    "se": null,
+    "theta": null,
+    "weight": 2
+   },
+   {
+    "answered": 1,
+    "category": "geometry",
+    "id": "area-ratios",
+    "name": "Area Ratios & Mass Points",
+    "points": 0.2,
+    "priority": 0.2,
+    "relevant": true,
+    "right": 1,
+    "se": 1.36,
+    "theta": 4.48,
+    "weight": 1
+   },
+   {
+    "answered": 0,
+    "category": "geometry",
+    "id": "transformations",
+    "name": "Rotations, Reflections & Symmetry",
+    "points": 0.1,
+    "priority": 0.1,
+    "relevant": true,
+    "right": 0,
+    "se": null,
+    "theta": null,
+    "weight": 1
+   },
+   {
+    "answered": 8,
+    "category": "misc",
+    "id": "statistics",
+    "name": "Mean, Median & Mode",
+    "points": 0.4,
+    "priority": 0.4,
+    "relevant": true,
+    "right": 4,
+    "se": 0.96,
+    "theta": 2.79,
+    "weight": 2
+   },
+   {
+    "answered": 2,
+    "category": "misc",
+    "id": "logic",
+    "name": "Logic & Puzzles",
+    "points": 0.2,
+    "priority": 0.2,
+    "relevant": true,
+    "right": 1,
+    "se": 1.33,
+    "theta": 3.25,
+    "weight": 1
+   },
+   {
+    "answered": 3,
+    "category": "misc",
+    "id": "clocks-calendars",
+    "name": "Clocks, Calendars & Time",
+    "points": 0.2,
+    "priority": 0.2,
+    "relevant": true,
+    "right": 1,
+    "se": 1.26,
+    "theta": 2.72,
+    "weight": 1
+   },
+   {
+    "answered": 0,
+    "category": "misc",
+    "id": "games-strategy",
+    "name": "Games & Strategy",
+    "points": 0.1,
+    "priority": 0.1,
+    "relevant": true,
+    "right": 0,
+    "se": null,
+    "theta": null,
+    "weight": 1
+   },
+   {
+    "answered": 0,
+    "category": "misc",
+    "id": "invariants",
+    "name": "Invariants & Processes",
+    "points": 0.1,
+    "priority": 0.1,
+    "relevant": true,
+    "right": 0,
+    "se": null,
+    "theta": null,
+    "weight": 1
+   },
+   {
+    "answered": 0,
+    "category": "misc",
+    "id": "data-graphs",
+    "name": "Tables, Charts & Data",
+    "points": 0.1,
+    "priority": 0.1,
+    "relevant": true,
+    "right": 0,
+    "se": null,
+    "theta": null,
+    "weight": 1
+   },
+   {
+    "answered": 0,
+    "category": "misc",
+    "id": "estimation",
+    "name": "Estimation & Bounding",
+    "points": 0.1,
+    "priority": 0.1,
+    "relevant": true,
+    "right": 0,
+    "se": null,
+    "theta": null,
+    "weight": 1
+   }
+  ],
+  "trend": [
+   {
+    "answered": 110,
+    "theta": 3.35,
+    "week_end": "2026-10-18"
+   },
+   {
+    "answered": 124,
+    "theta": 3.4,
+    "week_end": "2026-10-25"
+   },
+   {
+    "answered": 125,
+    "theta": 3.38,
+    "week_end": "2026-11-01"
+   },
+   {
+    "answered": 150,
+    "theta": 3.38,
+    "week_end": "2026-11-08"
+   },
+   {
+    "answered": 150,
+    "theta": 3.38,
+    "week_end": "2026-11-15"
+   },
+   {
+    "answered": 172,
+    "theta": 3.57,
+    "week_end": "2026-11-22"
+   }
+  ]
+ },
+ "success": true
+}

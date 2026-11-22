@@ -1051,6 +1051,26 @@ ADDED_TABLES = ('''
     )
 ''', '''
     CREATE INDEX IF NOT EXISTS amc_posts_created_idx ON amc_posts (created_at)
+''', '''
+    -- A timed contest in progress. The DDL is data/sql/amc.sql's; see the note on ADDED_TABLES.
+    CREATE TABLE IF NOT EXISTS amc_sittings (
+        user_id     TEXT NOT NULL REFERENCES users (username) ON DELETE CASCADE,
+        contest_id  TEXT NOT NULL,
+        used        REAL NOT NULL DEFAULT 0 CHECK (used >= 0),
+        answers     TEXT NOT NULL DEFAULT '{}',
+        flags       TEXT NOT NULL DEFAULT '[]',
+        started_at  TEXT NOT NULL,
+        updated_at  TEXT NOT NULL,
+        PRIMARY KEY (user_id, contest_id)
+    )
+''', '''
+    -- Official papers unlocked by hand before a sitting. The DDL is data/sql/amc.sql's.
+    CREATE TABLE IF NOT EXISTS amc_unlocks (
+        user_id     TEXT NOT NULL REFERENCES users (username) ON DELETE CASCADE,
+        contest_id  TEXT NOT NULL,
+        at          TEXT NOT NULL,
+        PRIMARY KEY (user_id, contest_id)
+    )
 ''')
 
 

@@ -1,0 +1,1377 @@
+{
+ "categories": [
+  {
+   "accuracy": 0.766,
+   "attempted": 107,
+   "blurb": "Equations, functions, sequences and polynomials.",
+   "color": "blue",
+   "id": "algebra",
+   "name": "Algebra",
+   "problems": 183,
+   "solved": 105,
+   "topics": [
+    {
+     "accuracy": 0.778,
+     "attempted": 9,
+     "category": "algebra",
+     "first_right": 7,
+     "id": "linear-equations",
+     "ideas": [
+      "Solve for the combination asked, not each variable",
+      "Add a cyclic system all at once",
+      "Write every quantity in one variable"
+     ],
+     "levels": [
+      "AMC 10",
+      "AMC 12"
+     ],
+     "mastery": 0.778,
+     "name": "Linear Equations & Systems",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "step-10-05",
+       "rating": 2.0,
+       "short": "S10\u00b74",
+       "status": "solved",
+       "title": "Step Mock AMC 10 #4 \u00b7 Ana is three times as old as Ben. In 12 years, Ana will be twice as old as Ben. How old is"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-1-05",
+       "rating": 2.0,
+       "short": "M10-1\u00b75",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #5 \u00b7 Ali has twice as many marbles as Bo. After Ali gives Bo 6 marbles, Bo has 4 more marbles t"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-1-10",
+       "rating": 2.0,
+       "short": "M10-1\u00b710",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #10 \u00b7 The line through (1, 3) and (4, 9) crosses the x-axis at (a, 0). What is a?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-3-08",
+       "rating": 2.0,
+       "short": "M10-3\u00b78",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 3 #8 \u00b7 What value of x satisfies 2^x + 3 = 4^x - 1?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-4-04",
+       "rating": 2.0,
+       "short": "M10-4\u00b74",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 4 #4 \u00b7 Pencils cost 15 cents each and pens cost 40 cents each. Mia buys 12 items for a total of $"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-5-05",
+       "rating": 2.0,
+       "short": "M10-5\u00b75",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 5 #5 \u00b7 If 3x - 7 = 11, what is the value of 6x - 10?"
+      }
+     ],
+     "playbook": [
+      {
+       "example": "If $3x+2y=11$ and $x+4y=7$, adding gives $4x+6y=18$, so $2x+3y=9$ with no solving.",
+       "move": "Solve for the combination asked, not each variable",
+       "when": "The question wants $x+y$, $2a-b$ or a ratio, not the variables themselves."
+      },
+      {
+       "example": "$a+b=9,\\ b+c=13,\\ c+a=14$: adding gives $a+b+c=18$, so $c=18-9=9$.",
+       "move": "Add a cyclic system all at once",
+       "when": "Each equation is a rotation of the others."
+      },
+      {
+       "example": "Ann is $4$ years older than Ben, and in $6$ years their ages sum to $40$: $(b+10)+(b+6)=40$, so $b=12$.",
+       "move": "Write every quantity in one variable",
+       "when": "Ages, coins or prices tied together by fixed differences or ratios."
+      }
+     ],
+     "problems": 9,
+     "review": 0,
+     "solved": 9,
+     "summary": "Translating words into equations and solving them cleanly.",
+     "trap": "Answering with $x$ when the question asked for $x+y$, or for the age \"in $6$ years\".",
+     "weight": 3
+    },
+    {
+     "accuracy": 0.812,
+     "attempted": 16,
+     "category": "algebra",
+     "first_right": 13,
+     "id": "word-problems",
+     "ideas": [
+      "Add rates, never times",
+      "Multiply successive percent changes",
+      "Average speed is total distance over total time"
+     ],
+     "levels": [
+      "AMC 10",
+      "AMC 12"
+     ],
+     "mastery": 0.684,
+     "name": "Rates, Ratios & Percents",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "step-10-04",
+       "rating": 2.0,
+       "short": "S10\u00b73",
+       "status": "solved",
+       "title": "Step Mock AMC 10 #3 \u00b7 The price of a jacket is increased by 20%, and then the new price is decreased by 25%. The"
+      },
+      {
+       "difficulty": 1,
+       "id": "step-10-05",
+       "rating": 2.0,
+       "short": "S10\u00b74",
+       "status": "solved",
+       "title": "Step Mock AMC 10 #4 \u00b7 Ana is three times as old as Ben. In 12 years, Ana will be twice as old as Ben. How old is"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-1-02",
+       "rating": 2.0,
+       "short": "M10-1\u00b72",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #2 \u00b7 A shirt is priced at $40. It is sold at 15% off, and then an 8% sales tax is added to the "
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-1-05",
+       "rating": 2.0,
+       "short": "M10-1\u00b75",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #5 \u00b7 Ali has twice as many marbles as Bo. After Ali gives Bo 6 marbles, Bo has 4 more marbles t"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-2-02",
+       "rating": 2.0,
+       "short": "M10-2\u00b72",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 2 #2 \u00b7 A car travels 150 miles in 2.5 hours and then 90 miles in 1.5 hours. What is its average s"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-3-02",
+       "rating": 2.0,
+       "short": "M10-3\u00b72",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 3 #2 \u00b7 A recipe uses 3 cups of flour for every 2 cups of sugar. A baker uses 15 cups of flour and"
+      }
+     ],
+     "playbook": [
+      {
+       "example": "A fills a tank in $3$ h and B in $6$ h. Together: $\\frac13+\\frac16=\\frac12$ tank per hour, so $2$ hours.",
+       "move": "Add rates, never times",
+       "when": "Two people, pipes or machines work together."
+      },
+      {
+       "example": "Up $20\\%$ then down $20\\%$: $1.2\\times0.8=0.96$, a $4\\%$ loss overall.",
+       "move": "Multiply successive percent changes",
+       "when": "A price rises then falls, or changes several times."
+      },
+      {
+       "example": "Out at $30$ mph and back at $60$ mph: $\\frac{2d}{d/30+d/60}=40$ mph, not $45$.",
+       "move": "Average speed is total distance over total time",
+       "when": "A trip has legs at different speeds."
+      }
+     ],
+     "problems": 19,
+     "review": 0,
+     "solved": 16,
+     "summary": "Work, speed, mixtures and percent change.",
+     "trap": "Averaging two speeds directly, or taking a percent of the new price instead of the original.",
+     "weight": 3
+    },
+    {
+     "accuracy": 0.929,
+     "attempted": 14,
+     "category": "algebra",
+     "first_right": 13,
+     "id": "exponents",
+     "ideas": [
+      "Rewrite on a common base",
+      "Factor out the smallest power",
+      "Compare at a common exponent",
+      "Rationalize with the conjugate"
+     ],
+     "levels": [
+      "AMC 10",
+      "AMC 12"
+     ],
+     "mastery": 0.65,
+     "name": "Exponents & Radicals",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "step-10-01",
+       "rating": 2.0,
+       "short": "S10\u00b71",
+       "status": "solved",
+       "title": "Step Mock AMC 10 #1 \u00b7 What is the value of (3\u00b2+3\u00b2+3\u00b2)/(3\u207b\u00b9+3\u207b\u00b9+3\u207b\u00b9)?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-1-01",
+       "rating": 2.0,
+       "short": "M10-1\u00b71",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #1 \u00b7 What is the value of (2\u00b9\u2070 - 2\u2078)/(2\u2078 - 2\u2076)?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-1-08",
+       "rating": 2.0,
+       "short": "M10-1\u00b78",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #8 \u00b7 If 4^x = 9, what is the value of 8^x?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-3-08",
+       "rating": 2.0,
+       "short": "M10-3\u00b78",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 3 #8 \u00b7 What value of x satisfies 2^x + 3 = 4^x - 1?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-4-06",
+       "rating": 2.0,
+       "short": "M10-4\u00b76",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 4 #6 \u00b7 What is the units digit of 7\u00b2\u2070\u00b2\u2076?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-5-10",
+       "rating": 2.0,
+       "short": "M10-5\u00b710",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 5 #10 \u00b7 What is \u221a50 + \u221a18 - \u221a8?"
+      }
+     ],
+     "playbook": [
+      {
+       "example": "$4^x=8^{x-1}$ becomes $2^{2x}=2^{3x-3}$, so $x=3$.",
+       "move": "Rewrite on a common base",
+       "when": "Powers of $2,4,8,16$ or of $3,9,27$ appear together."
+      },
+      {
+       "example": "$3^{20}-3^{18}=3^{18}(9-1)=8\\cdot3^{18}$, and four copies of $2^{10}$ make $2^{12}$.",
+       "move": "Factor out the smallest power",
+       "when": "A sum or difference of powers of one base."
+      },
+      {
+       "example": "As $25$th powers they are $16^{25}$, $27^{25}$ and $25^{25}$, so $3^{75}$ wins.",
+       "move": "Compare at a common exponent",
+       "when": "Which is largest: $2^{100}$, $3^{75}$ or $5^{50}$?"
+      },
+      {
+       "example": "$\\frac{1}{\\sqrt3+\\sqrt2}=\\frac{\\sqrt3-\\sqrt2}{3-2}=\\sqrt3-\\sqrt2$.",
+       "move": "Rationalize with the conjugate",
+       "when": "A radical sits in a denominator."
+      }
+     ],
+     "problems": 20,
+     "review": 1,
+     "solved": 14,
+     "summary": "Laws of exponents, simplifying radicals and comparing powers.",
+     "trap": "$\\sqrt{a+b}\\ne\\sqrt a+\\sqrt b$ and $(a+b)^2\\ne a^2+b^2$.",
+     "weight": 2
+    }
+   ]
+  },
+  {
+   "accuracy": 0.465,
+   "attempted": 43,
+   "blurb": "Divisibility, primes, remainders and digits.",
+   "color": "amber",
+   "id": "number-theory",
+   "name": "Number Theory",
+   "problems": 126,
+   "solved": 43,
+   "topics": [
+    {
+     "accuracy": 0.857,
+     "attempted": 7,
+     "category": "number-theory",
+     "first_right": 6,
+     "id": "divisibility",
+     "ideas": [
+      "Use the digit tests for 3, 9 and 11",
+      "Factor expressions like $n^3-n$",
+      "Test primes only up to $\\sqrt n$"
+     ],
+     "levels": [
+      "AMC 10",
+      "AMC 12",
+      "AIME"
+     ],
+     "mastery": 0.316,
+     "name": "Divisibility & Primes",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "step-10-06",
+       "rating": 2.0,
+       "short": "S10\u00b77",
+       "status": "solved",
+       "title": "Step Mock AMC 10 #7 \u00b7 How many positive integers less than 100 are divisible by 3 or by 5, but not by both?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-2-03",
+       "rating": 2.0,
+       "short": "M10-2\u00b73",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 2 #3 \u00b7 How many multiples of 6 are between 100 and 300, inclusive?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-2-06",
+       "rating": 2.0,
+       "short": "M10-2\u00b76",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 2 #6 \u00b7 What is the sum of the distinct prime factors of 2310?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-4-07",
+       "rating": 2.0,
+       "short": "M10-4\u00b77",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 4 #7 \u00b7 What is the median of the first ten prime numbers?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-5-03",
+       "rating": 2.0,
+       "short": "M10-5\u00b73",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 5 #3 \u00b7 How many positive integers less than or equal to 50 are divisible by 2 or by 3?"
+      },
+      {
+       "difficulty": 2,
+       "id": "mockaime-1-01",
+       "rating": 3.0,
+       "short": "MA-1\u00b71",
+       "status": "new",
+       "title": "AMC Guide Mock AIME \u00b7 Set 1 #1 \u00b7 Find the number of positive integers n \u2264 1000 that are divisible by 3 or by 5, but not by "
+      }
+     ],
+     "playbook": [
+      {
+       "example": "$918082$: the alternating digit sum $9-1+8-0+8-2=22$, so $11$ divides it.",
+       "move": "Use the digit tests for 3, 9 and 11",
+       "when": "Is a large number divisible by a small one?"
+      },
+      {
+       "example": "$n^3-n=(n-1)n(n+1)$, three consecutive integers, so $6$ always divides it.",
+       "move": "Factor expressions like $n^3-n$",
+       "when": "Show something always divides an expression in $n$."
+      },
+      {
+       "example": "For $221$, test primes up to $14$: $221=13\\cdot17$.",
+       "move": "Test primes only up to $\\sqrt n$",
+       "when": "Is $n$ prime?"
+      }
+     ],
+     "problems": 19,
+     "review": 1,
+     "solved": 7,
+     "summary": "Divisibility rules, primes, gcd and lcm.",
+     "trap": "$1$ is not prime, and $2$ is the only even prime.",
+     "weight": 3
+    },
+    {
+     "accuracy": 0.111,
+     "attempted": 9,
+     "category": "number-theory",
+     "first_right": 1,
+     "id": "factors-divisors",
+     "ideas": [
+      "Count divisors from the exponents",
+      "Pair each divisor $d$ with $\\frac nd$",
+      "An odd number of divisors means a square",
+      "The divisor sum multiplies over prime powers"
+     ],
+     "levels": [
+      "AMC 10",
+      "AMC 12",
+      "AIME"
+     ],
+     "mastery": 0.037,
+     "name": "Factors & Divisor Counting",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "mock10-2-06",
+       "rating": 2.0,
+       "short": "M10-2\u00b76",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 2 #6 \u00b7 What is the sum of the distinct prime factors of 2310?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock12-3-03",
+       "rating": 2.0,
+       "short": "M12-3\u00b73",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 3 #3 \u00b7 How many positive divisors does 504 = 2\u00b3 \u00b7 3\u00b2 \u00b7 7 have?"
+      },
+      {
+       "difficulty": 2,
+       "id": "mockaime-1-03",
+       "rating": 3.0,
+       "short": "MA-1\u00b73",
+       "status": "new",
+       "title": "AMC Guide Mock AIME \u00b7 Set 1 #3 \u00b7 Find the sum of all odd positive divisors of 360."
+      },
+      {
+       "difficulty": 2,
+       "id": "mockaime-4-01",
+       "rating": 3.0,
+       "short": "MA-4\u00b71",
+       "status": "new",
+       "title": "AMC Guide Mock AIME \u00b7 Set 4 #1 \u00b7 Find the number of ordered pairs (a, b) of positive integers such that a\u00b2 - b\u00b2 = 2025."
+      },
+      {
+       "difficulty": 3,
+       "id": "step-10-19",
+       "rating": 4.0,
+       "short": "S10\u00b717",
+       "status": "solved",
+       "title": "Step Mock AMC 10 #17 \u00b7 How many positive divisors of 2\u2074\u00b7 3\u00b3\u00b7 5\u00b2 are perfect squares?"
+      },
+      {
+       "difficulty": 3,
+       "id": "step-10-21",
+       "rating": 4.0,
+       "short": "S10\u00b718",
+       "status": "review",
+       "title": "Step Mock AMC 10 #18 \u00b7 How many ordered pairs of positive integers (x, y) satisfy 1/x + 1/y = 1/6?"
+      }
+     ],
+     "playbook": [
+      {
+       "example": "$360=2^3\\cdot3^2\\cdot5$ has $(3+1)(2+1)(1+1)=24$ divisors.",
+       "move": "Count divisors from the exponents",
+       "when": "How many divisors a number has."
+      },
+      {
+       "example": "The $9$ divisors of $36$ pair to $36$, so their product is $36^{9/2}=6^9$.",
+       "move": "Pair each divisor $d$ with $\\frac nd$",
+       "when": "Products of divisors, or factor pairs."
+      },
+      {
+       "example": "From $1$ to $100$ only the $10$ perfect squares have an odd number of divisors.",
+       "move": "An odd number of divisors means a square",
+       "when": "Lockers, light switches, or \"an odd number of divisors\"."
+      },
+      {
+       "example": "$72=2^3\\cdot3^2$: $(1+2+4+8)(1+3+9)=15\\cdot13=195$.",
+       "move": "The divisor sum multiplies over prime powers",
+       "when": "The sum of the divisors."
+      }
+     ],
+     "problems": 27,
+     "review": 7,
+     "solved": 9,
+     "summary": "Prime factorization, number of divisors, and factoring equations.",
+     "trap": "Counting $1$ or $n$ itself when the problem says \"proper\" divisors.",
+     "weight": 2
+    },
+    {
+     "accuracy": 0.556,
+     "attempted": 9,
+     "category": "number-theory",
+     "first_right": 5,
+     "id": "modular-arithmetic",
+     "ideas": [
+      "Find the cycle of the powers",
+      "Reduce first, multiply later",
+      "Solve with an inverse",
+      "Combine moduli (Chinese remainders)"
+     ],
+     "levels": [
+      "AMC 10",
+      "AMC 12",
+      "AIME"
+     ],
+     "mastery": 0.172,
+     "name": "Modular Arithmetic",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "mock10-4-06",
+       "rating": 2.0,
+       "short": "M10-4\u00b76",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 4 #6 \u00b7 What is the units digit of 7\u00b2\u2070\u00b2\u2076?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock12-5-03",
+       "rating": 2.0,
+       "short": "M12-5\u00b73",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 5 #3 \u00b7 Today is Tuesday. What day of the week will it be 100 days from today?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mockaime-5-01",
+       "rating": 2.0,
+       "short": "MA-5\u00b71",
+       "status": "new",
+       "title": "AMC Guide Mock AIME \u00b7 Set 5 #1 \u00b7 Find the remainder when 1 + 2 + 3 + \u22ef + 2026 is divided by 1000."
+      },
+      {
+       "difficulty": 2,
+       "id": "step-10-13",
+       "rating": 3.0,
+       "short": "S10\u00b712",
+       "status": "review",
+       "title": "Step Mock AMC 10 #12 \u00b7 What is the remainder when 3\u00b9\u2070\u2070 is divided by 7?"
+      },
+      {
+       "difficulty": 2,
+       "id": "step-drill-04",
+       "rating": 3.0,
+       "short": "S10\u00b715",
+       "status": "review",
+       "title": "Step Mock AMC 10 #15 \u00b7 What are the last two digits of 7\u00b2\u2070\u00b2\u2076?"
+      },
+      {
+       "difficulty": 2,
+       "id": "mock10-2-12",
+       "rating": 3.0,
+       "short": "M10-2\u00b712",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 2 #12 \u00b7 What is the sum of all integers n with 1 \u2264 n \u2264 100 that leave a remainder of 3 when divide"
+      }
+     ],
+     "playbook": [
+      {
+       "example": "Powers of $7$ end in $7,9,3,1$, repeating every $4$. $2025\\equiv1\\pmod4$, so $7^{2025}$ ends in $7$.",
+       "move": "Find the cycle of the powers",
+       "when": "The last digit or remainder of a huge power."
+      },
+      {
+       "example": "$98\\cdot99\\cdot101\\equiv(-2)(-1)(1)=2\\pmod{100}$.",
+       "move": "Reduce first, multiply later",
+       "when": "A big product or sum mod $m$."
+      },
+      {
+       "example": "$3x\\equiv4\\pmod7$: since $3\\cdot5\\equiv1$, $x\\equiv20\\equiv6\\pmod7$.",
+       "move": "Solve with an inverse",
+       "when": "$ax\\equiv b\\pmod m$."
+      },
+      {
+       "example": "$n\\equiv2\\ (3)$, $n\\equiv3\\ (4)$, $n\\equiv4\\ (5)$: $n+1$ is a multiple of $60$, so $n=59$.",
+       "move": "Combine moduli (Chinese remainders)",
+       "when": "Conditions mod $3$, $4$ and $5$ at once."
+      }
+     ],
+     "problems": 29,
+     "review": 4,
+     "solved": 9,
+     "summary": "Remainders, cycles of powers, Fermat, Euler and CRT.",
+     "trap": "Dividing both sides of a congruence by a number that shares a factor with the modulus.",
+     "weight": 3
+    }
+   ]
+  },
+  {
+   "accuracy": 0.519,
+   "attempted": 52,
+   "blurb": "Casework, combinations, probability and expected value.",
+   "color": "green",
+   "id": "counting",
+   "name": "Counting & Probability",
+   "problems": 168,
+   "solved": 46,
+   "topics": [
+    {
+     "accuracy": 0.333,
+     "attempted": 9,
+     "category": "counting",
+     "first_right": 3,
+     "id": "basic-counting",
+     "ideas": [
+      "Fill the most restricted slot first",
+      "Count the complement",
+      "Divide out the overcount"
+     ],
+     "levels": [
+      "AMC 10",
+      "AMC 12",
+      "AIME"
+     ],
+     "mastery": 0.188,
+     "name": "Counting Principles",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "step-10-08",
+       "rating": 2.0,
+       "short": "S10\u00b75",
+       "status": "solved",
+       "title": "Step Mock AMC 10 #5 \u00b7 How many three-digit positive integers have three distinct digits, all of which are odd?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-1-04",
+       "rating": 2.0,
+       "short": "M10-1\u00b74",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #4 \u00b7 How many positive integers less than 100 have digits whose product is 12?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-3-04",
+       "rating": 2.0,
+       "short": "M10-3\u00b74",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 3 #4 \u00b7 A restaurant offers 4 appetizers, 5 main courses and 3 desserts. A meal is one main course"
+      },
+      {
+       "difficulty": 2,
+       "id": "step-10-17",
+       "rating": 3.0,
+       "short": "S10\u00b714",
+       "status": "solved",
+       "title": "Step Mock AMC 10 #14 \u00b7 In how many ways can 6 identical candies be given to 3 children so that every child gets a"
+      },
+      {
+       "difficulty": 3,
+       "id": "step-10-23",
+       "rating": 4.0,
+       "short": "S10\u00b720",
+       "status": "review",
+       "title": "Step Mock AMC 10 #20 \u00b7 How many subsets of {1, 2, 3, \u2026, 10}, including the empty set, contain no two consecutive "
+      },
+      {
+       "difficulty": 3,
+       "id": "mock10-1-11",
+       "rating": 4.0,
+       "short": "M10-1\u00b711",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #11 \u00b7 In how many ways can the six letters of BANANA be arranged so that the two Ns are not next"
+      }
+     ],
+     "playbook": [
+      {
+       "example": "Even three-digit numbers with distinct digits: last digit $0$ gives $9\\cdot8$, else $4\\cdot8\\cdot8$; total $328$.",
+       "move": "Fill the most restricted slot first",
+       "when": "Arrangements with conditions on certain places."
+      },
+      {
+       "example": "Of $900$ three-digit numbers, $8\\cdot9\\cdot9=648$ have no $7$, so $252$ have at least one.",
+       "move": "Count the complement",
+       "when": "\"At least one\" conditions."
+      },
+      {
+       "example": "$6$ people around a round table: $\\frac{6!}6=120$ seatings.",
+       "move": "Divide out the overcount",
+       "when": "Order does not matter, or seats around a circle."
+      }
+     ],
+     "problems": 16,
+     "review": 6,
+     "solved": 8,
+     "summary": "The multiplication principle and organized lists.",
+     "trap": "Adding when you should multiply: independent choices multiply.",
+     "weight": 3
+    },
+    {
+     "accuracy": 0.0,
+     "attempted": 3,
+     "category": "counting",
+     "first_right": 0,
+     "id": "permutations",
+     "ideas": [
+      "Divide by repeated letters",
+      "Glue together what must be adjacent",
+      "Use the gaps for what must be apart"
+     ],
+     "levels": [
+      "AMC 10",
+      "AMC 12",
+      "AIME"
+     ],
+     "mastery": 0.0,
+     "name": "Permutations & Arrangements",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "mock12-4-06",
+       "rating": 2.0,
+       "short": "M12-4\u00b76",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 4 #6 \u00b7 How many 4-letter strings with no repeated letters can be made from A, B, C, D, E if the f"
+      },
+      {
+       "difficulty": 2,
+       "id": "mock10-4-18",
+       "rating": 3.0,
+       "short": "M10-4\u00b718",
+       "status": "new",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 4 #18 \u00b7 In how many distinct ways can the letters of MISSISSIPPI be arranged?"
+      },
+      {
+       "difficulty": 3,
+       "id": "mock10-1-11",
+       "rating": 4.0,
+       "short": "M10-1\u00b711",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #11 \u00b7 In how many ways can the six letters of BANANA be arranged so that the two Ns are not next"
+      },
+      {
+       "difficulty": 3,
+       "id": "mock10-5-16",
+       "rating": 4.0,
+       "short": "M10-5\u00b716",
+       "status": "new",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 5 #16 \u00b7 In how many ways can 5 people sit around a round table if Ana and Ben refuse to sit next t"
+      },
+      {
+       "difficulty": 4,
+       "id": "step-12-11",
+       "rating": 5.0,
+       "short": "S12\u00b720",
+       "status": "new",
+       "title": "Step Mock AMC 12 #20 \u00b7 A permutation of 1, 2, 3, 4, 5, 6 is chosen uniformly at random. What is the probability t"
+      },
+      {
+       "difficulty": 4,
+       "id": "mock10-2-25",
+       "rating": 6.0,
+       "short": "M10-2\u00b725",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 2 #25 \u00b7 How many permutations (a\u2081, a\u2082, \u2026, a\u2087) of 1, 2, \u2026, 7 have the property that for each k \u2265 2,"
+      }
+     ],
+     "playbook": [
+      {
+       "example": "BANANA: $\\frac{6!}{3!\\,2!}=60$.",
+       "move": "Divide by repeated letters",
+       "when": "Arrangements with identical items."
+      },
+      {
+       "example": "$5$ people in a row with A next to B: $4!\\cdot2=48$.",
+       "move": "Glue together what must be adjacent",
+       "when": "Two people must sit together."
+      },
+      {
+       "example": "$4$ boys, $3$ girls, no two girls adjacent: $4!\\cdot5\\cdot4\\cdot3=1440$.",
+       "move": "Use the gaps for what must be apart",
+       "when": "No two of something next to each other."
+      }
+     ],
+     "problems": 12,
+     "review": 4,
+     "solved": 3,
+     "summary": "Ordered arrangements, repeated letters, and derangements.",
+     "trap": "$n$ around a circle is $(n-1)!$, and $\\frac{(n-1)!}2$ if flips count as the same.",
+     "weight": 2
+    },
+    {
+     "accuracy": 0.375,
+     "attempted": 8,
+     "category": "counting",
+     "first_right": 3,
+     "id": "combinations",
+     "ideas": [
+      "Stars and bars",
+      "Hand out the minimums first",
+      "Choose positions, not objects"
+     ],
+     "levels": [
+      "AMC 10",
+      "AMC 12",
+      "AIME"
+     ],
+     "mastery": 0.083,
+     "name": "Combinations & Stars and Bars",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "mock10-4-03",
+       "rating": 2.0,
+       "short": "M10-4\u00b73",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 4 #3 \u00b7 How many diagonals does a convex decagon (a 10-sided polygon) have?"
+      },
+      {
+       "difficulty": 2,
+       "id": "step-10-17",
+       "rating": 3.0,
+       "short": "S10\u00b714",
+       "status": "solved",
+       "title": "Step Mock AMC 10 #14 \u00b7 In how many ways can 6 identical candies be given to 3 children so that every child gets a"
+      },
+      {
+       "difficulty": 2,
+       "id": "step-12-18",
+       "rating": 3.0,
+       "short": "S12\u00b76",
+       "status": "new",
+       "title": "Step Mock AMC 12 #6 \u00b7 A 6 \u00d7 6 grid is made of 36 unit squares. How many rectangles (of any size, including squar"
+      },
+      {
+       "difficulty": 2,
+       "id": "step-aime-06",
+       "rating": 3.0,
+       "short": "AIME\u00b71",
+       "status": "new",
+       "title": "Step Mock AIME #1 \u00b7 Find the number of four-digit positive integers whose digits are strictly increasing from "
+      },
+      {
+       "difficulty": 2,
+       "id": "mock10-2-11",
+       "rating": 3.0,
+       "short": "M10-2\u00b711",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 2 #11 \u00b7 How many three-digit positive integers have digits that are strictly decreasing from left "
+      },
+      {
+       "difficulty": 2,
+       "id": "mock10-4-11",
+       "rating": 3.0,
+       "short": "M10-4\u00b711",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 4 #11 \u00b7 A committee of 4 is chosen from 6 boys and 5 girls. How many committees have at least 2 gi"
+      }
+     ],
+     "playbook": [
+      {
+       "example": "Nonnegative solutions of $a+b+c=10$: $\\binom{12}2=66$.",
+       "move": "Stars and bars",
+       "when": "Identical items into distinct boxes."
+      },
+      {
+       "example": "Positive solutions of $a+b+c=10$: give each $1$, then $\\binom92=36$.",
+       "move": "Hand out the minimums first",
+       "when": "Each box needs at least one."
+      },
+      {
+       "example": "$10$-letter strings of $3$ A\u2019s and $7$ B\u2019s: $\\binom{10}3=120$.",
+       "move": "Choose positions, not objects",
+       "when": "Strings with a fixed number of each letter."
+      }
+     ],
+     "problems": 36,
+     "review": 4,
+     "solved": 7,
+     "summary": "Choosing subsets and distributing identical objects.",
+     "trap": "Using $\\binom nk$ when order matters, or stars and bars when the items are different.",
+     "weight": 3
+    }
+   ]
+  },
+  {
+   "accuracy": 0.39,
+   "attempted": 59,
+   "blurb": "Triangles, circles, area and coordinates.",
+   "color": "rose",
+   "id": "geometry",
+   "name": "Geometry",
+   "problems": 143,
+   "solved": 57,
+   "topics": [
+    {
+     "accuracy": 0.667,
+     "attempted": 6,
+     "category": "geometry",
+     "first_right": 4,
+     "id": "triangles",
+     "ideas": [
+      "Use the triangle inequality",
+      "Pick the right area formula",
+      "Law of cosines for an angle"
+     ],
+     "levels": [
+      "AMC 10",
+      "AMC 12",
+      "AIME"
+     ],
+     "mastery": 0.308,
+     "name": "Triangles",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "mock12-5-05",
+       "rating": 2.0,
+       "short": "M12-5\u00b75",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 5 #5 \u00b7 What is the area of a triangle with side lengths 10, 10 and 12?"
+      },
+      {
+       "difficulty": 2,
+       "id": "mock10-2-04",
+       "rating": 3.0,
+       "short": "M10-2\u00b74",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 2 #4 \u00b7 In triangle ABC, AB = AC and \u2220 A = 40\u00b0. The bisector of \u2220 B meets AC at D. What is \u2220 BDC, "
+      },
+      {
+       "difficulty": 2,
+       "id": "mock10-3-10",
+       "rating": 3.0,
+       "short": "M10-3\u00b710",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 3 #10 \u00b7 A triangle has side lengths 13, 14 and 15. What is its area?"
+      },
+      {
+       "difficulty": 2,
+       "id": "mock12-2-16",
+       "rating": 3.0,
+       "short": "M12-2\u00b716",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 2 #16 \u00b7 A triangle has side lengths 5, 7 and 8. What is its area?"
+      },
+      {
+       "difficulty": 3,
+       "id": "mock10-5-18",
+       "rating": 4.0,
+       "short": "M10-5\u00b718",
+       "status": "new",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 5 #18 \u00b7 A triangle has side lengths 7, 8 and 9. What is the length of the median to the side of le"
+      },
+      {
+       "difficulty": 3,
+       "id": "mock12-3-19",
+       "rating": 4.0,
+       "short": "M12-3\u00b719",
+       "status": "new",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 3 #19 \u00b7 A right circular cone has base radius 3 and height 4. What is the radius of the largest sp"
+      }
+     ],
+     "playbook": [
+      {
+       "example": "Sides $5$ and $9$: the third is strictly between $4$ and $14$, so $9$ integer values.",
+       "move": "Use the triangle inequality",
+       "when": "Which side lengths are possible?"
+      },
+      {
+       "example": "Heron for $13,14,15$: $s=21$, area $\\sqrt{21\\cdot8\\cdot7\\cdot6}=84$.",
+       "move": "Pick the right area formula",
+       "when": "Area from three sides, two sides and an angle, or the inradius."
+      },
+      {
+       "example": "Sides $5,7,8$: $\\cos C=\\frac{25+64-49}{80}=\\frac12$, so the angle opposite $7$ is $60^\\circ$.",
+       "move": "Law of cosines for an angle",
+       "when": "All three sides known."
+      }
+     ],
+     "problems": 13,
+     "review": 4,
+     "solved": 6,
+     "summary": "Triangle inequality, centers, Heron's formula and the 13-14-15.",
+     "trap": "The largest angle faces the longest side; check that your answer agrees.",
+     "weight": 3
+    },
+    {
+     "accuracy": 0.2,
+     "attempted": 5,
+     "category": "geometry",
+     "first_right": 1,
+     "id": "right-triangles",
+     "ideas": [
+      "Know the common triples",
+      "Altitude to the hypotenuse",
+      "Use the special triangles"
+     ],
+     "levels": [
+      "AMC 10",
+      "AMC 12",
+      "AIME"
+     ],
+     "mastery": 0.059,
+     "name": "Right Triangles & Pythagoras",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "mock10-5-04",
+       "rating": 2.0,
+       "short": "M10-5\u00b74",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 5 #4 \u00b7 A right triangle has a hypotenuse of length 13 and one leg of length 5. What is its perime"
+      },
+      {
+       "difficulty": 1,
+       "id": "mockaime-5-03",
+       "rating": 2.0,
+       "short": "MA-5\u00b73",
+       "status": "new",
+       "title": "AMC Guide Mock AIME \u00b7 Set 5 #3 \u00b7 A 25-foot ladder leans against a vertical wall with its foot 7 feet from the wall. The top"
+      },
+      {
+       "difficulty": 2,
+       "id": "step-10-16",
+       "rating": 3.0,
+       "short": "S12\u00b77",
+       "status": "new",
+       "title": "Step Mock AMC 12 #7 \u00b7 A circle is inscribed in a right triangle with legs 8 and 15. What is the radius of the ci"
+      },
+      {
+       "difficulty": 2,
+       "id": "mock10-1-12",
+       "rating": 3.0,
+       "short": "M10-1\u00b712",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #12 \u00b7 A right triangle has legs of length 20 and 21. What is the length of the altitude to the h"
+      },
+      {
+       "difficulty": 2,
+       "id": "mock10-4-12",
+       "rating": 3.0,
+       "short": "M10-4\u00b712",
+       "status": "review",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 4 #12 \u00b7 Two circles have the same center. A chord of the larger circle is tangent to the smaller c"
+      },
+      {
+       "difficulty": 2,
+       "id": "mock10-5-14",
+       "rating": 3.0,
+       "short": "M10-5\u00b714",
+       "status": "new",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 5 #14 \u00b7 A regular hexagon has side length 4. What is the distance between two opposite sides?"
+      }
+     ],
+     "playbook": [
+      {
+       "example": "$3$-$4$-$5$, $5$-$12$-$13$, $8$-$15$-$17$, $7$-$24$-$25$ and their multiples.",
+       "move": "Know the common triples",
+       "when": "Integer side lengths."
+      },
+      {
+       "example": "Legs $6$ and $8$: the altitude to the hypotenuse is $\\frac{6\\cdot8}{10}=4.8$.",
+       "move": "Altitude to the hypotenuse",
+       "when": "A right triangle split by its altitude."
+      },
+      {
+       "example": "Sides in ratio $1:\\sqrt3:2$ and $1:1:\\sqrt2$.",
+       "move": "Use the special triangles",
+       "when": "$30^\\circ$, $45^\\circ$ or $60^\\circ$ angles."
+      }
+     ],
+     "problems": 17,
+     "review": 4,
+     "solved": 4,
+     "summary": "Pythagorean triples, special triangles and distance.",
+     "trap": "The hypotenuse is opposite the right angle, and it is the longest side.",
+     "weight": 3
+    },
+    {
+     "accuracy": 0.0,
+     "attempted": 1,
+     "category": "geometry",
+     "first_right": 0,
+     "id": "similar-triangles",
+     "ideas": [
+      "Look for parallel lines and shared angles",
+      "Areas scale by the square",
+      "Power of a point is similarity in disguise"
+     ],
+     "levels": [
+      "AMC 10",
+      "AMC 12",
+      "AIME"
+     ],
+     "mastery": 0.0,
+     "name": "Similar Triangles",
+     "pills": [
+      {
+       "difficulty": 2,
+       "id": "step-10-12",
+       "rating": 3.0,
+       "short": "S10\u00b711",
+       "status": "review",
+       "title": "Step Mock AMC 10 #11 \u00b7 In triangle ABC, AB = 12. Point D lies on AB with AD = 4, and the line through D parallel "
+      },
+      {
+       "difficulty": 2,
+       "id": "mock10-3-14",
+       "rating": 3.0,
+       "short": "M10-3\u00b714",
+       "status": "new",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 3 #14 \u00b7 A person 6 feet tall stands 15 feet from the base of a lamppost and casts a shadow 5 feet "
+      },
+      {
+       "difficulty": 4,
+       "id": "mock10-3-24",
+       "rating": 6.0,
+       "short": "M10-3\u00b724",
+       "status": "new",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 3 #24 \u00b7 A square is inscribed in a right triangle with legs 5 and 12 so that one side of the squar"
+      }
+     ],
+     "playbook": [
+      {
+       "example": "A line parallel to $BC$ through the point $\\frac13$ of the way down $AB$ cuts off a triangle with $\\frac19$ the area.",
+       "move": "Look for parallel lines and shared angles",
+       "when": "A line parallel to a side, or two triangles sharing an angle."
+      },
+      {
+       "example": "Sides in ratio $2:3$ mean areas in ratio $4:9$.",
+       "move": "Areas scale by the square",
+       "when": "Comparing areas of similar figures."
+      },
+      {
+       "example": "$AP\\cdot PB=CP\\cdot PD$.",
+       "move": "Power of a point is similarity in disguise",
+       "when": "Chords that cross inside a circle."
+      }
+     ],
+     "problems": 3,
+     "review": 1,
+     "solved": 1,
+     "summary": "Parallel lines, ratios and scaling of area and volume.",
+     "trap": "Matching sides in the wrong order. Write the vertices in corresponding order.",
+     "weight": 2
+    }
+   ]
+  },
+  {
+   "accuracy": 0.462,
+   "attempted": 13,
+   "blurb": "Means, medians, logic puzzles and everything else.",
+   "color": "slate",
+   "id": "misc",
+   "name": "Logic, Statistics & Misc",
+   "problems": 15,
+   "solved": 13,
+   "topics": [
+    {
+     "accuracy": 0.5,
+     "attempted": 8,
+     "category": "misc",
+     "first_right": 4,
+     "id": "statistics",
+     "ideas": [
+      "Mean \u00d7 count = total",
+      "Sort before taking the median",
+      "Push the other values to their limits"
+     ],
+     "levels": [
+      "AMC 10",
+      "AMC 12"
+     ],
+     "mastery": 0.444,
+     "name": "Mean, Median & Mode",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "step-10-03",
+       "rating": 2.0,
+       "short": "S10\u00b72",
+       "status": "solved",
+       "title": "Step Mock AMC 10 #2 \u00b7 The mean of five numbers is 12. When one of the numbers is removed, the mean of the remain"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-1-03",
+       "rating": 2.0,
+       "short": "M10-1\u00b73",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 1 #3 \u00b7 The mean of seven numbers is 15. When an eighth number is added, the mean of all eight num"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-3-05",
+       "rating": 2.0,
+       "short": "M10-3\u00b75",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 3 #5 \u00b7 In one class of 20 students the mean test score is 80. In another class of 30 students it "
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-4-07",
+       "rating": 2.0,
+       "short": "M10-4\u00b77",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 4 #7 \u00b7 What is the median of the first ten prime numbers?"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-5-06",
+       "rating": 2.0,
+       "short": "M10-5\u00b76",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 5 #6 \u00b7 Six numbers have a mean of 10. When the largest is removed, the remaining five have a mean"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock12-4-04",
+       "rating": 2.0,
+       "short": "M12-4\u00b74",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 4 #4 \u00b7 The average of a, b and c is 8, and the average of a and b is 6. What is c?"
+      }
+     ],
+     "playbook": [
+      {
+       "example": "Mean $80$ on $5$ tests; for a mean of $82$ the sixth must be $6\\cdot82-5\\cdot80=92$.",
+       "move": "Mean \u00d7 count = total",
+       "when": "A value is added or removed."
+      },
+      {
+       "example": "With an even count, the median is the mean of the two middle values.",
+       "move": "Sort before taking the median",
+       "when": "Any median question."
+      },
+      {
+       "example": "Five distinct positive integers, mean $10$, median $8$: $1+2+8+9+x=50$, so $x=30$.",
+       "move": "Push the other values to their limits",
+       "when": "The largest possible value under a mean and median."
+      }
+     ],
+     "problems": 9,
+     "review": 1,
+     "solved": 8,
+     "summary": "Averages, medians and how they move when data changes.",
+     "trap": "Taking the middle of an unsorted list as the median.",
+     "weight": 2
+    },
+    {
+     "accuracy": 0.5,
+     "attempted": 2,
+     "category": "misc",
+     "first_right": 1,
+     "id": "logic",
+     "ideas": [
+      "Assume, then look for a contradiction",
+      "Make a grid",
+      "Check totals before searching"
+     ],
+     "levels": [
+      "AMC 10",
+      "AMC 12"
+     ],
+     "mastery": 0.5,
+     "name": "Logic & Puzzles",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "mock12-1-03",
+       "rating": 2.0,
+       "short": "M12-1\u00b73",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 1 #3 \u00b7 It is true that whenever it rains, the game is cancelled. Today the game was not cancelled"
+      },
+      {
+       "difficulty": 2,
+       "id": "step-drill-08",
+       "rating": 3.0,
+       "short": "S10\u00b716",
+       "status": "review",
+       "title": "Step Mock AMC 10 #16 \u00b7 Each of three students is either a knight, who always tells the truth, or a knave, who alw"
+      }
+     ],
+     "playbook": [
+      {
+       "example": "Suppose A tells the truth and follow what that forces; if it breaks, A lies.",
+       "move": "Assume, then look for a contradiction",
+       "when": "Knights and knaves, liars and truth-tellers."
+      },
+      {
+       "example": "People as rows, options as columns; cross out as you learn.",
+       "move": "Make a grid",
+       "when": "Who sits where, who owns what."
+      },
+      {
+       "example": "Sums, parity and counts often rule out a case faster than trying it.",
+       "move": "Check totals before searching",
+       "when": "Can this arrangement exist at all?"
+      }
+     ],
+     "problems": 2,
+     "review": 1,
+     "solved": 2,
+     "summary": "Knights and knaves, ordering puzzles and invariants.",
+     "trap": "\"Not all\" does not mean \"none\".",
+     "weight": 1
+    },
+    {
+     "accuracy": 0.333,
+     "attempted": 3,
+     "category": "misc",
+     "first_right": 1,
+     "id": "clocks-calendars",
+     "ideas": [
+      "The minute hand gains $5.5^\\circ$ a minute",
+      "Days advance mod 7",
+      "A date shifts one weekday a year"
+     ],
+     "levels": [
+      "AMC 10",
+      "AMC 12"
+     ],
+     "mastery": 0.333,
+     "name": "Clocks, Calendars & Time",
+     "pills": [
+      {
+       "difficulty": 1,
+       "id": "mock10-3-03",
+       "rating": 2.0,
+       "short": "M10-3\u00b73",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 3 #3 \u00b7 What is the measure, in degrees, of the smaller angle between the hour hand and the minute"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock10-5-02",
+       "rating": 2.0,
+       "short": "M10-5\u00b72",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 10 \u00b7 Set 5 #2 \u00b7 A train leaves at 9:40 a.m. and arrives at 1:15 p.m. the same day. How many minutes long i"
+      },
+      {
+       "difficulty": 1,
+       "id": "mock12-5-03",
+       "rating": 2.0,
+       "short": "M12-5\u00b73",
+       "status": "solved",
+       "title": "AMC Guide Mock AMC 12 \u00b7 Set 5 #3 \u00b7 Today is Tuesday. What day of the week will it be 100 days from today?"
+      }
+     ],
+     "playbook": [
+      {
+       "example": "At $3{:}20$ the angle is $|90-5.5\\cdot20|=20^\\circ$.",
+       "move": "The minute hand gains $5.5^\\circ$ a minute",
+       "when": "The angle between clock hands."
+      },
+      {
+       "example": "$100$ days after a Monday: $100\\equiv2\\pmod7$, so a Wednesday.",
+       "move": "Days advance mod 7",
+       "when": "The weekday after many days."
+      },
+      {
+       "example": "It shifts two weekdays across a February 29.",
+       "move": "A date shifts one weekday a year",
+       "when": "The same date in a later year."
+      }
+     ],
+     "problems": 3,
+     "review": 0,
+     "solved": 3,
+     "summary": "Clock hands, days of the week and elapsed time.",
+     "trap": "Century years are leap years only when divisible by $400$.",
+     "weight": 1
+    }
+   ]
+  }
+ ],
+ "success": true
+}
