@@ -69,7 +69,6 @@ def test_plain_text():
     assert found[1]['choices'][2] == '6'
 
 
-
 def test_inequalities_in_choices_are_not_html_tags():
     # 2016 AMC 10A #12: `p<\dfrac..` and `..p>` once read as a <p> tag and ate choices C to E.
     src = r"""==Problem 1==
@@ -96,6 +95,19 @@ What is <math>1+1</math>?
     (one,) = official.parse_contest(src, 'AMC 10')
     assert one['statement'] == 'What is $1+1$?'
     assert one['choices'][4] == '$5$'
+
+
+def test_textdollar_becomes_a_dollar_katex_can_draw():
+    # 2014 AMC 10A #11 prices its choices as `\textdollar179.95`, which KaTeX does not know.
+    src = r"""==Problem 1==
+Coupon: <math>\textdollar 20</math> off.
+
+<math>\textbf{(A) }\textdollar179.95\qquad\textbf{(B) }\textdollar199.95\qquad\textbf{(C) }\textdollar219.95\qquad\textbf{(D) }\textdollar239.95\qquad\textbf{(E) }\textdollar259.95</math>
+"""
+    (one,) = official.parse_contest(src, 'AMC 10')
+    assert one['statement'] == r'Coupon: $\$20$ off.'
+    assert one['choices'][0] == r'$\$179.95$'
+
 
 def test_aime_has_no_choices():
     found = official.parse_contest('==Problem 1==\nFind <math>x</math>.\n==Problem 2==\nFind y.', 'AIME')

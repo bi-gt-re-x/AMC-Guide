@@ -76,6 +76,8 @@ def _math_to_dollars(text):
     # `\overgroup` but no `\overarc` (2019 AMC 10B #20).
     text = re.sub(r'\\(begin|end)\{tabular\}', r'\\\1{array}', text)
     text = re.sub(r'\\overarc(?![A-Za-z])', r'\\overgroup', text)
+    # Nor `\textdollar`, which the wiki uses for prices (2014 AMC 10A #3, #11).
+    text = re.sub(r'\\textdollar(?![A-Za-z])\s*', r'\\$', text)
     out, last = [], 0
     for m in re.finditer(r'\\begin\{(align|eqnarray)\*?\}(.*?)\\end\{\1\*?\}', text, flags=re.S):
         block = '\\begin{aligned}' + m.group(2).strip() + '\\end{aligned}'

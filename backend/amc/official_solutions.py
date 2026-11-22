@@ -14,7 +14,7 @@ on its answer.
 Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
 10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
 Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, the
-2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, the 2016 AMC 10A and 10B, the 2015 AMC 10A and 10B, and the 2014 AMC 10B. A problem whose numbers are only in a picture the
+2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, the 2016 AMC 10A and 10B, the 2015 AMC 10A and 10B, the 2014 AMC 10A and 10B, and the 2013 AMC 10A. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -7531,6 +7531,530 @@ SOLUTIONS = {
             r'$\frac{73}{63}p_1 = \frac12$ gives $p_1 = \frac{63}{146}$. The answer is $\textbf{(C) } \frac{63}{146}$.',
         ],
         'trap': r'Guessing $\frac12$ from the symmetry. That is the answer from pad $5$, not pad $1$.',
+    },
+    # ------------------------------------------------------------------ 2014 AMC 10A
+    '2014-amc-10a-1': {
+        'topics': ['decimals-fractions', 'arithmetic'],
+        'answer': 'C',
+        'insight': r'Put the bracket over tenths: $\frac{5}{10} + \frac{2}{10} + \frac{1}{10} = \frac45$.',
+        'steps': [
+            r'$\left(\frac45\right)^{-1} = \frac54$.',
+            r'$10 \cdot \frac54 = \frac{25}{2}$. The answer is $\textbf{(C)}\ \frac{25}{2}$.',
+        ],
+        'trap': r'Taking the reciprocal of each fraction and adding, $2 + 5 + 10 = 17$, which gives $170$.',
+    },
+    '2014-amc-10a-2': {
+        'topics': ['clocks-calendars', 'decimals-fractions'],
+        'answer': 'C',
+        'insight': r'The cat eats $\frac13 + \frac14 = \frac{7}{12}$ of a can a day.',
+        'steps': [
+            r'After $10$ full days it has eaten $\frac{70}{12}$, leaving $\frac{2}{12} = \frac16$ of a can.',
+            r'That is less than a morning meal, so the food runs out on the $11$th morning.',
+            r'Day $1$ is Monday, day $8$ the next Monday, and day $11$ a Thursday. The answer is $\textbf{(C)}\ \text{Thursday}$.',
+        ],
+        'trap': r'Counting $11$ days on from Monday, which lands on Friday. Monday itself is day $1$.',
+    },
+    '2014-amc-10a-3': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'E',
+        'insight': r'Track the loaves through the day: $24$, then $16$, then $8$.',
+        'steps': [
+            r'Morning: $24 \cdot 2.50 = 60$. Afternoon: $16 \cdot 1.25 = 20$. Late afternoon: $8 \cdot 1 = 8$.',
+            r'She takes in $88$ and spent $48 \cdot 0.75 = 36$, so her profit is $52$. The answer is $\textbf{(E)}\ 52$.',
+        ],
+        'trap': r'Taking two thirds of all $48$ loaves in the afternoon instead of two thirds of the $24$ left.',
+    },
+    '2014-amc-10a-4': {
+        'topics': ['permutations', 'casework'],
+        'answer': 'B',
+        'insight': r'Place blue and yellow first. Orange and red then go in the other two spots in the only allowed order.',
+        'steps': [
+            r'Blue before yellow and not next to it: positions $(1, 3)$, $(1, 4)$ or $(2, 4)$.',
+            r'Each leaves two places, and orange must take the earlier one. That is $3$ orderings. The answer is $\textbf{(B)}\ 3$.',
+        ],
+        'trap': r'Forgetting that orange must come before red, and counting $6$.',
+    },
+    '2014-amc-10a-5': {
+        'topics': ['statistics'],
+        'answer': 'C',
+        'insight': r'Work in percents: the mean is a weighted average, and the median is the score at the $50\%$ mark.',
+        'steps': [
+            r'Mean: $0.1 \cdot 70 + 0.35 \cdot 80 + 0.3 \cdot 90 + 0.25 \cdot 100 = 87$.',
+            r'$45\%$ scored $80$ or less and $75\%$ scored $90$ or less, so the median is $90$.',
+            r'The difference is $3$. The answer is $\textbf{(C)}\ 3$.',
+        ],
+        'trap': r'Taking the median as $80$, the most common score.',
+    },
+    '2014-amc-10a-6': {
+        'topics': ['word-problems'],
+        'answer': 'A',
+        'insight': r'Find what one cow gives in one day, then scale up.',
+        'steps': [
+            r'One cow gives $\frac{b}{ac}$ gallons a day.',
+            r'$d$ cows for $e$ days give $\frac{bde}{ac}$. The answer is $\textbf{(A)}\ \frac{bde}{ac}$.',
+        ],
+        'trap': r'Multiplying by $c$ instead of dividing, which gives $\frac{bcde}{a}$. The $b$ gallons are spread over $c$ days.',
+    },
+    '2014-amc-10a-7': {
+        'topics': ['inequalities'],
+        'answer': 'B',
+        'insight': r'Inequalities can be added but not subtracted, multiplied or divided without knowing signs.',
+        'steps': [
+            r'(I) holds: add $x < a$ and $y < b$.',
+            r'(II) fails for $x = 1, a = 2, y = -5, b = 10$. (III) fails for $x = y = -3$, $a = b = -2$. (IV) fails for $x = y = 1$, $a = 2$, $b = 4$.',
+            r'Only one must be true. The answer is $\textbf{(B)}\ 1$.',
+        ],
+        'trap': r'Accepting (III) by thinking only of positive numbers. With negatives, $xy$ can be the larger product.',
+    },
+    '2014-amc-10a-8': {
+        'topics': ['factorials', 'perfect-powers'],
+        'answer': 'D',
+        'insight': r'$\frac{n!(n + 1)!}{2} = (n!)^2 \cdot \frac{n + 1}{2}$, so it is a square when $\frac{n + 1}{2}$ is.',
+        'steps': [
+            r'The choices have $n = 14, 15, 16, 17, 18$, so $\frac{n + 1}{2}$ is $7.5, 8, 8.5, 9, 9.5$.',
+            r'Only $9$ is a square, at $n = 17$. The answer is $\textbf{(D)}\ \dfrac{17!18!}2$.',
+        ],
+        'trap': r'Picking $\frac{15!16!}{2}$ because $16$ is a square. It is $\frac{16}{2} = 8$ that must be one.',
+    },
+    '2014-amc-10a-9': {
+        'topics': ['right-triangles', 'area'],
+        'answer': 'C',
+        'insight': r'Twice the area is a leg times a leg and also the hypotenuse times its altitude.',
+        'steps': [
+            r'The hypotenuse is $\sqrt{12 + 36} = 4\sqrt3$.',
+            r'The altitude to it is $\frac{2\sqrt3 \cdot 6}{4\sqrt3} = 3$. The answer is $\textbf{(C)}\ 3$.',
+        ],
+        'trap': r'Averaging the legs or halving one of them. The third altitude comes from the area.',
+    },
+    '2014-amc-10a-10': {
+        'topics': ['statistics', 'sequences-series'],
+        'answer': 'B',
+        'insight': r'Five consecutive integers average to their middle one.',
+        'steps': [
+            r'$b = a + 2$, the middle of $a, \dots, a + 4$.',
+            r'Five integers from $b$ average $b + 2 = a + 4$. The answer is $\textbf{(B)}\ a+4$.',
+        ],
+        'trap': r'Answering $a + 2$, which is $b$ itself, not the new average.',
+    },
+    '2014-amc-10a-11': {
+        'topics': ['word-problems', 'inequalities'],
+        'answer': 'C',
+        'insight': r'Write each saving in terms of the price $x$ and find where coupon $1$ wins both comparisons.',
+        'steps': [
+            r'Beating coupon $2$: $0.1x > 20$, so $x > 200$.',
+            r'Beating coupon $3$: $0.1x > 0.18(x - 100)$, so $0.08x < 18$ and $x < 225$.',
+            r'Only $\$219.95$ lies between. The answer is $\textbf{(C) }\$219.95$.',
+        ],
+        'trap': r'Checking only coupon $2$ and choosing a larger price; above $\$225$ coupon $3$ saves more.',
+    },
+    '2014-amc-10a-12': {
+        'topics': ['circles', 'polygons'],
+        'answer': 'C',
+        'insight': r'Each sector is a third of a circle of radius $3$, since a hexagon angle is $120^\circ$.',
+        'steps': [
+            r'The hexagon is six equilateral triangles of side $6$: $6 \cdot 9\sqrt3 = 54\sqrt3$.',
+            r'Six sectors of $\frac13 \cdot 9\pi = 3\pi$ make $18\pi$.',
+            r'Shaded: $54\sqrt3 - 18\pi$. The answer is $\textbf{(C)}\ 54\sqrt{3}-18\pi$.',
+        ],
+        'trap': r'Taking each sector as a sixth of a circle (the central angle of the hexagon), which gives $54\sqrt3 - 9\pi$.',
+    },
+    '2014-amc-10a-13': {
+        'topics': ['polygons', 'area'],
+        'answer': 'C',
+        'insight': r'The hexagon is the triangle, three unit squares and three gap triangles. Each gap has two sides of $1$ and an angle of $360^\circ - 90^\circ - 90^\circ - 60^\circ = 120^\circ$.',
+        'steps': [
+            r'The triangle is $\frac{\sqrt3}{4}$ and the squares add $3$.',
+            r'Each gap triangle is $\frac12 \cdot 1 \cdot 1 \cdot \sin 120^\circ = \frac{\sqrt3}{4}$.',
+            r'Total: $3 + 4 \cdot \frac{\sqrt3}{4} = 3 + \sqrt3$. The answer is $\textbf{(C)}\ 3+\sqrt3$.',
+        ],
+        'trap': r'Leaving out the three gap triangles and answering $3 + \frac{\sqrt3}{4}$.',
+    },
+    '2014-amc-10a-14': {
+        'topics': ['coordinate-geometry', 'circles'],
+        'answer': 'D',
+        'insight': r'$P$ and $Q$ are $(0, p)$ and $(0, -p)$, and $\angle PAQ = 90^\circ$, so $A$ is on the circle with diameter $PQ$, centred at the origin.',
+        'steps': [
+            r'That circle has radius $OA = \sqrt{36 + 64} = 10$, so $PQ = 20$.',
+            r'$A$ is $6$ from the $y$-axis, so $[APQ] = \frac12 \cdot 20 \cdot 6 = 60$. The answer is $\textbf{(D)}\ 60$.',
+        ],
+        'trap': r'Using $8$, the height of $A$, instead of $6$, its distance from the line $PQ$.',
+    },
+    '2014-amc-10a-15': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'C',
+        'insight': r'For the rest of the trip, going $50$ instead of $35$ saves $1\frac12$ hours.',
+        'steps': [
+            r'With $r$ miles left: $\frac{r}{35} - \frac{r}{50} = \frac32$, so $\frac{3r}{350} = \frac32$ and $r = 175$.',
+            r'With the first $35$ miles, the airport is $210$ miles away. The answer is $\textbf{(C) }210$.',
+        ],
+        'trap': r'Stopping at $175$, the distance after the first hour.',
+    },
+    '2014-amc-10a-16': {
+        'topics': ['coordinate-geometry', 'area'],
+        'answer': 'E',
+        'insight': r'The shaded kite has a vertical diagonal $HF$ of length $1$. Find the horizontal one.',
+        'steps': [
+            r'With $D$ at the origin, $AF$ is $y = 2 - 4x$ and $DH$ is $y = 2x$; they meet at $\left(\frac13, \frac23\right)$. By symmetry the other corner is $\left(\frac23, \frac23\right)$.',
+            r'The diagonals are $1$ and $\frac13$, so the area is $\frac12 \cdot 1 \cdot \frac13 = \frac16$. The answer is $\textbf{(E)}\ \dfrac16$.',
+        ],
+        'trap': r'Placing the side corners at the height of $G$ and $E$, or halfway down, instead of solving for them.',
+    },
+    '2014-amc-10a-17': {
+        'topics': ['probability', 'basic-counting'],
+        'answer': 'D',
+        'insight': r'Count the ordered pairs that add to at most $6$, then choose which die shows the sum.',
+        'steps': [
+            r'Ordered pairs with sum $2, 3, 4, 5, 6$: $1 + 2 + 3 + 4 + 5 = 15$.',
+            r'The sum can be on any of the $3$ dice, and no roll is counted twice (that would need a $0$): $45$ rolls.',
+            r'$\frac{45}{216} = \frac{5}{24}$. The answer is $\textbf{(D)}\ \dfrac5{24}$.',
+        ],
+        'trap': r'Forgetting to choose which die shows the sum, which gives $\frac{15}{216}$.',
+    },
+    '2014-amc-10a-18': {
+        'topics': ['coordinate-geometry', 'area'],
+        'answer': 'B',
+        'insight': r'From the corner at height $0$, the two sides go up $1$ and $4$. Turning one side by $90^\circ$ gives the other.',
+        'steps': [
+            r'If one side is $(a, 1)$, the side at right angles is $(\mp 1, \pm a)$. Its rise is $4$, so $a = 4$.',
+            r'The side is $\sqrt{16 + 1}$, so the area is $17$. The answer is $\textbf{(B)}\ 17$.',
+        ],
+        'trap': r'Taking the side as $5$, the full height, and answering $25$. The square is tilted.',
+    },
+    '2014-amc-10a-19': {
+        'topics': ['solid-geometry', 'similar-triangles'],
+        'answer': 'A',
+        'insight': r'Stack the cubes on a common corner. $XY$ runs from $(0, 0, 10)$ to $(4, 4, 0)$, and the edge-$3$ cube holds the heights $4$ to $7$.',
+        'steps': [
+            r'$XY = \sqrt{16 + 16 + 100} = 2\sqrt{33}$.',
+            r'Heights $7$ down to $4$ are $\frac{3}{10}$ of the drop. There $x = y$ runs from $1.2$ to $2.4$, inside the cube.',
+            r'The length is $\frac{3}{10} \cdot 2\sqrt{33} = \frac{3\sqrt{33}}{5}$. The answer is $\textbf{(A)}\ \dfrac{3\sqrt{33}}5$.',
+        ],
+        'trap': r'Using the cube diagonal $3\sqrt3$. The segment does not run corner to corner through it.',
+    },
+    '2014-amc-10a-20': {
+        'topics': ['digits-bases', 'sequences-series'],
+        'answer': 'D',
+        'insight': r'Multiply out small cases: $64$, $704$, $7104$, $71104$. The product is $7$, then $k - 2$ ones, then $04$.',
+        'steps': [
+            r'The digit sum is $7 + (k - 2) + 0 + 4 = k + 9$.',
+            r'$k + 9 = 1000$ gives $k = 991$. The answer is $\textbf{(D)}\ 991$.',
+        ],
+        'trap': r'Guessing the digits are all $4$s or all $8$s. Work out a few products first.',
+    },
+    '2014-amc-10a-21': {
+        'topics': ['coordinate-geometry', 'factors-divisors'],
+        'answer': 'E',
+        'insight': r'The $x$-intercepts are $-\frac5a$ and $-\frac b3$; equal means $ab = 15$.',
+        'steps': [
+            r'$a = 1, 3, 5, 15$ give intercepts $-5, -\frac53, -1, -\frac13$.',
+            r'They add to $-8$. The answer is $\textbf{(E)}\ {-8}$.',
+        ],
+        'trap': r'Adding the values of $a$ (or $b$) instead of the intercepts.',
+    },
+    '2014-amc-10a-22': {
+        'topics': ['right-triangles', 'trigonometry'],
+        'answer': 'E',
+        'insight': r'$\tan 15^\circ = 2 - \sqrt3$, so $CE = 20 - 10\sqrt3$ and $DE = 10\sqrt3$.',
+        'steps': [
+            r'In right triangle $BCE$, $CE = 10\tan 15^\circ = 20 - 10\sqrt3$, leaving $DE = 20 - CE = 10\sqrt3$.',
+            r'$AE = \sqrt{AD^2 + DE^2} = \sqrt{100 + 300} = 20$. The answer is $\textbf{(E)}\ 20$.',
+        ],
+        'trap': r'Measuring the $15^\circ$ from $BA$ instead of $BC$. Then $E$ would fall beyond the side $CD$.',
+    },
+    '2014-amc-10a-23': {
+        'topics': ['area', 'transformations'],
+        'answer': 'C',
+        'insight': r'The fold line cuts the sheet into two equal halves, and the folded half covers a triangle of the other. $B$ is $A$ minus that overlap.',
+        'steps': [
+            r'Take the width as $1$ and length $\sqrt3$, so $A = \sqrt3$. The fold runs from $\left(\frac{\sqrt3}{3}, 0\right)$ to $\left(\frac{2\sqrt3}{3}, 1\right)$ at $60^\circ$.',
+            r'Folding sends the bottom edge to a line at $120^\circ$ through $\left(\frac{\sqrt3}{3}, 0\right)$, which hits the top edge at $(0, 1)$. The overlap is the triangle with corners $\left(\frac{\sqrt3}{3}, 0\right)$, $\left(\frac{2\sqrt3}{3}, 1\right)$, $(0, 1)$.',
+            r'Its base on the top edge is $\frac{2\sqrt3}{3}$ and its height $1$: area $\frac{\sqrt3}{3} = \frac{A}{3}$.',
+            r'So $B = \frac{2A}{3}$. The answer is $\textbf{(C)}\ 2:3$.',
+        ],
+        'trap': r'Answering $1:2$, as if folding stacked the whole half on the other. Only part of it overlaps.',
+    },
+    '2014-amc-10a-24': {
+        'topics': ['sequences-series', 'quadratics'],
+        'answer': 'A',
+        'insight': r'After $N$ rounds, $\frac{N(N + 7)}{2}$ numbers are listed and the counting has reached $N^2 + 4N$.',
+        'steps': [
+            r'$N = 996$ lists $\frac{996 \cdot 1003}{2} = 499{,}494$ numbers and reaches $996^2 + 4 \cdot 996 = 996{,}000$.',
+            r'Round $997$ lists $1000$ numbers from $996{,}001$, and we need $506$ more.',
+            r'The $500{,}000$th is $996{,}506$. The answer is $\textbf{(A)}\ 996,506$.',
+        ],
+        'trap': r'Being off by one at the end, starting the last block at $996{,}000$ instead of $996{,}001$.',
+    },
+    '2014-amc-10a-25': {
+        'topics': ['exponents', 'inequalities'],
+        'answer': 'B',
+        'insight': r'Since $4 < 5 < 8$, each gap from $5^n$ to $5^{n+1}$ holds two or three powers of $2$. The pairs wanted are exactly the gaps holding three.',
+        'steps': [
+            r'From $5^0$ up to $5^{867}$ there are $867$ gaps and they hold $2^1, \dots, 2^{2013}$: $2013$ powers.',
+            r'If $t$ gaps hold three and the rest two: $2 \cdot 867 + t = 2013$, so $t = 279$.',
+            r'Each such gap gives one $m$ (its smallest power). The answer is $\textbf{(B) }279$.',
+        ],
+        'trap': r'Counting the gaps that hold two powers ($588$), or forgetting $2^1$ in the first gap.',
+    },
+    # ------------------------------------------------------------------ 2013 AMC 10A
+    '2013-amc-10a-1': {
+        'topics': ['word-problems', 'arithmetic'],
+        'answer': 'C',
+        'insight': r'A fixed charge plus a charge per mile.',
+        'steps': [
+            r'$1.50 + 5 \cdot 0.25 = 1.50 + 1.25 = 2.75$.',
+            r'The ride costs $\$2.75$. The answer is $\textbf{(C)}\ 2.75$.',
+        ],
+        'trap': r'Forgetting the $\$1.50$ starting charge and answering $1.25$, or charging it per mile.',
+    },
+    '2013-amc-10a-2': {
+        'topics': ['decimals-fractions', 'arithmetic'],
+        'answer': 'B',
+        'insight': r'Divide the amount needed by the size of the cup.',
+        'steps': [
+            r'$2\frac12 \div \frac14 = \frac52 \cdot 4 = 10$.',
+            r'She fills it $10$ times. The answer is $\textbf{(B)}\ 10$.',
+        ],
+        'trap': r'Multiplying by $\frac14$ instead of dividing.',
+    },
+    '2013-amc-10a-3': {
+        'topics': ['area', 'quadrilaterals'],
+        'answer': 'E',
+        'insight': r'$\triangle ABE$ is right-angled at $B$, with legs $AB = 10$ and $BE$.',
+        'steps': [
+            r'$\frac12 \cdot 10 \cdot BE = 40$.',
+            r'$BE = 8$. The answer is $\textbf{(E)}\ 8$.',
+        ],
+        'trap': r'Forgetting the $\frac12$ and answering $4$.',
+    },
+    '2013-amc-10a-4': {
+        'topics': ['parity', 'word-problems'],
+        'answer': 'C',
+        'insight': r'Scoring twice the opponent means an even score, so the five one-run losses are the five odd scores.',
+        'steps': [
+            r'Losses at $1, 3, 5, 7, 9$: the opponents scored $2, 4, 6, 8, 10$, which is $30$.',
+            r'Wins at $2, 4, 6, 8, 10$: the opponents scored $1, 2, 3, 4, 5$, which is $15$.',
+            r'In all $45$. The answer is $\textbf{(C)}\ 45$.',
+        ],
+        'trap': r'Making the low scores the losses ($1$ to $5$), which needs a doubled odd score.',
+    },
+    '2013-amc-10a-5': {
+        'topics': ['word-problems', 'arithmetic'],
+        'answer': 'B',
+        'insight': r'Each person should pay a third of the total; everyone pays Hammy what they are short.',
+        'steps': [
+            r'The total is $105 + 125 + 175 = 405$, so each owes $135$.',
+            r'$t = 135 - 105 = 30$ and $d = 135 - 125 = 10$, so $t - d = 20$. The answer is $\textbf{(B)}\ 20$.',
+        ],
+        'trap': r'Measuring what each owes against the $175$ Hammy paid ($70$ and $50$). Each should end at $135$, not at what Hammy paid.',
+    },
+    '2013-amc-10a-6': {
+        'topics': ['logic', 'casework'],
+        'answer': 'D',
+        'insight': r'The movie pair must add to $16$ without using $5$: $3 + 13$ or $7 + 9$.',
+        'steps': [
+            r'If $7$ and $9$ went to the movies, only $3$ is left under $10$ (with $5$ at home), so baseball fails.',
+            r'So $3$ and $13$ went to the movies, $7$ and $9$ played baseball, and $5$ and $11$ stayed home.',
+            r'Kris is $11$. The answer is $\textbf{(D)}\ 11$.',
+        ],
+        'trap': r'Choosing the $7 + 9$ pair for the movies without checking that two younger brothers are left for baseball.',
+    },
+    '2013-amc-10a-7': {
+        'topics': ['combinations'],
+        'answer': 'C',
+        'insight': r'English is fixed. Choose the other $3$ from $5$ courses and take away the choices with no math.',
+        'steps': [
+            r'$\binom53 = 10$ ways to fill the other three places.',
+            r'Only History, Art, Latin has no math, so $10 - 1 = 9$. The answer is $\textbf{(C)}\ 9$.',
+        ],
+        'trap': r'Counting Algebra and Geometry as one course, or forgetting that both can be taken.',
+    },
+    '2013-amc-10a-8': {
+        'topics': ['exponents'],
+        'answer': 'C',
+        'insight': r'Factor $2^{2012}$ out of the top and bottom.',
+        'steps': [
+            r'$\frac{2^{2012}(4 + 1)}{2^{2012}(4 - 1)} = \frac53$.',
+            r'The answer is $\textbf{(C)}\ \frac{5}{3}$.',
+        ],
+        'trap': r'Cancelling the $2^{2012}$ terms as if they were the same as the $2^{2014}$ ones, which gives $1$.',
+    },
+    '2013-amc-10a-9': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'B',
+        'insight': r'Each attempt is worth the same on average: $0.2 \cdot 3 = 0.3 \cdot 2 = 0.6$ points.',
+        'steps': [
+            r'Whatever the mix, $30$ attempts at $0.6$ points each give $18$.',
+            r'The answer is $\textbf{(B)}\ 18$.',
+        ],
+        'trap': r'Thinking the split between shot types is needed. Both kinds are worth $0.6$ points a try.',
+    },
+    '2013-amc-10a-10': {
+        'topics': ['decimals-fractions', 'word-problems'],
+        'answer': 'E',
+        'insight': r'Pink is $60\%$ and red $40\%$. Find the carnations in each colour.',
+        'steps': [
+            r'Two thirds of the pink are carnations: $40\%$.',
+            r'Three fourths of the red are carnations: $30\%$.',
+            r'Together $70\%$. The answer is $\textbf{(E)}\ 70$.',
+        ],
+        'trap': r'Taking the roses instead: $20\% + 10\% = 30\%$.',
+    },
+    '2013-amc-10a-11': {
+        'topics': ['combinations'],
+        'answer': 'A',
+        'insight': r'$\binom n2 = 10$ fixes the size of the council.',
+        'steps': [
+            r'$\binom52 = 10$, so there are $5$ members.',
+            r'$\binom53 = 10$. The answer is $\textbf{(A)}\ 10$.',
+        ],
+        'trap': r'Thinking the two committees must not overlap. The question says they may.',
+    },
+    '2013-amc-10a-12': {
+        'topics': ['similar-triangles', 'quadrilaterals'],
+        'answer': 'C',
+        'insight': r'$\triangle BDE$ and $\triangle EFC$ are similar to the isosceles $\triangle ABC$, so $DE = DB$ and $EF = FC$.',
+        'steps': [
+            r'Perimeter $= AD + DE + EF + FA = AD + DB + FC + FA = AB + AC$.',
+            r'That is $28 + 28 = 56$. The answer is $\textbf{(C) }56$.',
+        ],
+        'trap': r'Trying to locate $E$. The perimeter is the same wherever it is.',
+    },
+    '2013-amc-10a-13': {
+        'topics': ['digits-bases', 'casework'],
+        'answer': 'B',
+        'insight': r'The numbers are $aba$. Not divisible by $5$ rules out $a = 5$ (and $a$ cannot be $0$).',
+        'steps': [
+            r'For $a = 1, 2, 3, 4$, $2a + b < 20$ always holds: $4 \cdot 10 = 40$ numbers.',
+            r'For $a = 6, 7, 8, 9$, $b < 20 - 2a$ allows $8, 6, 4, 2$ values: $20$ more.',
+            r'In all $60$. The answer is $\textbf{(B)}\ 60$.',
+        ],
+        'trap': r'Forgetting to drop $a = 5$, or allowing $2a + b = 20$.',
+    },
+    '2013-amc-10a-14': {
+        'topics': ['solid-geometry', 'basic-counting'],
+        'answer': 'D',
+        'insight': r'Each of the $12$ original edges survives, shortened. Each notch at a corner adds new edges.',
+        'steps': [
+            r'A notch has $3$ edges meeting at its inner corner and $2$ new edges on each of the $3$ faces it cuts: $9$ edges.',
+            r'$12 + 8 \cdot 9 = 84$. The answer is $\textbf{(D) }84$.',
+        ],
+        'trap': r'Adding the $12$ edges of each removed cube, which gives $108$.',
+    },
+    '2013-amc-10a-15': {
+        'topics': ['triangles', 'area'],
+        'answer': 'D',
+        'insight': r'Each altitude is twice the area over its side, so averaging altitudes means averaging $\frac1{\text{side}}$.',
+        'steps': [
+            r'With area $K$, the altitudes are $\frac{K}{5}$ and $\frac{2K}{15}$, which average to $\frac{K}{6}$.',
+            r'The third side is $\frac{2K}{K/6} = 12$. The answer is $\textbf{(D)}\ 12$.',
+        ],
+        'trap': r'Averaging the sides instead of the altitudes. Altitudes go as $\frac{1}{\text{side}}$, so the third side is the harmonic mean, $12$, not $12.5$.',
+    },
+    '2013-amc-10a-16': {
+        'topics': ['coordinate-geometry', 'area'],
+        'answer': 'E',
+        'insight': r'The two triangles have area $8$ each. Find their overlap.',
+        'steps': [
+            r'The image has corners $(10, 5)$, $(8, -3)$, $(7, 1)$. Note $(7, 1)$ lies on the side from $(6, 5)$ to $(8, -3)$.',
+            r'The overlap is the kite $(8, -3)$, $(9, 1)$, $\left(8, \frac73\right)$, $(7, 1)$, with diagonals $\frac{16}{3}$ and $2$: area $\frac{16}{3}$.',
+            r'Union: $8 + 8 - \frac{16}{3} = \frac{32}{3}$. The answer is $\textbf{(E)}\ \frac{32}{3}$.',
+        ],
+        'trap': r'Adding the two areas, $16$, without taking out the overlap.',
+    },
+    '2013-amc-10a-17': {
+        'topics': ['divisibility', 'basic-counting'],
+        'answer': 'B',
+        'insight': r'Two friends meet on multiples of $12$, $15$ or $20$; all three on multiples of $60$, which must be removed.',
+        'steps': [
+            r'In $365$ days: $30$ multiples of $12$, $24$ of $15$, $18$ of $20$, and $6$ of $60$.',
+            r'Exactly two: $(30 - 6) + (24 - 6) + (18 - 6) = 54$. The answer is $\textbf{(B)}\ 54$.',
+        ],
+        'trap': r'Taking out the multiples of $60$ only once, which gives $66$.',
+    },
+    '2013-amc-10a-18': {
+        'topics': ['coordinate-geometry', 'area'],
+        'answer': 'B',
+        'insight': r'The line from $A$ cuts off triangle $APD$ with base $AD = 4$. Make it half the area.',
+        'steps': [
+            r'By the shoelace formula, $ABCD$ has area $\frac{15}{2}$, so $\triangle APD$ needs $\frac{15}{4}$: $\frac12 \cdot 4 \cdot y = \frac{15}{4}$ gives $y = \frac{15}{8}$.',
+            r'On $CD$, $x = 3 + \frac{3 - y}{3} = \frac{27}{8}$.',
+            r'$27 + 8 + 15 + 8 = 58$. The answer is $\textbf{(B)}\ 58$.',
+        ],
+        'trap': r'Cutting the area in half with the triangle $ABP$ instead of $APD$, or halving the side $CD$.',
+    },
+    '2013-amc-10a-19': {
+        'topics': ['digits-bases', 'factors-divisors'],
+        'answer': 'C',
+        'insight': r'The last digit is the remainder, so $b \mid 2010$ and $b > 3$ (a digit $3$ needs base at least $4$).',
+        'steps': [
+            r'$2010 = 2 \cdot 3 \cdot 5 \cdot 67$ has $16$ divisors.',
+            r'Leaving out $1$, $2$ and $3$: $13$. The answer is $\textbf{(C)}\ 13$.',
+        ],
+        'trap': r'Counting all $16$ divisors. In bases $2$ and $3$ there is no digit $3$.',
+    },
+    '2013-amc-10a-20': {
+        'topics': ['area', 'circles'],
+        'answer': 'C',
+        'insight': r'Split the plane into $45^\circ$ wedges. Where a corner passes, the edge of the region is an arc of radius $\frac{\sqrt2}{2}$; elsewhere it is a side of the first or last square.',
+        'steps': [
+            r'The four corners sweep $45^\circ$ arcs: four sectors of radius $\frac{\sqrt2}{2}$, together $4 \cdot \frac{\pi}{16} = \frac{\pi}{4}$.',
+            r'In each other wedge the region reaches the side of the first square on one half and of the last square on the other: two triangles of area $\frac18(1 - \tan 22.5^\circ) = \frac{2 - \sqrt2}{8}$.',
+            r'Total: $8 \cdot \frac{2 - \sqrt2}{8} + \frac{\pi}{4} = 2 - \sqrt2 + \frac{\pi}{4}$. The answer is $\textbf{(C)}\ 2 - \sqrt2 + \frac{\pi}{4}$.',
+        ],
+        'trap': r'Answering with the circle the corners trace, or adding the full square to the sectors, which counts parts twice.',
+    },
+    '2013-amc-10a-21': {
+        'topics': ['factorials', 'factors-divisors'],
+        'answer': 'D',
+        'insight': r'After the $k$th pirate, $\frac{12 - k}{12}$ is left. The twelfth takes $N \cdot \frac{11!}{12^{11}}$, which must be whole.',
+        'steps': [
+            r'$12^{11} = 2^{22} 3^{11}$ and $11! = 2^8 3^4 \cdot 5^2 \cdot 7 \cdot 11$, so the least $N$ is $2^{14} 3^7$ (every earlier share is then whole too).',
+            r'The twelfth pirate gets $\frac{11!}{2^8 3^4} = 5^2 \cdot 7 \cdot 11 = 1925$. The answer is $\textbf{(D)}\ 1925$.',
+        ],
+        'trap': r'Expecting a power of $12$ such as $1728$. The $5^2 \cdot 7 \cdot 11$ in $11!$ never cancels.',
+    },
+    '2013-amc-10a-22': {
+        'topics': ['solid-geometry', 'right-triangles'],
+        'answer': 'B',
+        'insight': r'The small centres are $2$ from the centre, so the big sphere has radius $3$. The eighth sphere sits on the axis above the hexagon.',
+        'steps': [
+            r'With radius $r$ and centre at height $h$: tangency to the big sphere gives $h + r = 3$, and to a small one $\sqrt{4 + h^2} = 1 + r$.',
+            r'$4 + (3 - r)^2 = (1 + r)^2$ gives $12 = 8r$, so $r = \frac32$. The answer is $\textbf{(B)}\ \frac{3}{2}$.',
+        ],
+        'trap': r'Putting the eighth sphere in the plane of the hexagon, in the middle, where it would have radius $1$.',
+    },
+    '2013-amc-10a-23': {
+        'topics': ['circles', 'factors-divisors'],
+        'answer': 'D',
+        'insight': r'The power of $C$ with respect to the circle: $CX \cdot CB = AC^2 - AB^2$.',
+        'steps': [
+            r'$CX \cdot CB = 97^2 - 86^2 = 11 \cdot 183 = 2013 = 3 \cdot 11 \cdot 61$.',
+            r'$CB$ is between $97 - 86 = 11$ and $97 + 86 = 183$ and is the larger factor: only $CB = 61$, $CX = 33$ fits.',
+            r'The answer is $\textbf{(D)}\ 61$.',
+        ],
+        'trap': r'Taking $CB = 33$ and $CX = 61$. $X$ is between $B$ and $C$, so $CX$ is the smaller.',
+    },
+    '2013-amc-10a-24': {
+        'topics': ['permutations', 'combinations'],
+        'answer': 'E',
+        'insight': r'Each round pairs the players by a permutation of $3$. The even and odd permutations each cover every pairing once.',
+        'steps': [
+            r'Each pairing is in exactly one even and one odd permutation, so the counts must be equal within each group: all six once, all three even ones twice, or all three odd ones twice.',
+            r'Ordering the rounds: $6! = 720$, plus $\frac{6!}{2!\,2!\,2!} = 90$ twice.',
+            r'$720 + 90 + 90 = 900$. The answer is $\textbf{(E)}\ 900$.',
+        ],
+        'trap': r'Counting only the $720$ schedules with six different rounds.',
+    },
+    '2013-amc-10a-25': {
+        'topics': ['polygons', 'combinations'],
+        'answer': 'A',
+        'insight': r'Any $4$ vertices give one crossing, $\binom84 = 70$, but in a regular octagon some crossings coincide.',
+        'steps': [
+            r'The $4$ long diagonals all meet at the centre: $\binom42 = 6$ crossings counted for $1$ point, so take off $5$.',
+            r'There are $8$ more points where three diagonals meet, each counted $\binom32 = 3$ times: take off $16$.',
+            r'$70 - 5 - 16 = 49$. The answer is $\textbf{(A)}\ 49$.',
+        ],
+        'trap': r'Stopping at $70$, or fixing only the centre and answering $65$.',
     },
 }
 
