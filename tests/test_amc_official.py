@@ -109,6 +109,18 @@ Coupon: <math>\textdollar 20</math> off.
     assert one['choices'][0] == r'$\$179.95$'
 
 
+def test_a_choice_letter_in_doubled_braces_still_marks_a_choice():
+    # 2013 AMC 10B #5 writes `\textbf{{(B)}}` for every choice after the first.
+    src = r"""==Problem 1==
+What is the least value?
+
+<math>\textbf{(A)}\ -20\qquad\textbf{{(B)}}\ -15\qquad\textbf{{(C)}}\ -10\qquad\textbf{{(D)}}\ 0\qquad\textbf{{(E)}}\ 2</math>
+"""
+    (one,) = official.parse_contest(src, 'AMC 10')
+    assert one['statement'] == 'What is the least value?'
+    assert one['choices'] == ['$-20$', '$-15$', '$-10$', '$0$', '$2$']
+
+
 def test_aime_has_no_choices():
     found = official.parse_contest('==Problem 1==\nFind <math>x</math>.\n==Problem 2==\nFind y.', 'AIME')
     assert found[0]['choices'] is None and found[0]['statement'] == 'Find $x$.'

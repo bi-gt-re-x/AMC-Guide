@@ -14,7 +14,7 @@ on its answer.
 Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A and 10B, the 2024 AMC 10A and
 10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
 Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, the
-2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, the 2016 AMC 10A and 10B, the 2015 AMC 10A and 10B, the 2014 AMC 10A and 10B, and the 2013 AMC 10A. A problem whose numbers are only in a picture the
+2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, the 2016 AMC 10A and 10B, the 2015 AMC 10A and 10B, the 2014 AMC 10A and 10B, the 2013 AMC 10A and 10B, and the 2012 AMC 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
 
@@ -8055,6 +8055,519 @@ SOLUTIONS = {
             r'$70 - 5 - 16 = 49$. The answer is $\textbf{(A)}\ 49$.',
         ],
         'trap': r'Stopping at $70$, or fixing only the centre and answering $65$.',
+    },
+    # ------------------------------------------------------------------ 2013 AMC 10B
+    '2013-amc-10b-1': {
+        'topics': ['decimals-fractions', 'arithmetic'],
+        'answer': 'C',
+        'insight': r'The sums are $12$ and $9$, so this is $\frac43 - \frac34$.',
+        'steps': [
+            r'$\frac{12}{9} - \frac{9}{12} = \frac43 - \frac34 = \frac{16 - 9}{12}$.',
+            r'That is $\frac{7}{12}$. The answer is $\textbf{(C)}\ \frac{7}{12}$.',
+        ],
+        'trap': r'Subtracting the tops and the bottoms separately, as if $\frac{12}{9} - \frac{9}{12} = \frac{3}{-3}$, and answering $-1$.',
+    },
+    '2013-amc-10b-2': {
+        'topics': ['area', 'word-problems'],
+        'answer': 'A',
+        'insight': r'Convert steps to feet before finding the area.',
+        'steps': [
+            r'The garden is $30$ by $40$ feet, so $1200$ square feet.',
+            r'Half a pound per square foot gives $600$ pounds. The answer is $\textbf{(A)}\ 600$.',
+        ],
+        'trap': r'Doubling the area instead of each side, which gives $15 \cdot 20 \cdot 2 \cdot \frac12 = 300$, or forgetting the half and answering $1200$.',
+    },
+    '2013-amc-10b-3': {
+        'topics': ['linear-equations', 'statistics'],
+        'answer': 'C',
+        'insight': r'The average sits halfway between, so the low is $8$ below it.',
+        'steps': [
+            r'High and low are $16$ apart with average $3$, so they are $3 + 8$ and $3 - 8$.',
+            r'The low was $-5$. The answer is $\textbf{(C)}\ -5$.',
+        ],
+        'trap': r'Going a full $16$ below the average and answering $-13$.',
+    },
+    '2013-amc-10b-4': {
+        'topics': ['basic-counting', 'sequences-series'],
+        'answer': 'D',
+        'insight': r'Counting down, $201$ is first, so $k$ is number $202 - k$.',
+        'steps': [
+            r'$53$ is number $201 - 53 + 1 = 149$.',
+            r'(Check: there are $199$ numbers, and $51 + 149 = 200$, one more because $53$ is counted both ways.) The answer is $\textbf{(D)}\ 149$.',
+        ],
+        'trap': r'Forgetting the $+1$ and answering $148$.',
+    },
+    '2013-amc-10b-5': {
+        'topics': ['inequalities', 'arithmetic'],
+        'answer': 'B',
+        'insight': r'$2a - ab = a(2 - b)$. Make $2 - b$ as negative as possible and $a$ as large as possible.',
+        'steps': [
+            r'$b = 5$ gives $2 - b = -3$, and $a = 5$ gives $5 \cdot (-3)$.',
+            r'The least value is $-15$. The answer is $\textbf{(B)}\ -15$.',
+        ],
+        'trap': r'Letting $a$ or $b$ be $6$ (they are less than $6$), which leads to $-20$ or $-24$.',
+    },
+    '2013-amc-10b-6': {
+        'topics': ['statistics'],
+        'answer': 'C',
+        'insight': r'Add the ages, then divide by all $88$ people.',
+        'steps': [
+            r'The children total $33 \cdot 11 = 363$ and the parents $55 \cdot 33 = 1815$, together $2178$.',
+            r'$\frac{2178}{88} = 24.75$. The answer is $\textbf{(C)}\ 24.75$.',
+        ],
+        'trap': r'Averaging the two averages and answering $22$. There are more parents than children.',
+    },
+    '2013-amc-10b-7': {
+        'topics': ['circles', 'right-triangles'],
+        'answer': 'B',
+        'insight': r'The only scalene choice uses a diameter: points $1$, $2$ and $4$ round the hexagon, with arcs of $60^\circ$, $120^\circ$, $180^\circ$.',
+        'steps': [
+            r'One side is a diameter, $2$, so the angle opposite it is right. The other sides are $1$ (a side of the hexagon) and $\sqrt3$.',
+            r'The area is $\frac12 \cdot 1 \cdot \sqrt3 = \frac{\sqrt3}{2}$. The answer is $\textbf{(B)}\ \frac{\sqrt{3}}{2}$.',
+        ],
+        'trap': r'Using the equilateral triangle on alternate points, whose area is $\frac{3\sqrt3}{4}$. It is excluded.',
+    },
+    '2013-amc-10b-8': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'B',
+        'insight': r'Combined miles per gallon is total miles over total gallons, not the average of $40$ and $10$.',
+        'steps': [
+            r'For $40$ miles each, Ray uses $1$ gallon and Tom $4$: $80$ miles on $5$ gallons.',
+            r'That is $16$ miles per gallon. The answer is $\textbf{(B) }16$.',
+        ],
+        'trap': r'Averaging the rates and answering $25$. Tom burns far more of the fuel.',
+    },
+    '2013-amc-10b-9': {
+        'topics': ['gcd-lcm', 'factors-divisors'],
+        'answer': 'D',
+        'insight': r'$27000 = 2^3 \cdot 3^3 \cdot 5^3$. Pairwise coprime factors greater than $1$ must each take one whole prime power.',
+        'steps': [
+            r'The numbers are $8$, $27$ and $125$.',
+            r'Their sum is $160$. The answer is $\textbf{(D)}\ 160$.',
+        ],
+        'trap': r'Answering $30 + 30 + 30 = 90$ from $30^3$; those share factors.',
+    },
+    '2013-amc-10b-10': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'C',
+        'insight': r'With $x$ three-point tries there are $1.5x$ two-point tries. Find the points per $x$.',
+        'steps': [
+            r'Two-pointers: $0.5 \cdot 1.5x \cdot 2 = 1.5x$ points. Three-pointers: $0.4 \cdot x \cdot 3 = 1.2x$ points.',
+            r'$2.7x = 54$ gives $x = 20$. The answer is $\textbf{(C) }20$.',
+        ],
+        'trap': r'Putting the $50\%$ more on the three-point shots instead of the two-point shots.',
+    },
+    '2013-amc-10b-11': {
+        'topics': ['quadratics', 'circles'],
+        'answer': 'B',
+        'insight': r'Complete the squares: the equation is a circle of radius $0$.',
+        'steps': [
+            r'$x^2 - 10x + 25 + y^2 + 6y + 9 = 0$, so $(x - 5)^2 + (y + 3)^2 = 0$.',
+            r'Both squares are $0$: $x = 5$, $y = -3$, and $x + y = 2$. The answer is $\textbf{(B)}\ 2$.',
+        ],
+        'trap': r'Getting the sign of $y$ wrong when completing the square and answering $8$.',
+    },
+    '2013-amc-10b-12': {
+        'topics': ['probability', 'combinations'],
+        'answer': 'B',
+        'insight': r'There are $5$ sides and $5$ diagonals, and all sides match, as do all diagonals.',
+        'steps': [
+            r'Of the $\binom{10}{2} = 45$ pairs, $\binom52 + \binom52 = 20$ have equal length.',
+            r'$\frac{20}{45} = \frac49$. The answer is $\textbf{(B) }\frac{4}9$.',
+        ],
+        'trap': r'Treating it as picking with replacement and answering $\frac12$.',
+    },
+    '2013-amc-10b-13': {
+        'topics': ['sequences-series', 'basic-counting'],
+        'answer': 'E',
+        'insight': r'The turns say $1, 2, 3, \dots$ numbers, so after $k$ turns $\frac{k(k + 1)}{2}$ numbers have been said.',
+        'steps': [
+            r'After $9$ turns, $45$ numbers. The $10$th turn says $1$ to $10$.',
+            r'The $53$rd number is the $8$th of that turn: $8$. The answer is $\textbf{(E)}\ 8$.',
+        ],
+        'trap': r'Thinking each turn counts on from where the last one stopped. Every turn starts again at $1$.',
+    },
+    '2013-amc-10b-14': {
+        'topics': ['functions', 'graphs-transformations'],
+        'answer': 'E',
+        'insight': r'$x \clubsuit y = xy(x - y)$, and $y \clubsuit x = -xy(x - y)$.',
+        'steps': [
+            r'They are equal when $2xy(x - y) = 0$: $x = 0$, $y = 0$ or $y = x$.',
+            r'That is three lines. The answer is $\textbf{(E)}\ \text{three lines}$.',
+        ],
+        'trap': r'Dividing by $xy$ and keeping only $y = x$, one line.',
+    },
+    '2013-amc-10b-15': {
+        'topics': ['polygons', 'area'],
+        'answer': 'B',
+        'insight': r'A hexagon of side $s$ is six triangles of side $s$. Compare in units of small equilateral triangles.',
+        'steps': [
+            r'The triangle has side $\frac a3$ and area $\frac{\sqrt3}{4}\cdot\frac{a^2}{9}$; the hexagon has side $\frac b6$ and area $6 \cdot \frac{\sqrt3}{4}\cdot\frac{b^2}{36}$.',
+            r'Equal areas: $\frac{a^2}{9} = \frac{b^2}{6}$, so $\frac{a^2}{b^2} = \frac32$ and $\frac ab = \frac{\sqrt6}{2}$. The answer is $\textbf{(B)}\ \frac{\sqrt{6}}{2}$.',
+        ],
+        'trap': r'Matching side lengths instead of areas, which gives $\frac ab = \frac12$.',
+    },
+    '2013-amc-10b-16': {
+        'topics': ['triangle-centers', 'area'],
+        'answer': 'B',
+        'insight': r'$1.5$, $2$, $2.5$ is a $3$-$4$-$5$ triangle, so the medians cross at right angles. The centroid makes $CP = 3$ and $AP = 4$.',
+        'steps': [
+            r'$AD = 4 + 2 = 6$ and $CE = 3 + 1.5 = 4.5$, and they are perpendicular.',
+            r'A quadrilateral with perpendicular diagonals has area half their product: $\frac12 \cdot 6 \cdot 4.5 = 13.5$. The answer is $\textbf{(B)}13.5$.',
+        ],
+        'trap': r'Forgetting the $2:1$ split at the centroid and using $PE$ and $PD$ as the half-diagonals.',
+    },
+    '2013-amc-10b-17': {
+        'topics': ['invariants', 'linear-equations'],
+        'answer': 'E',
+        'insight': r'Each first-booth trade costs $5$ from $3r + b$, and each second-booth trade costs $5$ from $r + 2b$. Both start at multiples of $5$.',
+        'steps': [
+            r'Alex stops with $r \le 1$ and $b \le 2$. Keeping both sums multiples of $5$ allows only $(0, 0)$ or $(1, 2)$, and every trade hands back a token, so it is $(1, 2)$.',
+            r'$3r + b$ fell from $300$ to $5$: $59$ first-booth trades. $r + 2b$ fell from $225$ to $5$: $44$ second-booth trades.',
+            r'Each gives a silver token: $59 + 44 = 103$. The answer is $\textbf{(E)} 103$.',
+        ],
+        'trap': r'Assuming Alex ends with no tokens at all, which gives $105$; the last trade always returns one.',
+    },
+    '2013-amc-10b-18': {
+        'topics': ['digits-bases', 'basic-counting'],
+        'answer': 'D',
+        'insight': r'For $1bcd$, $d = 1 + b + c$ means $b + c \le 8$.',
+        'steps': [
+            r'Pairs $(b, c)$ of digits with $b + c \le 8$: $1 + 2 + \dots + 9 = 45$.',
+            r'From $2000$ to $2012$ only $2002$ works. In all $46$. The answer is $\textbf{(D)}\ 46$.',
+        ],
+        'trap': r'Forgetting $2002$ and answering $45$.',
+    },
+    '2013-amc-10b-19': {
+        'topics': ['quadratics', 'sequences-series'],
+        'answer': 'D',
+        'insight': r'One root means $b^2 = 4ac$, and the arithmetic sequence gives $b = \frac{a + c}{2}$.',
+        'steps': [
+            r'$\frac{(a + c)^2}{4} = 4ac$ gives $a^2 - 14ac + c^2 = 0$, so $\frac ca = 7 - 4\sqrt3$ (it is at most $1$).',
+            r'The root is $-\frac{b}{2a} = -\frac{a + c}{4a} = -\frac{8 - 4\sqrt3}{4} = -2 + \sqrt3$. The answer is $\textbf{(D)}\ -2+\sqrt{3}$.',
+        ],
+        'trap': r'Taking $\frac ca = 7 + 4\sqrt3$, which breaks $a \ge c$ and gives $-2 - \sqrt3$.',
+    },
+    '2013-amc-10b-20': {
+        'topics': ['factorials', 'factors-divisors'],
+        'answer': 'B',
+        'insight': r'$2013 = 3 \cdot 11 \cdot 61$. The $61$ forces $a_1 \ge 61$, and then the $59$ in $61!$ must be cancelled, so $b_1 \ge 59$.',
+        'steps': [
+            r'$a_1 = 61$ and $b_1 = 59$ work: $\frac{61!}{59!} = 61 \cdot 60$, and $2013 = \frac{61! \cdot 11! \cdot 3!}{59! \cdot 10! \cdot 5!}$.',
+            r'So $|a_1 - b_1| = 2$. The answer is $\textbf{(B)}\ 2$.',
+        ],
+        'trap': r'Thinking $b_1 = 60$ is needed to cancel $60$. Only the prime $59$ needs cancelling.',
+    },
+    '2013-amc-10b-21': {
+        'topics': ['sequences-series', 'diophantine'],
+        'answer': 'C',
+        'insight': r'Starting $a, b$, the seventh term is $5a + 8b$. Two starts give the same value when one is $(a + 8, b - 5)$.',
+        'steps': [
+            r'Both must be non-decreasing: $a \le b$ and $a + 8 \le b - 5$, so $b \ge a + 13$.',
+            r'The smallest is $a = 0$, $b = 13$ (and $8, 8$): $N = 8 \cdot 13 = 104$. The answer is $\textbf{(C)}\ 104$.',
+        ],
+        'trap': r'Forgetting the non-decreasing condition, which lets smaller pairs collide.',
+    },
+    '2013-amc-10b-22': {
+        'topics': ['permutations', 'divisibility'],
+        'answer': 'C',
+        'insight': r'The four lines share $J$, so $45 - J$ splits into four equal pair sums: $J$ is $1$, $5$ or $9$.',
+        'steps': [
+            r'For each such $J$ the other eight digits pair up in one way (for $J = 5$: $1 + 9$, $2 + 8$, $3 + 7$, $4 + 6$).',
+            r'The pairs go on the four lines in $4!$ ways and each pair can be flipped: $4! \cdot 2^4 = 384$.',
+            r'$3 \cdot 384 = 1152$. The answer is $\textbf{(C)}\ 1152$.',
+        ],
+        'trap': r'Taking only $J = 5$ and answering $384$.',
+    },
+    '2013-amc-10b-23': {
+        'topics': ['coordinate-geometry', 'right-triangles'],
+        'answer': 'B',
+        'insight': r'$AD = 12$ splits $BC$ into $5$ and $9$. Put $D$ at the origin and write $F$ on the line $DE$.',
+        'steps': [
+            r'With $B = (-5, 0)$, $C = (9, 0)$, $A = (0, 12)$, the line $DE$ is perpendicular to $AC$, so it runs along $(4, 3)$: $F = (4s, 3s)$.',
+            r'$AF \perp BF$: $4s(4s + 5) + 3s(3s - 12) = 25s^2 - 16s = 0$, so $s = \frac{16}{25}$.',
+            r'$DF = 5s = \frac{16}{5}$, and $16 + 5 = 21$. The answer is $\textbf{(B)}\ 21$.',
+        ],
+        'trap': r'Answering with $DE = \frac{36}{5}$, which gives $41$, not a choice; $F$ is partway along it.',
+    },
+    '2013-amc-10b-24': {
+        'topics': ['factors-divisors', 'casework'],
+        'answer': 'A',
+        'insight': r'Four divisors means $m = p^3$ (sum $1 + p + p^2 + p^3$) or $m = pq$ (sum $(1 + p)(1 + q)$).',
+        'steps': [
+            r'Cubes give $15, 40, 156, 400, 1464, 2380, \dots$: none in range.',
+            r'With $p = 2$ the sum is $3(1 + q)$: $2010, 2013, 2016, 2019$ give $q = 669, 670, 671, 672$, and none is prime ($669 = 3 \cdot 223$, $671 = 11 \cdot 61$).',
+            r'With $p, q$ odd both factors are even and at least $4$, so $4 \mid n$. $2012 = 2^2 \cdot 503$ has no such split; $2016 = 4 \cdot 504$ works with $p = 3$, $q = 503$.',
+            r'One nice number. The answer is $\textbf{(A)}\ 1$.',
+        ],
+        'trap': r'Forgetting the cube case or counting $2016 = 3 \cdot 672$ with $671$, which is not prime.',
+    },
+    '2013-amc-10b-25': {
+        'topics': ['digits-bases', 'modular-arithmetic'],
+        'answer': 'E',
+        'insight': r'Only the last two digits matter. Check the units digit first, then the tens.',
+        'steps': [
+            r'The last two digits in base $5$ depend on $N \bmod 25$, in base $6$ on $N \bmod 36$, and those of $2N$ on $N \bmod 50$. So the test depends on $N \bmod 900$, and the $900$ three-digit numbers are one full cycle.',
+            r'Units: $S$ ends in $(N \bmod 5) + (N \bmod 6) \le 9$, which must equal the last digit of $2N$. That happens exactly for $N \equiv 0, 1, 2, 3, 4 \pmod{30}$. Write $N = 30k + j$ with $0 \le j \le 4$.',
+            r'Tens: the base-$5$ tens digit is $k \bmod 5$, the base-$6$ one is $5k \bmod 6$, and $2N = 60k + 2j$ has tens digit $6k \bmod 10$. Of $k = 0, \dots, 29$, only $0, 1, 12, 13, 24$ make these agree.',
+            r'$5 \cdot 5 = 25$ values of $N$. The answer is $\textbf{(E)}\ 25$.',
+        ],
+        'trap': r'Thinking the base-$5$ and base-$6$ strings can just be added as numbers; LeRoy reads them as base-$10$ strings.',
+    },
+    # ------------------------------------------------------------------ 2012 AMC 10B
+    '2012-amc-10b-1': {
+        'topics': ['arithmetic', 'word-problems'],
+        'answer': 'C',
+        'insight': r'Each classroom has $18 - 2 = 16$ more students than rabbits.',
+        'steps': [
+            r'Four classrooms: $4 \cdot 16 = 64$.',
+            r'The answer is $\textbf{(C)}\ 64$.',
+        ],
+        'trap': r'Counting only the students, $72$, and forgetting to take away the rabbits.',
+    },
+    '2012-amc-10b-2': {
+        'topics': ['circles', 'area'],
+        'answer': 'E',
+        'insight': r'The circle touches both long sides, so the width is the diameter.',
+        'steps': [
+            r'The width is $10$ and the length twice that, $20$.',
+            r'The area is $200$. The answer is $\textbf{(E)}\ 200$.',
+        ],
+        'trap': r'Taking the radius as the width and answering $50$.',
+    },
+    '2012-amc-10b-3': {
+        'topics': ['transformations', 'coordinate-geometry'],
+        'answer': 'B',
+        'insight': r'Reflecting in a horizontal line keeps $x$ and puts $y$ the same distance on the other side.',
+        'steps': [
+            r'$2012$ is $12$ above $2000$, so the image is $12$ below: $1988$.',
+            r'The point is $(1000, 1988)$. The answer is $\textbf{(B)}\ (1000,1988)$.',
+        ],
+        'trap': r'Changing $x$ instead of $y$, or adding $2000$ and answering $(1000, 4012)$.',
+    },
+    '2012-amc-10b-4': {
+        'topics': ['modular-arithmetic'],
+        'answer': 'A',
+        'insight': r'Only the leftovers matter: $4 + 3 = 7$.',
+        'steps': [
+            r'Together they have $7$ more than a multiple of $6$, and $7$ fills one more bag with $1$ over.',
+            r'The answer is $\textbf{(A)}\ 1$.',
+        ],
+        'trap': r'Answering $7$, which is more than a bag holds.',
+    },
+    '2012-amc-10b-5': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'D',
+        'insight': r'Tip and tax are both on the meal price, so she pays $1 + 0.15 + 0.10 = 1.25$ times it.',
+        'steps': [
+            r'$1.25x = 27.50$ gives $x = 22$.',
+            r'The answer is $\textbf{(D)}\ 22$.',
+        ],
+        'trap': r'Taking $25\%$ off $27.50$ instead of dividing by $1.25$.',
+    },
+    '2012-amc-10b-6': {
+        'topics': ['inequalities'],
+        'answer': 'A',
+        'insight': r'Rounding $x$ up and $y$ down both widen the gap.',
+        'steps': [
+            r'$(x + \varepsilon) - (y - \varepsilon) = (x - y) + 2\varepsilon$.',
+            r'Her estimate is too big. The answer is $\textbf{(A)}$.',
+        ],
+        'trap': r'Thinking the two roundings cancel because they are the same amount.',
+    },
+    '2012-amc-10b-7': {
+        'topics': ['linear-equations', 'word-problems'],
+        'answer': 'D',
+        'insight': r'Equal acorns: $3$ per hole for the chipmunk and $4$ per hole for the squirrel with $4$ fewer holes.',
+        'steps': [
+            r'$3h = 4(h - 4)$ gives $h = 16$.',
+            r'The chipmunk hid $48$ acorns. The answer is $\textbf{(D)}\ 48$.',
+        ],
+        'trap': r'Answering with a number of holes ($16$ or $12$) instead of the number of acorns.',
+    },
+    '2012-amc-10b-8': {
+        'topics': ['inequalities', 'perfect-powers'],
+        'answer': 'B',
+        'insight': r'$(x - 2)^2$ must be a square strictly between $1$ and $25$: $4$, $9$ or $16$.',
+        'steps': [
+            r'$x - 2 = \pm 2, \pm 3, \pm 4$, so $x = 0, 4, -1, 5, -2, 6$.',
+            r'They add to $12$ (the pairs average $2$). The answer is $\textbf{(B)}\ 12$.',
+        ],
+        'trap': r'Including $x - 2 = \pm 1$ or $\pm 5$, where the inequality is not strict.',
+    },
+    '2012-amc-10b-9': {
+        'topics': ['parity'],
+        'answer': 'A',
+        'insight': r'Each pair adds $26$, $15$ and $16$. Only an odd pair sum forces an odd number.',
+        'steps': [
+            r'$26$ and $16$ can each be two even numbers. $15$ needs exactly one odd number.',
+            r'The least is $1$. The answer is $\textbf{(A)}\ 1$.',
+        ],
+        'trap': r'Thinking $57$ being odd means many odd numbers. One odd one makes the total odd.',
+    },
+    '2012-amc-10b-10': {
+        'topics': ['factors-divisors'],
+        'answer': 'D',
+        'insight': r'Cross-multiply: $MN = 36$.',
+        'steps': [
+            r'Each divisor $M$ of $36$ gives one $N$, and $36 = 2^2 3^2$ has $3 \cdot 3 = 9$ divisors.',
+            r'The answer is $\textbf{(D)}\ 9$.',
+        ],
+        'trap': r'Counting unordered pairs and getting $5$, which is not a choice; $(M, N)$ is ordered.',
+    },
+    '2012-amc-10b-11': {
+        'topics': ['basic-counting'],
+        'answer': 'A',
+        'insight': r'Work outward from the fixed cake on Friday: every other day has $3$ choices, different from its neighbour toward Friday.',
+        'steps': [
+            r'Thursday, Wednesday, $\dots$, Sunday each avoid the day after them: $3^5$. Saturday avoids cake: $3$.',
+            r'$3^6 = 729$. The answer is $\textbf{(A)}\ 729$.',
+        ],
+        'trap': r'Starting from Sunday with $4$ choices. Working outward from the fixed Friday is what makes every day a clean $3$.',
+    },
+    '2012-amc-10b-12': {
+        'topics': ['right-triangles', 'estimation'],
+        'answer': 'B',
+        'insight': r'$\angle BAC = 45^\circ$ makes $AB = BC = 10$, so $D$ is $30$ north of $B$.',
+        'steps': [
+            r'$AD = \sqrt{10^2 + 30^2} = \sqrt{1000}$.',
+            r'$31^2 = 961 < 1000 < 1024 = 32^2$. The answer is $\textbf{(B)}\ 31\ \text{and}\ 32$.',
+        ],
+        'trap': r'Adding $20$ to $AC = 10\sqrt2 \approx 14.1$ and answering between $34$ and $35$.',
+    },
+    '2012-amc-10b-13': {
+        'topics': ['word-problems', 'decimals-fractions'],
+        'answer': 'B',
+        'insight': r'Speeds add: her walking covers $\frac{1}{60}$ of the escalator a second, and with the motor $\frac{1}{24}$.',
+        'steps': [
+            r'The motor alone does $\frac{1}{24} - \frac{1}{60} = \frac{5 - 2}{120} = \frac{1}{40}$ a second.',
+            r'Standing takes $40$ seconds. The answer is $\textbf{(B)}\ 40$.',
+        ],
+        'trap': r'Subtracting the times, $60 - 24 = 36$. Rates subtract, not times.',
+    },
+    '2012-amc-10b-14': {
+        'topics': ['quadrilaterals', 'triangles'],
+        'answer': 'D',
+        'insight': r'Each triangle has height $3$ in a square of side $2\sqrt3$, so they overlap by $6 - 2\sqrt3$ vertically.',
+        'steps': [
+            r'That overlap, $6 - 2\sqrt3$, is the vertical diagonal of the rhombus.',
+            r'Its side corners are at mid-height $\sqrt3$, where each triangle is $2\sqrt3\left(1 - \frac{\sqrt3}{3}\right) = 2\sqrt3 - 2$ wide: the other diagonal.',
+            r'Area $= \frac12(6 - 2\sqrt3)(2\sqrt3 - 2) = 8\sqrt3 - 12$. The answer is $\textbf{(D) } 8\sqrt 3 - 12$.',
+        ],
+        'trap': r'Taking the full side $2\sqrt3$ as the horizontal diagonal.',
+    },
+    '2012-amc-10b-15': {
+        'topics': ['graph-theory', 'inequalities'],
+        'answer': 'D',
+        'insight': r'There are only $\binom62 = 15$ wins to share out.',
+        'steps': [
+            r'Six teams tied would need $2.5$ wins each. Five teams tied at $3$ wins use all $15$.',
+            r'That works: the five beat the sixth and, in a circle, each beats the next two. The answer is $\textbf{(D)}\ 5$.',
+        ],
+        'trap': r'Answering $6$ without noticing $15$ cannot be split six ways.',
+    },
+    '2012-amc-10b-16': {
+        'topics': ['circles', 'area'],
+        'answer': 'A',
+        'insight': r'The centres form an equilateral triangle of side $4$. The triangle already contains three $60^\circ$ sectors of the circles.',
+        'steps': [
+            r'The circles give $3 \cdot 4\pi = 12\pi$ and the triangle $\frac{\sqrt3}{4} \cdot 16 = 4\sqrt3$.',
+            r'The three sectors make half a circle, $2\pi$, counted twice: $12\pi + 4\sqrt3 - 2\pi = 10\pi + 4\sqrt3$. The answer is $\textbf{(A)}\ 10\pi+4\sqrt{3}$.',
+        ],
+        'trap': r'Adding the whole triangle to the three circles without removing the sectors, which gives $12\pi + 4\sqrt3$.',
+    },
+    '2012-amc-10b-17': {
+        'topics': ['solid-geometry', 'circles'],
+        'answer': 'C',
+        'insight': r'Each arc becomes a base circle, and the radius $12$ becomes the slant height.',
+        'steps': [
+            r'The $120^\circ$ arc is $8\pi$, so the base radius is $4$ and the height $\sqrt{144 - 16} = 8\sqrt2$.',
+            r'The $240^\circ$ arc gives base radius $8$ and height $\sqrt{144 - 64} = 4\sqrt5$.',
+            r'$\frac{16 \cdot 8\sqrt2}{64 \cdot 4\sqrt5} = \frac{\sqrt2}{2\sqrt5} = \frac{\sqrt{10}}{10}$. The answer is $\textbf{(C)}\ \frac{\sqrt{10}}{10}$.',
+        ],
+        'trap': r'Treating the cones as similar and cubing the ratio $\frac12$ to get $\frac18$. Same slant, different shapes.',
+    },
+    '2012-amc-10b-18': {
+        'topics': ['conditional-probability', 'probability'],
+        'answer': 'C',
+        'insight': r'Picture $500$ people: $1$ is ill and tests positive, and about $10$ of the healthy $499$ test positive too.',
+        'steps': [
+            r'$p = \frac{1/500}{1/500 + \frac{499}{500} \cdot \frac{2}{100}} = \frac{100}{1098} = \frac{50}{549}$.',
+            r'That is about $\frac{1}{11}$. The answer is $\textbf{(C)}\ \frac{1}{11}$.',
+        ],
+        'trap': r'Answering $\frac{98}{99}$ from the $98\%$ accuracy. The disease is rare, so most positives are false.',
+    },
+    '2012-amc-10b-19': {
+        'topics': ['similar-triangles', 'area'],
+        'answer': 'C',
+        'insight': r'$BFDG$ is a trapezoid with parallel sides $BF$ and $GD$, $6$ apart.',
+        'steps': [
+            r'$\triangle EBF \sim \triangle EAD$ with ratio $\frac{2}{8}$, so $BF = \frac14 \cdot 30 = 7.5$. And $GD = 15$.',
+            r'Area $= \frac{7.5 + 15}{2} \cdot 6 = 67.5$. The answer is $\textbf{(C)}\ \frac{135}{2}$.',
+        ],
+        'trap': r'Using $\frac{2}{6}$ for the ratio (forgetting $E$ is $8$ from $A$), which gives $BF = 10$.',
+    },
+    '2012-amc-10b-20': {
+        'topics': ['games-strategy', 'sequences-series'],
+        'answer': 'A',
+        'insight': r'From $N$ the numbers go $2N$, $2N + 50$, $4N + 100$, $4N + 150$, $8N + 300$, $8N + 350$, $16N + 700$, $16N + 750$. Bernardo wins when his number is the last below $1000$.',
+        'steps': [
+            r'For small $N$ the earliest Bernardo win is at $16N + 700 < 1000 \le 16N + 750$, which needs $N \ge 16$ (and $N \le 18$).',
+            r'For $N \le 15$ every number up to $16N + 750 \le 990$ stays below $1000$, and the next doubling, by Bernardo, passes it, so Silvia wins. Hence $N = 16$, digit sum $7$. The answer is $\textbf{(A)}\ 7$.',
+        ],
+        'trap': r'Stopping at $8N + 300$ and forgetting it is Silvia who adds $50$ after Bernardo doubles.',
+    },
+    '2012-amc-10b-21': {
+        'topics': ['right-triangles', 'circles'],
+        'answer': 'A',
+        'insight': r'Two segments of length $a$ adding to $2a$ must lie on one line: the midpoint $M$ of the $2a$ segment is one of the points.',
+        'steps': [
+            r'With ends $P$, $Q$ and midpoint $M$, the fourth point $S$ is $a$ from $M$ and from $P$, so $PMS$ is equilateral.',
+            r'$S$ is on the circle with diameter $PQ$, so $\angle PSQ = 90^\circ$ and $SQ = \sqrt{4a^2 - a^2} = \sqrt3\,a$. The answer is $\textbf{(A)}\ \sqrt{3}$.',
+        ],
+        'trap': r'Picturing a rhombus with side $a$ and diagonal $2a$, which would be flat.',
+    },
+    '2012-amc-10b-22': {
+        'topics': ['permutations', 'combinations'],
+        'answer': 'B',
+        'insight': r'The numbers used so far always form a block of consecutive integers, and each new one extends it left or right.',
+        'steps': [
+            r'After the first number, the other $9$ each go on the left end or the right end of the block.',
+            r'The first number is fixed by how many go left, so each of the $2^9$ left/right patterns gives exactly one list: $512$. The answer is $\textbf{(B)}\ 512$.',
+        ],
+        'trap': r'Counting $10 \cdot 2^9$ by choosing the first number freely. It is set by the pattern.',
+    },
+    '2012-amc-10b-23': {
+        'topics': ['solid-geometry', 'coordinate-geometry'],
+        'answer': 'D',
+        'insight': r'The cut is the plane $x + y + z = 1$, slicing the corner at the origin off the unit cube.',
+        'steps': [
+            r'On its cut face the solid stands as high as its farthest point from that plane, the corner $(1, 1, 1)$.',
+            r'That distance is $\frac{1 + 1 + 1 - 1}{\sqrt3} = \frac{2}{\sqrt3} = \frac{2\sqrt3}{3}$. The answer is $\textbf{(D)}\ \frac{2\sqrt{3}}{3}$.',
+        ],
+        'trap': r'Using the whole space diagonal $\sqrt3$, or the distance from the origin, $\frac{\sqrt3}{3}$.',
+    },
+    '2012-amc-10b-24': {
+        'topics': ['combinations', 'casework'],
+        'answer': 'B',
+        'insight': r'Each song is liked by nobody, by one girl ($3$ ways) or by one pair ($3$ ways): $7$ options. Every pair must appear.',
+        'steps': [
+            r'By inclusion and exclusion over the three pairs: $7^4 - 3 \cdot 6^4 + 3 \cdot 5^4 - 4^4$.',
+            r'$2401 - 3888 + 1875 - 256 = 132$. The answer is $\textbf{(B)}\ 132$.',
+        ],
+        'trap': r'Placing one song for each pair first and multiplying, which counts some ways several times.',
+    },
+    '2012-amc-10b-25': {
+        'topics': ['lattice-paths', 'basic-counting'],
+        'answer': 'E',
+        'insight': r'Every path crosses the $1$st, $3$rd, $5$th and $7$th columns of black arrows exactly once, so count the ways from each such column to the next and multiply.',
+        'steps': [
+            r'From $A$ there is $1$ way onto each first-column arrow. From those, each of the $4$ arrows in the $3$rd column is reached in $2 + 3 = 5$ ways.',
+            r'From the $3$rd column, each $5$th-column arrow is reached in $4 + 4 + 8 + 8 = 24$ ways from the four arrows, so $5 \cdot 24 = 120$ ways each.',
+            r'From the $5$th column, each last arrow is reached in $3 + 3 + 2 + 2 = 10$ ways, so $1200$ ways each, and each leads straight to $B$.',
+            r'$2 \cdot 1200 = 2400$. The answer is $\textbf{(E)}\ 2400$.',
+        ],
+        'trap': r'Ignoring the white arrows, which let the bug double back on the middle row and add many paths.',
     },
 }
 

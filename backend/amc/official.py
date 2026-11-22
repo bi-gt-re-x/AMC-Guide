@@ -107,6 +107,8 @@ def _emphasis_to_math(text):
 
 def _clean_wiki(text):
     """Wiki markup that is not math, removed or reduced to its words."""
+    # Before `{{...}}` templates go: a choice letter wrapped in doubled braces, `\textbf{{(B)}}` (2013 AMC 10B #5).
+    text = re.sub(r'\\(textbf|mathrm|text|textrm|mathbf)\s*\{\{\s*(\(\s*[A-E]\s*\))\s*\}\}', r'\\\1{\2}', text)
     text = re.sub(r'<!--.*?-->', '', text, flags=re.S)
     text = re.sub(r'\[\[(?:Image|File):[^\]]*\]\]', '', text, flags=re.I)
     # A full stop typed after the link goes with it (2015 AMC 10A #25).
