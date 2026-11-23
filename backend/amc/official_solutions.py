@@ -13,7 +13,7 @@ on its answer.
 
 Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A, 10B, 12A and 12B, the 2024 AMC 10A,
 10B, 12A and 12B, the 2023 AMC 10A, 10B, 12A and 12B, the 2022 AMC 10A, 10B, 12A and 12B, the 2021 AMC 10A, 10B, 12A and 12B, the 2021
-Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, the
+Fall AMC 10A, 10B, 12A and 12B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, the
 2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, the 2016 AMC 10A and 10B, the 2015 AMC 10A and 10B, the 2014 AMC 10A and 10B, the 2013 AMC 10A and 10B, and the 2012 AMC 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
@@ -5446,6 +5446,313 @@ SOLUTIONS = {
         ],
         'trap': r"Taking the next slope as $\frac{21}{30} = \frac7{10}$; $\frac{19}{28}$ is closer, found by looking for $\frac yx$ just above $\frac23$ with $x \le 30$.",
     },
+    # ------------------------------------------------------------------ 2021 Fall AMC 12A
+    # Problems 1, 2, 3, 4, 5, 6, 7, 10, 17, 18, 20 and 23 are the Fall 10A's 1, 2, 4,
+    # 5, 6, 7, 10, 12, 20, 21, 23 and 25, and use its write-ups (_SAME_AS_10 below).
+    '2021-fall-amc-12a-8': {
+        'topics': ['gcd-lcm', 'factors-divisors'],
+        'answer': 'D',
+        'insight': r"$N/M$ is the product of the prime powers that the new numbers bring and $M$ lacks.",
+        'steps': [
+            r"$M$ contains $2^4$, $3^3$, $5^2$ and every prime up to $29$.",
+            r"Among $32, \dots, 40$: $32 = 2^5$ adds a factor $2$, and $37$ is a new prime. The others ($33 = 3 \cdot 11$, $34$, $35$, $36 = 4 \cdot 9$, $38$, $39$, $40 = 8 \cdot 5$) already divide $M$.",
+            r"$\frac NM = 2 \cdot 37 = 74$. The answer is $\textbf{(D)}\ 74$.",
+        ],
+        'trap': r"Including $31$, which is not in the list, and answering $2 \cdot 31 \cdot 37$.",
+    },
+    '2021-fall-amc-12a-9': {
+        'topics': ['logarithms', 'solid-geometry'],
+        'answer': 'E',
+        'insight': r"Surface area equals volume means $2\left(\frac1a + \frac1b + \frac1c\right) = 1$, and $\frac{1}{\log_k x} = \log_x k$.",
+        'steps': [
+            r"$2(ab + bc + ca) = abc$; divide by $abc$: $2\left(\frac1a + \frac1b + \frac1c\right) = 1$.",
+            r"With $a = \log_2 x$ and so on, $\frac1a + \frac1b + \frac1c = \log_x 2 + \log_x 3 + \log_x 4 = \log_x 24$.",
+            r"$2\log_x 24 = 1$, so $x = 24^2 = 576$. The answer is $\textbf{(E)}\ 576$.",
+        ],
+        'trap': r"Stopping at $\log_x 24 = 1$ and answering $24$; the factor $2$ squares it.",
+    },
+    '2021-fall-amc-12a-11': {
+        'topics': ['circles', 'right-triangles'],
+        'answer': 'E',
+        'insight': r"The chord and its inner half share a midpoint, so both are measured from the same distance $d$ to the center.",
+        'steps': [
+            r"Let the chord be $2h$ at distance $d$. Then $h^2 + d^2 = 19^2$, and the inner half (length $h$, half-length $\frac h2$) gives $\frac{h^2}{4} + d^2 = 17^2$.",
+            r"Subtracting, $\frac34h^2 = 361 - 289 = 72$, so $h^2 = 96$.",
+            r"The chord is $2\sqrt{96} = 8\sqrt6$. The answer is $\textbf{(E)}\ 8\sqrt{6}$.",
+        ],
+        'trap': r"Taking the inner part to be half of the half-chord, or answering $h$ instead of $2h$.",
+    },
+    '2021-fall-amc-12a-12': {
+        'topics': ['binomial-theorem', 'modular-arithmetic'],
+        'answer': 'C',
+        'insight': r"The term with $y^k$ has $2^{(1000-k)/3}\,3^{k/2}$, rational exactly when $3 \mid 1000 - k$ and $2 \mid k$.",
+        'steps': [
+            r"$3 \mid 1000 - k$ means $k \equiv 1 \pmod 3$; with $k$ even, $k \equiv 4 \pmod 6$.",
+            r"So $k = 4, 10, 16, \dots, 1000$.",
+            r"That is $\frac{1000 - 4}{6} + 1 = 167$ terms. The answer is $\textbf{(C)}\ 167$.",
+        ],
+        'trap': r"Requiring $3 \mid k$ instead of $3 \mid 1000 - k$; the cube root goes with $x$'s exponent.",
+    },
+    '2021-fall-amc-12a-13': {
+        'topics': ['coordinate-geometry', 'trigonometry'],
+        'answer': 'A',
+        'insight': r"The bisector points along the sum of the two lines' unit direction vectors.",
+        'steps': [
+            r"Unit directions: $\frac{(1, 1)}{\sqrt2}$ and $\frac{(1, 3)}{\sqrt{10}}$. Multiply both by $\sqrt{10}$: $(\sqrt5, \sqrt5)$ and $(1, 3)$.",
+            r"Their sum $(\sqrt5 + 1, \sqrt5 + 3)$ has slope $\frac{3 + \sqrt5}{1 + \sqrt5} = \frac{(3 + \sqrt5)(\sqrt5 - 1)}{4} = \frac{2 + 2\sqrt5}{4}$.",
+            r"$k = \frac{1 + \sqrt5}{2}$. The answer is $\textbf{(A)} \ \frac{1+\sqrt{5}}{2}$.",
+        ],
+        'trap': r"Averaging the slopes and answering $2$; the bisector averages angles, not slopes.",
+    },
+    '2021-fall-amc-12a-14': {
+        'topics': ['polygons', 'area'],
+        'answer': 'E',
+        'insight': r"The other three angles are reflex ($210^\circ$ each), so the hexagon is an equilateral triangle with three isosceles notches cut out.",
+        'steps': [
+            r"The angles add to $720^\circ$, so the other three are $\frac{720 - 90}{3} = 210^\circ$. With side $s$, the acute vertices form an equilateral triangle, and each reflex vertex cuts in a notch with legs $s$ and apex angle $150^\circ$.",
+            r"The triangle's side is $2s\sin 75^\circ$, so its area is $\frac{\sqrt3}{4} \cdot 4s^2\sin^2 75^\circ = \frac{\sqrt3}{4}(2 + \sqrt3)s^2$. Each notch has area $\frac12 s^2\sin 150^\circ = \frac{s^2}{4}$.",
+            r"Area $= \frac{2\sqrt3 + 3}{4}s^2 - \frac34s^2 = \frac{\sqrt3}{2}s^2 = 6\sqrt3$, so $s^2 = 12$ and $s = 2\sqrt3$.",
+            r"The perimeter is $6s = 12\sqrt3$. The answer is $\textbf{(E)} \: 12\sqrt3$.",
+        ],
+        'trap': r"Treating the three non-acute angles as convex; the angle sum forces them to be $210^\circ$.",
+    },
+    '2021-fall-amc-12a-15': {
+        'topics': ['complex-numbers', 'polynomials'],
+        'answer': 'D',
+        'insight': r"$P$ has real coefficients, so the conjugates of its roots are its roots again: the new roots are just $4i$ times $P$'s roots.",
+        'steps': [
+            r"$\{\overline{z_k}\} = \{z_k\}$, so the roots of $Q$ are $4iz_k$ and $Q(w) = (4i)^4P\left(\frac{w}{4i}\right)$.",
+            r"Then $Q(w) = w^4 + 4(4i)w^3 + 3(4i)^2w^2 + 2(4i)^3w + (4i)^4 = w^4 + 16iw^3 - 48w^2 - 128iw + 256$.",
+            r"$B + D = -48 + 256 = 208$. The answer is $\textbf{(D)} \: 208$.",
+        ],
+        'trap': r"Forgetting that $(4i)^2 = -16$, which flips the sign of $B$.",
+    },
+    '2021-fall-amc-12a-16': {
+        'topics': ['graph-theory', 'basic-counting'],
+        'answer': 'B',
+        'insight': r"Just before the last cable the network is still disconnected, so count the most cables a disconnected network can hold.",
+        'steps': [
+            r"Split the computers into two groups with no cables between them: $a$ brand A and $b$ brand B in one group. At most $ab + (20 - a)(10 - b)$ cables fit.",
+            r"That is largest when one brand A computer sits alone: $19 \cdot 10 = 190$.",
+            r"The next cable connects everything, so the most is $191$. The answer is $\textbf{(B)}\  191$.",
+        ],
+        'trap': r"Stopping at $190$ and forgetting the final cable that joins the network.",
+    },
+    '2021-fall-amc-12a-19': {
+        'topics': ['trigonometry', 'quadratics'],
+        'answer': 'B',
+        'insight': r"$\sin x = \sin y$ (in degrees) when $y = x + 360k$ or $y = 180 - x + 360k$.",
+        'steps': [
+            r"$x^2 = x + 360k$ first works for $k = 1$ at $x \approx 19.5$.",
+            r"$x^2 = 180 - x$ gives $x = \frac{-1 + \sqrt{721}}{2} \approx 12.93$, which is smaller.",
+            r"Rounded up, $x$ is $13$. The answer is $\textbf{(B) } 13$.",
+        ],
+        'trap': r"Only using $x^2 = x + 360k$, which gives $20$.",
+    },
+    '2021-fall-amc-12a-21': {
+        'topics': ['coordinate-geometry', 'quadrilaterals'],
+        'answer': 'C',
+        'insight': r"Put the diagonal on the $x$-axis; the two perpendicular feet give $B$ and $D$ directly.",
+        'steps': [
+            r"Take $C = (0, 0)$, $Y = (2, 0)$, $X = (3, 0)$, $A = (6, 0)$, $B = (2, b)$ and $D = (3, -d)$.",
+            r"$BC \parallel AD$: slopes $\frac b2 = \frac d3$, so $d = \frac32 b$. $AB = CD$: $16 + b^2 = 9 + \frac94b^2$, so $b^2 = \frac{28}{5}$.",
+            r"Area $= \frac12 \cdot AC \cdot (b + d) = 3 \cdot \frac52 b = \frac{15}{2}\sqrt{\frac{28}{5}} = 3\sqrt{35}$. The answer is $\textbf{(C)} \: 3\sqrt{35}$.",
+        ],
+        'trap': r"Assuming $BY = DX$; the trapezoid is isosceles but the diagonal is not its axis.",
+    },
+    '2021-fall-amc-12a-22': {
+        'topics': ['basic-counting', 'casework'],
+        'answer': 'D',
+        'insight': r"The final board has three $O$'s in a line and three $X$'s elsewhere that are not in a line (or Azar would have won first).",
+        'steps': [
+            r"Choose Carl's line ($8$ ways) and $3$ of the other $6$ squares for the $X$'s: $8 \cdot 20 = 160$.",
+            r"Remove boards where the $X$'s form a line. If Carl's line is a row or column, the other $6$ squares hold $2$ full lines: $6 \cdot 2 = 12$. If it is a diagonal, they hold none.",
+            r"$160 - 12 = 148$. The answer is $\textbf{(D) } 148$.",
+        ],
+        'trap': r"Counting all $160$ and forgetting that Azar would already have won.",
+    },
+    '2021-fall-amc-12a-24': {
+        'topics': ['quadrilaterals', 'sequences-series'],
+        'answer': 'E',
+        'insight': r"Put $A$ at the origin: $D = x\left(\frac12, \frac{\sqrt3}2\right)$ and $C = D + (y, 0)$, so $BC^2 = \left(\frac x2 + y - 18\right)^2 + \frac34x^2$.",
+        'steps': [
+            r"The sides are $18, 18 - d, 18 - 2d, 18 - 3d$. Try each order of the last three as $AD = x$, $CD = y$, $BC = z$; each gives a quadratic in $d$.",
+            r"The solutions: $d = 0$ (a rhombus, all sides $18$); $d = 2$ with $AD = 16$, $CD = 12$, $BC = 14$, since $(8 + 12 - 18)^2 + 192 = 196$; and $d = 5$ with $AD = 8$, $CD = 3$, $BC = 13$, since $(4 + 3 - 18)^2 + 48 = 169$.",
+            r"The possible values are $18, 16, 14, 12, 13, 8, 3$, which add to $84$. The answer is $\textbf{(E) } 84$.",
+        ],
+        'trap': r"Dropping the rhombus (common difference $0$) and answering $66$.",
+    },
+    '2021-fall-amc-12a-25': {
+        'topics': ['basic-counting', 'modular-arithmetic'],
+        'answer': 'E',
+        'insight': r"Choose $a_1, a_2, a_3$; then $a_4$ is forced mod $m$, and you only subtract the cases where it repeats one of them.",
+        'steps': [
+            r"There are $m(m-1)(m-2)$ ordered triples, each forcing $a_4$. Let $T$ count those with $a_4 = a_1$ (by symmetry the same for $a_2$, $a_3$; two collisions at once are impossible).",
+            r"$a_4 = a_1$ means $a_3 \equiv -2a_1 - a_2$. Over the $m(m-1)$ pairs $(a_1, a_2)$, $a_3$ fails to be new when $a_2 \equiv -3a_1$ or $a_2 \equiv -a_1$, each once for every $a_1 \not\equiv 0$. So $T = m(m-1) - 2(m-1) = (m-1)(m-2)$.",
+            r"$D(m) = m(m-1)(m-2) - 3(m-1)(m-2) = (m-1)(m-2)(m-3) = m^3 - 6m^2 + 11m - 6$.",
+            r"$c_1 = 11$. The answer is $\textbf{(E)}\ 11$.",
+        ],
+        'trap': r"Not removing the triples whose forced $a_4$ repeats an earlier number, which leaves $m(m-1)(m-2)$ and $c_1 = 2$.",
+    },
+    # ------------------------------------------------------------------ 2021 Fall AMC 12B
+    # Problems 1, 2, 3, 4, 5, 6, 7, 11, 15, 19 and 20 are the Fall 10B's 1, 2, 4, 5,
+    # 7, 8, 12, 14, 18, 21 and 24, and use its write-ups (_SAME_AS_10 below).
+    '2021-fall-amc-12b-8': {
+        'topics': ['triangles', 'trigonometry'],
+        'answer': 'D',
+        'insight': r"Write the base and height with the vertex angle $\theta$: $b = 2s\sin\frac\theta2$, $h = s\cos\frac\theta2$.",
+        'steps': [
+            r"$s^2 = b \cdot 2h = 4s^2\sin\frac\theta2\cos\frac\theta2 = 2s^2\sin\theta$.",
+            r"So $\sin\theta = \frac12$, and $\theta = 30^\circ$ or $150^\circ$.",
+            r"The triangle is obtuse, so $\theta = 150^\circ$. The answer is $\textbf{(D)} \: 150$.",
+        ],
+        'trap': r"Taking $\theta = 30^\circ$, which is acute.",
+    },
+    '2021-fall-amc-12b-9': {
+        'topics': ['circles', 'triangles'],
+        'answer': 'B',
+        'insight': r"In an equilateral triangle $\angle AOC = 120^\circ$; the Law of Sines gives the circle through $A$, $O$, $C$.",
+        'steps': [
+            r"$\angle AOC = 120^\circ$ and $AC = 6$.",
+            r"The circumradius of $\triangle AOC$ is $\frac{AC}{2\sin 120^\circ} = \frac{6}{\sqrt3} = 2\sqrt3$.",
+            r"Its area is $\pi(2\sqrt3)^2 = 12\pi$. The answer is $\textbf{(B)} \: 12\pi$.",
+        ],
+        'trap': r"Using the incircle of $ABC$, radius $\sqrt3$, and answering $3\pi$.",
+    },
+    '2021-fall-amc-12b-10': {
+        'topics': ['circles', 'triangles'],
+        'answer': 'E',
+        'insight': r"On a circle, equal chords cut equal arcs: find $t$ for each choice of apex.",
+        'steps': [
+            r"Apex at $t$: $t$ is equidistant from $40$ and $60$, so $t = 50$ or $230$.",
+            r"Apex at $40$: the arc to $t$ is $20^\circ$, so $t = 20$. Apex at $60$: $t = 80$.",
+            r"$50 + 230 + 20 + 80 = 380$. The answer is $\textbf{(E)} \: 380$.",
+        ],
+        'trap': r"Missing $t = 230$, the far point on the perpendicular bisector.",
+    },
+    '2021-fall-amc-12b-12': {
+        'topics': ['factors-divisors', 'decimals-fractions'],
+        'answer': 'B',
+        'insight': r"$f(n) = \frac{\sigma(n)}{n}$ is multiplicative, and $768$, $384$ differ only in the power of $2$.",
+        'steps': [
+            r"$768 = 2^8 \cdot 3$ and $384 = 2^7 \cdot 3$. The factor for $3$ is $\frac43$ in both.",
+            r"For $2^k$, $\frac{\sigma(2^k)}{2^k} = 2 - \frac1{2^k}$, so the difference is $\frac43\left(\frac1{2^7} - \frac1{2^8}\right) = \frac43 \cdot \frac1{256}$.",
+            r"That is $\frac1{192}$. The answer is $\textbf{(B)}\ \frac{1}{192}$.",
+        ],
+        'trap': r"Thinking doubling $n$ leaves $f$ unchanged; the power of $2$ moves $f$ slightly.",
+    },
+    '2021-fall-amc-12b-13': {
+        'topics': ['trigonometry', 'modular-arithmetic'],
+        'answer': 'E',
+        'insight': r"Multiplying by $3$ shuffles $\pm1, \dots, \pm5$ mod $11$, so the top is the bottom up to signs.",
+        'steps': [
+            r"Mod $11$: $3, 6, 9, 12, 15 \equiv 3, -5, -2, 1, 4$.",
+            r"Since $\sin(11c - jc) = -\sin jc$: $\sin 6c = -\sin 5c$, $\sin 9c = -\sin 2c$, $\sin 12c = \sin c$, $\sin 15c = \sin 4c$.",
+            r"The two minus signs cancel, and the top equals the bottom. The answer is $\textbf{(E)}\ 1$.",
+        ],
+        'trap': r"Counting the minus signs wrong and answering $-1$.",
+    },
+    '2021-fall-amc-12b-14': {
+        'topics': ['polynomials', 'complex-numbers'],
+        'answer': 'B',
+        'insight': r"$R - PQ$ has degree exactly $6$ and constant term $3 - 2 = 1$, so it has at least one root, and all six can coincide.",
+        'steps': [
+            r"$PQ$ has degree $5$, so $R - PQ$ has degree $6$ and at least one root: $N \ge 1$.",
+            r"Take $R = PQ + (z - 1)^6$ with, for example, $P = z^2 + 1$ and $Q = z^3 + 2$; its constant term is $2 + 1 = 3$ as required.",
+            r"Then $PQ = R$ only at $z = 1$, so $N = 1$. The answer is $\textbf{(B)} \: 1$.",
+        ],
+        'trap': r"Thinking real coefficients force a pair of conjugate roots; a repeated real root is allowed.",
+    },
+    '2021-fall-amc-12b-16': {
+        'topics': ['gcd-lcm', 'parity'],
+        'answer': 'B',
+        'insight': r"Parity first: $23$ is odd, and two even numbers would make an even gcd, so all three are odd and so are all the gcds.",
+        'steps': [
+            r"If exactly two numbers were even, their gcd would be even and the other two odd, making the gcd sum even. So $a, b, c$ are all odd, and the gcds are three odd numbers adding to $9$: $1 + 1 + 7$, $1 + 3 + 5$ or $3 + 3 + 3$.",
+            r"$3 + 3 + 3$ makes all three multiples of $3$, but $3 \nmid 23$. $1 + 1 + 7$: two numbers are odd multiples of $7$, giving $7, 7, 9$. $1 + 3 + 5$: one number is a multiple of $15$, giving $3, 5, 15$.",
+            r"$49 + 49 + 81 = 179$ and $9 + 25 + 225 = 259$, which add to $438$. The answer is $\textbf{(B)} \: 438$.",
+        ],
+        'trap': r"Finding only one of the two triples.",
+    },
+    '2021-fall-amc-12b-17': {
+        'topics': ['probability', 'recursion'],
+        'answer': 'A',
+        'insight': r"The bug must stay at the start or one of its six neighbors; from a neighbor, $3$ of the $6$ moves keep it there.",
+        'steps': [
+            r"From the start every move reaches a neighbor. From a neighbor, $1$ move returns to the start and $2$ go to an adjacent neighbor.",
+            r"Let $a_k, b_k$ be the chances of being safe at the start or at a neighbor after $k$ moves: $a_{k+1} = \frac{b_k}6$, $b_{k+1} = a_k + \frac{b_k}{3}$, from $a_1 = 0$, $b_1 = 1$.",
+            r"This gives $(a, b) = \left(\frac16, \frac13\right), \left(\frac1{18}, \frac5{18}\right), \left(\frac5{108}, \frac4{27}\right), \left(\frac2{81}, \frac{31}{324}\right)$ after moves $2$ to $5$.",
+            r"$\frac{8}{324} + \frac{31}{324} = \frac{39}{324} = \frac{13}{108}$. The answer is $\textbf{(A)}\ \frac{13}{108}$.",
+        ],
+        'trap': r"Counting only where the bug ends up, not whether it stayed close at every step.",
+    },
+    '2021-fall-amc-12b-18': {
+        'topics': ['recursion', 'exponents'],
+        'answer': 'A',
+        'insight': r"With $v_k = \frac12 - u_k$, the recurrence becomes $v_{k+1} = 2v_k^2$, which squares the error each step.",
+        'steps': [
+            r"$\frac12 - (2u - 2u^2) = 2\left(\frac12 - u\right)^2$, so $v_{k+1} = 2v_k^2$ and $L = \frac12$. With $w_k = 2v_k$: $w_{k+1} = w_k^2$ and $w_0 = \frac12$.",
+            r"$w_k = 2^{-2^k}$, so $|u_k - L| = 2^{-2^k - 1}$.",
+            r"$2^k + 1 \ge 1000$ first holds at $k = 10$. The answer is $\textbf{(A)}\: 10$.",
+        ],
+        'trap': r"Assuming the error halves each step, which gives about $1000$ steps.",
+    },
+    '2021-fall-amc-12b-21': {
+        'topics': ['complex-numbers', 'polynomials'],
+        'answer': 'A',
+        'insight': r"With $w = e^{ix}$, $P = 1 + w - w^2 + w^3$; on the unit circle, conjugating gives a second equation to subtract.",
+        'steps': [
+            r"If $1 + w - w^2 + w^3 = 0$ with $|w| = 1$, conjugate (using $\overline w = \frac1w$) and multiply by $w^3$: $w^3 + w^2 - w + 1 = 0$.",
+            r"Subtracting the two equations: $2w - 2w^2 = 0$, so $w = 0$ or $w = 1$.",
+            r"$w = 0$ is not on the circle and $P = 2$ at $w = 1$, so there are no solutions. The answer is $\textbf{(A)}\ 0$.",
+        ],
+        'trap': r"Counting the three roots of the cubic in $w$; none of them has modulus $1$.",
+    },
+    '2021-fall-amc-12b-22': {
+        'topics': ['circles', 'coordinate-geometry'],
+        'answer': 'C',
+        'insight': r"A circle tangent to a line at a point has its center on the perpendicular there; then one equation finds each center.",
+        'steps': [
+            r"Put $C = (0, 0)$, $B = (6, 0)$, $A = (0, 8)$. $O = (6, t)$ with $OA = OB$: $36 + (t - 8)^2 = t^2$, so $t = \frac{25}{4}$.",
+            r"$P = (s, 8)$ with $PB = PA$: $(s - 6)^2 + 64 = s^2$, so $s = \frac{25}{3}$.",
+            r"$OP = \sqrt{\left(\frac73\right)^2 + \left(\frac74\right)^2} = 7 \cdot \frac{5}{12} = \frac{35}{12}$. The answer is $\textbf{(C)}\  \frac{35}{12}$.",
+        ],
+        'trap': r"Putting the centers on the segments' perpendicular bisectors alone; tangency also fixes a perpendicular.",
+    },
+    '2021-fall-amc-12b-23': {
+        'topics': ['expected-value', 'combinations'],
+        'answer': 'A',
+        'insight': r"Linearity of expectation: each of the $29$ pairs $(i, i+1)$ is in the subset with the same probability.",
+        'steps': [
+            r"A given pair is in the subset with probability $\frac{\binom{28}{3}}{\binom{30}{5}} = \frac{5 \cdot 4}{30 \cdot 29} = \frac{2}{87}$.",
+            r"There are $29$ such pairs.",
+            r"$29 \cdot \frac2{87} = \frac23$. The answer is $\textbf{(A)}\ \frac{2}{3}$.",
+        ],
+        'trap': r"Trying to count subsets by how many runs they contain; linearity avoids the casework.",
+    },
+    '2021-fall-amc-12b-24': {
+        'topics': ['circles', 'similar-triangles'],
+        'answer': 'C',
+        'insight': r"The power of $A$ gives $AF \cdot AB = AD \cdot AE$, and the bisector chord gives $AD \cdot AE = AB \cdot AC$: so $AF = AC$.",
+        'steps': [
+            r"$\triangle ABD \sim \triangle AEC$ (equal angles at $A$, and $\angle ABC = \angle AEC$), so $AD \cdot AE = AB \cdot AC$.",
+            r"$A$'s power with respect to circle $BED$ is $AF \cdot AB = AD \cdot AE = AB \cdot AC$, so $AF = AC = 20$.",
+            r"$\cos A = \frac{121 + 400 - 576}{2 \cdot 11 \cdot 20} = -\frac18$, so $CF^2 = 2 \cdot 400\left(1 + \frac18\right) = 900$.",
+            r"$CF = 30$. The answer is $\textbf{(C) } 30$.",
+        ],
+        'trap': r"Placing $F$ between $A$ and $B$; $AF = 20 > AB$, so $F$ is past $B$.",
+    },
+    '2021-fall-amc-12b-25': {
+        'topics': ['modular-arithmetic', 'factors-divisors'],
+        'answer': 'C',
+        'insight': r"Going from $n$ to $n + 1$ raises each remainder by $1$, except that it drops by $k - 1$ when $k \mid n + 1$.",
+        'steps': [
+            r"$R(n+1) - R(n) = 9 - \sum k$ over the $k$ in $2, \dots, 10$ dividing $n + 1$. So those divisors must add to $9$.",
+            r"Sets adding to $9$: $\{9\}$, $\{2, 7\}$, $\{3, 6\}$, $\{4, 5\}$, $\{2, 3, 4\}$. Only $\{2, 7\}$ is closed (a multiple of $9$ is a multiple of $3$, of $6$ or $4$ a multiple of $2$, and so on).",
+            r"So $n + 1$ is $14$ times an odd number not divisible by $3$ or $5$, at most $100$: $14$ or $98$. That gives $n = 13$ and $97$. The answer is $\textbf{(C) }2$.",
+        ],
+        'trap': r"Accepting $\{4, 5\}$ or $\{3, 6\}$; a multiple of $4$ or $6$ is also a multiple of $2$.",
+    },
     # ------------------------------------------------------------------ 2021 Fall AMC 10B
     '2021-fall-amc-10b-1': {
         'topics': ['arithmetic', 'digits-bases'],
@@ -10423,7 +10730,7 @@ SOLUTIONS = {
 }
 
 
-# The 2024, 2023, 2022 and 2021 AMC 12A and 12B each share eleven to thirteen problems
+# The 2024, 2023, 2022, 2021 and 2021 Fall AMC 12A and 12B each share eleven to thirteen problems
 # with that year's 10A and 10B, the same problem with the same answer, so they carry the 10's
 # write-up rather than a copy of it. (Some differ only in how the paste wrote a
 # choice: `\frac13` for `\frac{1}{3}`, `46` for `\$46`.)
@@ -10444,6 +10751,10 @@ _SAME_AS_10 = {
        [(3, 3), (4, 7), (5, 8), (7, 9), (9, 10), (10, 12), (12, 14), (16, 16), (17, 17), (18, 18), (23, 23)]},
     **{'2021-amc-12b-%d' % twelve: '2021-amc-10b-%d' % ten for twelve, ten in
        [(1, 1), (2, 4), (4, 6), (5, 9), (6, 10), (7, 12), (8, 14), (12, 19), (15, 20), (22, 24), (25, 25)]},
+    **{'2021-fall-amc-12a-%d' % twelve: '2021-fall-amc-10a-%d' % ten for twelve, ten in
+       [(1, 1), (2, 2), (3, 4), (4, 5), (5, 6), (6, 7), (7, 10), (10, 12), (17, 20), (18, 21), (20, 23), (23, 25)]},
+    **{'2021-fall-amc-12b-%d' % twelve: '2021-fall-amc-10b-%d' % ten for twelve, ten in
+       [(1, 1), (2, 2), (3, 4), (4, 5), (5, 7), (6, 8), (7, 12), (11, 14), (15, 18), (19, 21), (20, 24)]},
 }
 for _twelve, _ten in _SAME_AS_10.items():
     SOLUTIONS[_twelve] = SOLUTIONS[_ten]

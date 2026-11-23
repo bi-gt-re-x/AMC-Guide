@@ -32,6 +32,8 @@ KEY_2022_12A = 'DEBBCDDAAEEBACDDAADBEADEE'
 KEY_2022_12B = 'ADABBBDDBDEDDECCDCAEECACB'
 KEY_2021_12A = 'BDDDECDCCECABEDCDECBADDDE'
 KEY_2021_12B = 'DBACDACBDEDDDADABABADBAAE'
+KEY_2021_FALL_12A = 'CEBEBDBDEDECAEDBBEBDCDAEE'
+KEY_2021_FALL_12B = 'EBCECCDDBECBEBEBAAEAACACC'
 
 
 @pytest.fixture(autouse=True)
@@ -122,7 +124,8 @@ def test_the_2026_amc_12a_is_written_up_against_its_key():
                                         ('2024-amc-12a', KEY_2024_12A), ('2024-amc-12b', KEY_2024_12B),
                                         ('2023-amc-12a', KEY_2023_12A), ('2023-amc-12b', KEY_2023_12B),
                                         ('2022-amc-12a', KEY_2022_12A), ('2022-amc-12b', KEY_2022_12B),
-                                        ('2021-amc-12a', KEY_2021_12A), ('2021-amc-12b', KEY_2021_12B)])
+                                        ('2021-amc-12a', KEY_2021_12A), ('2021-amc-12b', KEY_2021_12B),
+                                        ('2021-fall-amc-12a', KEY_2021_FALL_12A), ('2021-fall-amc-12b', KEY_2021_FALL_12B)])
 def test_the_amc_12_papers_are_written_up_against_their_keys(paper, key):
     assert [SOLUTIONS['%s-%d' % (paper, n)]['answer'] for n in range(1, 26)] == list(key)
 
