@@ -5,8 +5,10 @@
  * Top to bottom: a hero with a mountain range that parallaxes and a sample
  * problem you can answer on the spot, a moving strip of the topics, the
  * numbers (counted up as they arrive), "the climb" (the four steps, with a
- * trail that fills as you scroll), small live demos of the features, the
- * mock contests, and a closing call to the summit.
+ * trail that fills as you scroll), small live demos of the features (the
+ * scale, the predicted score, review, the answer sheet, the chooser, the
+ * study plan, weak topics, the AI coach), the mock contests, the library of
+ * official papers, a tour of every page, and a closing call to the summit.
  *
  * Motion comes from one IntersectionObserver (things fade and rise in as they
  * reach the screen) and one scroll listener (the parallax, the progress bar,
@@ -15,6 +17,10 @@
  */
 import { useEffect, useRef, useState, type CSSProperties, type ReactNode, type RefObject } from 'react';
 import { Link, Navigate, useSearchParams } from 'react-router-dom';
+import {
+  BookOpenCheck, CalendarRange, ChartNoAxesCombined, Compass, History, LayoutDashboard, ListFilter, Search, Timer,
+  type LucideIcon,
+} from 'lucide-react';
 import { MathText } from '@/components/Amc/MathText';
 import { AnswerInput } from '@/components/Amc/bits';
 import { useAuth, useDocumentTitle } from '@/hooks';
@@ -74,6 +80,54 @@ const COACH = [
   'You solve about half the problems rated 2.5.',
   'Counting is costing you the most points.',
   'This week: 20 casework problems, 30 min a day.',
+];
+
+/**
+ * The official papers, year by year, for the library grid: one letter per
+ * slot in AMC 10A, 10B, 12A, 12B, AIME I, AIME II order. `-` is a slot that
+ * year did not have (2000-01 ran one AMC 10 and one AMC 12), `o` a paper in
+ * the catalogue, `s` one AMC Guide has also written worked solutions for
+ * (backend/amc/official_solutions.py). 2021 ran twice; its Fall papers are a
+ * column of their own. Keep in step with catalog.PAST when papers are solved.
+ */
+const LIBRARY: { year: string; slots: string }[] = [
+  ...Array.from({ length: 2 }, (_, i) => ({ year: String(2000 + i), slots: 'o-o-oo' })),
+  ...Array.from({ length: 10 }, (_, i) => ({ year: String(2002 + i), slots: 'oooooo' })),
+  { year: '2012', slots: 'osoooo' },
+  ...Array.from({ length: 8 }, (_, i) => ({ year: String(2013 + i), slots: 'ssoooo' })),
+  { year: '2021', slots: 'ssoooo' },
+  { year: '2021 Fall', slots: 'ssoo--' },
+  ...Array.from({ length: 2 }, (_, i) => ({ year: String(2022 + i), slots: 'ssoooo' })),
+  { year: '2024', slots: 'ssssoo' },
+  { year: '2025', slots: 'ssssoo' },
+  { year: '2026', slots: 'sssooo' },
+];
+const LIBRARY_ROWS = ['AMC 10A', 'AMC 10B', 'AMC 12A', 'AMC 12B', 'AIME I', 'AIME II'];
+
+const PLAN = [
+  { phase: 'Foundations', weeks: 4, note: 'Fill the gaps your weakest topics show' },
+  { phase: 'Core', weeks: 4, note: 'Problems #10–20, by topic and technique' },
+  { phase: 'Contest mode', weeks: 3, note: 'A timed mock every week, then review' },
+  { phase: 'Taper', weeks: 1, note: 'Light sets, rest, the night before' },
+];
+
+const WEAK = [
+  { topic: 'Casework', pct: 41 },
+  { topic: 'Circles', pct: 48 },
+  { topic: 'Expected Value', pct: 52 },
+  { topic: 'Mod Arithmetic', pct: 57 },
+];
+
+const TOUR: { to: string; icon: LucideIcon; name: string; body: string }[] = [
+  { to: '/dashboard', icon: LayoutDashboard, name: 'Dashboard', body: 'Today’s plan, the next problem, your projected score against your goal.' },
+  { to: '/problems', icon: ListFilter, name: 'Problems', body: '350 rated problems with the key insight and the trap. Answer to unlock the solution.' },
+  { to: '/topics', icon: Compass, name: 'Topics', body: '63 topics in 5 categories and 92 techniques, each with its key ideas and its problems.' },
+  { to: '/review', icon: BookOpenCheck, name: 'Review', body: 'Twelve problems from your four weakest topics, then every miss on its schedule.' },
+  { to: '/mock-contests', icon: Timer, name: 'Mock Contests', body: 'An exam screen with a cover page and bubble sheet. Resumes on any device.' },
+  { to: '/contests', icon: History, name: 'Past Contests', body: 'Every AMC 10, AMC 12 and AIME since 2000, read whole, practiced or sat timed.' },
+  { to: '/study-plan', icon: CalendarRange, name: 'Study Plan', body: 'Contest, date, goal and hours become a week-by-week plan to contest day.' },
+  { to: '/analytics', icon: ChartNoAxesCombined, name: 'Insights', body: 'Your level, predicted scores for all three contests, and the points each topic is worth.' },
+  { to: '/search', icon: Search, name: 'Search', body: 'Problems, topics, contests and pages, from anywhere with ⌘K.' },
 ];
 
 // ---------------------------------------------------------------------------
@@ -372,6 +426,86 @@ function ChooserDemo() {
   );
 }
 
+/** The study plan as a strip of weeks, the phases filling in left to right. */
+function PlanDemo() {
+  const [ref, seen] = useInView<HTMLDivElement>();
+  const total = PLAN.reduce((n, p) => n + p.weeks, 0);
+  let at = 0;
+  return (
+    <div ref={ref} className={`lp-plan${seen ? ' is-in' : ''}`}>
+      <div className="lp-plan-inputs" aria-label="Example inputs">
+        {['AMC 10A', 'Nov 5', 'Goal 120', '6 h / week'].map((x) => <span key={x} className="lp-plan-chip">{x}</span>)}
+      </div>
+      <div className="lp-plan-bar">
+        {PLAN.map((p, i) => {
+          const style = { flexGrow: p.weeks, '--d': `${200 + i * 260}ms` } as CSSProperties;
+          at += p.weeks;
+          return (
+            <div key={p.phase} className={`lp-plan-phase lp-plan-${i}`} style={style}>
+              <b>{p.phase}</b>
+              <span>{p.weeks === 1 ? 'Week' : 'Weeks'} {at - p.weeks + 1}{p.weeks > 1 ? `–${at}` : ''}</span>
+            </div>
+          );
+        })}
+      </div>
+      <ul className="lp-plan-notes">
+        {PLAN.map((p, i) => <li key={p.phase} style={{ '--d': `${500 + i * 260}ms` } as CSSProperties}><i className={`lp-plan-dot lp-plan-${i}`} />{p.note}</li>)}
+      </ul>
+      <span className="lp-muted lp-plan-foot">{total} weeks to contest day</span>
+    </div>
+  );
+}
+
+/** First-try accuracy on the four weakest topics, bars growing in. */
+function WeakDemo() {
+  const [ref, seen] = useInView<HTMLDivElement>();
+  return (
+    <div ref={ref} className={`lp-weak${seen ? ' is-in' : ''}`}>
+      {WEAK.map((w, i) => (
+        <div key={w.topic} className="lp-weak-row">
+          <span>{w.topic}</span>
+          <div className="lp-weak-bar"><i style={{ width: seen ? `${w.pct}%` : 0, transitionDelay: `${i * 140}ms` }} /></div>
+          <b>{w.pct}%</b>
+        </div>
+      ))}
+      <span className="lp-muted lp-weak-foot">12 problems, pitched where you get about 2 in 3</span>
+    </div>
+  );
+}
+
+/** Every official paper since 2000, a dot each, filled in by year. */
+function LibraryGrid() {
+  const [ref, seen] = useInView<HTMLDivElement>();
+  return (
+    <div ref={ref} className={`lp-library-grid${seen ? ' is-in' : ''}`}>
+      <div className="lp-library-scroll">
+        <div className="lp-library-table" style={{ '--cols': LIBRARY.length } as CSSProperties}>
+          <span />
+          {LIBRARY.map((c) => <span key={c.year} className="lp-library-year">{`${c.year.slice(2, 4)}${c.year.endsWith('Fall') ? 'F' : ''}`}</span>)}
+          {LIBRARY_ROWS.map((row, r) => (
+            <div key={row} className="lp-library-row">
+              <span className="lp-library-label">{row}</span>
+              {LIBRARY.map((c, x) => {
+                const v = c.slots[r];
+                const title = v === '-' ? undefined : `${c.year} ${row}${v === 's' ? ' · worked solutions' : ''}`;
+                return (
+                  <i key={c.year} title={title}
+                     className={v === 's' ? 'is-solved' : v === 'o' ? 'is-paper' : 'is-none'}
+                     style={{ '--d': `${x * 28 + r * 40}ms` } as CSSProperties} />
+                );
+              })}
+            </div>
+          ))}
+        </div>
+      </div>
+      <div className="lp-library-key">
+        <span><i className="is-paper" />Official paper</span>
+        <span><i className="is-solved" />With AMC Guide’s worked solutions</span>
+      </div>
+    </div>
+  );
+}
+
 // ---------------------------------------------------------------------------
 // The page
 // ---------------------------------------------------------------------------
@@ -399,12 +533,13 @@ export default function Landing() {
       <header className={`lp-nav${scrolled ? ' is-scrolled' : ''}`}>
         <Link className="lp-brand" to="/home">
           <img src="/static/images/logo.svg" alt="" width={28} height={28} />
-          SUMMIT
+          AMC Guide
         </Link>
         <nav className="lp-links" aria-label="Site">
           <a href="#climb">How it works</a>
           <a href="#features">Features</a>
           <a href="#mocks">Mocks</a>
+          <a href="#library">Past papers</a>
           <Link to="/about-us">About</Link>
           {signedIn ? (
             <Link className="lp-btn lp-btn-dark lp-btn-sm" to="/dashboard">Dashboard</Link>
@@ -520,13 +655,24 @@ export default function Landing() {
             </Reveal>
             <Reveal className="lp-tile" delay={100}>
               <h3>A real answer sheet</h3>
-              <p>Cover page, clock and bubbles. Scored 6 / 1.5 / 0.</p>
+              <p>Cover page, clock and bubbles, scored 6 / 1.5 / 0. The clock pauses when you leave the tab.</p>
               <BubbleDemo />
             </Reveal>
             <Reveal className="lp-tile" delay={200}>
               <h3>Find exactly the problem</h3>
               <p>Filter by topic, technique, number, year, real or mock.</p>
               <ChooserDemo />
+            </Reveal>
+            <Reveal className="lp-tile lp-tile-wide" delay={0}>
+              <h3>A plan back from contest day</h3>
+              <p>Contest, date, goal and hours become weeks: Foundations, Core, Contest mode, Taper. Tell it your last score
+                and weak topics and the AI coach writes the plan around you.</p>
+              <PlanDemo />
+            </Reveal>
+            <Reveal className="lp-tile" delay={100}>
+              <h3>Your weakest topics, first</h3>
+              <p>Review opens on the four topics where your first tries miss most.</p>
+              <WeakDemo />
             </Reveal>
             <Reveal className="lp-tile lp-tile-full lp-tile-dark" delay={0}>
               <div>
@@ -560,6 +706,42 @@ export default function Landing() {
                 <svg className="lp-mock-peak" viewBox="0 0 200 60" aria-hidden="true" preserveAspectRatio="none">
                   <path d="M0 60 L40 34 L70 46 L110 10 L150 40 L200 22 L200 60 Z" />
                 </svg>
+              </Reveal>
+            ))}
+          </div>
+        </section>
+
+        {/* Library --------------------------------------------------------- */}
+        <section id="library" className="lp-library lp-wrap">
+          <Reveal className="lp-library-copy">
+            <p className="lp-kicker">Past contests</p>
+            <h2 className="lp-h2">Every official paper<br />since 2000.</h2>
+            <ul className="lp-ticks">
+              <li><b>162 papers</b>: every AMC 10, AMC 12 and AIME from 2000 to 2026.</li>
+              <li>Read one whole, like the AoPS page, or sit it timed and graded.</li>
+              <li><b>896 worked solutions</b> written by AMC Guide, across 36 papers.</li>
+              <li>Locked until your first sitting, so you can still take it cold.</li>
+            </ul>
+          </Reveal>
+          <Reveal delay={120} className="lp-library-card">
+            <LibraryGrid />
+          </Reveal>
+        </section>
+
+        {/* Tour ------------------------------------------------------------ */}
+        <section id="tour" className="lp-tour lp-wrap">
+          <Reveal className="lp-section-head">
+            <p className="lp-kicker">One account</p>
+            <h2 className="lp-h2">Everything you need<br />to the last problem.</h2>
+          </Reveal>
+          <div className="lp-tour-grid">
+            {TOUR.map(({ to, icon: Icon, name, body }, i) => (
+              <Reveal key={to} delay={(i % 3) * 80}>
+                <Link to={to} className="lp-tour-card">
+                  <span className="lp-tour-icon"><Icon size={20} strokeWidth={1.75} aria-hidden="true" /></span>
+                  <span className="lp-tour-name">{name}<span aria-hidden="true">→</span></span>
+                  <span className="lp-tour-body">{body}</span>
+                </Link>
               </Reveal>
             ))}
           </div>
