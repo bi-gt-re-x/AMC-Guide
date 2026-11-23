@@ -218,6 +218,45 @@ export interface MockBrief {
   note: string;
   at: string;
   max?: number;
+  /** Read against the paper's real results (backend/amc/results.py); null for a mock set. */
+  standing?: Standing | null;
+}
+
+/** A score read against the official paper it was sat on. */
+export interface Standing {
+  score: number;
+  /** Under that year's scoring (a blank was 2.5 until 2006). */
+  scored_as: number;
+  /** The same result on a typical recent paper, where 100 (AMC 10) / 85 (AMC 12) qualifies. */
+  adjusted: number;
+  /** About what share of the real field it beat, 0-100. */
+  percentile: number | null;
+  /** "Top N%". */
+  top: number | null;
+  floor: number | null;
+  vs_floor: number | null;
+  award: string;
+  mean: number | null;
+  students: number | null;
+}
+
+/** One official paper's published results. */
+export interface PaperResults {
+  mean?: number;
+  median?: number;
+  floor?: number;
+  floor_pct?: number;
+  top25?: number;
+  top10?: number;
+  hr?: number;
+  top2_5?: number;
+  dhr?: number;
+  students?: number;
+  top5?: number;
+  top1?: number;
+  usamo?: number | Record<string, number>;
+  usajmo?: number | Record<string, number>;
+  blank_points: number;
 }
 
 export interface TodayItem {
@@ -299,6 +338,12 @@ export interface ScorePoint {
   score: number;
   max: number | null;
   at: string;
+  /** The score on a typical recent paper; the score itself for a mock set. */
+  adjusted: number;
+  top: number | null;
+  floor: number | null;
+  vs_floor: number | null;
+  award: string;
 }
 
 export interface Note {
@@ -573,6 +618,8 @@ export interface ContestDetail {
   unlocked?: boolean;
   /** The timed sitting in progress on this paper, kept on the account. */
   sitting?: SittingState | null;
+  /** How the paper went for real: mean, AIME floor, honor rolls (official papers). */
+  results?: PaperResults | null;
   /** An official paper only part brought in: the numbers of the problems that
    *  are (each can be practised; the paper is sat once all of them are in). */
   partial?: number[];

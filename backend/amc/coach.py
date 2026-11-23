@@ -144,6 +144,20 @@ def provider_label():
     return ''
 
 
+def _read(st):
+    """A sitting's standing in a few words, for the brief."""
+    if not st:
+        return ''
+    bits = ['adjusted {}'.format(st['adjusted'])]
+    if st.get('top') is not None:
+        bits.append('about top {}%'.format(st['top']))
+    if st.get('vs_floor') is not None:
+        bits.append('{:+g} vs that year\'s AIME floor'.format(st['vs_floor']))
+    if st.get('award'):
+        bits.append(st['award'])
+    return ' [' + ', '.join(bits) + ']'
+
+
 def brief(plan, details, tstats, projected, mocks, review_counts, answers, today):
     """Everything the model is told, as plain text."""
     target = plan['target']
@@ -181,8 +195,9 @@ def brief(plan, details, tstats, projected, mocks, review_counts, answers, today
     lines.append('- Review log: {} due, {} in the log, {} mastered.'.format(
         review_counts['due'], review_counts['active'], review_counts['mastered']))
     if mocks:
-        lines.append('- Recent contests: ' + '; '.join(
-            '{} {} ({})'.format(m['name'], m['score'], m['at'][:10]) for m in mocks[:5]) + '.')
+        lines.append('- Recent contests (official papers differ in difficulty: "adjusted" is the score on a '
+                     'typical recent paper, where 100 on the AMC 10 / 85 on the AMC 12 qualifies): ' + '; '.join(
+            '{} {} ({}){}'.format(m['name'], m['score'], m['at'][:10], _read(m.get('standing'))) for m in mocks[:5]) + '.')
     else:
         lines.append('- No timed contests yet.')
     attempted = [(t, tstats[t['id']]) for t in relevant if tstats[t['id']]['attempted']]

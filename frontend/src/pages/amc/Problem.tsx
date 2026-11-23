@@ -77,6 +77,10 @@ export default function Problem() {
   // try it again (or it is a review, which is always a fresh try).
   const seenBefore = Boolean(data?.attempts.length) && !reviewing && !weak && !retry && !answered;
   const locked = answered || seenBefore;
+  // A review (or a weak-topic set, or "Try it again") is a fresh try: until it
+  // is answered, the attempts list says only whether each try was right, never
+  // which answer was given, so neither the old wrong answer nor the key shows.
+  const freshTry = !answered && (reviewing || weak || retry);
   const [seconds, setSeconds] = useStopwatch(!locked && !loading);
   useEffect(() => setSeconds(0), [problemId, retry, setSeconds]);
 
@@ -350,7 +354,11 @@ export default function Problem() {
                   <li key={i}>
                     <span>{shortDate(a.at)} · {a.source}</span>
                     <span className={a.correct ? '' : 'am-muted'} style={{ color: a.correct ? 'var(--am-good)' : undefined }}>
-                      {a.source === 'reveal' ? 'revealed' : `${a.answer || '—'} ${a.correct ? '✓' : '✗'}`}
+                      {a.source === 'reveal'
+                        ? 'revealed'
+                        : freshTry
+                          ? (a.correct ? 'right' : 'missed')
+                          : `${a.answer || '—'} ${a.correct ? '✓' : '✗'}`}
                     </span>
                   </li>
                 ))}

@@ -5,7 +5,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
 import { MathText } from '@/components/Amc/MathText';
-import { DiagramNote, Difficulty, Meter, PageHeader, Solution } from '@/components/Amc/bits';
+import { DiagramNote, Difficulty, Meter, PageHeader, Solution, StandingNote } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
 import { amc, shortDate } from '@/services/amc';
 import { clock } from '@/components/Amc/bits';
@@ -47,6 +47,7 @@ export default function MockResult() {
           <p className="am-muted" style={{ margin: '8px 0 0', fontSize: 13 }}>
             {result.correct} right · {result.wrong} wrong · {result.blank} blank · {clock(result.seconds)} used
           </p>
+          <StandingNote standing={result.standing} />
         </section>
         <section className="am-card">
           <span className="am-kicker">Points lost by position</span>

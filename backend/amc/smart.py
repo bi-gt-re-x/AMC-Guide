@@ -57,7 +57,7 @@ import math
 import random
 from datetime import date, timedelta
 
-from backend.amc import catalog, engine
+from backend.amc import catalog, engine, results
 from backend.amc import problems as pb
 from backend.amc.scale import SCALE_BY_NUMBER
 
@@ -316,6 +316,15 @@ def _patterns(attempts, hist, theta, level, mock_check):
     return out
 
 
+def _scored(m):
+    """One sitting for the brief: the score, and read against that paper's real results."""
+    st = results.of_row(m)
+    out = {'contest': m['contest_id'], 'score': m['score'], 'at': m['at'][:10]}
+    if st:
+        out.update(adjusted=st['adjusted'], top=st['top'], vs_floor=st['vs_floor'], award=st['award'])
+    return out
+
+
 def _mock_summary(mocks):
     graded = [m for m in mocks if m['kind'] == 'mock']
     if not graded:
@@ -339,7 +348,7 @@ def _mock_summary(mocks):
                 by_fifth[fifth][0] += 1
     return {
         'taken': len(graded),
-        'scores': [{'contest': m['contest_id'], 'score': m['score'], 'at': m['at'][:10]} for m in reversed(graded[:8])],
+        'scores': [_scored(m) for m in reversed(graded[:8])],
         'blank_rate': round(blanks / asked, 3) if asked else None,
         'by_fifth': [round(r / n, 3) if n else None for r, n in by_fifth],
     }
@@ -526,8 +535,17 @@ def ai_brief(stats, plan):
     ]
     if stats['mocks']:
         m = stats['mocks']
-        lines.append('Mocks taken: {}; recent scores {}; blank rate {}; accuracy by fifth of the paper {}.'.format(
-            m['taken'], [s['score'] for s in m['scores']], m['blank_rate'], m['by_fifth']))
+        lines.append('Mocks taken: {}; blank rate {}; accuracy by fifth of the paper {}.'.format(
+            m['taken'], m['blank_rate'], m['by_fifth']))
+        lines.append('Recent sittings, oldest first, each read against that paper\'s real results (official papers '
+                     'differ in difficulty, so compare the adjusted score, which puts every paper on a typical recent '
+                     'one where 100 on the AMC 10 / 85 on the AMC 12 qualifies): {}.'.format('; '.join(
+                         '{} {}{}'.format(s['contest'], s['score'], ' (adjusted {}, about top {}%, {:+g} vs that year\'s '
+                                          'AIME floor{})'.format(s['adjusted'], s['top'], s['vs_floor'],
+                                                                 ', ' + s['award'] if s['award'] else '')
+                                          if s.get('vs_floor') is not None and s.get('top') is not None else
+                                          (' (adjusted {})'.format(s['adjusted']) if s.get('adjusted') is not None else ''))
+                         for s in m['scores'])))
     if stats.get('mock_check'):
         lines.append('Timed mocks against the model\'s expectation for those papers: {:+g} points on average.'.format(
             stats['mock_check']['gap']))

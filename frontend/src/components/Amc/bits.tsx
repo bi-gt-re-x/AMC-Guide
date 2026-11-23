@@ -4,7 +4,7 @@
  */
 import { useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link } from 'react-router-dom';
-import { CATEGORY_TONE, RATING_TOP, type CategoryId, type Pill, type ProblemSummary, type Status } from '@/services/amc';
+import { CATEGORY_TONE, RATING_TOP, type CategoryId, type PaperResults, type Pill, type ProblemSummary, type Standing, type Status } from '@/services/amc';
 import { MathText } from './MathText';
 
 /** A rating as text: 7 → "7/12". */
@@ -343,5 +343,82 @@ export function PillLegend() {
       ))}
       <span className="am-muted">Bar = difficulty</span>
     </div>
+  );
+}
+
+
+const fmtPts = (v: number) => (Number.isInteger(v) ? String(v) : v.toFixed(1));
+
+/**
+ * A score read against the real results of the paper it was sat on
+ * (backend/amc/results.py): that year's AIME floor and the margin over it,
+ * about where it would have placed, any award, and the same result on a
+ * typical recent paper. Nothing for a mock set, which has no published results.
+ */
+export function StandingNote({ standing }: { standing?: Standing | null }) {
+  if (!standing) return null;
+  const { floor, vs_floor: vs, top, award, adjusted, score, scored_as: asThen } = standing;
+  const parts: ReactNode[] = [];
+  if (floor != null && vs != null) {
+    parts.push(
+      <span key="floor">
+        That year's AIME floor {fmtPts(floor)}:{' '}
+        <b className={`am-vs ${vs >= 0 ? 'is-up' : 'is-down'}`} style={{ marginLeft: 0 }}>{vs >= 0 ? '+' : ''}{fmtPts(vs)}</b>
+      </span>,
+    );
+  }
+  if (top != null) parts.push(<span key="top">about top {top}% of the real field</span>);
+  if (award) parts.push(<b key="award">{award}</b>);
+  if (adjusted !== score) parts.push(<span key="adj">{fmtPts(adjusted)} on a typical recent paper</span>);
+  if (asThen !== score) parts.push(<span key="then">{fmtPts(asThen)} under that year's scoring (2.5 a blank)</span>);
+  if (!parts.length) return null;
+  return (
+    <p className="am-standing">
+      {parts.map((part, i) => <span key={i}>{i > 0 && ' · '}{part}</span>)}
+    </p>
+  );
+}
+
+/** How a paper went for real: its mean, AIME floor and honor rolls, as published. */
+export function PaperResultsCard({ results, aime }: { results?: PaperResults | null; aime: boolean }) {
+  if (!results) return null;
+  const rows: [string, string][] = [];
+  const add = (label: string, v: number | undefined | null, suffix = '') => {
+    if (v != null) rows.push([label, `${fmtPts(v)}${suffix}`]);
+  };
+  add('Average', results.mean);
+  add('Median', results.median);
+  if (!aime) {
+    add('AIME floor', results.floor, results.floor_pct != null ? ` (top ${fmtPts(results.floor_pct)}%)` : '');
+    add('Top 25%', results.top25);
+    add('Top 10%', results.top10);
+    add('Honor Roll (top 5%)', results.hr);
+    add('Top 2.5%', results.top2_5);
+    add('Distinguished (top 1%)', results.dhr);
+  } else {
+    add('Top 5%', results.top5);
+    add('Top 2.5%', results.top2_5);
+    add('Top 1%', results.top1);
+    const index = (v: PaperResults['usamo']) =>
+      v == null ? null : typeof v === 'number' ? fmtPts(v) : Object.entries(v).map(([k, n]) => `${fmtPts(n)} (${k})`).join(', ');
+    const mo = index(results.usamo);
+    const jmo = index(results.usajmo);
+    if (mo) rows.push(['USAMO index', mo]);
+    if (jmo) rows.push(['USAJMO index', jmo]);
+  }
+  if (results.students != null) rows.push(['Students', results.students.toLocaleString()]);
+  if (!rows.length) return null;
+  return (
+    <section className="am-card">
+      <div className="am-card-head"><h2>How it went for real</h2></div>
+      <dl className="am-mini-stats am-paper-results">
+        {rows.map(([k, v]) => <div key={k}><dt>{k}</dt><dd>{v}</dd></div>)}
+      </dl>
+      {results.blank_points === 2.5 && (
+        <p className="am-muted" style={{ margin: '10px 0 0', fontSize: 12 }}>
+          Scored then at 2.5 a blank (1.5 since 2007); a sitting here is read under that year's rules.
+        </p>
+      )}
+    </section>
   );
 }

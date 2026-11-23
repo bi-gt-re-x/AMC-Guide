@@ -87,20 +87,42 @@ export default function Contests() {
           <section className="am-card">
             <div className="am-card-head"><h2>Your scores</h2></div>
             {data.history.length ? (
+              <>
               <table className="am-table">
-                <thead><tr><th>Contest</th><th className="num">Score</th><th className="num">Date</th></tr></thead>
+                <thead>
+                  <tr>
+                    <th>Contest</th><th className="num">Score</th>
+                    <th className="num" title="The same result on a typical recent paper">Adj.</th>
+                    <th className="num" title="About where it would have placed among the real field">Top</th>
+                    <th className="num">Date</th>
+                  </tr>
+                </thead>
                 <tbody>
-                  {data.history.map((h) => (
-                    <tr key={h.id}>
-                      <td>
-                        <Link to={h.kind === 'mock' ? `/mocks/${h.id}` : `/contests/${h.contest_id}`}>{h.name}</Link>
-                      </td>
-                      <td className="num">{h.score}</td>
-                      <td className="num am-muted">{shortDate(h.at)}</td>
-                    </tr>
-                  ))}
+                  {data.history.map((h) => {
+                    const st = h.standing;
+                    const vs = st?.vs_floor;
+                    return (
+                      <tr key={h.id}>
+                        <td>
+                          <Link to={h.kind === 'mock' ? `/mocks/${h.id}` : `/contests/${h.contest_id}`}>{h.name}</Link>
+                        </td>
+                        <td className="num" title={st?.floor != null ? `That year's AIME floor: ${st.floor}` : undefined}>
+                          {h.score}
+                          {vs != null && <span className={`am-vs ${vs >= 0 ? 'is-up' : 'is-down'}`}>{vs >= 0 ? '+' : ''}{vs}</span>}
+                        </td>
+                        <td className="num">{st && st.adjusted !== h.score ? st.adjusted : <span className="am-muted">—</span>}</td>
+                        <td className="num">{st?.top != null ? `${st.top}%` : <span className="am-muted">—</span>}</td>
+                        <td className="num am-muted">{shortDate(h.at)}</td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
+              <p className="am-muted" style={{ margin: '10px 0 0', fontSize: 12, lineHeight: 1.5 }}>
+                +/− is against that year's AIME floor. Adj. is the same result on a typical recent paper, so
+                papers of different difficulty compare. Top is about where it would have placed.
+              </p>
+              </>
             ) : (
               <p className="am-muted" style={{ margin: 0, fontSize: 13 }}>No scores yet.</p>
             )}

@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Union
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from backend.amc import catalog, coach, engine, insights, store, weak
+from backend.amc import catalog, coach, engine, insights, results, store, weak
 from backend.amc import official
 from backend.amc import problems as pb
 from backend.amc.scale import TOP
@@ -198,7 +198,10 @@ def _mock_brief(row):
     return {'id': row['id'], 'contest_id': row['contest_id'], 'name': c['name'], 'level': c.get('level', ''),
             'kind': row['kind'], 'score': row['score'], 'correct': row['correct'], 'wrong': row['wrong'],
             'blank': row['blank'], 'seconds': row['seconds'], 'note': row.get('note') or '', 'at': row['at'],
-            'max': c.get('max')}
+            'max': c.get('max'),
+            # Read against the paper it was sat on: that year's AIME floor, about
+            # what share of the field it beat, and the same score on a typical paper.
+            'standing': results.of_row(row)}
 
 
 # ---------------------------------------------------------------------------
@@ -649,7 +652,7 @@ def contest(contest_id: str, username: str = Depends(current_username)):
         # be practised one at a time, so the page says which they are.
         partial = sorted(p['number'] for p in official.all_problems() if p['contest'] == contest_id)
         return ok(contest={**c, 'imported': False}, problems=[], history=mine, can_import=can_import(username),
-                  partial=partial)
+                  partial=partial, results=results.paper(contest_id))
     _, _, hist, review_by_id = _context(username)
     problems = []
     for number, pid in enumerate(gradable['problems'], start=1):
@@ -663,7 +666,8 @@ def contest(contest_id: str, username: str = Depends(current_username)):
         info['difficulty'] = _mock_difficulty(gradable)
     return ok(contest=info, problems=problems, history=mine, can_import=can_import(username),
               unlocked=c['kind'] == 'past' and store.unlocked(username, contest_id),
-              sitting=store.sitting(username, contest_id))
+              sitting=store.sitting(username, contest_id),
+              results=results.paper(contest_id) if c['kind'] == 'past' else None)
 
 
 class SittingBody(BaseModel):

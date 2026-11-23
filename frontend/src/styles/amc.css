@@ -1462,6 +1462,15 @@ html[data-theme="dark"] .am-predict-tag { color: #0d1117; }
 
 /* Past Contests (pages/amc/Contests.tsx): the papers in AMC Guide, picked out in the
    year grid. */
+/* A score read against its paper's real results (components/Amc/bits.tsx StandingNote). */
+.am-standing { margin: 8px 0 0; font-size: 13px; line-height: 1.5; color: var(--am-muted); }
+.am-standing b { color: var(--am-ink); font-weight: 600; }
+.am-paper-results { grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); margin-bottom: 0; }
+.am-paper-results dd { font-size: 20px; }
+/* A score's margin over (or under) that year's AIME floor, beside it. */
+.am-vs { margin-left: 6px; font-size: 11px; font-weight: 600; }
+.am-vs.is-up { color: var(--am-good); }
+.am-vs.is-down { color: var(--am-bad); }
 .am-paper.is-in { border-color: var(--am-sage); background: var(--am-sage-soft); }
 
 /* An official paper before its first sitting (Contest.tsx `Locked`): the

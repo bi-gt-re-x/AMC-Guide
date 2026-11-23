@@ -106,7 +106,10 @@ export function ScoreChart({ points, target, goal }: { points: ScorePoint[]; tar
   const inset = Math.min(28, iw / 8);
   const x = (i: number) => pad.l + inset + (rows.length === 1 ? (iw - 2 * inset) / 2 : (i / (rows.length - 1)) * (iw - 2 * inset));
   const y = (v: number) => pad.t + ih - (v / max) * ih;
-  const xy = rows.map((r, i) => [x(i), y(r.score)] as [number, number]);
+  // Every paper on one footing: the adjusted score is the result on a typical
+  // recent paper (backend/amc/results.py), so a hard year is not a slump.
+  const val = (r: ScorePoint) => r.adjusted ?? r.score;
+  const xy = rows.map((r, i) => [x(i), y(val(r))] as [number, number]);
   const line = smooth(xy);
   const firstXY = xy[0];
   const lastXY = xy[xy.length - 1];
@@ -117,9 +120,10 @@ export function ScoreChart({ points, target, goal }: { points: ScorePoint[]; tar
 
   const latest = rows[rows.length - 1];
   const first = rows[0];
-  const best = rows.reduce<ScorePoint | null>((b, r) => (!b || r.score > b.score ? r : b), null);
-  const avg = rows.length ? rows.reduce((s, r) => s + r.score, 0) / rows.length : null;
-  const change = rows.length > 1 && latest && first ? latest.score - first.score : null;
+  const best = rows.reduce<ScorePoint | null>((b, r) => (!b || val(r) > val(b) ? r : b), null);
+  const avg = rows.length ? rows.reduce((s, r) => s + val(r), 0) / rows.length : null;
+  const change = rows.length > 1 && latest && first ? val(latest) - val(first) : null;
+  const adjustedAny = rows.some((r) => r.adjusted != null && r.adjusted !== r.score);
   const active = on == null ? null : rows[on];
 
   function nearest(clientX: number, el: SVGSVGElement) {
@@ -134,9 +138,10 @@ export function ScoreChart({ points, target, goal }: { points: ScorePoint[]; tar
     <div className="am-an-score">
       <div className="am-an-score-top">
         <dl className="am-an-sums">
-          <SummaryStat label="Latest" value={latest ? fmtScore(latest.score) : '—'}
-                       hint={latest ? shortDate(latest.at) : `out of ${max}`} />
-          <SummaryStat label="Best" value={best ? fmtScore(best.score) : '—'} hint={best ? best.name : undefined} />
+          <SummaryStat label="Latest" value={latest ? fmtScore(val(latest)) : '—'}
+                       hint={latest ? (latest.top != null ? `top ~${latest.top}% · ${shortDate(latest.at)}` : shortDate(latest.at)) : `out of ${max}`} />
+          <SummaryStat label="Best" value={best ? fmtScore(val(best)) : '—'}
+                       hint={best ? (best.top != null ? `${best.name} · top ~${best.top}%` : best.name) : undefined} />
           <SummaryStat label="Average" value={avg == null ? '—' : fmtScore(Math.round(avg * 10) / 10)}
                        hint={`${rows.length} contest${rows.length === 1 ? '' : 's'}`} />
           <SummaryStat label="Since first" value={change == null ? '—' : `${change > 0 ? '+' : ''}${fmtScore(change)}`}
@@ -156,7 +161,7 @@ export function ScoreChart({ points, target, goal }: { points: ScorePoint[]; tar
 
       <figure className="am-an-chart" ref={ref} onMouseLeave={() => setOn(null)}>
         <svg width={width} height={H} role="img"
-             aria-label={`${level} contest scores, oldest first: ${rows.map((r) => fmtScore(r.score)).join(', ')}`}
+             aria-label={`${level} contest scores adjusted for each paper's difficulty, oldest first: ${rows.map((r) => fmtScore(val(r))).join(', ')}`}
              onMouseMove={(e) => rows.length && nearest(e.clientX, e.currentTarget)}>
           <defs>
             <linearGradient id="am-an-score-fill" x1="0" y1="0" x2="0" y2="1">
@@ -196,7 +201,7 @@ export function ScoreChart({ points, target, goal }: { points: ScorePoint[]; tar
               <circle className={`am-an-dot${r.kind === 'logged' ? ' is-logged' : ''}${on === i ? ' is-on' : ''}`}
                       cx={at(i)[0]} cy={at(i)[1]} r={on === i ? 7 : 5} />
               {(i === rows.length - 1 || on === i) && (
-                <text className="am-an-dot-label" x={at(i)[0]} y={at(i)[1] - 14} textAnchor="middle">{fmtScore(r.score)}</text>
+                <text className="am-an-dot-label" x={at(i)[0]} y={at(i)[1] - 14} textAnchor="middle">{fmtScore(val(r))}</text>
               )}
               {(i % every === 0 || i === rows.length - 1) && (
                 <text className="am-an-axis" x={at(i)[0]} y={H - 10} textAnchor="middle">{shortDate(r.at)}</text>
@@ -206,8 +211,18 @@ export function ScoreChart({ points, target, goal }: { points: ScorePoint[]; tar
         </svg>
         <Readout>
           {active
-            ? `${active.name} · ${fmtScore(active.score)} / ${active.max ?? max} · ${shortDate(active.at)} · ${active.kind === 'mock' ? 'timed mock' : 'logged score'}`
-            : `${level} scores out of ${max}. Point at a dot for the contest.`}
+            ? [
+                `${active.name} · ${fmtScore(active.score)} / ${active.max ?? max}`,
+                active.adjusted !== active.score ? `${fmtScore(active.adjusted)} on a typical paper` : '',
+                active.top != null ? `top ~${active.top}%` : '',
+                active.vs_floor != null ? `${active.vs_floor >= 0 ? '+' : ''}${fmtScore(active.vs_floor)} vs that year's AIME floor ${fmtScore(active.floor ?? 0)}` : '',
+                active.award,
+                shortDate(active.at),
+                active.kind === 'mock' ? 'timed mock' : 'logged score',
+              ].filter(Boolean).join(' · ')
+            : adjustedAny
+              ? `${level} scores out of ${max}, adjusted for each paper's difficulty (the same result on a typical recent paper). Point at a dot for the real score.`
+              : `${level} scores out of ${max}. Point at a dot for the contest.`}
         </Readout>
       </figure>
       <ul className="am-an-legend">
@@ -227,7 +242,7 @@ type Series = 'accuracy' | 'difficulty' | 'tests';
 const SERIES: { id: Series; label: string }[] = [
   { id: 'accuracy', label: 'First-try accuracy' },
   { id: 'difficulty', label: `Avg difficulty (of ${RATING_TOP})` },
-  { id: 'tests', label: 'Best test score' },
+  { id: 'tests', label: 'Best test score (adjusted)' },
 ];
 
 export function PerformanceChart({ weeks, categories }: { weeks: PerformanceWeek[]; categories: Category[] }) {

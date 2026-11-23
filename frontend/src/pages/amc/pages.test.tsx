@@ -174,3 +174,28 @@ describe('AMC pages render the API as it is', () => {
     expect(screen.queryByText(/Could not load/i)).not.toBeInTheDocument();
   });
 });
+
+describe('Reviewing a miss', () => {
+  const missed = {
+    ...problem,
+    attempts: [{ answer: 'B', at: '2026-11-01T17:00:00', correct: false, seconds: 60, source: 'practice' },
+               { answer: 'D', at: '2026-11-04T17:00:00', correct: true, seconds: 40, source: 'review' }],
+  };
+
+  it("shows neither the old wrong answer nor the key before it is answered", async () => {
+    vi.spyOn(amc, 'problem').mockResolvedValue({ ...missed, success: true } as any);
+    show('/problems/step-10-01?review=1', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    expect(await screen.findByText('missed')).toBeInTheDocument();
+    expect(screen.getByText('right')).toBeInTheDocument();
+    expect(screen.queryByText(/B ✗/)).not.toBeInTheDocument();
+    expect(screen.queryByText(/D ✓/)).not.toBeInTheDocument();
+  });
+
+  it('keeps the full history when browsing a problem already answered', async () => {
+    vi.spyOn(amc, 'problem').mockResolvedValue({ ...missed, success: true } as any);
+    show('/problems/step-10-01', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    expect(await screen.findByText(/B ✗/)).toBeInTheDocument();
+  });
+});

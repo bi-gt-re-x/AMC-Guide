@@ -20,7 +20,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useNotice, ErrorState, Loading } from '@/components';
-import { CategoryDot, DiagramNote, Difficulty, PageHeader, ratingText, Solution, StatusPill } from '@/components/Amc/bits';
+import { CategoryDot, DiagramNote, Difficulty, PageHeader, ratingText, Solution, StatusPill, PaperResultsCard, StandingNote } from '@/components/Amc/bits';
 import { MathText } from '@/components/Amc/MathText';
 import { Importer } from '@/components/Amc/Importer';
 import { useApi, useDocumentTitle } from '@/hooks';
@@ -37,7 +37,8 @@ function History({ rows, onDelete }: { rows: MockBrief[]; onDelete: (id: string)
           <tr key={r.id}>
             <td>{r.kind === 'mock' ? <Link to={`/mocks/${r.id}`}>{shortDate(r.at)}</Link> : shortDate(r.at)}
               {r.note && <div className="am-muted" style={{ fontSize: 12 }}>{r.note}</div>}</td>
-            <td className="num">{r.score}{r.kind === 'mock' ? ` (${r.correct}✓ ${r.wrong}✗ ${r.blank}–)` : ''}</td>
+            <td className="num">{r.score}{r.kind === 'mock' ? ` (${r.correct}✓ ${r.wrong}✗ ${r.blank}–)` : ''}
+              <StandingNote standing={r.standing} /></td>
             <td className="num">
               <button type="button" className="am-btn am-btn-ghost am-btn-sm" onClick={() => onDelete(r.id)}
                       aria-label="Delete this score">✕</button>
@@ -305,6 +306,7 @@ export default function Contest() {
             </section>
           )}
           <aside className="am-stack">
+            <PaperResultsCard results={data.results} aime={c.level === 'AIME'} />
             {logCard}
             <section className="am-card">
               <div className="am-card-head"><h2>Your scores</h2></div>
@@ -487,6 +489,7 @@ export default function Contest() {
               <li>Wrong and blank answers go to Review.</li>
             </ul>
           </section>
+          {official && <PaperResultsCard results={data.results} aime={c.level === 'AIME'} />}
           {logCard}
           <section className="am-card">
             <div className="am-card-head"><h2>Your sittings</h2></div>

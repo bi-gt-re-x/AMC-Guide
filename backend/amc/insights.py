@@ -9,7 +9,7 @@ site, and kept beside the topic map in catalog.py.
 import math
 from datetime import date, timedelta
 
-from backend.amc import catalog, engine
+from backend.amc import catalog, engine, results
 from backend.amc import official
 from backend.amc import problems as pb
 
@@ -52,9 +52,18 @@ def _window(attempts, start, end):
 
 
 def _mock_point(row):
+    """One score for the chart. `adjusted` is the score on a typical recent paper
+    (backend/amc/results.py), so a hard year and an easy one compare fairly;
+    a mock with no published figures keeps its score."""
     c = catalog.contest(row['contest_id']) or {'name': row['contest_id'], 'level': '', 'max': None}
+    standing = results.of_row(row)
     return {'id': row['id'], 'contest_id': row['contest_id'], 'name': c['name'], 'level': c.get('level', ''),
-            'kind': row['kind'], 'score': row['score'], 'max': c.get('max'), 'at': row['at']}
+            'kind': row['kind'], 'score': row['score'], 'max': c.get('max'), 'at': row['at'],
+            'adjusted': standing['adjusted'] if standing else row['score'],
+            'top': standing['top'] if standing else None,
+            'floor': standing['floor'] if standing else None,
+            'vs_floor': standing['vs_floor'] if standing else None,
+            'award': standing['award'] if standing else ''}
 
 
 def recent_performance(attempts, mocks, today):
@@ -231,7 +240,8 @@ def by_rating(attempts, hist):
 def weekly(attempts, today, weeks=8, mocks=()):
     """Each of the last `weeks` weeks, oldest first: answers and accuracy, the
     answers split by category, the average 1-12 rating of what was answered,
-    and the best contest score that week as a share of the paper's maximum."""
+    and the best contest score that week (adjusted for the paper's difficulty)
+    as a share of the paper's maximum."""
     out = []
     for back in range(weeks - 1, -1, -1):
         end = today - timedelta(days=7 * back)
@@ -251,7 +261,7 @@ def weekly(attempts, today, weeks=8, mocks=()):
             if lo <= m['at'][:10] <= hi:
                 point = _mock_point(m)
                 if point['max']:
-                    scores.append(point['score'] / point['max'])
+                    scores.append(point['adjusted'] / point['max'])
         out.append({'start': start.isoformat(), 'answered': w['answered'],
                     'correct': w['correct'], 'accuracy': w['accuracy'],
                     'minutes': w['minutes'], 'days': w['days'],

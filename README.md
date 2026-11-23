@@ -94,6 +94,15 @@ Every AIME from 2000 I to 2025 II comes whole from `allenai/aime-2022-2025`,
 
     .venv-fastapi/bin/python scripts/import_aime_hf.py --user myles
 
+Every official paper's real results (mean, AIME floor, honor rolls, students;
+for the AIME the USAMO/USAJMO index cutoffs) are in `backend/amc/results.py`,
+from the AoPS wiki's historical results. A sitting or logged score is read
+against its own paper: the margin over that year's AIME floor, about what share
+of the real field it beat, and the same result on a typical recent paper (where
+100 qualifies on the AMC 10 and 85 on the AMC 12, the floors fixed since 2026).
+Best, average, improvement and the Analytics score chart use that adjusted
+score, so a hard year is not read as a slump; a paper's page shows how it went.
+
 The productivity app this grew out of is described below; its pages are no
 longer routed (their old URLs redirect to the dashboard).
 
