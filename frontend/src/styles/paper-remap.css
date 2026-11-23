@@ -213,6 +213,18 @@ html:not([data-skin]):not([data-theme="dark"]) .rail-foot-settings.active {
 html:not([data-skin]):not([data-theme="dark"]) .rail-foot-settings:focus-visible {
     outline: 2px solid #899886
 }
+html:not([data-skin]):not([data-theme="dark"]) .rail-foot-signout {
+    border: 0;
+    background: transparent;
+    color: #8F8F8C
+}
+html:not([data-skin]):not([data-theme="dark"]) .rail-foot-signout:hover {
+    background: #F8F7F3;
+    color: #947875
+}
+html:not([data-skin]):not([data-theme="dark"]) .rail-foot-signout:focus-visible {
+    outline: 2px solid #899886
+}
 @media (max-width: 640px) {
     html:not([data-skin]):not([data-theme="dark"]) .rail {
         border-right: none;
@@ -948,6 +960,14 @@ html:not([data-skin]):not([data-theme="dark"]):has(.st-page) .st-page {
 }
 html:not([data-skin]):not([data-theme="dark"]):has(.st-page) .st-quiet {
     color: var(--st-muted)
+}
+html:not([data-skin]):not([data-theme="dark"]):has(.st-page) .st-signout {
+    border: 1px solid var(--st-line, rgba(42, 44, 42, 0.12));
+    background: transparent;
+    color: var(--st-text, inherit)
+}
+html:not([data-skin]):not([data-theme="dark"]):has(.st-page) .st-signout:hover {
+    background: var(--st-card-2)
 }
 html:not([data-skin]):not([data-theme="dark"]):has(.st-page) .st-exit {
     color: var(--st-muted);

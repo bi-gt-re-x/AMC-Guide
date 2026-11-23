@@ -294,7 +294,7 @@ def _monday(day):
     return day - timedelta(days=day.weekday())
 
 
-def plan_weeks(settings, tstats, mocks_taken, today, priorities=None):
+def plan_weeks(settings, tstats, mocks_taken, today, priorities=None, stage=None):
     """The week-by-week plan from today to the exam.
 
     Phases: Foundations (first ~40%), Core (~35%), Contest mode (the rest),
@@ -332,8 +332,13 @@ def plan_weeks(settings, tstats, mocks_taken, today, priorities=None):
     if priorities:
         from backend.amc import planning
         schedule = planning.schedule(priorities, count, coached=coached)
-    foundations = max(1, round(count * 0.4)) if count >= 4 else 0
-    core = max(1, round(count * 0.35)) if count >= 3 else 0
+    # How far the student is from the goal sets the plan's shape: far below it,
+    # more weeks on skills; at it already, more under exam conditions
+    # (backend/amc/planning.py SHAPES, from `starting_point`).
+    from backend.amc import planning as _planning
+    shape = _planning.SHAPES.get(stage or 'unknown', _planning.SHAPES['unknown'])
+    foundations = max(1, round(count * shape['foundations'])) if count >= 4 else 0
+    core = max(1, round(count * shape['core'])) if count >= 3 else 0
     per_week = max(5, int(settings['hours']) * 6)
     taken = {m['at'][:10] for m in mocks_taken}
 
@@ -356,7 +361,8 @@ def plan_weeks(settings, tstats, mocks_taken, today, priorities=None):
         else:
             focus = [ranked[(cursor + k) % len(ranked)] for k in range(2)] if ranked else []
             cursor += 2
-        mock = phase == 'Contest mode' or (phase == 'Core' and (i - foundations) % 3 == 2)
+        every = shape['core_mock_every']
+        mock = phase == 'Contest mode' or (phase == 'Core' and (i - foundations) % every == every - 1)
         week_end = week_start + timedelta(days=6)
         mock_done = any(week_start.isoformat() <= d <= week_end.isoformat() for d in taken)
         notes = {
@@ -388,9 +394,10 @@ def _practice_label(focus, daily):
         from backend.amc import planning
         split = planning.split_count(mix, daily)
         label += ': ' + ', '.join('{} at level {}'.format(c['count'], c['level']) for c in split)
-        main = max(split, key=lambda c: c['count'])['level']
-        if 'rating=' not in to and to.startswith('/problems?topic='):
-            to += '&rating=' + ','.join(str(r) for r in planning.level_ratings(main))
+    # The day's practice is the topic's own handpicked set of eight, in this
+    # mode, all from the one topic (backend/amc/practice.py).
+    mode = focus.get('mode', 'practice')
+    to = '/practice/{}?mode={}'.format(focus['id'], mode)
     return label, to
 
 
@@ -406,8 +413,8 @@ def _practice_kind(focus, daily):
     if mode == 'timed':
         return ('Timed set: {} {} problems, 3 minutes each'.format(daily, name), '/problems?topic=' + tid)
     if mode == 'mixed':
-        return ('Mixed set: {} problems from different topics, {} among them; name the technique first'.format(
-            daily, name), '/problems')
+        return ('Mixed set: {} {} problems of every kind, topic hidden; name the technique first'.format(
+            daily, name), '/problems?topic=' + tid)
     if mode == 'spaced':
         return ('Revisit {} {} problems you have solved before'.format(daily, name), '/problems?topic={}&status=solved'.format(tid))
     return 'Solve {} problems in {}'.format(daily, name), '/problems?topic=' + tid
@@ -418,7 +425,8 @@ def today_items(settings, weeks, due_count, today, checks, practiced_today):
     """The checklist for today, from the current week of the plan."""
     week = next((w for w in weeks if w['current']), weeks[0] if weeks else None)
     level = settings['target']
-    daily = max(3, round((week['problems'] if week else 10) / 6)) if week and week['problems'] else 0
+    # One handpicked set of eight a day (backend/amc/practice.py SIZE).
+    daily = 8 if week and week['problems'] else 0
     ticked = set(checks.get(today.isoformat(), []))
     items = []
     if due_count:

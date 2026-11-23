@@ -458,7 +458,7 @@ def analytics(attempts, hist, review_by_id, reviews, mocks, plan, today):
     if plan and plan.get('exam_date'):
         days_left = (date.fromisoformat(plan['exam_date']) - today).days
     mock_rows = [m for m in mocks if m['kind'] in ('mock', 'logged')]
-    study = planning.analyze(attempts, hist, target, today, goal)
+    study = planning.analyze(attempts, hist, target, today, goal, (plan or {}).get('details'))
     return {
         # What to study for the most points, and the kinds of weakness behind
         # each topic, with the training each wants (backend/amc/planning.py).

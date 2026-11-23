@@ -313,6 +313,10 @@ export function Topbar() {
                   </span>
                 )}
               </div>
+              {/* Sign out sits with who is signed in, not under fifty avatars. */}
+              <button type="button" className="topbar-signout" onClick={() => { setOpen(null); void signOut(); }}>
+                Sign out
+              </button>
               {tag.title && <TitleSelect tag={tag} className="topbar-title-pick" />}
               {/* All fifty in one scrolling line, as they were in the rail.
                   A wrapping grid would be ten rows deep and turn a menu into a
@@ -349,9 +353,7 @@ export function Topbar() {
               <Link to="/settings" onClick={() => setOpen(null)}>
                 Settings
               </Link>
-              <button type="button" className="topbar-signout" onClick={() => void signOut()}>
-                Log out
-              </button>
+
             </div>
           )}
         </div>

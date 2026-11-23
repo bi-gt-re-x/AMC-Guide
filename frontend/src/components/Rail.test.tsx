@@ -106,3 +106,12 @@ describe('the rail', () => {
     expect(sheet.getByRole('menuitem', { name: /Settings/ })).toHaveAttribute('href', '/settings');
   });
 });
+
+describe('Signing out from the rail', () => {
+  it('is one click on the button beside Settings', async () => {
+    const signOut = vi.fn(async () => {});
+    renderWithProviders(<Rail />, { auth: { signOut } });
+    fireEvent.click(await screen.findByRole('button', { name: 'Sign out' }));
+    expect(signOut).toHaveBeenCalledTimes(1);
+  });
+});

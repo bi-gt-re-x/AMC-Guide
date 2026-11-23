@@ -39,6 +39,7 @@ const TermsOfService = lazy(() => import('@/pages/TermsOfService'));
    under them. See backend/api/amc.py for what each one reads. */
 const Problems = lazy(() => import('@/pages/amc/Problems'));
 const Problem = lazy(() => import('@/pages/amc/Problem'));
+const PracticeSet = lazy(() => import('@/pages/amc/PracticeSet'));
 const Review = lazy(() => import('@/pages/amc/Review'));
 const Topics = lazy(() => import('@/pages/amc/Topics'));
 const Topic = lazy(() => import('@/pages/amc/Topic'));
@@ -310,6 +311,7 @@ export default function App() {
               <Route path="/review" element={<Review />} />
               <Route path="/problems" element={<Problems />} />
               <Route path="/problems/:problemId" element={<Problem />} />
+              <Route path="/practice/:topicId" element={<PracticeSet />} />
               <Route path="/topics" element={<Topics />} />
               <Route path="/topics/:topicId" element={<Topic />} />
               <Route path="/mock-contests" element={<MockContests />} />

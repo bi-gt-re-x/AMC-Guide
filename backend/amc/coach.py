@@ -183,6 +183,14 @@ def brief(plan, details, tstats, projected, mocks, review_counts, answers, today
     if details.get('weak'):
         lines.append('They say they are weak at: {}.'.format(', '.join(
             catalog.TOPIC_BY_ID[t]['name'] for t in details['weak'] if t in catalog.TOPIC_BY_ID)))
+    names = {c['id']: c['name'] for c in catalog.CATEGORIES}
+    for word in ('weak', 'ok', 'strong'):
+        rated = [names[k] for k, v in (details.get('subjects') or {}).items() if v == word and k in names]
+        if rated:
+            lines.append('They rate themselves {} in: {}.'.format({'ok': 'okay'}.get(word, word), ', '.join(rated)))
+    for k, note in (details.get('subject_notes') or {}).items():
+        if k in names:
+            lines.append('On {}: {}'.format(names[k], note))
     if details.get('resources'):
         lines.append('Resources they have: {}'.format(details['resources']))
     if details.get('notes'):
@@ -214,6 +222,12 @@ def brief(plan, details, tstats, projected, mocks, review_counts, answers, today
             if str(answer).strip():
                 lines.append('- Q: {}\n  A: {}'.format(question, str(answer).strip()))
 
+    start = (study or {}).get('start')
+    if start and start.get('current') is not None:
+        lines.append('')
+        lines.append('Where they start: about {} now (from {}), goal {}, so {:+g} to go over {} weeks. {}'.format(
+            start['current'], start['from'], start['goal'], start['gap'], start['weeks'], start['summary']))
+        lines.append('Build the plan from that gap: its size sets how much is skills work and how much timed papers.')
     if study:
         from backend.amc import planning
         lines.append('')

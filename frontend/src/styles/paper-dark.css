@@ -98,6 +98,13 @@ html[data-theme="dark"]:not([data-skin]) .rail-xp-bar {
 html[data-theme="dark"]:not([data-skin]) .rail-link.rail-invite {
     color: #989793
 }
+html[data-theme="dark"]:not([data-skin]) .rail-foot-signout {
+    color: #989793
+}
+html[data-theme="dark"]:not([data-skin]) .rail-foot-signout:hover {
+    background: #2B2B28;
+    color: #D2B5B1
+}
 html[data-theme="dark"]:not([data-skin]) .rail-foot-settings {
     color: #989793
 }
@@ -759,6 +766,18 @@ html[data-theme="dark"]:not([data-skin]) .rail-foot-settings.active {
     color: #889D86
 }
 html[data-theme="dark"]:not([data-skin]) .rail-foot-settings:focus-visible {
+    outline: 2px solid #9CA999
+}
+html[data-theme="dark"]:not([data-skin]) .rail-foot-signout {
+    border: 0;
+    background: transparent;
+    color: #8B8A86
+}
+html[data-theme="dark"]:not([data-skin]) .rail-foot-signout:hover {
+    background: #1E1E1B;
+    color: #A48B88
+}
+html[data-theme="dark"]:not([data-skin]) .rail-foot-signout:focus-visible {
     outline: 2px solid #9CA999
 }
 @media (max-width: 640px) {
@@ -1478,6 +1497,14 @@ html[data-theme="dark"]:not([data-skin]):has(.st-page) .st-page {
 }
 html[data-theme="dark"]:not([data-skin]):has(.st-page) .st-quiet {
     color: var(--st-muted)
+}
+html[data-theme="dark"]:not([data-skin]):has(.st-page) .st-signout {
+    border: 1px solid var(--st-line, rgba(234, 233, 229, 0.12));
+    background: transparent;
+    color: var(--st-text, inherit)
+}
+html[data-theme="dark"]:not([data-skin]):has(.st-page) .st-signout:hover {
+    background: var(--st-card-2)
 }
 html[data-theme="dark"]:not([data-skin]):has(.st-page) .st-exit {
     color: var(--st-muted);

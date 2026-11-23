@@ -813,6 +813,9 @@ export default function Settings() {
           <span className={`st-status${saved || failure ? ' is-on' : ''}`} role="status">
             {failure ? <em className="st-bad">{failure}</em> : (saved ?? '')}
           </span>
+          <button type="button" className="st-signout" onClick={() => void signOut().then(() => navigate('/home', { replace: true }))}>
+            Sign out
+          </button>
         </header>
 
         <div className="st-body">

@@ -288,6 +288,21 @@ export interface Takeaway {
   mix?: DifficultyMix;
 }
 
+/** A topic's handpicked practice set (backend/amc/practice.py). */
+export interface PracticeSetPayload {
+  topic: { id: string; name: string; category: CategoryId };
+  mode: StudyMode;
+  title: string;
+  instructions: string;
+  seconds: number | null;
+  hide_topic: boolean;
+  level: Level;
+  mix: DifficultyMix;
+  suggested: StudyMode;
+  modes: { id: StudyMode; title: string }[];
+  problems: (ProblemSummary & { level_of: number })[];
+}
+
 /** One topic's study priority: expected points from studying it, and why. */
 export interface StudyPriority {
   id: string;
@@ -724,6 +739,8 @@ export interface MockResult {
   attempts: MockBrief[];
 }
 
+export type SubjectStrength = 'weak' | 'ok' | 'strong';
+
 export interface PlanDetails {
   experience?: 'first' | 'taken' | 'qualified';
   /** School grade, '6'-'12' or 'Other'. */
@@ -732,6 +749,9 @@ export interface PlanDetails {
   days_per_week?: number;
   strong?: string[];
   weak?: string[];
+  /** How strong they feel in each subject, and anything more on it (both optional). */
+  subjects?: Partial<Record<CategoryId, SubjectStrength>>;
+  subject_notes?: Partial<Record<CategoryId, string>>;
   resources?: string;
   notes?: string;
 }
@@ -775,6 +795,11 @@ export interface PlanPayload {
   priorities?: StudyPriority[];
   kinds?: WeaknessKind[];
   difficulty?: DifficultyPlan;
+  /** Where the student starts against the goal, from their scores and answers. */
+  start?: {
+    current: number | null; from: string; goal: number; gap: number | null; weeks: number | null;
+    per_week: number | null; stage: 'far' | 'near' | 'there' | 'unknown'; summary: string;
+  };
   defaults: { dates: Record<Level, string>; goals: Record<Level, number> };
 }
 
@@ -921,6 +946,8 @@ export interface SearchResults {
 export const amc = {
   dashboard: () => get<Dashboard>('/api/amc/dashboard'),
   analytics: () => get<Analytics>('/api/amc/analytics'),
+  topicSet: (topic: string, mode: string) =>
+    get<PracticeSetPayload>(`/api/amc/topics/${encodeURIComponent(topic)}/set?mode=${encodeURIComponent(mode)}`),
   insights: () => get<InsightsPayload>('/api/amc/insights'),
   diagnose: (refresh = false) =>
     post<{ diagnosis: Diagnosis; at: string; cached: boolean }>('/api/amc/insights/ai', { refresh }),

@@ -6,7 +6,7 @@
  * keep them small), so a page that reads a field the server no longer sends,
  * or crashes on a shape it really gets, fails here rather than in the browser.
  */
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NoticesProvider } from '@/components';
@@ -33,7 +33,9 @@ import Dashboard from './Dashboard';
 import MockContests from './MockContests';
 import MockResult from './MockResult';
 import Problem from './Problem';
+import PracticeSet from './PracticeSet';
 import Problems from './Problems';
+import { writePracticeSet } from './practiceSetStore';
 import Review from './Review';
 import Search from './Search';
 import StudyPlan from './StudyPlan';
@@ -197,5 +199,49 @@ describe('Reviewing a miss', () => {
     show('/problems/step-10-01', '/problems/:problemId', <Problem />);
     await settled(/What is the value of/);
     expect(await screen.findByText(/B ✗/)).toBeInTheDocument();
+  });
+});
+
+
+describe('A topic practice set', () => {
+  const summary = (n: number) => ({
+    ...problems.problems[0]!, id: `step-10-0${n}`, source: `Step drill #${n}`, topic: 'circles', topic_name: 'Circles',
+    rating: 4, status: 'new', level_of: 2,
+  });
+  const payload = (mode: string) => ({
+    success: true, topic: { id: 'circles', name: 'Circles', category: 'geometry' }, mode,
+    title: mode === 'mixed' ? 'Mixed set' : 'Timed set', instructions: 'Eight problems.',
+    seconds: mode === 'timed' ? 180 : null, hide_topic: mode === 'mixed', level: 'AMC 10',
+    mix: [{ level: 2, share: 1 }], suggested: 'timed',
+    modes: [{ id: 'timed', title: 'Timed set' }, { id: 'mixed', title: 'Mixed set' }],
+    problems: Array.from({ length: 8 }, (_, i) => summary(i + 1)),
+  });
+
+  it('lists eight, hides the topic on a mixed set, and starts the walk', async () => {
+    vi.spyOn(amc, 'topicSet').mockResolvedValue(payload('mixed') as any);
+    show('/practice/circles?mode=mixed', '/practice/:topicId', <PracticeSet />);
+    await settled('Mixed set');
+    expect(screen.getAllByText(/Step drill #/)).toHaveLength(8);
+    expect(screen.queryByText('Circles', { selector: '.am-set-main span' })).not.toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Start set' }));
+    expect(JSON.parse(sessionStorage.getItem('amc-practice-set')!).ids).toHaveLength(8);
+  });
+
+  it('walks a timed set on the problem page with its clock and position', async () => {
+    writePracticeSet({ ids: ['step-10-01', 'step-10-02'], topic: 'circles', mode: 'timed', title: 'Timed set',
+                       seconds: 180, hideTopic: false });
+    show('/problems/step-10-01?set=1', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    expect(screen.getByText('← Timed set')).toBeInTheDocument();
+    expect(screen.getByText(/1 of 2/)).toBeInTheDocument();
+    expect(screen.getByLabelText(/against the set's pace/)).toHaveTextContent('/ 3:00');
+  });
+
+  it('hides the topic on a mixed set until it is answered', async () => {
+    writePracticeSet({ ids: ['step-10-01'], topic: 'circles', mode: 'mixed', title: 'Mixed set',
+                       seconds: null, hideTopic: true });
+    show('/problems/step-10-01?set=1', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    expect(screen.queryByRole('link', { name: problem.problem.topic_name })).not.toBeInTheDocument();
   });
 });

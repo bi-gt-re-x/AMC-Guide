@@ -104,6 +104,7 @@ SPA_ROUTES = (
     # The AMC prep pages.
     '/problems',
     '/problems/{problem_id}',
+    '/practice/{topic_id}',
     '/review',
     '/topics',
     '/topics/{topic_id}',

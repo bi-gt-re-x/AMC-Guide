@@ -796,7 +796,7 @@ html[data-theme="dark"] .rail-link.rail-invite { color: #8B949E; }
    it is the only way to Settings on a desk apart from the account menu. */
 .rail-foot-settings {
     grid-column: 3;
-    grid-row: 1 / span 3;
+    grid-row: 1 / span 2;
     display: grid;
     place-items: center;
     width: 28px;
@@ -810,6 +810,29 @@ html[data-theme="dark"] .rail-link.rail-invite { color: #8B949E; }
 .rail-foot-settings.active { background: #F1EDE7; color: #A38A70; }
 .rail-foot-settings:focus-visible { outline: 2px solid #A38A70; outline-offset: 1px; }
 html.nav-collapsed .rail-foot-settings { margin: var(--space-2) auto 0; }
+/* Sign out, under the gear: one click from any page. */
+.rail-foot-signout {
+    grid-column: 3;
+    grid-row: 3 / span 2;
+    align-self: end;
+    display: grid;
+    place-items: center;
+    width: 28px;
+    height: 28px;
+    padding: 0;
+    border: 0;
+    border-radius: var(--radius-md);
+    background: transparent;
+    color: #8A8E95;
+    cursor: pointer;
+    transition: background-color .16s ease, color .16s ease;
+}
+.rail-foot-signout svg { width: 17px; height: 17px; stroke-width: 1.8; }
+.rail-foot-signout:hover { background: #F4F6F8; color: #A8645C; }
+.rail-foot-signout:focus-visible { outline: 2px solid #A38A70; outline-offset: 1px; }
+html.nav-collapsed .rail-foot-signout { margin: var(--space-1) auto 0; }
+html[data-theme="dark"] .rail-foot-signout { color: #8B949E; }
+html[data-theme="dark"] .rail-foot-signout:hover { background: #21262D; color: #E8A39B; }
 html[data-theme="dark"] .rail-foot-settings { color: #8B949E; }
 html[data-theme="dark"] .rail-foot-settings:hover { background: #21262D; color: #F0F2F5; }
 html[data-theme="dark"] .rail-foot-settings.active { background: #2A2118; color: #D8C3A5; }

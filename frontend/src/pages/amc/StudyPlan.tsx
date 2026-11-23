@@ -21,6 +21,7 @@ import {
   type PlanDetails,
   type PlanPayload,
   type PlanSettings,
+  type SubjectStrength,
 } from '@/services/amc';
 import { MixBar, ModeTag, PrioritiesCard, WeaknessKinds } from '@/components/Amc/Study';
 import { TodayList } from './Dashboard';
@@ -58,6 +59,50 @@ function TopicPicker({
           </button>
         );
       })}
+    </div>
+  );
+}
+
+const STRENGTHS: { key: SubjectStrength; label: string }[] = [
+  { key: 'weak', label: 'Weak' }, { key: 'ok', label: 'Okay' }, { key: 'strong', label: 'Strong' },
+];
+
+/**
+ * How strong the student feels in each subject — a tap each — with an
+ * optional box per subject for anything more ("fine until circles", "slow at
+ * casework"). The plan leans on these while there are few answers, and the
+ * answers take over as they come (backend/amc/planning.py `subject_lean`).
+ */
+export function SubjectStrengths({ categories, details, onChange }: {
+  categories: { id: CategoryId; name: string }[];
+  details: PlanDetails;
+  onChange: (next: PlanDetails) => void;
+}) {
+  if (!categories.length) return null;
+  const subjects = details.subjects ?? {};
+  const notes = details.subject_notes ?? {};
+  return (
+    <div className="am-field am-field-wide">
+      <span>How strong are you in each subject?</span>
+      <div className="am-subjects">
+        {categories.map((c) => (
+          <div key={c.id} className="am-subject">
+            <span className="am-subject-name"><CategoryDot category={c.id} /> {c.name}</span>
+            <div className="am-seg" role="radiogroup" aria-label={`${c.name}: how strong`}>
+              {STRENGTHS.map((s) => (
+                <button key={s.key} type="button" role="radio" aria-checked={subjects[c.id] === s.key}
+                        className={subjects[c.id] === s.key ? 'is-on' : ''}
+                        onClick={() => onChange({ ...details, subjects: { ...subjects, [c.id]: subjects[c.id] === s.key ? undefined : s.key } })}>
+                  {s.label}
+                </button>
+              ))}
+            </div>
+            <input className="am-input am-subject-note" maxLength={200} aria-label={`More on ${c.name} (optional)`}
+                   placeholder="More on this (optional)" value={notes[c.id] ?? ''}
+                   onChange={(e) => onChange({ ...details, subject_notes: { ...notes, [c.id]: e.target.value } })} />
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
@@ -169,16 +214,20 @@ function PlanForm({
           <input className="am-input" maxLength={300} placeholder="e.g. AoPS Intro to Counting, Alcumus"
                  value={details.resources ?? ''} onChange={(e) => set('resources', e.target.value)} />
         </label>
-        <div className="am-field am-field-wide">
-          <span>Strong at</span>
-          <TopicPicker topics={topics} value={details.strong ?? []} exclude={details.weak ?? []}
-                       onChange={(v) => set('strong', v)} />
-        </div>
-        <div className="am-field am-field-wide">
-          <span>Weak at</span>
-          <TopicPicker topics={topics} value={details.weak ?? []} exclude={details.strong ?? []}
-                       onChange={(v) => set('weak', v)} />
-        </div>
+        <SubjectStrengths categories={topicData?.categories ?? []} details={details} onChange={setDetails} />
+        <details className="am-field am-field-wide am-more">
+          <summary>Specific topics you're strong or weak at <span className="am-muted">(optional)</span></summary>
+          <div className="am-field am-field-wide">
+            <span>Strong at</span>
+            <TopicPicker topics={topics} value={details.strong ?? []} exclude={details.weak ?? []}
+                         onChange={(v) => set('strong', v)} />
+          </div>
+          <div className="am-field am-field-wide">
+            <span>Weak at</span>
+            <TopicPicker topics={topics} value={details.weak ?? []} exclude={details.strong ?? []}
+                         onChange={(v) => set('weak', v)} />
+          </div>
+        </details>
         <label className="am-field am-field-wide">
           <span>Anything else</span>
           <textarea className="am-input" maxLength={1000}
@@ -450,11 +499,18 @@ export default function StudyPlan() {
           </p>
         </section>
         <section className="am-card">
-          <span className="am-kicker">Projected vs goal</span>
-          <div className="am-countdown"><strong>{projected ?? '—'}</strong><span className="am-muted">/ goal {plan.goal_score}</span></div>
-          <div style={{ marginTop: 10 }}>
-            <Meter value={(projected ?? 0) / plan.goal_score} tone={projected != null && projected >= plan.goal_score ? 'good' : 'sage'} />
+          <span className="am-kicker">Starting point</span>
+          <div className="am-countdown">
+            <strong>{payload.start?.current ?? projected ?? '—'}</strong>
+            <span className="am-muted">/ goal {plan.goal_score}</span>
           </div>
+          <div style={{ marginTop: 10 }}>
+            <Meter value={((payload.start?.current ?? projected) ?? 0) / plan.goal_score}
+                   tone={payload.start?.stage === 'there' ? 'good' : 'sage'} />
+          </div>
+          <p className="am-muted" style={{ margin: '8px 0 0', fontSize: 13 }} title={payload.start?.from ? `From ${payload.start.from}` : undefined}>
+            {payload.start?.summary ?? ''}
+          </p>
         </section>
         <section className="am-card">
           <span className="am-kicker">This week</span>

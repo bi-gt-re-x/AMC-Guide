@@ -1678,3 +1678,30 @@ a.am-take:hover { border-color: var(--am-sage); }
 .am-kind-lines li { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; align-items: baseline; }
 .am-kind-lines li .am-muted { grid-column: 2; font-size: 12px; }
 .am-focus-row { display: grid; gap: 4px; margin-top: 6px; }
+.am-timer.is-over { color: var(--am-bad); font-weight: 600; }
+
+/* A topic's practice set (pages/amc/PracticeSet.tsx). */
+.am-set-modes { flex-wrap: wrap; }
+.am-set-list { list-style: none; margin: 0; padding: 0; display: grid; gap: 6px; }
+.am-set-row { width: 100%; display: grid; grid-template-columns: 28px 1fr auto auto; gap: 12px; align-items: center;
+    padding: 10px 12px; border: 1px solid var(--am-line); border-radius: 10px; background: var(--am-card);
+    color: inherit; font: inherit; text-align: left; cursor: pointer; }
+.am-set-row:hover { border-color: var(--am-sage); }
+.am-set-num { font-family: var(--am-serif); font-size: 18px; color: var(--am-muted); text-align: center; }
+.am-set-main { display: grid; gap: 2px; min-width: 0; font-size: 13px; }
+.am-set-source { color: var(--am-ink); font-weight: 500; }
+.am-set-done { display: flex; gap: 6px; align-items: baseline; margin-bottom: var(--space-4); }
+.am-set-done strong { font-family: var(--am-serif); font-size: 22px; }
+.am-mode.is-l1 { background: color-mix(in srgb, var(--am-green) 25%, transparent); }
+.am-mode.is-l2 { background: color-mix(in srgb, var(--am-green) 45%, transparent); }
+.am-mode.is-l3 { background: color-mix(in srgb, var(--am-amber) 35%, transparent); }
+.am-mode.is-l4 { background: color-mix(in srgb, var(--am-rose) 35%, transparent); }
+.am-mode.is-l5 { background: color-mix(in srgb, var(--am-rose) 55%, transparent); }
+.am-set-starts { display: flex; flex-wrap: wrap; gap: 6px; margin: -4px 0 var(--space-4); }
+/* The plan's subject strengths (pages/amc/StudyPlan.tsx SubjectStrengths). */
+.am-subjects { display: grid; gap: 8px; }
+.am-subject { display: grid; grid-template-columns: minmax(150px, 1fr) auto minmax(160px, 1.4fr); gap: 10px; align-items: center; }
+.am-subject-name { font-size: 13px; color: var(--am-ink); }
+.am-subject-note { font-size: 13px; }
+@media (max-width: 720px) { .am-subject { grid-template-columns: 1fr; } }
+.am-more > summary { cursor: pointer; font-size: 13px; color: var(--am-ink); margin-bottom: 8px; }

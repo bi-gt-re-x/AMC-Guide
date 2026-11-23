@@ -197,7 +197,9 @@ def test_todays_practice_and_analytics_carry_the_mix(client):
     focus = body['weeks'][0]['focus'][0]
     assert focus['mix'] and abs(sum(m['share'] for m in focus['mix']) - 1) < 1e-9
     practice = next(i for i in body['today'] if i['key'] == 'practice')
-    assert 'at level' in practice['label'] and '&rating=' in practice['to']
+    assert 'at level' in practice['label']
+    # It opens the topic's own handpicked set of eight, in the topic's mode.
+    assert practice['to'] == '/practice/{}?mode={}'.format(focus['id'], focus['mode'])
     analytics = client.get('/api/amc/analytics').json()
     tiles = {t['id']: t for t in analytics['takeaways']}
     assert set(tiles) == {'projected', 'level', 'next', 'weakness'}

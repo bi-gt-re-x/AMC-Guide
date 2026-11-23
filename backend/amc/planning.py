@@ -329,7 +329,7 @@ def classify(level, theta, problems, topic_theta=None):
     return out
 
 
-def analyze(attempts, hist, level, today=None, goal=None):
+def analyze(attempts, hist, level, today=None, goal=None, details=None):
     """Priorities, weaknesses and difficulty mixes for a `level` student aiming at `goal`.
 
     Returns {'theta', 'ceiling', 'mix', 'topics': [priority rows, highest first], 'kinds': [per kind]}."""
@@ -354,6 +354,7 @@ def analyze(attempts, hist, level, today=None, goal=None):
             for tid in [p['topic']] + p['also']:
                 on_level.setdefault(tid, []).append(p['rating'])
 
+    leans = subject_lean(details, {tid: len(v) for tid, v in by_topic.items()})
     out = []
     for t in relevant:
         pts = by_topic.get(t['id'], [])
@@ -368,7 +369,8 @@ def analyze(attempts, hist, level, today=None, goal=None):
         days = _days(today.isoformat(), last) if last else None
         recency = round(1.15 if days is None else 1 + 0.3 * min(1.0, days / STALE_DAYS), 2)
         importance = round(min(1.25, 1 + 0.05 * builds.get(t['id'], 0)), 2)
-        priority = round(gain * feasibility * recency * importance, 2)
+        lean = leans.get(t['id'], 1.0)
+        priority = round(gain * feasibility * recency * importance * lean, 2)
         kinds = classify(level, theta, rows.get(t['id'], {}).get('problems', []), th)
         main = max(kinds, key=lambda k: kinds[k]['score']) if kinds else None
         if main:
@@ -385,7 +387,8 @@ def analyze(attempts, hist, level, today=None, goal=None):
                         'answered': answered, 'right': right,
                         'level': round(th, 2) if th is not None else None,
                         'feasibility': feasibility, 'recency': recency, 'days_since': days,
-                        'importance': importance, 'builds': builds.get(t['id'], 0)},
+                        'importance': importance, 'builds': builds.get(t['id'], 0),
+                        'self_rated': ((details or {}).get('subjects') or {}).get(t['category'])},
             'kinds': kinds, 'kind': main, 'mode': mode, 'mode_label': MODE_LABEL[mode],
             'why': _why(t, gain, answered, right, feasibility, days, builds.get(t['id'], 0), main),
             # What difficulty to practise it at: from the topic's ability, or a
@@ -479,3 +482,94 @@ def brief(study, top=6):
     else:
         lines.append('Not enough answers yet to tell what kind of weakness any topic has.')
     return '\n'.join(lines)
+
+
+# ---------------------------------------------------------------------------
+# Where the student starts, and the plan's shape from the gap to the goal
+# ---------------------------------------------------------------------------
+#: How far back a sitting still says where the student is.
+RECENT_DAYS = 120
+SUBJECT_LEAN = {'weak': 1.2, 'ok': 1.0, 'strong': 0.8}
+
+
+def starting_point(level, goal, projected, mocks, details, today):
+    """Where the student is now against the goal, from their data.
+
+    The estimate blends the score model's projection (from every answer) with
+    their recent official sittings, each adjusted for that paper's difficulty
+    (backend/amc/results.py), the sittings counting more the more there are;
+    with neither, the last real score they gave. Returns {'current', 'from',
+    'goal', 'gap', 'weeks', 'per_week', 'stage', 'summary'}."""
+    from backend.amc import results
+    from datetime import timedelta
+    since = (today - timedelta(days=RECENT_DAYS)).isoformat()
+    recent = []
+    for m in sorted(mocks, key=lambda m: m['at'], reverse=True):
+        c = catalog.PAST_BY_ID.get(m['contest_id'])
+        if not c or c['level'] != level or m['at'][:10] < since or m['kind'] not in ('mock', 'logged'):
+            continue
+        st = results.of_row(m)
+        recent.append(st['adjusted'] if st else m['score'])
+        if len(recent) == 5:
+            break
+    parts, sources = [], []
+    if recent:
+        weight = min(0.75, 0.25 * len(recent))
+        parts.append((sum(recent) / len(recent), weight))
+        sources.append('{} recent sitting{} (adjusted for difficulty)'.format(len(recent), '' if len(recent) == 1 else 's'))
+    if projected is not None:
+        parts.append((projected, 1 - sum(w for _, w in parts) if parts else 1.0))
+        sources.append('your answers')
+    if not parts and (details or {}).get('last_score') not in (None, ''):
+        parts.append((float(details['last_score']), 1.0))
+        sources.append('the last score you gave')
+    current = None
+    if parts:
+        total = sum(w for _, w in parts) or 1
+        current = round(sum(v * w for v, w in parts) / total * 2) / 2
+    return _shape_from(level, goal, current, sources, today, details)
+
+
+def _shape_from(level, goal, current, sources, today, details):
+    aime = level == 'AIME'
+    exam = (details or {}).get('_exam')
+    weeks = max(1, ((date.fromisoformat(exam) - today).days // 7) + 1) if exam else None
+    if current is None:
+        return {'current': None, 'from': '', 'goal': goal, 'gap': None, 'weeks': weeks, 'per_week': None,
+                'stage': 'unknown', 'summary': 'Answer a few problems or sit a paper to see where you start.'}
+    gap = round(goal - current, 1)
+    far, near = (3, 0) if aime else (20, 0)
+    if gap >= far:
+        stage = 'far'
+        summary = '{:g} below your goal: skills first, timed papers later.'.format(gap)
+    elif gap > near:
+        stage = 'near'
+        summary = '{:g} below your goal: skills and timed papers side by side.'.format(gap)
+    else:
+        stage = 'there'
+        summary = 'At your goal already: hold it under exam conditions and push higher.'
+    return {'current': current, 'from': ' and '.join(sources), 'goal': goal, 'gap': gap, 'weeks': weeks,
+            'per_week': round(gap / weeks, 2) if weeks and gap > 0 else 0, 'stage': stage, 'summary': summary}
+
+
+#: Share of the weeks in Foundations and Core, and how often Core has a mock,
+#: by how far the student is from the goal.
+SHAPES = {
+    'far': {'foundations': 0.45, 'core': 0.35, 'core_mock_every': 3},
+    'near': {'foundations': 0.25, 'core': 0.4, 'core_mock_every': 2},
+    'there': {'foundations': 0.15, 'core': 0.35, 'core_mock_every': 2},
+    'unknown': {'foundations': 0.4, 'core': 0.35, 'core_mock_every': 3},
+}
+
+
+def subject_lean(details, answered_by_topic):
+    """{topic: multiplier} from the student's own rating of each subject, worth
+    less as the topic gathers answers of its own (the data takes over)."""
+    rated = (details or {}).get('subjects') or {}
+    out = {}
+    for t in catalog.TOPICS:
+        lean = SUBJECT_LEAN.get(rated.get(t['category']), 1.0)
+        if lean != 1.0:
+            trust = 1 / (1 + answered_by_topic.get(t['id'], 0) / 8)
+            out[t['id']] = 1 + (lean - 1) * trust
+    return out

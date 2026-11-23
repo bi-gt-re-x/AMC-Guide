@@ -22,3 +22,10 @@ describe('goalFor', () => {
     expect(goalFor('AIME', 'better', undefined, { ...DEFAULTS })).toBe(5);
   });
 });
+
+describe('goalFor, aiming high', () => {
+  it('120+ on the AMC, 12 on the AIME', () => {
+    expect(goalFor('AMC 10', 'high', undefined, { ...DEFAULTS })).toBe(120);
+    expect(goalFor('AIME', 'high', 9, { ...DEFAULTS })).toBe(12);
+  });
+});

@@ -28,6 +28,11 @@ function Pick({ pick }: { pick: NextPick }) {
   );
 }
 
+const SETS = [
+  { mode: 'learn', label: 'Learn the ideas' }, { mode: 'accuracy', label: 'Accuracy drill' },
+  { mode: 'timed', label: 'Timed set' }, { mode: 'mixed', label: 'Mixed set' }, { mode: 'spaced', label: 'Spaced review' },
+];
+
 export default function Topic() {
   const { topicId = '' } = useParams();
   const { data, error, loading, reload } = useApi(() => amc.topic(topicId), [topicId]);
@@ -36,7 +41,6 @@ export default function Topic() {
   if (error || !data) return <ErrorState message={error ?? 'Could not load this topic.'} onRetry={reload} />;
 
   const { topic, problems } = data;
-  const firstNew = problems.find((p) => p.status === 'new');
   const missed = problems.filter((p) => p.status === 'missed' || p.status === 'review').length;
 
   return (
@@ -47,12 +51,17 @@ export default function Topic() {
       <PageHeader
         kicker={topic.category_name}
         title={topic.name}
-        actions={firstNew ? (
-          <Link className="am-btn am-btn-primary" to={`/problems/${firstNew.id}`}>Practice</Link>
-        ) : undefined}
+        actions={<Link className="am-btn am-btn-primary" to={`/practice/${topic.id}`}>Practice 8 problems</Link>}
       >
         <p>{topic.summary} On the {topic.levels.join(', ')}.</p>
       </PageHeader>
+
+      {/* Eight problems from this topic only, picked for one way of training it. */}
+      <div className="am-set-starts" aria-label="Practice sets">
+        {SETS.map((s) => (
+          <Link key={s.mode} className="am-chip" to={`/practice/${topic.id}?mode=${s.mode}`}>{s.label}</Link>
+        ))}
+      </div>
 
       <div className="am-grid am-grid-main">
         <div className="am-stack">

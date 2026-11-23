@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Union
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from backend.amc import catalog, coach, engine, insights, planning, results, store, weak
+from backend.amc import catalog, coach, engine, insights, planning, practice, results, store, weak
 from backend.amc import official
 from backend.amc import problems as pb
 from backend.amc.scale import TOP
@@ -532,6 +532,23 @@ def _topic_next(problems):
     return picks
 
 
+@router.get('/api/amc/topics/{topic_id}/set')
+def topic_set(topic_id: str, mode: str = 'practice', username: str = Depends(current_username)):
+    """Eight problems in this topic only, picked for one way of training it
+    (backend/amc/practice.py): learn, accuracy, timed, mixed, spaced, practice."""
+    if topic_id not in catalog.TOPIC_BY_ID:
+        return fail('No such topic.')
+    attempts, _, hist, review_by_id = _context(username)
+    plan = store.plan(username)
+    level = plan['target'] if plan else 'AMC 10'
+    goal = plan['goal_score'] if plan else engine.DEFAULT_GOALS[level]
+    found = practice.for_user(topic_id, mode, attempts, hist, review_by_id, level, goal, username, _today())
+    found['problems'] = [_summary(username, pid, hist, review_by_id) for pid in found['problems']]
+    for row in found['problems']:
+        row['level_of'] = planning.level_of(row['rating'])
+    return ok(**found, modes=[{'id': m, 'title': practice.TITLES[m]} for m in practice.MODES])
+
+
 @router.get('/api/amc/topics/{topic_id}')
 def topic(topic_id: str, username: str = Depends(current_username)):
     t = catalog.TOPIC_BY_ID.get(topic_id)
@@ -921,9 +938,15 @@ def _plan_payload(username):
     today = _today()
     attempts, reviews, hist, review_by_id = _context(username)
     tstats = engine.topic_stats(hist, review_by_id)
-    mocks = [m for m in store.mocks(username) if m['kind'] == 'mock']
-    study = planning.analyze(attempts, hist, plan['target'], today, plan['goal_score'])
-    weeks = engine.plan_weeks(plan, tstats, mocks, today, study['topics'])
+    every_score = store.mocks(username)
+    mocks = [m for m in every_score if m['kind'] == 'mock']
+    study = planning.analyze(attempts, hist, plan['target'], today, plan['goal_score'], plan['details'])
+    projected_now = engine.projected(hist, plan['target']) if len(hist) >= engine.PROJECTION_MIN else None
+    # Where the student starts against the goal, from their scores and answers;
+    # it sets the plan's shape (more skills when far, more papers when close).
+    start = planning.starting_point(plan['target'], plan['goal_score'], projected_now, every_score,
+                                    {**plan['details'], '_exam': plan['exam_date']}, today)
+    weeks = engine.plan_weeks(plan, tstats, mocks, today, study['topics'], start['stage'])
     due = sum(1 for r in reviews if r['status'] == 'active' and r['due'] <= today.isoformat())
     practiced = {a['problem_id'] for a in attempts
                  if a['at'][:10] == today.isoformat() and a['source'] == 'practice'}
@@ -932,7 +955,7 @@ def _plan_payload(username):
     return ok(plan={**plan, 'days_left': (date.fromisoformat(plan['exam_date']) - today).days},
               ai={'available': coach.available(), 'label': coach.provider_label()},
               weeks=weeks, today=items,
-              projected=engine.projected(hist, plan['target']) if len(hist) >= engine.PROJECTION_MIN else None,
+              projected=projected_now, start=start,
               coverage=[{'id': t['id'], 'name': t['name'], 'category': t['category'],
                          'mastery': tstats[t['id']]['mastery'], 'weight': t['weight']}
                         for t in sorted(relevant, key=lambda t: (t['category'], t['name']))],
@@ -986,6 +1009,15 @@ def _details(raw):
             out['days_per_week'] = max(1, min(7, int(raw['days_per_week'])))
     except (TypeError, ValueError):
         pass
+    # How strong they feel in each subject, and a note on each (both optional).
+    cats = {c['id'] for c in catalog.CATEGORIES}
+    subjects = {k: v for k, v in (raw.get('subjects') or {}).items() if k in cats and v in ('weak', 'ok', 'strong')}
+    if subjects:
+        out['subjects'] = subjects
+    notes = {k: str(v).strip()[:200] for k, v in (raw.get('subject_notes') or {}).items()
+             if k in cats and str(v or '').strip()}
+    if notes:
+        out['subject_notes'] = notes
     for key in ('strong', 'weak'):
         ids = [t for t in (raw.get(key) or []) if isinstance(t, str) and t in catalog.TOPIC_BY_ID]
         if ids:
@@ -1041,8 +1073,10 @@ def coach_plan(body: CoachBody, username: str = Depends(current_username)):
               'mastered': sum(1 for r in reviews if r['status'] == 'mastered')}
     answers = {str(q)[:300]: str(a)[:600] for q, a in (body.answers or {}).items()}
     try:
-        written = coach.write_plan(plan, plan['details'], tstats, projected, mocks, counts, answers, today,
-                                   planning.analyze(attempts, hist, plan['target'], today, plan['goal_score']))
+        study = planning.analyze(attempts, hist, plan['target'], today, plan['goal_score'], plan['details'])
+        study['start'] = planning.starting_point(plan['target'], plan['goal_score'], projected, store.mocks(username),
+                                                 {**plan['details'], '_exam': plan['exam_date']}, today)
+        written = coach.write_plan(plan, plan['details'], tstats, projected, mocks, counts, answers, today, study)
     except planner.PlannerUnavailable as exc:
         return fail(str(exc))
     store.save_coach(username, written, coach.provider_label())

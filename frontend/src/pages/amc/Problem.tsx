@@ -5,7 +5,9 @@
  * `?review=1` is a review session's problem (pages/amc/Review.tsx): the answer
  * is sent as a review, which is what moves it along the 3/10/21-day schedule.
  * `?weak=1` is one of the Review page's twelve weak-topic problems: always a
- * fresh try, with a button on to the next of the twelve.
+ * fresh try, with a button on to the next of the twelve. `?set=1` is one of a
+ * topic's eight handpicked practice problems (pages/amc/PracticeSet.tsx): a
+ * fresh try too, with the set's clock, and the topic hidden on a mixed set.
  */
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -25,6 +27,7 @@ import {
 } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
 import { amc, announceAmcChanged, shortDate, type AttemptReply, type Problem as ProblemData } from '@/services/amc';
+import { readPracticeSet } from './practiceSetStore';
 import { readWeakSet } from './weakSet';
 import '@/styles/amc.css';
 
@@ -46,6 +49,12 @@ export default function Problem() {
   const weakSet = weak ? readWeakSet() : [];
   const weakAt = weakSet.indexOf(problemId);
   const weakNext = weakAt >= 0 ? weakSet[weakAt + 1] : undefined;
+  const inSet = !reviewing && !weak && params.get('set') === '1';
+  const practiceSet = inSet ? readPracticeSet() : null;
+  const setIds = practiceSet?.ids ?? [];
+  const setAt = setIds.indexOf(problemId);
+  const setNext = setAt >= 0 ? setIds[setAt + 1] : undefined;
+  const setHome = practiceSet ? `/practice/${practiceSet.topic}?mode=${practiceSet.mode}` : '/topics';
   const navigate = useNavigate();
   const { data, error, loading, reload } = useApi(() => amc.problem(problemId), [problemId]);
   const { notify } = useNotice();
@@ -75,12 +84,14 @@ export default function Problem() {
   const answered = Boolean(result || revealed);
   // A problem answered before shows its solution, unless the reader asks to
   // try it again (or it is a review, which is always a fresh try).
-  const seenBefore = Boolean(data?.attempts.length) && !reviewing && !weak && !retry && !answered;
+  const seenBefore = Boolean(data?.attempts.length) && !reviewing && !weak && !inSet && !retry && !answered;
   const locked = answered || seenBefore;
   // A review (or a weak-topic set, or "Try it again") is a fresh try: until it
   // is answered, the attempts list says only whether each try was right, never
   // which answer was given, so neither the old wrong answer nor the key shows.
-  const freshTry = !answered && (reviewing || weak || retry);
+  const freshTry = !answered && (reviewing || weak || retry || inSet);
+  // A mixed set is practice in recognising the topic: its name waits until answered.
+  const hideTopic = Boolean(practiceSet?.hideTopic) && !answered;
   const [seconds, setSeconds] = useStopwatch(!locked && !loading);
   useEffect(() => setSeconds(0), [problemId, retry, setSeconds]);
 
@@ -159,11 +170,20 @@ export default function Problem() {
   return (
     <div className="amc-page">
       <nav className="am-muted" style={{ fontSize: 13, marginBottom: 12, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
-        <Link to={reviewing || weak ? '/review' : '/problems'} className="am-link">
-          {reviewing || weak ? '← Review' : '← Problems'}
-        </Link>
-        <span>/</span>
-        <Link to={`/topics/${p.topic}`} className="am-link">{p.topic_name}</Link>
+        {inSet ? (
+          <Link to={setHome} className="am-link">← {practiceSet?.title ?? 'Practice set'}</Link>
+        ) : (
+          <Link to={reviewing || weak ? '/review' : '/problems'} className="am-link">
+            {reviewing || weak ? '← Review' : '← Problems'}
+          </Link>
+        )}
+        {!hideTopic && (
+          <>
+            <span>/</span>
+            <Link to={`/topics/${p.topic}`} className="am-link">{p.topic_name}</Link>
+          </>
+        )}
+        {inSet && setAt >= 0 && <span>· {setAt + 1} of {setIds.length}</span>}
       </nav>
 
       <div className="am-grid am-grid-main">
@@ -171,8 +191,8 @@ export default function Problem() {
           <article className="am-card" style={{ padding: 28 }}>
             <div className="am-problem-meta">
               <span className="am-tag">{source ? `${source.name} #${source.number}` : p.ai ? p.level : `${p.level} drill`}</span>
-              <Link className="am-tag" to={`/topics/${p.topic}`}>{p.topic_name}</Link>
-              {p.also.map((t) => <Link key={t.id} className="am-tag" to={`/topics/${t.id}`}>{t.name}</Link>)}
+              {!hideTopic && <Link className="am-tag" to={`/topics/${p.topic}`}>{p.topic_name}</Link>}
+              {!hideTopic && p.also.map((t) => <Link key={t.id} className="am-tag" to={`/topics/${t.id}`}>{t.name}</Link>)}
               <span className="am-tag"><Difficulty value={p.difficulty} rating={p.rating} /></span>
               {p.official && <span className="am-tag">Official</span>}
               {p.ai && <span className="am-tag" title="Written by the AI; kept because an independent second solve agreed">AI practice</span>}
@@ -195,7 +215,14 @@ export default function Problem() {
 
             {!locked && (
               <div className="am-answer-bar">
-                <span className="am-timer" aria-label="Time on this problem">{clock(seconds)}</span>
+                {practiceSet?.seconds ? (
+                  <span className={`am-timer${seconds > practiceSet.seconds ? ' is-over' : ''}`}
+                        aria-label="Time on this problem, against the set's pace">
+                    {clock(seconds)} / {clock(practiceSet.seconds)}
+                  </span>
+                ) : (
+                  <span className="am-timer" aria-label="Time on this problem">{clock(seconds)}</span>
+                )}
                 <div style={{ display: 'flex', gap: 8 }}>
                   <button type="button" className="am-btn am-btn-ghost" disabled={busy} onClick={() => void reveal()}>
                     {p.official && !p.has_solution ? 'Show answer' : 'Show solution'}
@@ -251,6 +278,18 @@ export default function Problem() {
               ) : (
                 <Solution solution={p.solution} insight={p.insight} trap={p.trap} />
               )
+            )}
+
+            {inSet && answered && (
+              <div className="am-nav-row">
+                <span className="am-muted" style={{ fontSize: 13 }}>
+                  {practiceSet?.title ?? 'Practice set'}{setAt >= 0 ? ` · ${setAt + 1} of ${setIds.length}` : ''}
+                </span>
+                <button type="button" className="am-btn am-btn-primary"
+                        onClick={() => navigate(setNext ? `/problems/${setNext}?set=1` : `${setHome}&done=1`)}>
+                  {setNext ? 'Next problem →' : 'Finish the set'}
+                </button>
+              </div>
             )}
 
             {weak && answered && (
