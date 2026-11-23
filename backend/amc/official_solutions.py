@@ -12,7 +12,7 @@ key the solution is left off rather than shown beside the wrong answer
 on its answer.
 
 Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A, 10B, 12A and 12B, the 2024 AMC 10A,
-10B, 12A and 12B, the 2023 AMC 10A, 10B, 12A and 12B, the 2022 AMC 10A, 10B, 12A and 12B, the 2021 AMC 10A and 10B, the 2021
+10B, 12A and 12B, the 2023 AMC 10A, 10B, 12A and 12B, the 2022 AMC 10A, 10B, 12A and 12B, the 2021 AMC 10A, 10B, 12A and 12B, the 2021
 Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, the
 2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, the 2016 AMC 10A and 10B, the 2015 AMC 10A and 10B, the 2014 AMC 10A and 10B, the 2013 AMC 10A and 10B, and the 2012 AMC 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
@@ -4598,6 +4598,324 @@ SOLUTIONS = {
             r"$149 + 99 + 89 = 337$. The answer is $\textbf{(B) }337$.",
         ],
         'trap': r"Comparing areas instead of lattice points, which drops every \"$+1$\".",
+    },
+    # ------------------------------------------------------------------ 2021 AMC 12A
+    # Problems 3, 4, 5, 7, 9, 10, 12, 16, 17, 18 and 23 are the 10A's 3, 7, 8, 9,
+    # 10, 12, 14, 16, 17, 18 and 23, and use its write-ups (_SAME_AS_10 below).
+    '2021-amc-12a-1': {
+        'topics': ['exponents', 'arithmetic'],
+        'answer': 'B',
+        'insight': r"Add the exponents first on the left; the bracket is a plain sum of three powers.",
+        'steps': [
+            r"$2^{1+2+3} = 2^6 = 64$.",
+            r"$2^1 + 2^2 + 2^3 = 2 + 4 + 8 = 14$.",
+            r"$64 - 14 = 50$. The answer is $\textbf{(B) }50$.",
+        ],
+        'trap': r"Treating $2^1 + 2^2 + 2^3$ as $2^{1+2+3}$, which gives $0$.",
+    },
+    '2021-amc-12a-2': {
+        'topics': ['inequalities', 'logic'],
+        'answer': 'D',
+        'insight': r"Squaring finds the condition $ab = 0$, but a square root is never negative, so $a + b \ge 0$ is needed too.",
+        'steps': [
+            r"Squaring, $a^2 + b^2 = a^2 + 2ab + b^2$ exactly when $ab = 0$.",
+            r"The left side $\sqrt{a^2 + b^2}$ is at least $0$, so the equation also needs $a + b \ge 0$: $a = -3$, $b = 0$ gives $3 \ne -3$.",
+            r"Both conditions together are enough. The answer is $\textbf{(D) }$ true if and only if $ab=0$ and $a+b\ge 0$.",
+        ],
+        'trap': r"Stopping at $ab = 0$ after squaring; squaring lets in negative right-hand sides.",
+    },
+    '2021-amc-12a-6': {
+        'topics': ['probability', 'linear-equations'],
+        'answer': 'C',
+        'insight': r"The number of red cards $r$ doesn't change; write the deck size both ways.",
+        'steps': [
+            r"With $n$ cards, $\frac{r}{n} = \frac13$, so $n = 3r$.",
+            r"After adding $4$ black cards, $\frac{r}{n + 4} = \frac14$, so $n + 4 = 4r$.",
+            r"Subtracting, $r = 4$ and $n = 12$. The answer is $\textbf{(C) }12$.",
+        ],
+        'trap': r"Answering with the new deck size, $16$, or the number of red cards.",
+    },
+    '2021-amc-12a-8': {
+        'topics': ['recursion', 'parity'],
+        'answer': 'C',
+        'insight': r"Work mod $2$: the parities repeat once three consecutive terms repeat.",
+        'steps': [
+            r"Mod $2$ the sequence runs $D_0, D_1, \dots = 0, 0, 1, 1, 1, 0, 1, 0, 0, 1, \dots$",
+            r"$D_7, D_8, D_9 = 0, 0, 1$ is the starting triple, so the parities repeat every $7$.",
+            r"$2021 = 7 \cdot 288 + 5$, so the triple matches $D_5, D_6, D_7 = 0, 1, 0$: $(E, O, E)$. The answer is $\textbf{(C) }(E,O,E)$.",
+        ],
+        'trap': r"Assuming the period is $3$ because each term looks back three places.",
+    },
+    '2021-amc-12a-11': {
+        'topics': ['coordinate-geometry', 'transformations'],
+        'answer': 'C',
+        'insight': r"Reflect the target across both axes; the bounced path then unfolds into a straight segment.",
+        'steps': [
+            r"Reflecting $(7, 5)$ across the $x$-axis and then the $y$-axis gives $(-7, -5)$.",
+            r"The beam's length equals the straight distance from $(3, 5)$ to $(-7, -5)$.",
+            r"$\sqrt{10^2 + 10^2} = 10\sqrt2$. The answer is $\textbf{(C) }10\sqrt2$.",
+        ],
+        'trap': r"Reflecting across only one axis, which models a single bounce.",
+    },
+    '2021-amc-12a-13': {
+        'topics': ['complex-numbers', 'trigonometry'],
+        'answer': 'B',
+        'insight': r"Every choice has modulus $2$, so $z^5$ has modulus $32$; compare $\cos 5\theta$.",
+        'steps': [
+            r"The arguments are $180^\circ, 150^\circ, 135^\circ, 120^\circ, 90^\circ$; times $5$: $900^\circ, 750^\circ, 675^\circ, 600^\circ, 450^\circ$.",
+            r"Reduced, these are $180^\circ, 30^\circ, 315^\circ, 240^\circ, 90^\circ$, with cosines $-1, \frac{\sqrt3}{2}, \frac{\sqrt2}{2}, -\frac12, 0$.",
+            r"$\cos 30^\circ$ is largest. The answer is $\textbf{(B) }{-}\sqrt3+i$.",
+        ],
+        'trap': r"Comparing the real parts of $z$ itself instead of $z^5$.",
+    },
+    '2021-amc-12a-14': {
+        'topics': ['logarithms', 'sequences-series'],
+        'answer': 'E',
+        'insight': r"$\log_{b^k} a^m = \frac{m}{k}\log_b a$, so each sum is a constant log times a simple sum.",
+        'steps': [
+            r"$\log_{5^k} 3^{k^2} = \frac{k^2}{k}\log_5 3 = k\log_5 3$, and $\sum_{k=1}^{20} k = 210$.",
+            r"$\log_{9^k} 25^k = \log_9 25 = \log_3 5$, so the second sum is $100\log_3 5$.",
+            r"$210\log_5 3 \cdot 100\log_3 5 = 21000$. The answer is $\textbf{(E) }21{,}000$.",
+        ],
+        'trap': r"Reading $\log_9 25$ as $\log_3 5$ squared; the squares in base and argument cancel.",
+    },
+    '2021-amc-12a-15': {
+        'topics': ['combinations', 'binomial-coefficients'],
+        'answer': 'D',
+        'insight': r"Count the basses left out instead: $t - b \equiv t + (8 - b) \pmod 4$, so a group is a subset of the $14$ people of size a multiple of $4$.",
+        'steps': [
+            r"Pick $t$ tenors and the $b' = 8 - b$ basses to leave out. $\binom8b = \binom8{b'}$, and $t - b \equiv 0 \pmod 4$ exactly when $t + b' \equiv 0 \pmod 4$.",
+            r"So the count is $\binom{14}{0} + \binom{14}{4} + \binom{14}{8} + \binom{14}{12} = 1 + 1001 + 3003 + 91 = 4096$.",
+            r"The empty group is one of those ($t = 0$, $b' = 8$), so $N = 4095$ and the remainder is $95$. The answer is $\textbf{(D) } 95$.",
+        ],
+        'trap': r"Forgetting to remove the empty group, which gives $96$.",
+    },
+    '2021-amc-12a-19': {
+        'topics': ['trigonometry', 'functions'],
+        'answer': 'C',
+        'insight': r"Turn the cosine into a sine; on $[0, \pi]$ both angles lie where sine is one-to-one.",
+        'steps': [
+            r"$\cos\left(\frac\pi2\sin x\right) = \sin\left(\frac\pi2 - \frac\pi2\sin x\right)$.",
+            r"For $x \in [0, \pi]$, both $\frac\pi2\cos x$ and $\frac\pi2 - \frac\pi2\sin x$ lie in $\left[-\frac\pi2, \frac\pi2\right]$, where sine is one-to-one, so $\cos x = 1 - \sin x$.",
+            r"$\sin x + \cos x = 1$ means $\sqrt2\sin\left(x + \frac\pi4\right) = 1$, so $x = 0$ or $x = \frac\pi2$. The answer is $\textbf{(C) }2$.",
+        ],
+        'trap': r"Equating the angles without checking the range; on a wider interval sine repeats values.",
+    },
+    '2021-amc-12a-20': {
+        'topics': ['conics', 'quadratics'],
+        'answer': 'B',
+        'insight': r"Put the vertex at the origin; the focal distance of a point is its height plus $p$.",
+        'steps': [
+            r"Take $V = (0, 0)$, $F = (0, p)$ and the parabola $x^2 = 4py$. For $A = (x, y)$, $AF = y + p = 20$.",
+            r"$AV^2 = x^2 + y^2 = 4p(20 - p) + (20 - p)^2 = (20 - p)(3p + 20) = 441$.",
+            r"That is $3p^2 - 40p + 41 = 0$, with two positive roots below $20$, summing to $\frac{40}{3}$. The answer is $\textbf{(B) }\frac{40}3$.",
+        ],
+        'trap': r"Using the directrix distance $y$ for $AF$ and leaving off the $p$.",
+    },
+    '2021-amc-12a-21': {
+        'topics': ['conics', 'complex-numbers'],
+        'answer': 'A',
+        'insight': r"The five points are symmetric about the $x$-axis, so the ellipse is $\frac{(x-h)^2}{a^2} + \frac{y^2}{b^2} = 1$ with three unknowns.",
+        'steps': [
+            r"The roots are $1$, $-1 \pm \sqrt3 i$ and $-2 \pm \sqrt2 i$: the points $(1, 0)$, $(-1, \pm\sqrt3)$, $(-2, \pm\sqrt2)$.",
+            r"With $u = \frac1{a^2}$, $w = \frac1{b^2}$: $(1-h)^2u = 1$, $(1+h)^2u + 3w = 1$ and $(2+h)^2u + 2w = 1$. Removing $w$ gives $3(2+h)^2 - 2(1+h)^2 = (1-h)^2$, so $h = -\frac9{10}$.",
+            r"Then $a^2 = \frac{361}{100}$ and $b^2 = \frac{361}{120}$, so $e^2 = 1 - \frac{b^2}{a^2} = 1 - \frac{100}{120} = \frac16$.",
+            r"$m + n = 1 + 6 = 7$. The answer is $\textbf{(A) }7$.",
+        ],
+        'trap': r"Centering the ellipse at the origin; the points force $h \ne 0$.",
+    },
+    '2021-amc-12a-22': {
+        'topics': ['polynomials', 'trigonometry'],
+        'answer': 'D',
+        'insight': r"The numbers $2\cos\frac{2\pi k}{7}$ are $\zeta^k + \zeta^{-k}$ for a seventh root of unity, roots of $y^3 + y^2 - 2y - 1$.",
+        'steps': [
+            r"Dividing $1 + \zeta + \cdots + \zeta^6 = 0$ by $\zeta^3$ and writing $y = \zeta + \zeta^{-1}$ gives $y^3 + y^2 - 2y - 1 = 0$, with roots $2\cos\frac{2\pi}7, 2\cos\frac{4\pi}7, 2\cos\frac{6\pi}7$.",
+            r"Put $y = 2x$: $8x^3 + 4x^2 - 4x - 1 = 0$, so $P(x) = x^3 + \frac12x^2 - \frac12x - \frac18$.",
+            r"$abc = \frac12 \cdot \left(-\frac12\right) \cdot \left(-\frac18\right) = \frac1{32}$. The answer is $\textbf{(D) }\frac{1}{32}$.",
+        ],
+        'trap': r"Using $y^3 + y^2 - 2y - 1$ directly, which is the polynomial for $2\cos$, not $\cos$.",
+    },
+    '2021-amc-12a-24': {
+        'topics': ['circles', 'area'],
+        'answer': 'D',
+        'insight': r"The $60^\circ$ inscribed angle fixes $\Omega$'s radius from $QR$; the common chord's distance from $\Omega$'s center then fixes $P$.",
+        'steps': [
+            r"In $\Omega$, $QR = 2\rho\sin 60^\circ$, so $\rho = 3$. Put $\Gamma$'s center at the origin, $P = (p, 0)$ and $\Omega$'s center at $(p, 3)$.",
+            r"The common chord is $2px + 6y = p^2 + 49$. Its distance from $(p, 3)$ must be $\sqrt{9 - \frac{27}{4}} = \frac32$: $\frac{|p^2 - 31|}{2\sqrt{p^2 + 9}} = \frac32$, so $p^2 = 16$ (the root $55$ puts $P$ off the diameter).",
+            r"With $p = 4$ the chord is $8x + 6y = 65$, at distance $\frac{33}{10}$ from $P$. Area $= \frac12 \cdot 3\sqrt3 \cdot \frac{33}{10} = \frac{99\sqrt3}{20}$.",
+            r"$a + b + c = 99 + 3 + 20 = 122$. The answer is $\textbf{(D) }122$.",
+        ],
+        'trap': r"Taking $\Omega$'s radius as $3\sqrt3$ by treating $QR$ as a diameter or a side of an equilateral triangle centered at $P$.",
+    },
+    '2021-amc-12a-25': {
+        'topics': ['factors-divisors', 'inequalities'],
+        'answer': 'E',
+        'insight': r"$f$ is multiplicative, so choose each prime's exponent $e$ separately to maximize $\frac{e+1}{p^{e/3}}$.",
+        'steps': [
+            r"For $p = 2$: $e = 0, 1, 2, 3, 4$ give $1, 1.59, 1.89, 2, 1.98$, so $e = 3$. For $p = 3$: $1, 1.39, 1.44, 1.33$, so $e = 2$.",
+            r"For $p = 5$ and $7$, $e = 1$ gives $\frac{2}{\sqrt[3]5} \approx 1.17$ and $\frac2{\sqrt[3]7} \approx 1.05$, both above $1$; from $p = 11$ on, $\frac2{\sqrt[3]p} < 1$, so $e = 0$.",
+            r"$N = 2^3 \cdot 3^2 \cdot 5 \cdot 7 = 2520$, whose digits add to $9$. The answer is $\textbf{(E) }9$.",
+        ],
+        'trap': r"Leaving out $7$ because $\frac2{\sqrt[3]7}$ is only slightly above $1$.",
+    },
+    # ------------------------------------------------------------------ 2021 AMC 12B
+    # Problems 1, 2, 4, 5, 6, 7, 8, 12, 15, 22 and 25 are the 10B's 1, 4, 6, 9,
+    # 10, 12, 14, 19, 20, 24 and 25, and use its write-ups (_SAME_AS_10 below).
+    '2021-amc-12b-3': {
+        'topics': ['decimals-fractions', 'linear-equations'],
+        'answer': 'A',
+        'insight': r"Peel the continued fraction from the outside in, one reciprocal at a time.",
+        'steps': [
+            r"$\frac{144}{53} - 2 = \frac{38}{53}$, so $1 + \frac{1}{2 + \frac{2}{3+x}} = \frac{53}{38}$ and $2 + \frac{2}{3+x} = \frac{38}{15}$.",
+            r"Then $\frac{2}{3+x} = \frac{8}{15}$, so $3 + x = \frac{15}{4}$.",
+            r"$x = \frac34$. The answer is $\textbf{(A) }\frac34$.",
+        ],
+        'trap': r"Subtracting $1$ instead of taking the reciprocal at a layer.",
+    },
+    '2021-amc-12b-9': {
+        'topics': ['logarithms', 'arithmetic'],
+        'answer': 'D',
+        'insight': r"$\frac{1}{\log_{40} 2} = \log_2 40$; write every log in terms of $L = \log_2 5$.",
+        'steps': [
+            r"The expression is $\log_2 80 \cdot \log_2 40 - \log_2 160 \cdot \log_2 20 = (4 + L)(3 + L) - (5 + L)(2 + L)$.",
+            r"That is $(12 + 7L + L^2) - (10 + 7L + L^2)$.",
+            r"It equals $2$. The answer is $\textbf{(D) }2$.",
+        ],
+        'trap': r"Treating $\frac{\log_2 80}{\log_{40} 2}$ as $\log_2 80 \div \log_2 40$; dividing by $\log_{40} 2$ multiplies by $\log_2 40$.",
+    },
+    '2021-amc-12b-10': {
+        'topics': ['diophantine', 'factors-divisors'],
+        'answer': 'E',
+        'insight': r"$703 - x - y = xy$ factors after adding $1$: $(x + 1)(y + 1) = 704$.",
+        'steps': [
+            r"$1 + 2 + \cdots + 37 = 703$, so $703 - x - y = xy$ and $(x + 1)(y + 1) = 704 = 2^6 \cdot 11$.",
+            r"Both factors are between $2$ and $38$: only $22 \cdot 32$ works, so the numbers are $21$ and $31$.",
+            r"Their difference is $10$. The answer is $\textbf{(E) }10$.",
+        ],
+        'trap': r"Factoring $703$ instead of $704$; the $+1$ is what makes the left side factor.",
+    },
+    '2021-amc-12b-11': {
+        'topics': ['coordinate-geometry', 'quadrilaterals'],
+        'answer': 'D',
+        'insight': r"Each trapezoid comes from one pair of parallel sides: $CD \parallel AB$ for $D$, and $AE \parallel BC$ for $E$.",
+        'steps': [
+            r"Put $B = (0, 0)$, $C = (14, 0)$, $A = (5, 12)$. Then $P = C + \frac23(A - C) = (8, 8)$, so line $BP$ is $y = x$.",
+            r"$D$: the line through $C$ parallel to $AB$ is $(14 + 5s, 12s)$, which meets $y = x$ at $s = 2$, $D = (24, 24)$.",
+            r"$E$: the line through $A$ parallel to $BC$ is $y = 12$, so $E = (12, 12)$.",
+            r"$DE = 12\sqrt2$. The answer is $\textbf{(D) }12\sqrt2$.",
+        ],
+        'trap': r"Placing $P$ with $AP = 10$ instead of $PC = 10$.",
+    },
+    '2021-amc-12b-13': {
+        'topics': ['trigonometry', 'functions'],
+        'answer': 'D',
+        'insight': r"Compare $5\cos 3\theta$, which swings between $\pm5$ three times, with $3\sin\theta - 1$, which stays in $[-4, 2]$.",
+        'steps': [
+            r"The equation is $5\cos 3\theta = 3\sin\theta - 1$.",
+            r"$5\cos 3\theta$ hits $5$ and $-5$ alternately at $\theta = 0, \frac\pi3, \frac{2\pi}3, \dots, 2\pi$, while the right side stays between $-4$ and $2$, so the curves cross in each of those six intervals.",
+            r"Each half-period of $5\cos 3\theta$ is steep enough to cross only once, so there are $6$ solutions. The answer is $\textbf{(D) }6$.",
+        ],
+        'trap': r"Counting the extremes of $\cos 3\theta$ (three maxima) instead of the crossings.",
+    },
+    '2021-amc-12b-14': {
+        'topics': ['solid-geometry', 'perfect-powers'],
+        'answer': 'A',
+        'insight': r"With $DA = a$, $DC = b$, $DM = h$: $MA^2 = h^2 + a^2$, $MC^2 = h^2 + b^2$, $MB^2 = h^2 + a^2 + b^2$.",
+        'steps': [
+            r"Let $MA, MC, MB = k, k+2, k+4$. Then $a^2 = MB^2 - MC^2 = 4k + 12$ and $b^2 = MB^2 - MA^2 = 8k + 16$.",
+            r"$h^2 = k^2 - a^2 = (k - 6)(k + 2)$ must be a perfect square; $k = 7$ gives $h = 3$.",
+            r"Then $a = \sqrt{40}$, $b = \sqrt{72}$, and the volume is $\frac13 \cdot \sqrt{40}\sqrt{72} \cdot 3 = \sqrt{2880} = 24\sqrt5$. The answer is $\textbf{(A) }24\sqrt5$.",
+        ],
+        'trap': r"Assuming $MB$ is opposite $MA$ in the rectangle; $B$ is the far corner, so $MB$ uses both sides.",
+    },
+    '2021-amc-12b-16': {
+        'topics': ['polynomials'],
+        'answer': 'A',
+        'insight': r"Reversing coefficients gives reciprocal roots: $x^3 f\left(\frac1x\right) = 1 + ax + bx^2 + cx^3$; divide by $c$ to make it monic.",
+        'steps': [
+            r"$x^3 f\left(\frac1x\right) = cx^3 + bx^2 + ax + 1$ has roots the reciprocals of $f$'s roots.",
+            r"So $g(x) = \frac{x^3 f(1/x)}{c}$, and $g(1) = \frac{f(1)}{c}$.",
+            r"$g(1) = \frac{1 + a + b + c}{c}$. The answer is $\textbf{(A) }\frac{1+a+b+c}c$.",
+        ],
+        'trap': r"Forgetting to divide by $c$; $g$ must have leading coefficient $1$.",
+    },
+    '2021-amc-12b-17': {
+        'topics': ['area', 'quadrilaterals'],
+        'answer': 'B',
+        'insight': r"The triangles on the two bases have heights that add to the trapezoid's height; write both heights from their areas.",
+        'steps': [
+            r"Let $CD = c$ and $AB = rc$. The triangles on $CD$ and $AB$ have heights $\frac{4}{c}$ and $\frac{8}{rc}$, which add to the height $H$.",
+            r"The total area is $14 = \frac12(rc + c)H = \frac12(r + 1)\left(4 + \frac8r\right)$.",
+            r"So $4r + 12 + \frac8r = 28$, that is $r^2 - 4r + 2 = 0$, and $r = 2 + \sqrt2$ (the other root is less than $1$). The answer is $\textbf{(B)}\: 2+\sqrt{2}$.",
+        ],
+        'trap': r"Assuming the side triangles split the area evenly, as they would in a parallelogram.",
+    },
+    '2021-amc-12b-18': {
+        'topics': ['complex-numbers', 'inequalities'],
+        'answer': 'A',
+        'insight': r"Expand everything in $r = |z|^2$ and $s = z + \overline z$; the equation becomes a sum of two squares equal to $0$.",
+        'steps': [
+            r"$2|z + 2|^2 = 2r + 4s + 8$ and $|z^2 + 1|^2 = r^2 + (s^2 - 2r) + 1$.",
+            r"The equation becomes $r^2 - 12r + 36 + s^2 + 4s + 4 = 0$, that is $(r - 6)^2 + (s + 2)^2 = 0$, so $|z|^2 = 6$ and $z + \overline z = -2$.",
+            r"$\frac6z = \frac{|z|^2}{z} = \overline z$, so $z + \frac6z = z + \overline z = -2$. The answer is $\textbf{(A) }-2$.",
+        ],
+        'trap': r"Taking $|z^2 + 1|^2 = |z|^4 + 1$ and dropping the cross terms $z^2 + \overline z^2$.",
+    },
+    '2021-amc-12b-19': {
+        'topics': ['probability', 'basic-counting'],
+        'answer': 'B',
+        'insight': r"Both dice have at least $6$ faces, so a sum of $7$ has exactly $6$ ways; then the sum of $10$ needs $8$.",
+        'steps': [
+            r"$P(7) = \frac34 P(10)$ means $6 = \frac34 \cdot \#(10)$, so a sum of $10$ has $8$ ways, and the smaller die has $a \ge 8$ faces.",
+            r"With $a \le b$, a sum of $10$ has $\min(a, 9) - \max(1, 10 - b) + 1$ ways. Getting $8$ needs $a + b = 17$ if $b \le 9$, or $a = 8$ if $b \ge 9$; either way $a + b \ge 17$.",
+            r"With $a = 8$, a sum of $12$ has $8 - (12 - b) + 1 = b - 3$ ways, and that must be $\frac{8b}{12}$, so $b = 9$: $8 + 9 = 17$ faces. The answer is $\textbf{(B) }17$.",
+        ],
+        'trap': r"Assuming two standard dice with extra faces on one only; both counts change.",
+    },
+    '2021-amc-12b-20': {
+        'topics': ['polynomials', 'complex-numbers'],
+        'answer': 'A',
+        'insight': r"Evaluate at a root $\omega$ of $z^2 + z + 1$: $R(\omega) = \omega^{2021} + 1$.",
+        'steps': [
+            r"$\omega^3 = 1$ and $2021 \equiv 2 \pmod 3$, so $R(\omega) = \omega^2 + 1 = -\omega$.",
+            r"The same holds for the other root, $\omega^2$, so the linear $R$ agrees with $-z$ at two points.",
+            r"$R(z) = -z$. The answer is $\textbf{(A) }{-}z$.",
+        ],
+        'trap': r"Using $z = 1$ as if it were a root of $z^2 + z + 1$.",
+    },
+    '2021-amc-12b-21': {
+        'topics': ['exponents', 'logarithms'],
+        'answer': 'D',
+        'insight': r"Take $\log_2$: the equation is $2^{\sqrt2}\log_2 x = 2^{x-1}$, a log curve against an exponential, which meet at most twice.",
+        'steps': [
+            r"$x = \sqrt2$ works: both sides are $2^{\sqrt2 - 1}$.",
+            r"At $x = 2$ the left side $2^{\sqrt2} \approx 2.67$ beats the right side $2$; at $x = 4$ it is $2^{\sqrt2+1} \approx 5.33$ against $8$. So the second root is between $2$ and $4$.",
+            r"$S$ lies between $2 + \sqrt2$ and $4 + \sqrt2$, about $4.55$. The answer is $\textbf{(D) }2\le S<6$.",
+        ],
+        'trap': r"Stopping at the obvious root $\sqrt2$ and answering $S = \sqrt2$.",
+    },
+    '2021-amc-12b-23': {
+        'topics': ['probability', 'sequences-series'],
+        'answer': 'A',
+        'insight': r"An evenly spaced set is $a, a+d, a+2d$; its probability $2^{-3a-3d}$ splits into two geometric series.",
+        'steps': [
+            r"For bins $a < a + d < a + 2d$ in some order there are $3! = 6$ orders, each with probability $2^{-a}2^{-(a+d)}2^{-(a+2d)} = 2^{-3a}2^{-3d}$.",
+            r"$\sum_{a \ge 1} 8^{-a} = \frac17$ and $\sum_{d \ge 1} 8^{-d} = \frac17$, so the probability is $\frac{6}{49}$.",
+            r"$p + q = 55$. The answer is $\textbf{(A) }55$.",
+        ],
+        'trap': r"Forgetting the $3!$ orders in which the balls can land.",
+    },
+    '2021-amc-12b-24': {
+        'topics': ['quadrilaterals', 'trigonometry'],
+        'answer': 'A',
+        'insight': r"$PQ$ is the projection of diagonal $AC$ onto $BD$, and $RS$ the projection of $BD$ onto $AC$: both use the same angle $\theta$ between the diagonals.",
+        'steps': [
+            r"With $|BD| = d$ and $|AC| = e$: $e\cos\theta = 6$, $d\cos\theta = 8$, and the area $\frac12 de\sin\theta = 15$.",
+            r"So $\frac{24\sin\theta}{\cos^2\theta} = 15$, that is $225c^4 + 576c^2 - 576 = 0$ for $c = \cos\theta$, giving $c^2 = \frac{8(\sqrt{41} - 4)}{25}$.",
+            r"$d^2 = \frac{64}{c^2} = \frac{200}{\sqrt{41} - 4} = 32 + 8\sqrt{41}$.",
+            r"$m + n + p = 32 + 8 + 41 = 81$. The answer is $\textbf{(A) }81$.",
+        ],
+        'trap': r"Using area $= de\sin\theta$ without the $\frac12$ for a parallelogram's diagonals.",
     },
     # ------------------------------------------------------------------ 2021 AMC 10A
     '2021-amc-10a-1': {
@@ -10105,7 +10423,7 @@ SOLUTIONS = {
 }
 
 
-# The 2024, 2023 and 2022 AMC 12A and 12B each share eleven to thirteen problems
+# The 2024, 2023, 2022 and 2021 AMC 12A and 12B each share eleven to thirteen problems
 # with that year's 10A and 10B, the same problem with the same answer, so they carry the 10's
 # write-up rather than a copy of it. (Some differ only in how the paste wrote a
 # choice: `\frac13` for `\frac{1}{3}`, `46` for `\$46`.)
@@ -10122,6 +10440,10 @@ _SAME_AS_10 = {
        [(1, 1), (2, 3), (4, 7), (6, 8), (7, 9), (9, 12), (10, 14), (15, 16), (18, 18), (19, 22), (20, 23), (24, 24)]},
     **{'2022-amc-12b-%d' % twelve: '2022-amc-10b-%d' % ten for twelve, ten in
        [(1, 1), (2, 2), (3, 6), (4, 7), (6, 8), (7, 10), (13, 16), (15, 17), (18, 19), (20, 21), (21, 22), (22, 23), (23, 25)]},
+    **{'2021-amc-12a-%d' % twelve: '2021-amc-10a-%d' % ten for twelve, ten in
+       [(3, 3), (4, 7), (5, 8), (7, 9), (9, 10), (10, 12), (12, 14), (16, 16), (17, 17), (18, 18), (23, 23)]},
+    **{'2021-amc-12b-%d' % twelve: '2021-amc-10b-%d' % ten for twelve, ten in
+       [(1, 1), (2, 4), (4, 6), (5, 9), (6, 10), (7, 12), (8, 14), (12, 19), (15, 20), (22, 24), (25, 25)]},
 }
 for _twelve, _ten in _SAME_AS_10.items():
     SOLUTIONS[_twelve] = SOLUTIONS[_ten]
