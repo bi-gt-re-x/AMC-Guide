@@ -12,7 +12,7 @@ key the solution is left off rather than shown beside the wrong answer
 on its answer.
 
 Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A, 10B, 12A and 12B, the 2024 AMC 10A,
-10B, 12A and 12B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
+10B, 12A and 12B, the 2023 AMC 10A, 10B, 12A and 12B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
 Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, the
 2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, the 2016 AMC 10A and 10B, the 2015 AMC 10A and 10B, the 2014 AMC 10A and 10B, the 2013 AMC 10A and 10B, and the 2012 AMC 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
@@ -2921,6 +2921,326 @@ SOLUTIONS = {
             r"$\frac{252 + 720}{4096} = \frac{972}{4096} = \frac{243}{1024}$, so $m = 243$. The answer is $\textbf{(A) } 243$.",
         ],
         'trap': r"Forgetting the cases where every ball is one colour or one pattern: independence holds there automatically.",
+    },
+    # ------------------------------------------------------------------ 2023 AMC 12A
+    # Problems 1, 2, 3, 4, 5, 7, 8, 9, 13, 18 and 21 are the 10A's 1, 2, 3, 5,
+    # 7, 9, 10, 11, 16, 22 and 25, and use its write-ups (_SAME_AS_10 below).
+    '2023-amc-12a-6': {
+        'topics': ['logarithms', 'quadratics'],
+        'answer': 'D',
+        'insight': r"The midpoint gives the sum of the $x$-coordinates and, through the logs, their product.",
+        'steps': [
+            r"Say the points are $(a, \log_2 a)$ and $(b, \log_2 b)$. The midpoint gives $a + b = 12$ and $\log_2 a + \log_2 b = 4$, so $ab = 16$.",
+            r"$(a - b)^2 = (a + b)^2 - 4ab = 144 - 64 = 80$.",
+            r"$|a - b| = \sqrt{80} = 4\sqrt5$. The answer is $\textbf{(D)}~4\sqrt{5}$.",
+        ],
+        'trap': r"Setting $\log_2$ of the midpoint's $x$ equal to $2$, as if the midpoint were on the curve.",
+    },
+    '2023-amc-12a-10': {
+        'topics': ['nonlinear-systems', 'exponents'],
+        'answer': 'D',
+        'insight': r"Take square roots in the second equation and keep the sign that leaves both numbers positive.",
+        'steps': [
+            r"$(y - x)^2 = 4y^2$ means $y - x = \pm 2y$. $y - x = 2y$ would make $x = -y < 0$, so $x - y = 2y$ and $x = 3y$.",
+            r"Then $y^3 = 9y^2$, so $y = 9$ and $x = 27$.",
+            r"$x + y = 36$. The answer is $\textbf{(D)}\ 36$.",
+        ],
+        'trap': r"Taking $y - x = 2y$ without checking the sign, which gives a negative $x$.",
+    },
+    '2023-amc-12a-11': {
+        'topics': ['coordinate-geometry', 'trigonometry'],
+        'answer': 'C',
+        'insight': r"The tangent of the angle between lines with slopes $m_1, m_2$ is $\left|\frac{m_1 - m_2}{1 + m_1 m_2}\right|$.",
+        'steps': [
+            r"$\tan\theta = \left|\dfrac{2 - \frac13}{1 + \frac23}\right| = \dfrac{5/3}{5/3} = 1$.",
+            r"So $\theta = 45^\circ$. The answer is $\textbf{(C)}~45$.",
+        ],
+        'trap': r"Writing $1 - m_1 m_2$ in the denominator, which gives $\tan\theta = 5$ and no listed angle.",
+    },
+    '2023-amc-12a-12': {
+        'topics': ['sequences-series', 'polynomials'],
+        'answer': 'D',
+        'insight': r"Each pair is $(2k)^3 - (2k-1)^3 = 12k^2 - 6k + 1$, so the sum is three standard sums.",
+        'steps': [
+            r"The pairs run over $k = 1, \dots, 9$, and $(2k)^3 - (2k-1)^3 = 12k^2 - 6k + 1$.",
+            r"$\sum k^2 = 285$ and $\sum k = 45$, so the total is $12 \cdot 285 - 6 \cdot 45 + 9 = 3420 - 270 + 9 = 3159$.",
+            r"The answer is $\textbf{(D) } 3159$.",
+        ],
+        'trap': r"Counting $18$ pairs instead of $9$: the terms go up to $18$, so there are nine pairs.",
+    },
+    '2023-amc-12a-14': {
+        'topics': ['complex-numbers'],
+        'answer': 'E',
+        'insight': r"Taking absolute values forces $|z| = 0$ or $1$, and on the unit circle $\overline{z} = \frac1z$.",
+        'steps': [
+            r"$|z|^5 = |z|$, so $z = 0$ or $|z| = 1$. $z = 0$ works.",
+            r"With $|z| = 1$, $\overline{z} = \frac{1}{z}$, so the equation is $z^6 = 1$: six roots of unity, all on the unit circle.",
+            r"$1 + 6 = 7$. The answer is $\textbf{(E)}~7$.",
+        ],
+        'trap': r"Forgetting $z = 0$, or answering $5$ by treating it as $z^5 = z$.",
+    },
+    '2023-amc-12a-15': {
+        'topics': ['trigonometry', 'right-triangles'],
+        'answer': 'A',
+        'insight': r"However many segments there are, they all make angle $\theta$ with the long side, so their lengths times $\cos\theta$ add to the $100$ meters he covers along it.",
+        'steps': [
+            r"Each segment of length $\ell$ moves Usain $\ell\cos\theta$ along the $100$-meter side, and together they take him from $A$ to $\overline{BC}$.",
+            r"So $120\cos\theta = 100$ and $\cos\theta = \frac56$.",
+            r"The answer is $\textbf{(A)}~\arccos\frac{5}{6}$.",
+        ],
+        'trap': r"Working with the $30$-meter width and the number of crossings, which the problem warns is not fixed.",
+    },
+    '2023-amc-12a-16': {
+        'topics': ['complex-numbers', 'quadratics'],
+        'answer': 'B',
+        'insight': r"Complete the square: $1 + z + z^2 = w^2 + \frac34$ with $w = z + \frac12$, which has the same imaginary part as $z$.",
+        'steps': [
+            r"With $w = a + bi$: $\left|w^2 + \frac34\right|^2 = \left(a^2 - b^2 + \frac34\right)^2 + 4a^2b^2 = 16$.",
+            r"With $u = a^2 \ge 0$ the left side is $u^2 + 2u\left(b^2 + \frac34\right) + \left(b^2 - \frac34\right)^2$, which grows with $u$. So $b$ is largest when $u = 0$.",
+            r"Then $\left(b^2 - \frac34\right)^2 = 16$, so $b^2 = \frac{19}{4}$ and $b = \frac{\sqrt{19}}{2}$.",
+            r"$m + n = 19 + 2 = 21$. The answer is $\textbf{(B)}~21$.",
+        ],
+        'trap': r"Expanding in $x$ and $y$ directly: the quartic in two variables is hard to maximise, and the completed square does it in one line.",
+    },
+    '2023-amc-12a-17': {
+        'topics': ['probability', 'recursion'],
+        'answer': 'E',
+        'insight': r"A jump of length $m$ with probability $2^{-m}$ is the same as flipping a coin at every integer: stop there on heads, carry on past it on tails.",
+        'steps': [
+            r"Seen that way, Flora stops on each integer she reaches with probability $\frac12$, whatever happened before.",
+            r"Every integer is reached, landed on or passed, so she lands on $10$ with probability $\frac12$.",
+            r"(Recursively: $p_1 = \frac12$, and $p_n = 2^{-n} + \sum_{k<n} p_k 2^{-(n-k)} = \frac12$ for every $n$.) The answer is $\textbf{(E) } \frac{1}{2}$.",
+        ],
+        'trap': r"Adding up the ways to make $10$ from jumps and getting lost; the coin view needs no counting.",
+    },
+    '2023-amc-12a-19': {
+        'topics': ['logarithms', 'quadratics'],
+        'answer': 'C',
+        'insight': r"$7 \cdot 289 = 2023$. Write everything with $y = \ln x$ and the equation becomes a quadratic whose roots add to $0$.",
+        'steps': [
+            r"Let $c = \ln 2023$, $p = \ln 7$, $q = \ln 289$, so $p + q = c$. The equation is $\dfrac{c^2}{(p + y)(q + y)} = \dfrac{c}{c + y}$.",
+            r"Cross-multiplying, $c(c + y) = (p + y)(q + y)$, that is $y^2 + (p + q - c)y + pq - c^2 = 0$, or $y^2 = c^2 - pq$.",
+            r"Its two roots $y = \pm\sqrt{c^2 - pq}$ add to $0$, so the product of the $x$'s is $e^0 = 1$.",
+            r"The answer is $\textbf{(C) } 1$.",
+        ],
+        'trap': r"Not spotting $7 \cdot 289 = 2023$, without which the linear term does not vanish.",
+    },
+    '2023-amc-12a-20': {
+        'topics': ['sequences-series', 'recursion', 'modular-arithmetic'],
+        'answer': 'C',
+        'insight': r"Row sums satisfy $S_{n+1} = 2S_n + n - 1$, which gives $S_n = 2^n - n$.",
+        'steps': [
+            r"Each of the $n - 1$ inside entries of row $n+1$ adds two neighbours plus $1$, so they total $2S_n - 2 + (n - 1)$; the two end $1$s add $2$. So $S_{n+1} = 2S_n + n - 1$.",
+            r"The sums $1, 2, 5, 12, 27$ fit $S_n = 2^n - n$, and $2^{n+1} - (n+1) = 2(2^n - n) + n - 1$ confirms it.",
+            r"$S_{2023} = 2^{2023} - 2023$. Since $2023 \equiv 3 \pmod 4$, $2^{2023}$ ends in $8$, and $8 - 3$ ends in $5$.",
+            r"The answer is $\textbf{(C) }5$.",
+        ],
+        'trap': r"Finding the units digits of the first few row sums and guessing a period from too few rows.",
+    },
+    '2023-amc-12a-22': {
+        'topics': ['factors-divisors', 'functions'],
+        'answer': 'B',
+        'insight': r"$f$ is multiplicative, and on a prime power the condition gives $f(p^k) = 1 - p$.",
+        'steps': [
+            r"$n = 1$ gives $f(1) = 1$. For a prime, $f(p) + p = 1$, so $f(p) = 1 - p$.",
+            r"For $p^2$: $f(p^2) + p f(p) + p^2 = 1$, so $f(p^2) = 1 - p + p^2 - p^2 = 1 - p$. (Every prime power gives $1 - p$.)",
+            r"The sum is multiplicative in $n$, so $f$ is too. $2023 = 7 \cdot 17^2$, so $f(2023) = (1 - 7)(1 - 17) = 96$.",
+            r"The answer is $\textbf{(B)}~96$.",
+        ],
+        'trap': r"Using $f(17^2) = (1-17)^2$, as if $f$ were completely multiplicative.",
+    },
+    '2023-amc-12a-23': {
+        'topics': ['inequalities'],
+        'answer': 'B',
+        'insight': r"With $x = 2a$, $y = b$ the equation is $(1 + x)(1 + y)(x + y) = 8xy$, and AM-GM says the left side is always at least $8xy$.",
+        'steps': [
+            r"Substituting: $(1 + x)(2 + 2y)(x + y) = 16xy$, so $(1 + x)(1 + y)(x + y) = 8xy$.",
+            r"$1 + x \ge 2\sqrt{x}$, $1 + y \ge 2\sqrt{y}$ and $x + y \ge 2\sqrt{xy}$, so the left side is at least $8xy$, with equality only when $x = y = 1$.",
+            r"So the only solution is $(a, b) = \left(\frac12, 1\right)$. The answer is $\textbf{(B) }1$.",
+        ],
+        'trap': r"Expanding into a cubic in two variables and guessing that it has several solutions.",
+    },
+    '2023-amc-12a-24': {
+        'topics': ['basic-counting', 'modular-arithmetic'],
+        'answer': 'C',
+        'insight': r"A chain of length $n$ is fixed by when each element first appears: at step $1, \dots, n$, or never. That is $n + 1$ choices per element.",
+        'steps': [
+            r"For a fixed $n$ there are $(n + 1)^{10}$ chains, so $K = \sum_{n=1}^{10} (n+1)^{10} = 2^{10} + 3^{10} + \dots + 11^{10}$.",
+            r"Last digits: $4, 9, 6, 5, 6, 9, 4, 1, 0, 1$ for $2^{10}$ through $11^{10}$.",
+            r"They add to $45$, so $K$ ends in $5$. The answer is $\textbf{(C) } 5$.",
+        ],
+        'trap': r"Counting $2^{10}$ choices per step as if each set were chosen freely, which ignores that each must contain the one before.",
+    },
+    '2023-amc-12a-25': {
+        'topics': ['trigonometry', 'complex-numbers'],
+        'answer': 'C',
+        'insight': r"$\tan 2023x$ is $\frac{\operatorname{Im}}{\operatorname{Re}}$ of $(1 + i\tan x)^{2023}$, and the top power of $\tan x$ comes from $(i\tan x)^{2023}$.",
+        'steps': [
+            r"$(\cos x + i\sin x)^{2023} = \cos^{2023}x\,(1 + it)^{2023}$ with $t = \tan x$, so $\tan 2023x = \dfrac{\operatorname{Im}(1 + it)^{2023}}{\operatorname{Re}(1 + it)^{2023}}$.",
+            r"The denominator starts with $1$, as the problem's form needs. The $t^{2023}$ term of the numerator comes from $(it)^{2023} = i^{2023} t^{2023} = -i\,t^{2023}$.",
+            r"So $a_{2023} = -1$. The answer is $\textbf{(C) } -1$.",
+        ],
+        'trap': r"Guessing $2023$ from $a_1 = 2023$; the coefficient of the top power is just $\pm 1$.",
+    },
+    # ------------------------------------------------------------------ 2023 AMC 12B
+    # Problems 1, 2, 3, 4, 5, 6, 9, 13, 15, 19 and 25 are the 10B's 1, 2, 3, 4,
+    # 10, 12, 13, 17, 18, 21 and 25, and use its write-ups (_SAME_AS_10 below).
+    '2023-amc-12b-7': {
+        'topics': ['logarithms', 'inequalities'],
+        'answer': 'E',
+        'insight': r"With $L = \log n \ge 0$ the inside is $\frac{L(2 - L)}{L - 3}$; it is non-negative at $L = 0$, $L = 2$, and for $2 < L < 3$.",
+        'steps': [
+            r"$\log(n^2) = 2L$, so the inside is $\dfrac{L(2-L)}{L-3}$, which needs $n \ge 1$ and $L \ne 3$.",
+            r"For $0 < L < 2$ it is negative, and for $L > 3$ it is negative too. For $2 < L < 3$ both $2 - L$ and $L - 3$ are negative, so it is positive.",
+            r"That leaves $n = 1$, $n = 100$, and $101 \le n \le 999$: $1 + 1 + 899 = 901$.",
+            r"The answer is $\textbf{(E) }901$.",
+        ],
+        'trap': r"Missing $n = 1$ or $n = 100$, where the inside is exactly $0$.",
+    },
+    '2023-amc-12b-8': {
+        'topics': ['combinations'],
+        'answer': 'D',
+        'insight': r"If the least element is $k$, the other $k - 1$ elements come from the $12 - k$ numbers above $k$.",
+        'steps': [
+            r"$k = 0$ would need an empty set, so $k \ge 1$, and there are $\binom{12-k}{k-1}$ sets for each $k$.",
+            r"$\binom{11}{0} + \binom{10}{1} + \binom92 + \binom83 + \binom74 + \binom65 = 1 + 10 + 36 + 56 + 35 + 6 = 144$.",
+            r"The answer is $\textbf{(D)}\ 144$.",
+        ],
+        'trap': r"Choosing $k$ elements from above $k$ instead of $k - 1$: the least element $k$ is itself one of the $k$.",
+    },
+    '2023-amc-12b-10': {
+        'topics': ['circles', 'coordinate-geometry'],
+        'answer': 'E',
+        'insight': r"Subtracting the two circles' equations cancels the squares and leaves the line through both intersection points.",
+        'steps': [
+            r"The circles are $x^2 + y^2 - 8x = 0$ and $x^2 + y^2 - 20y = 0$.",
+            r"Subtracting: $20y - 8x = 0$, so the common chord is $y = \frac25 x$.",
+            r"The slope is $\frac25$. The answer is $\textbf{(E)}\ \dfrac{2}{5}$.",
+        ],
+        'trap': r"Taking the slope of the line through the centers, $-\frac{10}{4}$, which is perpendicular to the chord.",
+    },
+    '2023-amc-12b-11': {
+        'topics': ['quadrilaterals', 'inequalities'],
+        'answer': 'D',
+        'insight': r"With bases $2s$ and $4s$, each leg overhangs by $s$, so the height is $\sqrt{1 - s^2}$ and the area is $3s\sqrt{1 - s^2}$.",
+        'steps': [
+            r"Area $= \frac{2s + 4s}{2}\sqrt{1 - s^2} = 3\sqrt{s^2(1 - s^2)}$.",
+            r"$s^2(1 - s^2)$ is largest at $s^2 = \frac12$, where it is $\frac14$.",
+            r"The area is $3 \cdot \frac12 = \frac32$. The answer is $\textbf{(D) } \frac 32$.",
+        ],
+        'trap': r"Using the full difference of the bases as each overhang; it splits between the two sides.",
+    },
+    '2023-amc-12b-12': {
+        'topics': ['complex-numbers'],
+        'answer': 'E',
+        'insight': r"With $z = a + bi$, $z \otimes z = a^2 + b^2 i$. Match it with $z^2 + 40$ part by part.",
+        'steps': [
+            r"$z^2 + 40 = (a^2 - b^2 + 40) + 2abi$.",
+            r"Real parts: $a^2 = a^2 - b^2 + 40$, so $b^2 = 40$. Imaginary parts: $b^2 = 2ab$, so $a = \frac b2$ and $a^2 = 10$.",
+            r"$|z|^2 = 10 + 40 = 50$, so $|z| = 5\sqrt2$. The answer is $\textbf{(E) }5\sqrt{2}$.",
+        ],
+        'trap': r"Reading $bdi$ as $b \cdot d$ with $i$ dropped, which loses the imaginary-part equation.",
+    },
+    '2023-amc-12b-14': {
+        'topics': ['polynomials', 'factors-divisors'],
+        'answer': 'A',
+        'insight': r"The three distinct integer roots multiply to $-6$, and each such set gives one pair $(a, b)$.",
+        'steps': [
+            r"By Vieta, $rst = -6$, $a = -(r + s + t)$, $b = rs + st + tr$.",
+            r"The sets of three distinct integers with product $-6$: $\{-1, 1, 6\}$, $\{1, 2, -3\}$, $\{-1, 2, 3\}$, $\{1, -2, 3\}$, $\{-1, -2, -3\}$.",
+            r"They give five different pairs. The answer is $\textbf{(A)}\ 5$.",
+        ],
+        'trap': r"Missing $\{-1, -2, -3\}$ or $\{-1, 1, 6\}$, or counting orderings of the roots as different pairs.",
+    },
+    '2023-amc-12b-16': {
+        'topics': ['diophantine', 'parity'],
+        'answer': 'D',
+        'insight': r"Two $15$s make $30 = 3 \cdot 10$, so use at most one. Without it, $6$ and $10$ make the even amounts; with it, the odd ones.",
+        'steps': [
+            r"$6a + 10b = 2(3a + 5b)$, and $3a + 5b$ reaches every whole number from $8$ on. So the even amounts missed are $2, 4, 8, 14$.",
+            r"An odd amount needs one $15$ plus an even amount, so the odd amounts missed past $15$ are $15 + 14 = 29$ and smaller.",
+            r"The largest amount you cannot make is $29$, and $2 + 9 = 11$. The answer is $\textbf{(D) }11$.",
+        ],
+        'trap': r"Using the two-coin formula $ab - a - b$ for a pair of these, which does not apply to three coins.",
+    },
+    '2023-amc-12b-17': {
+        'topics': ['triangles', 'area'],
+        'answer': 'E',
+        'insight': r"The $120^\circ$ angle is opposite the longest side. The law of cosines then fixes the common difference.",
+        'steps': [
+            r"Sides $6$, $6 + d$, $6 + 2d$: $(6 + 2d)^2 = 36 + (6 + d)^2 + 6(6 + d)$, since $\cos 120^\circ = -\frac12$.",
+            r"This simplifies to $d^2 + 2d - 24 = 0$, so $d = 4$ and the sides are $6, 10, 14$.",
+            r"Area $= \frac12 \cdot 6 \cdot 10 \sin 120^\circ = 15\sqrt3$. The answer is $\textbf{(E) }15\sqrt{3}$.",
+        ],
+        'trap': r"Using $\cos 120^\circ = +\frac12$, which gives the wrong sides.",
+    },
+    '2023-amc-12b-18': {
+        'topics': ['statistics', 'inequalities'],
+        'answer': 'A',
+        'insight': r"A year's average lies between its two semester averages. Yolanda's is at most $z + 21$ and Zelda's at least $z$, so the gap is under $21$.",
+        'steps': [
+            r"Let Zelda's first-semester average be $z$. Then Zelda's are $z$ and $z + 18$, and Yolanda's are $z + 3$ and $z + 21$.",
+            r"Each year's average is strictly between (or at) its two semester averages, so Yolanda's is below $z + 21$ and Zelda's above $z$: Yolanda leads by less than $21$.",
+            r"So she cannot lead by $22$, while the other statements happen for suitable numbers of quizzes. The answer is $\textbf{(A)}$.",
+        ],
+        'trap': r"Thinking Yolanda must always be ahead because she is ahead each semester; the numbers of quizzes can reverse that, so (B) is possible.",
+    },
+    '2023-amc-12b-20': {
+        'topics': ['geometric-probability', 'trigonometry'],
+        'answer': 'E',
+        'insight': r"Two jumps of $2$ at angle $\varphi$ apart land $4\left|\cos\frac\varphi2\right|$ away, and $\varphi$ is uniform on $[0, \pi]$.",
+        'steps': [
+            r"The distance from the start is $|2u + 2v| = 4\cos\frac\varphi2$ for unit vectors $u, v$ at angle $\varphi \in [0, \pi]$, uniform.",
+            r"It is under $1$ when $\cos\frac\varphi2 < \frac14$, that is $\frac\varphi2 > \arccos\frac14 = \frac\pi2 - \arcsin\frac14$.",
+            r"The chance is $\dfrac{\arcsin\frac14}{\pi/2} = \dfrac{2\arcsin\frac14}{\pi}$. The answer is $\textbf{(E)}~\frac{2\arcsin \frac{1}{4}}{\pi}$.",
+        ],
+        'trap': r"Measuring the area of a disk of radius $1$ against a disk of radius $4$: he always lands on a circle, not anywhere in a disk.",
+    },
+    '2023-amc-12b-21': {
+        'topics': ['solid-geometry', 'circles'],
+        'answer': 'E',
+        'insight': r"Unroll the frustum into half an annulus. The straight line to the honey cuts through the missing top, so the shortest path hugs the top edge for part of the way.",
+        'steps': [
+            r"The slant height is $\sqrt{27 + 9} = 6$, so the full cone has slant $12$ to the bottom and $6$ to the top. Its bottom circumference $12\pi$ over radius $12$ unrolls to an angle of $\pi$: a half-annulus with radii $6$ and $12$.",
+            r"Bug and honey are half the way around, $\frac\pi2$ apart in the unrolled picture. The chord between them passes $\frac{12 \cdot 6}{\sqrt{180}} \approx 5.4 < 6$ from the apex, outside the shade.",
+            r"So the path runs along a tangent to the inner circle, of length $\sqrt{12^2 - 6^2} = 6\sqrt3$ and covering angle $\frac\pi3$, then along the top edge for the remaining $\frac\pi6$: length $6 \cdot \frac\pi6 = \pi$.",
+            r"Total $6\sqrt3 + \pi$. The answer is $\textbf{(E) } 6\sqrt3 + \pi$.",
+        ],
+        'trap': r"Answering $6\sqrt5$, the straight chord, which would leave the lampshade.",
+    },
+    '2023-amc-12b-22': {
+        'topics': ['functions'],
+        'answer': 'E',
+        'insight': r"$a = b = \frac12$ gives $f(1) + f(0) = 2f\left(\frac12\right)^2 \ge 0$, and $f(0)$ is $0$ or $1$.",
+        'steps': [
+            r"$a = b = 0$ gives $2f(0) = 2f(0)^2$, so $f(0) = 0$ or $1$. If $f(0) = 0$, then $b = 0$ gives $2f(a) = 0$, so $f(1) = 0$.",
+            r"If $f(0) = 1$, then $f(1) = 2f\left(\frac12\right)^2 - 1 \ge -1$.",
+            r"So $f(1) = -2$ is impossible, while $0, 1, -1, 2$ come from $f(x) = \cos\frac{\pi x}{2}$, $1$, $\cos \pi x$ and $\cosh(kx)$. The answer is $\textbf{(E) } -2$.",
+        ],
+        'trap': r"Remembering only cosine solutions and ruling out $2$; $\cosh$ also satisfies the equation.",
+    },
+    '2023-amc-12b-23': {
+        'topics': ['basic-counting', 'factors-divisors'],
+        'answer': 'A',
+        'insight': r"A product is $2^a 3^b 5^c$. Fix $c$ (the number of fives); the other $m = n - c$ dice can make every $(a, b)$ with $b \le m$ and $a \le 2m - b$.",
+        'steps': [
+            r"With $m$ dice from $\{1, 2, 3, 4, 6\}$: $b$ dice show $3$ or $6$ and the rest $1, 2, 4$, so $a$ runs from $0$ to $2m - b$. That is $\sum_{b=0}^{m}(2m - b + 1) = \frac{(m+1)(3m+2)}{2}$ pairs.",
+            r"The number of products is $\sum_{m=0}^{n} \frac{(m+1)(3m+2)}{2}$. For $m = 0, 1, \dots, 11$ the terms are $1, 5, 12, 22, 35, 51, 70, 92, 117, 145, 176, 210$.",
+            r"Those twelve terms add to $936$, so $n = 11$. The answer is $\textbf{(A)}~11$.",
+        ],
+        'trap': r"Counting $6^n$ outcomes or $\binom{n+5}{5}$ multisets: different rolls often give the same product.",
+    },
+    '2023-amc-12b-24': {
+        'topics': ['gcd-lcm', 'factors-divisors'],
+        'answer': 'C',
+        'insight': r"Work one prime at a time: the exponents of $2$, $3$ and $5$ in $a, b, c, d$ are pinned down by their sums and pairwise maxima.",
+        'steps': [
+            r"Prime $2$: $\max(b, c) = 1$ and $\max(a, b) = 3$ force $a = 3$; $\max(b, d) = 2$ forces $d = 2$; the sum $6$ leaves $b + c = 1$, so one of them is $0$.",
+            r"Prime $3$: $\max(a, b) = 2$ but $\max(a, c) = \max(a, d) = 3$, so $c = d = 3$ and $a + b = 3$ with both at most $2$: $\{1, 2\}$. The least is $1$.",
+            r"Prime $5$: $b, c, d \le 2$ forces $a = 3$, and $b + c + d = 4$ with every pair reaching $2$ means one of them is $0$.",
+            r"So $\gcd(a, b, c, d) = 2^0 \cdot 3^1 \cdot 5^0 = 3$. The answer is $\textbf{(C)}~3$.",
+        ],
+        'trap': r"Reading the gcd off the smallest exponents in the lcm list instead of the numbers themselves.",
     },
     # ------------------------------------------------------------------ 2023 AMC 10A
     '2023-amc-10a-1': {
@@ -9497,14 +9817,19 @@ SOLUTIONS = {
 }
 
 
-# The 2024 AMC 12A and 12B each share eleven problems with that year's 10A and
-# 10B, word for word with the same choices and answer, so they carry the 10's
-# write-up rather than a copy of it.
+# The 2024 and 2023 AMC 12A and 12B each share eleven problems with that year's
+# 10A and 10B, the same problem with the same answer, so they carry the 10's
+# write-up rather than a copy of it. (Some differ only in how the paste wrote a
+# choice: `\frac13` for `\frac{1}{3}`, `46` for `\$46`.)
 _SAME_AS_10 = {
     **{'2024-amc-12a-%d' % twelve: '2024-amc-10a-%d' % ten for twelve, ten in
        [(1, 1), (2, 2), (3, 4), (4, 5), (6, 7), (9, 15), (11, 18), (12, 19), (14, 21), (17, 23), (22, 25)]},
     **{'2024-amc-12b-%d' % twelve: '2024-amc-10b-%d' % ten for twelve, ten in
        [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (7, 11), (9, 14), (10, 15), (14, 18), (16, 22), (18, 23)]},
+    **{'2023-amc-12a-%d' % twelve: '2023-amc-10a-%d' % ten for twelve, ten in
+       [(1, 1), (2, 2), (3, 3), (4, 5), (5, 7), (7, 9), (8, 10), (9, 11), (13, 16), (18, 22), (21, 25)]},
+    **{'2023-amc-12b-%d' % twelve: '2023-amc-10b-%d' % ten for twelve, ten in
+       [(1, 1), (2, 2), (3, 3), (4, 4), (5, 10), (6, 12), (9, 13), (13, 17), (15, 18), (19, 21), (25, 25)]},
 }
 for _twelve, _ten in _SAME_AS_10.items():
     SOLUTIONS[_twelve] = SOLUTIONS[_ten]
