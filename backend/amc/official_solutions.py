@@ -11,8 +11,8 @@ key the solution is left off rather than shown beside the wrong answer
 (`for_problem`). tests/test_amc_official_solutions.py checks that each one ends
 on its answer.
 
-Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A, 10B, 12A and 12B, the 2024 AMC 10A and
-10B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
+Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A, 10B, 12A and 12B, the 2024 AMC 10A,
+10B, 12A and 12B, the 2023 AMC 10A and 10B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
 Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, the
 2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, the 2016 AMC 10A and 10B, the 2015 AMC 10A and 10B, the 2014 AMC 10A and 10B, the 2013 AMC 10A and 10B, and the 2012 AMC 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
@@ -2589,6 +2589,338 @@ SOLUTIONS = {
             r"$2 + 2^6 + 2 \cdot 2^5 + 2^4 = 2 + 64 + 64 + 16 = 146$. The answer is $\textbf{(C) }146$.",
         ],
         'trap': r"Forgetting the two loops that stay entirely in the top or bottom row.",
+    },
+    # ------------------------------------------------------------------ 2024 AMC 12A
+    # Problems 1, 2, 3, 4, 6, 9, 11, 12, 14, 17 and 22 are the 10A's 1, 2, 4, 5,
+    # 7, 15, 18, 19, 21, 23 and 25, and use its write-ups (_SAME_AS_10 below).
+    '2024-amc-12a-5': {
+        'topics': ['statistics', 'linear-equations'],
+        'answer': 'D',
+        'insight': r"Work with totals, not means: the sum drops by $6$ for every $6$ taken out.",
+        'steps': [
+            r"The $20$ numbers add up to $20 \cdot 45 = 900$.",
+            r"Say there are $k$ sixes. The rest add up to $900 - 6k$ and there are $20 - k$ of them, so $900 - 6k = 66(20 - k) = 1320 - 66k$.",
+            r"$60k = 420$, so $k = 7$. The answer is $\textbf{(D) }7$.",
+        ],
+        'trap': r"Averaging the two means or forgetting that removing the sixes also shrinks the count, not just the sum.",
+    },
+    '2024-amc-12a-7': {
+        'topics': ['coordinate-geometry', 'right-triangles'],
+        'answer': 'D',
+        'insight': r"Pair $P_k$ with $P_{2025-k}$: they are mirror images about the midpoint $M$ of $\overline{AC}$, so each pair of vectors adds to $2\overrightarrow{BM}$.",
+        'steps': [
+            r"The points cut $\overline{AC}$ into $2025$ equal pieces, so $P_k$ and $P_{2025-k}$ are equally far from $M$ on opposite sides, and $\overrightarrow{BP_k} + \overrightarrow{BP_{2025-k}} = 2\overrightarrow{BM}$.",
+            r"The $2024$ points make $1012$ such pairs, so the sum is $2024\,\overrightarrow{BM}$.",
+            r"The hypotenuse is $\sqrt{2}\cdot\sqrt{2} = 2$, and the median to the hypotenuse is half of it, so $BM = 1$.",
+            r"The length is $2024$. The answer is $\textbf{(D) }2024$.",
+        ],
+        'trap': r"Adding the lengths $BP_k$ instead of the vectors. The vectors along $\overline{AC}$ cancel in pairs; only the parts along $\overline{BM}$ survive.",
+    },
+    '2024-amc-12a-8': {
+        'topics': ['logarithms', 'trigonometry'],
+        'answer': 'A',
+        'insight': r"The equation says $\sin 3\theta \cdot \cos 2\theta = 1$ with both factors positive, and neither can be more than $1$.",
+        'steps': [
+            r"Adding the logs, $\log(\sin 3\theta \cos 2\theta) = 0$, so $\sin 3\theta \cos 2\theta = 1$, with both factors positive for the logs to exist.",
+            r"Each factor is at most $1$, so both must equal $1$. $\cos 2\theta = 1$ forces $\theta = 0, \pi$ or $2\pi$.",
+            r"At each of these $\sin 3\theta = 0$, not $1$. No angle works. The answer is $\textbf{(A) }0$.",
+        ],
+        'trap': r"Solving $\sin 3\theta = 1$ and $\cos 2\theta = 1$ separately and counting the solutions of each, without asking whether they happen at the same $\theta$.",
+    },
+    '2024-amc-12a-10': {
+        'topics': ['trigonometry', 'right-triangles'],
+        'answer': 'C',
+        'insight': r"$\tan\alpha = \frac34$, and the double-angle formula turns that into $\tan 2\alpha = \frac{24}{7}$: the $7$-$24$-$25$ triangle seen from its other acute angle.",
+        'steps': [
+            r"In the $3$-$4$-$5$ triangle the smallest angle is opposite $3$, so $\tan\alpha = \frac34$.",
+            r"$\tan 2\alpha = \dfrac{2 \cdot \frac34}{1 - \frac{9}{16}} = \dfrac{3/2}{7/16} = \dfrac{24}{7}$.",
+            r"In the $7$-$24$-$25$ triangle, $\tan\beta = \frac{7}{24}$, so the other acute angle has tangent $\frac{24}{7}$ and equals $2\alpha$. Hence $\beta = \frac{\pi}{2} - 2\alpha$.",
+            r"The answer is $\textbf{(C) }\frac{\pi}{2} - 2\alpha$.",
+        ],
+        'trap': r"Picking $\frac{\alpha}{2}$ because $\beta$ is smaller than $\alpha$. Check numerically: $\alpha \approx 0.64$, $\beta \approx 0.28$, and $\frac{\alpha}{2} \approx 0.32$ is close but wrong.",
+    },
+    '2024-amc-12a-13': {
+        'topics': ['functions', 'transformations'],
+        'answer': 'D',
+        'insight': r"The two exponentials swap under $x \mapsto -1 - x$: $e^{(-1-x)+1} = e^{-x}$ and $e^{-(-1-x)} = e^{x+1}$.",
+        'steps': [
+            r"Replacing $x$ by $-1 - x$ turns $e^{x+1} + e^{-x}$ into $e^{-x} + e^{x+1}$, the same thing. So the graph is symmetric about the vertical line $x = -\frac12$.",
+            r"Reflecting over $x = -\frac12$ sends $(x, y)$ to $(-1 - x, y)$, so $\left(-1, \frac12\right)$ goes to $\left(0, \frac12\right)$.",
+            r"The answer is $\textbf{(D) }\left(0,\frac{1}{2}\right)$.",
+        ],
+        'trap': r"Assuming the axis is $x = 0$ as for $e^x + e^{-x}$. The $+1$ in the exponent shifts the centre to $x = -\frac12$.",
+    },
+    '2024-amc-12a-15': {
+        'topics': ['polynomials', 'complex-numbers'],
+        'answer': 'D',
+        'insight': r"$p^2 + 4 = (p - 2i)(p + 2i)$, so the product is the polynomial evaluated at $2i$ and at $-2i$.",
+        'steps': [
+            r"Let $f(x) = x^3 + 2x^2 - x + 3 = (x-p)(x-q)(x-r)$. Then $(p-2i)(q-2i)(r-2i) = -f(2i)$ and $(p+2i)(q+2i)(r+2i) = -f(-2i)$.",
+            r"So the product is $f(2i)\,f(-2i)$. Since $f$ has real coefficients, $f(-2i)$ is the conjugate of $f(2i)$, and the product is $|f(2i)|^2$.",
+            r"$f(2i) = -8i - 8 - 2i + 3 = -5 - 10i$, so $|f(2i)|^2 = 25 + 100 = 125$.",
+            r"The answer is $\textbf{(D) }125$.",
+        ],
+        'trap': r"Expanding with Vieta and losing a sign in one of the many symmetric sums. The factoring through $\pm 2i$ avoids all of them.",
+    },
+    '2024-amc-12a-16': {
+        'topics': ['probability', 'combinations'],
+        'answer': 'C',
+        'insight': r"Treat every token as distinct. Then each deal of $4$, $4$ and $4$ is equally likely, and a good deal is fixed by who gets which colour and which black tokens go where.",
+        'steps': [
+            r"All deals: $\dbinom{12}{4}\dbinom{8}{4} = 495 \cdot 70 = 34650$.",
+            r"Good deals: $3! = 6$ ways to say who gets the reds, the whites and the blue. The red player needs $1$ black ($6$ ways), the white player $2$ of the other $5$ ($10$ ways), and the blue player takes the last $3$.",
+            r"That is $6 \cdot 6 \cdot 10 = 360$, so the probability is $\frac{360}{34650} = \frac{4}{385}$.",
+            r"$m + n = 389$. The answer is $\textbf{(C) }389$.",
+        ],
+        'trap': r"Counting the good deals with identical tokens but the total with distinct ones (or the other way round). Both counts must treat the tokens the same way.",
+    },
+    '2024-amc-12a-18': {
+        'topics': ['transformations', 'quadrilaterals', 'trigonometry'],
+        'answer': 'A',
+        'insight': r"The diagonal makes a $15^\circ$ angle with the long side ($\tan 15^\circ = 2 - \sqrt3$), so laying a card along its diagonal is the same as turning it $30^\circ$ about its centre.",
+        'steps': [
+            r"$\tan\angle(\text{diagonal}, \text{long side}) = \frac{1}{2+\sqrt3} = 2 - \sqrt3$, so that angle is $15^\circ$.",
+            r"Every card shares the same centre. Reflecting a rectangle over a diagonal is the same as turning it by twice the angle between that diagonal and a line of symmetry: $30^\circ$. So each card is the one before turned $30^\circ$ the same way.",
+            r"Around the centre, the four corners of the first card sit at $15^\circ$, $165^\circ$, $195^\circ$ and $345^\circ$ from the long axis. Turning the way the cards turn (the second card shows no corner lands on $B$ after one turn), the other corners reach $B$ after $150^\circ$, $180^\circ$ and $330^\circ$.",
+            r"The first is $150^\circ = 5$ turns, so the sixth card puts a corner on $B$. The answer is $\textbf{(A) }6$.",
+        ],
+        'trap': r"Waiting for a full $360^\circ$ turn ($12$ cards) to bring $B$'s own corner back, when another corner of the card gets there first.",
+    },
+    '2024-amc-12a-19': {
+        'topics': ['cyclic-quadrilaterals', 'triangles'],
+        'answer': 'D',
+        'insight': r"Find $AC$ with the law of cosines, use the opposite angle $\angle ABC = 60^\circ$ to get $AB$, then Ptolemy gives $BD$.",
+        'steps': [
+            r"In $\triangle ACD$: $AC^2 = 3^2 + 5^2 - 2 \cdot 3 \cdot 5 \cos 120^\circ = 9 + 25 + 15 = 49$, so $AC = 7$.",
+            r"Opposite angles of a cyclic quadrilateral add to $180^\circ$, so $\angle ABC = 60^\circ$. In $\triangle ABC$: $49 = AB^2 + 9 - 3\,AB$, so $AB^2 - 3AB - 40 = 0$ and $AB = 8$.",
+            r"Ptolemy: $AC \cdot BD = AB \cdot CD + BC \cdot DA = 8 \cdot 3 + 3 \cdot 5 = 39$, so $BD = \frac{39}{7} \approx 5.6$, shorter than $AC = 7$.",
+            r"The answer is $\textbf{(D) }\frac{39}7$.",
+        ],
+        'trap': r"Stopping at $AC = 7$ without checking which diagonal is shorter; $7$ is not even a choice, which is the hint.",
+    },
+    '2024-amc-12a-20': {
+        'topics': ['geometric-probability', 'area-ratios'],
+        'answer': 'D',
+        'insight': r"With $x = \frac{AP}{AB}$ and $y = \frac{AQ}{AC}$, the area ratio is just $xy$, so the question is the chance that $xy < \frac12$ for $x, y$ uniform on $[0,1]$.",
+        'steps': [
+            r"$\dfrac{[APQ]}{[ABC]} = \dfrac{\frac12 AP \cdot AQ \sin A}{\frac12 AB \cdot AC \sin A} = xy$.",
+            r"For $x \le \frac12$, every $y$ works. For $x > \frac12$, the good $y$ are those below $\frac{1}{2x}$.",
+            r"$P = \frac12 + \displaystyle\int_{1/2}^{1} \frac{dx}{2x} = \frac12 + \frac12 \ln 2 \approx 0.5 + 0.347 = 0.847$.",
+            r"That lies between $\frac34$ and $\frac78 = 0.875$. The answer is $\textbf{(D) } \left(\frac 34, \frac 78\right]$.",
+        ],
+        'trap': r"Guessing $\frac12$ by symmetry. The product $xy$ is usually much smaller than either factor, so the area is small far more often than not.",
+    },
+    '2024-amc-12a-21': {
+        'topics': ['sequences-series', 'recursion'],
+        'answer': 'B',
+        'insight': r"Work out a few terms: $2, \frac52, \frac{10}{3}, \dots$ These are $n + \frac1n$.",
+        'steps': [
+            r"From the recurrence, $a_2 = 1 + \frac{3}{2} = \frac52$ and $a_3 = 1 + 2 \cdot \frac{7/2}{3} = \frac{10}{3}$. Guess $a_n = n + \frac1n$.",
+            r"Check: both sides become $1 + \frac{1}{n(n-1)}$, since $\frac{a_n - 1}{n-1} = \frac{n - 1 + \frac1n}{n-1}$ and $\frac{a_{n-1}+1}{n} = \frac{n + \frac{1}{n-1}}{n}$.",
+            r"$a_n^2 = n^2 + 2 + \frac{1}{n^2}$, so the sum is $\sum n^2 + 200 + \sum \frac1{n^2} = 338350 + 200 + \sum \frac{1}{n^2}$.",
+            r"$\sum_{n=1}^{100} \frac{1}{n^2}$ is between $1$ and $\frac{\pi^2}{6} < 2$, so the floor is $338551$. The answer is $\textbf{(B) } 338{,}551$.",
+        ],
+        'trap': r"Dropping the $\sum \frac{1}{n^2}$ term, or rounding it to $2$; it is about $1.63$, which decides between the choices.",
+    },
+    '2024-amc-12a-23': {
+        'topics': ['trigonometry', 'polynomials'],
+        'answer': 'B',
+        'insight': r"The four numbers $\tan^2\frac{k\pi}{16}$, $k = 1, 3, 5, 7$, are the roots of one quartic, and the sum asked for is its second symmetric sum minus two pairs that multiply to $1$.",
+        'steps': [
+            r"Those $\theta$ are exactly where $\cos 8\theta = 0$. With $t = \tan\theta$, $\frac{\cos 8\theta}{\cos^8\theta} = 1 - 28t^2 + 70t^4 - 28t^6 + t^8$, so $u = t^2$ runs over the roots of $u^4 - 28u^3 + 70u^2 - 28u + 1$.",
+            r"The sum of the products of pairs of roots is $70$. Of the six pairs, the expression leaves out $\tan^2\frac{\pi}{16}\tan^2\frac{7\pi}{16}$ and $\tan^2\frac{3\pi}{16}\tan^2\frac{5\pi}{16}$.",
+            r"Since $\tan\frac{7\pi}{16} = \cot\frac{\pi}{16}$ and $\tan\frac{5\pi}{16} = \cot\frac{3\pi}{16}$, each left-out pair is $1$.",
+            r"The value is $70 - 2 = 68$. The answer is $\textbf{(B) } 68$.",
+        ],
+        'trap': r"Answering $70$: the expression has only four of the six pairs.",
+    },
+    '2024-amc-12a-24': {
+        'topics': ['solid-geometry', 'triangles', 'area'],
+        'answer': 'D',
+        'insight': r"A disphenoid is a box's alternate corners: its edges are the face diagonals, so its face is a triangle with sides $a, b, c$ where $a^2 = y^2+z^2$ and so on. That needs the face to be acute.",
+        'steps': [
+            r"Solving $a^2 = y^2 + z^2$, $b^2 = z^2 + x^2$, $c^2 = x^2 + y^2$ gives $2x^2 = b^2 + c^2 - a^2$, which is positive for every side only if the triangle is acute. So we want the smallest acute scalene triangle with integer sides.",
+            r"Sides $a < b < c$ with $c \ge b+1$ and $a^2 + b^2 > c^2$: $a = 2$ and $a = 3$ give nothing, and $a = 4$ gives $(4,5,6)$, $(4,6,7)$, $(4,7,8)$.",
+            r"$(4,5,6)$ has area $\sqrt{\frac{15}{2} \cdot \frac72 \cdot \frac52 \cdot \frac32} = \frac{15\sqrt7}{4}$. Every other candidate has two sides with product at least $24$ around an angle of at least $60^\circ$, so its area is at least $6\sqrt3 > \frac{15\sqrt7}{4}$.",
+            r"The four faces give $15\sqrt7$. The answer is $\textbf{(D) }15\sqrt{7}$.",
+        ],
+        'trap': r"Using $(3,4,5)$ or $(2,3,4)$: a right or obtuse face cannot close up into a tetrahedron with four congruent faces.",
+    },
+    '2024-amc-12a-25': {
+        'topics': ['functions', 'casework'],
+        'answer': 'B',
+        'insight': r"A graph is symmetric about $y = x$ when the function is its own inverse. For $\frac{ax+b}{cx+d}$ that means $d = -a$ (when $c \ne 0$), or a line of slope $-1$ or $y = x$ (when $c = 0$), never a constant.",
+        'steps': [
+            r"If $ad - bc = 0$ the function is constant and its graph is a horizontal line, which is not symmetric. Otherwise it is its own inverse exactly when $a + d = 0$, or when it is the identity.",
+            r"$c = 0$ ($d \ne 0$, $10$ ways): the line $y = \frac{a}{d}x + \frac{b}{d}$ needs slope $-1$ ($a = -d$, any $b$: $10 \cdot 11 = 110$) or to be $y = x$ ($a = d$, $b = 0$: $10$). That is $120$.",
+            r"$c \ne 0$: $d = -a$ with $a, b$ free gives $10 \cdot 11 \cdot 11 = 1210$, minus those with $a^2 + bc = 0$. Counting: $a = 0, b = 0$ gives $10$; $a = \pm1$ gives $4$; $a = \pm2$ gives $12$; $a = \pm3, \pm4, \pm5$ give $4$ each. That is $38$, leaving $1172$.",
+            r"$120 + 1172 = 1292$. The answer is $\textbf{(B) }1292$.",
+        ],
+        'trap': r"Forgetting to throw out the constant functions ($a^2 + bc = 0$), or forgetting the lines with $c = 0$.",
+    },
+    # ------------------------------------------------------------------ 2024 AMC 12B
+    # Problems 1, 2, 3, 4, 5, 7, 9, 10, 14, 16 and 18 are the 10B's 1, 2, 3, 4,
+    # 5, 11, 14, 15, 18, 22 and 23, and use its write-ups (_SAME_AS_10 below).
+    '2024-amc-12b-6': {
+        'topics': ['digits-bases', 'logarithms'],
+        'answer': 'B',
+        'insight': r"$5 \cdot 10^{13} = 5^{14} \cdot 2^{13}$, so the base-$5$ length is $15$ plus however many powers of $5$ fit in $2^{13}$.",
+        'steps': [
+            r"A number $N$ has $\lfloor \log_5 N \rfloor + 1$ digits in base $5$, and $\log_5 N = 14 + 13\log_5 2$.",
+            r"$\log_5 2 = \frac{\log 2}{\log 5} \approx \frac{0.3}{0.7} \approx 0.43$, so $13 \log_5 2 \approx 5.6$.",
+            r"$\log_5 N \approx 19.6$, so there are $20$ digits. The answer is $\textbf{(B) }20$.",
+        ],
+        'trap': r"Using $\log_5 10 \approx 1$ or counting $14$ digits for $5^{14}$ and stopping.",
+    },
+    '2024-amc-12b-8': {
+        'topics': ['logarithms'],
+        'answer': 'C',
+        'insight': r"Flip the fraction: $\frac{\log_2 x + \log_3 x}{\log_2 x \log_3 x} = \frac{1}{\log_3 x} + \frac{1}{\log_2 x} = \log_x 3 + \log_x 2$.",
+        'steps': [
+            r"The equation becomes $\log_x 2 + \log_x 3 = \frac12$, that is $\log_x 6 = \frac12$.",
+            r"So $x^{1/2} = 6$ and $x = 36$.",
+            r"The answer is $\textbf{(C) }36$.",
+        ],
+        'trap': r"Trying to clear denominators with change of base to $\ln$ and getting lost in the algebra. Taking reciprocals makes it one line.",
+    },
+    '2024-amc-12b-11': {
+        'topics': ['trigonometry', 'sequences-series'],
+        'answer': 'E',
+        'insight': r"$\sin^2 n^\circ + \sin^2 (90-n)^\circ = \sin^2 n^\circ + \cos^2 n^\circ = 1$.",
+        'steps': [
+            r"Pair $n$ with $90 - n$ for $n = 1, \dots, 44$: $44$ pairs, each adding to $1$.",
+            r"Left over: $\sin^2 45^\circ = \frac12$ and $\sin^2 90^\circ = 1$. The total is $45.5$.",
+            r"The mean is $\frac{45.5}{90} = \frac{91}{180}$. The answer is $\textbf{(E) }\frac{91}{180}$.",
+        ],
+        'trap': r"Answering $\frac12$ by symmetry, which forgets that $\sin^2 90^\circ = 1$ has no partner.",
+    },
+    '2024-amc-12b-12': {
+        'topics': ['complex-numbers', 'area'],
+        'answer': 'D',
+        'insight': r"Write $z = 2(\cos\theta + i\sin\theta)$. The quadrilateral is two triangles from the origin, and both have angle $\theta$ at $0$.",
+        'steps': [
+            r"$z, z^2, z^3$ have lengths $2, 4, 8$ at angles $\theta, 2\theta, 3\theta$. Real part above $1$ means $\theta < 60^\circ$, so $3\theta < 180^\circ$.",
+            r"Area $= \frac12 \cdot 2 \cdot 4 \sin\theta + \frac12 \cdot 4 \cdot 8 \sin\theta = 20\sin\theta = 15$, so $\sin\theta = \frac34$.",
+            r"The imaginary part of $z$ is $2\sin\theta = \frac32$. The answer is $\textbf{(D)}~\frac{3}{2}$.",
+        ],
+        'trap': r"Giving $\sin\theta = \frac34$ itself; the question wants $\operatorname{Im} z = 2\sin\theta$.",
+    },
+    '2024-amc-12b-13': {
+        'topics': ['circles', 'quadratics'],
+        'answer': 'C',
+        'insight': r"$h$ and $k$ are just whatever the left sides come to, so add the equations and complete the square.",
+        'steps': [
+            r"$h + k = 2x^2 + 2y^2 - 16x - 4y = 2\left[(x-4)^2 + (y-1)^2\right] - 34$.",
+            r"Any real $x, y$ give real $h, k$, so the minimum is at $(4, 1)$: $-34$.",
+            r"The answer is $\textbf{(C) }-34$.",
+        ],
+        'trap': r"Thinking the two circles must intersect and minimising each of $h$ and $k$ separately ($-25$ and $-29$) to get $-54$.",
+    },
+    '2024-amc-12b-15': {
+        'topics': ['logarithms', 'coordinate-geometry', 'area'],
+        'answer': 'B',
+        'insight': r"Shoelace with logs: products become sums of logs, and the area collapses to one logarithm.",
+        'steps': [
+            r"The points are $A(0, 1)$, $B(\log_2 3, 2)$, $C(\log_2 7, 3)$. From $A$: $\overrightarrow{AB} = (\log_2 3, 1)$ and $\overrightarrow{AC} = (\log_2 7, 2)$.",
+            r"Area $= \frac12 \left| 2\log_2 3 - \log_2 7 \right| = \frac12 \log_2 \frac97$.",
+            r"$\frac12 \log_2 \frac97 = \log_2 \frac{3}{\sqrt7}$. The answer is $\textbf{(B) }\log_2\frac3{\sqrt7}$.",
+        ],
+        'trap': r"Forgetting that $\log_2 1 = 0$ and $\log_2 2 = 1$, which is what makes the arithmetic short.",
+    },
+    '2024-amc-12b-17': {
+        'topics': ['polynomials', 'probability'],
+        'answer': 'C',
+        'insight': r"Three distinct integer roots multiply to $-6$, and there are only five such sets. Check which give $a$ and $b$ inside $[-10, 10]$.",
+        'steps': [
+            r"There are $21 \cdot 20 = 420$ ordered choices of $a \ne b$. If the roots are $r, s, t$, then $rst = -6$, $a = -(r+s+t)$ and $b = rs + st + tr$.",
+            r"The sets: $\{-1, 1, 6\}$ gives $(a,b) = (-6, -1)$; $\{1, 2, -3\}$ gives $(0, -7)$; $\{-1, 2, 3\}$ gives $(-4, 1)$; $\{1, -2, 3\}$ gives $(-2, -5)$; $\{-1, -2, -3\}$ gives $(6, 11)$, out of range.",
+            r"So $4$ of the $420$ choices work: $\frac{4}{420} = \frac{1}{105}$. The answer is $\textbf{(C) }\frac{1}{105}$.",
+        ],
+        'trap': r"Missing the set with $6$ in it, or keeping $\{-1,-2,-3\}$ even though $b = 11$ is not allowed.",
+    },
+    '2024-amc-12b-19': {
+        'topics': ['triangles', 'trigonometry', 'area'],
+        'answer': 'B',
+        'insight': r"All six vertices are on the circumcircle. Split the hexagon into six triangles at the centre, with central angles alternating $\theta$ and $120^\circ - \theta$.",
+        'steps': [
+            r"The circumradius is $R = \frac{14}{\sqrt3}$, so $R^2 = \frac{196}{3}$. The hexagon's area is $3 \cdot \frac12 R^2 \left(\sin\theta + \sin(120^\circ - \theta)\right) = 98\left(\sin\theta + \sin(120^\circ - \theta)\right)$.",
+            r"$\sin\theta + \sin(120^\circ - \theta) = 2\sin 60^\circ \cos(60^\circ - \theta) = \sqrt3\cos(60^\circ - \theta)$. Setting $98\sqrt3 \cos(60^\circ - \theta) = 91\sqrt3$ gives $\cos(60^\circ - \theta) = \frac{13}{14}$, so $\tan(60^\circ - \theta) = \frac{3\sqrt3}{13}$.",
+            r"$\tan\theta = \dfrac{\sqrt3 - \frac{3\sqrt3}{13}}{1 + \sqrt3 \cdot \frac{3\sqrt3}{13}} = \dfrac{10\sqrt3/13}{22/13} = \dfrac{5\sqrt3}{11}$.",
+            r"The answer is $\textbf{(B)}~\frac{5\sqrt{3}}{11}$.",
+        ],
+        'trap': r"Taking the hexagon as the overlap of the two triangles. It is the outer hexagon through all six vertices.",
+    },
+    '2024-amc-12b-20': {
+        'topics': ['triangles', 'inequalities'],
+        'answer': 'C',
+        'insight': r"The median is fixed by $BC$: $4x^2 = 2 \cdot 40^2 + 2 \cdot 42^2 - BC^2$. Let $BC$ run over $(2, 82)$ for the domain; the area is largest at a right angle at $A$.",
+        'steps': [
+            r"$4x^2 = 6728 - BC^2$ with $2 < BC < 82$, so $1 < x^2 < 1681$ and the domain is $(1, 41)$: $p = 1$, $q = 41$.",
+            r"The area $\frac12 \cdot 40 \cdot 42 \sin A$ is largest at $A = 90^\circ$: $r = 840$.",
+            r"Then $BC = \sqrt{1600 + 1764} = 58$ and the median to the hypotenuse is half of it: $s = 29$.",
+            r"$1 + 41 + 840 + 29 = 911$. The answer is $\textbf{(C) }911$.",
+        ],
+        'trap': r"Taking the domain as $(2, 82)$, the range of $BC$, instead of the range of the median.",
+    },
+    '2024-amc-12b-21': {
+        'topics': ['right-triangles', 'trigonometry'],
+        'answer': 'C',
+        'insight': r"The third angle is the complement of the other two together, so its tangent is the reciprocal of $\tan(\alpha + \beta)$.",
+        'steps': [
+            r"$\tan\alpha = \frac34$ and $\tan\beta = \frac{5}{12}$, so $\tan(\alpha+\beta) = \dfrac{\frac34 + \frac5{12}}{1 - \frac{15}{48}} = \dfrac{7/6}{33/48} = \dfrac{56}{33}$.",
+            r"The third angle is $90^\circ - (\alpha + \beta)$, with tangent $\frac{33}{56}$: legs $33$ and $56$, which are coprime.",
+            r"The hypotenuse is $\sqrt{33^2 + 56^2} = \sqrt{4225} = 65$, and the perimeter is $33 + 56 + 65 = 154$.",
+            r"The answer is $\textbf{(C) }154$.",
+        ],
+        'trap': r"Adding the tangents, $\frac34 + \frac5{12} = \frac76$, and forgetting the denominator $1 - \tan\alpha\tan\beta$.",
+    },
+    '2024-amc-12b-22': {
+        'topics': ['triangles', 'similar-triangles'],
+        'answer': 'C',
+        'insight': r"$\angle B = 2\angle A$ exactly when $b^2 = a(a + c)$, with $a$ opposite $A$ and $b$ opposite $B$.",
+        'steps': [
+            r"Bisect $\angle B$ to meet $\overline{AC}$ at $D$. Then $\angle DBC = \angle A$, so $\triangle BDC \sim \triangle ABC$ and $AD = BD$; the ratios give $b^2 = a(a + c)$. Also $\frac{b}{a} = \frac{\sin 2A}{\sin A} = 2\cos A$ with $0 < A < 60^\circ$, so $a < b < 2a$.",
+            r"So $c = \frac{b^2 - a^2}{a}$ must be a whole number. $a = 1$ leaves no room for $b$; $a = 2, b = 3$ gives $c = \frac52$; $a = 3$ gives $c = \frac73$ or $\frac{16}{3}$; $a = 5$ gives $c = \frac{11}{5}, \frac{24}{5}, \frac{39}{5}, \frac{56}{5}$.",
+            r"$a = 4, b = 6$ gives $c = 5$: the triangle $(4, 6, 5)$, perimeter $15$. For $a \ge 6$, $b \ge a + 1$ makes $c > 2$, so the perimeter is more than $6 + 7 + 2 = 15$.",
+            r"The answer is $\textbf{(C) }15$.",
+        ],
+        'trap': r"Stopping at a triple that fits $b^2 = a(a+c)$ without an integer $c$, such as $(2, 3, \frac52)$.",
+    },
+    '2024-amc-12b-23': {
+        'topics': ['solid-geometry', 'polygons'],
+        'answer': 'B',
+        'insight': r"$A$ and $D$ are three vertices apart, so $\angle AOD = 135^\circ$. Perpendicular edges from the apex mean $\overrightarrow{OA}\cdot\overrightarrow{OD} + h^2 = 0$.",
+        'steps': [
+            r"Put the centre $O$ at the origin and $V$ at height $h$. Then $\overrightarrow{VA}\cdot\overrightarrow{VD} = \overrightarrow{OA}\cdot\overrightarrow{OD} + h^2 = R^2\cos 135^\circ + h^2$.",
+            r"For a regular octagon with side $1$, $R^2 = \frac{1}{4\sin^2 22.5^\circ} = \frac{1}{2 - \sqrt2} = \frac{2 + \sqrt2}{2}$.",
+            r"Setting the dot product to $0$: $h^2 = R^2 \cdot \frac{\sqrt2}{2} = \frac{(2+\sqrt2)\sqrt2}{4} = \frac{1 + \sqrt2}{2}$.",
+            r"The answer is $\textbf{(B) }\frac{1+\sqrt2}{2}$.",
+        ],
+        'trap': r"Using the angle $90^\circ$ or $180^\circ$ between $\overrightarrow{OA}$ and $\overrightarrow{OD}$; they are three of the eight $45^\circ$ steps apart.",
+    },
+    '2024-amc-12b-24': {
+        'topics': ['triangles', 'inequalities'],
+        'answer': 'B',
+        'insight': r"With area $K$, the sides are $\frac{2K}{a}, \frac{2K}{b}, \frac{2K}{c}$ and $K = rs$, which gives $\frac1r = \frac1a + \frac1b + \frac1c$.",
+        'steps': [
+            r"The sides are in the ratio $\frac1a : \frac1b : \frac1c$, so the triangle exists exactly when $\frac1b + \frac1c > \frac1a$.",
+            r"$r = 1$: $\frac1a + \frac1b + \frac1c = 1$ gives $(3,3,3)$, $(2,4,4)$, $(2,3,6)$, and only $(3,3,3)$ is a real triangle; the others are flat.",
+            r"$r = 2$: with $c \le 9$ only $(6,6,6)$ and the flat $(4,8,8)$. $r = 3$: only $(9,9,9)$, since each fraction is at least $\frac19$. $r \ge 4$ is impossible.",
+            r"That is $3$ triples. The answer is $\textbf{(B) }3$.",
+        ],
+        'trap': r"Counting $(2,4,4)$, $(2,3,6)$ or $(4,8,8)$: their sides would be in ratio $2:1:1$ or $3:2:1$, which is a straight line, not a triangle.",
+    },
+    '2024-amc-12b-25': {
+        'topics': ['probability', 'casework'],
+        'answer': 'A',
+        'insight': r"With $n_{RS}$ red striped balls, $n_R$ red and $n_S$ striped, independence is $6\,n_{RS} = n_R\,n_S$. Count outcomes of the $12$ flips by these numbers.",
+        'steps': [
+            r"Colour and pattern are separate fair flips for each ball, so all $2^6 \cdot 2^6 = 4096$ outcomes are equally likely. Independence is $\frac{n_{RS}}{6} = \frac{n_R}{6} \cdot \frac{n_S}{6}$, that is $6\,n_{RS} = n_R\,n_S$.",
+            r"If every ball has the same colour, or every ball the same pattern, it holds automatically: $2 \cdot 64 + 2 \cdot 64 - 4 = 252$ outcomes.",
+            r"Otherwise $1 \le n_R, n_S \le 5$ and $n_R n_S$ is $6$ or $12$: $(n_R, n_S) = (3,2), (2,3)$ with $n_{RS} = 1$, or $(3,4), (4,3)$ with $n_{RS} = 2$. Each has $180$ outcomes, for example $\binom63\binom31\binom32 = 180$ for $(3,4)$, so $720$ in all.",
+            r"$\frac{252 + 720}{4096} = \frac{972}{4096} = \frac{243}{1024}$, so $m = 243$. The answer is $\textbf{(A) } 243$.",
+        ],
+        'trap': r"Forgetting the cases where every ball is one colour or one pattern: independence holds there automatically.",
     },
     # ------------------------------------------------------------------ 2023 AMC 10A
     '2023-amc-10a-1': {
@@ -9163,6 +9495,19 @@ SOLUTIONS = {
         'trap': r'Ignoring the white arrows, which let the bug double back on the middle row and add many paths.',
     },
 }
+
+
+# The 2024 AMC 12A and 12B each share eleven problems with that year's 10A and
+# 10B, word for word with the same choices and answer, so they carry the 10's
+# write-up rather than a copy of it.
+_SAME_AS_10 = {
+    **{'2024-amc-12a-%d' % twelve: '2024-amc-10a-%d' % ten for twelve, ten in
+       [(1, 1), (2, 2), (3, 4), (4, 5), (6, 7), (9, 15), (11, 18), (12, 19), (14, 21), (17, 23), (22, 25)]},
+    **{'2024-amc-12b-%d' % twelve: '2024-amc-10b-%d' % ten for twelve, ten in
+       [(1, 1), (2, 2), (3, 3), (4, 4), (5, 5), (7, 11), (9, 14), (10, 15), (14, 18), (16, 22), (18, 23)]},
+}
+for _twelve, _ten in _SAME_AS_10.items():
+    SOLUTIONS[_twelve] = SOLUTIONS[_ten]
 
 
 def for_problem(problem_id, answer):
