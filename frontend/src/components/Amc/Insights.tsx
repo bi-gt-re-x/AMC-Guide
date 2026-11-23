@@ -222,16 +222,21 @@ export function Insights() {
       <div className="am-grid am-grid-2">
         <section className="am-card">
           <div className="am-card-head"><h2>Worth the most points</h2></div>
+          {/* Only topics you have answered: one never tried isn't known to be weak. */}
           {s.focus.map((t) => (
             <div key={t.id} className="am-ability">
               <Link className="am-link" to={`/topics/${t.id}`}><CategoryDot category={t.category} /> {t.name}</Link>
               <span className="am-muted">
-                {t.theta == null ? 'not tried yet' : `level ${lv(t.theta)} · ${t.right}/${t.answered} right`}
+                {t.theta != null && `level ${lv(t.theta)} · `}{t.right}/{t.answered} right
                 {t.points > 0 && <strong className="am-points"> +{t.points} pts</strong>}
               </span>
             </div>
           ))}
-          <p className="am-muted am-card-note">Points your predicted score gains by bringing the topic up to your level.</p>
+          <p className="am-muted am-card-note">
+            {s.focus.length
+              ? 'Topics you have tried and do worse in than overall: points your predicted score gains by bringing each up to your level.'
+              : 'No weak topics yet among the ones you have tried.'}
+          </p>
           {s.strong.length > 0 && (
             <>
               <h3 className="am-h3" style={{ marginTop: 16 }}>Strongest</h3>

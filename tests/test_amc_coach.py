@@ -103,3 +103,21 @@ def test_an_unreadable_answer_is_an_error_not_a_crash(client, monkeypatch, model
     _plan(client)
     body = client.post('/api/amc/plan/coach', json={}).json()
     assert not body['success'] and 'could not be read' in body['message']
+
+
+def test_with_a_gemini_key_gemini_writes_the_plan(client, monkeypatch):
+    seen = {}
+
+    def gemini(brief, system=None, instruction='', schema=None, max_tokens=0):
+        seen.update(brief=brief, schema=schema)
+        return json.dumps(REPLY)
+
+    monkeypatch.setenv('GEMINI_API_KEY', 'gemini-test')
+    monkeypatch.setattr(planner, '_from_gemini', gemini)
+    monkeypatch.setattr(planner, 'from_provider', lambda *a, **k: pytest.fail('went past Gemini'))
+    monkeypatch.setattr('backend.api.amc._today', lambda: date(2026, 11, 12))
+    assert coach.available() and coach.provider_label().startswith('Gemini · ')
+    _plan(client)
+    body = client.post('/api/amc/plan/coach', json={}).json()
+    assert body['success'] and body['plan']['coach_by'].startswith('Gemini')
+    assert seen['schema'] is coach.SCHEMA and 'Only free on weekends' in seen['brief']

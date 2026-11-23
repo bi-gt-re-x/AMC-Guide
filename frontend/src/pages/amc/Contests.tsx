@@ -3,8 +3,8 @@
  * official problems and answer keys on the AoPS wiki, with a place to log the
  * score you got. The timed mocks have their own page (MockContests.tsx).
  *
- * Papers brought into AMC Guide come first, as cards with what they hold (worked
- * solutions) and how you have done on them, and stand out in the year grid.
+ * One list, year by year; the papers brought into AMC Guide stand out in it (●)
+ * and open to be practised or sat.
  */
 import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -33,7 +33,6 @@ export default function Contests() {
   if (error || !data) return <ErrorState message={error ?? 'Could not load contests.'} onRetry={reload} />;
 
   const total = data.years.reduce((n, y) => n + y.contests.length, 0);
-  const ready = data.years.flatMap((y) => y.contests).filter((c) => c.imported === c.count);
 
   return (
     <div className="amc-page">
@@ -51,31 +50,6 @@ export default function Contests() {
         </span>
         <span aria-hidden="true">→</span>
       </Link>
-
-      {ready.length > 0 && (
-        <section className="am-ready" aria-label="Ready to practice">
-          <h2 className="am-h2">Ready to practice</h2>
-          <div className="am-ready-cards">
-            {ready.map((c) => (
-              <article key={c.id} className="am-card am-ready-card">
-                <Link to={`/contests/${c.id}`} className="am-ready-name">{c.name}</Link>
-                <p className="am-muted">
-                  {c.count} problems · {c.minutes} min{c.written ? (c.written === c.count ? ' · all worked out' : ` · ${c.written} worked out`) : ''}
-                </p>
-                <p className="am-ready-score">
-                  {c.sittings
-                    ? <>Best <b>{c.best}</b> of {c.max} · {c.sittings} sitting{c.sittings === 1 ? '' : 's'}</>
-                    : <span className="am-muted">Not sat yet</span>}
-                </p>
-                <div className="am-ready-actions">
-                  <Link className="am-btn am-btn-sm" to={`/contests/${c.id}`}>Open</Link>
-                  <Link className="am-btn am-btn-primary am-btn-sm" to={`/contests/${c.id}/take`}>{c.sittings ? 'Sit it again' : 'Sit it'}</Link>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      )}
 
       <div className="am-grid am-grid-main">
         <section className="am-card">

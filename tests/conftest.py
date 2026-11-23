@@ -113,8 +113,12 @@ def _no_model_keys(monkeypatch):
     whatever happens to be in the developer's .env.
     """
     for name in ('GROQ_API_KEY', 'XAI_API_KEY', 'GROK_API_KEY', 'ANTHROPIC_API_KEY', 'ANTHROPIC_WORKSPACE_ID',
-                 'HF_TOKEN', 'HUGGINGFACE_API_KEY', 'MILESTONE_PROVIDER'):
+                 'HF_TOKEN', 'HUGGINGFACE_API_KEY', 'GEMINI_API_KEY', 'GOOGLE_API_KEY', 'GEMINI_MODEL',
+                 'MILESTONE_PROVIDER'):
         monkeypatch.delenv(name, raising=False)
+    # Which Gemini model answered last is module state; no test inherits another's.
+    from backend.tracking import planner as _planner
+    monkeypatch.setitem(_planner.GEMINI_ANSWERED, 'model', '')
 
     # And nothing may put them back. `settings.load_dotenv` reads the .env of
     # whoever is running the tests and fills in any name that is *not already

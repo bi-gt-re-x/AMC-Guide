@@ -30,6 +30,7 @@ Asymptote diagrams cannot be drawn here (that needs the Asymptote compiler), so
 a problem with one is flagged and its source kept, and the page says so.
 """
 import json
+import os
 import re
 import time
 from datetime import datetime
@@ -589,6 +590,25 @@ def difficulty_at(level, number):
     return _tier(rating_at(level, number))
 
 
+def _load_maa_ratings():
+    path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'maa_ratings.json')
+    try:
+        with open(path) as f:
+            return {pid: float(r) for pid, r in json.load(f).items()}
+    except (OSError, ValueError):
+        return {}
+
+
+#: Problems rated by their own difficulty, from the MAA's share of students
+#: answering correctly (scripts/rate_from_maa.py), in half steps.
+MAA_RATINGS = _load_maa_ratings()
+
+
+def problem_rating(pid, level, number):
+    """A problem's 1-12 rating: its own where the MAA figure is known, else its slot's."""
+    return MAA_RATINGS.get(pid, rating_at(level, number))
+
+
 # ---------------------------------------------------------------------------
 # Storage
 # ---------------------------------------------------------------------------
@@ -612,6 +632,7 @@ def _shape(row):
         answer = int(answer)
     choices = json.loads(row['choices']) if row.get('choices') else None
     pid = problem_id(row['contest_id'], number)
+    rating = problem_rating(pid, contest['level'], number)
     # AMC Guide's own write-up, when one has been written for this answer.
     ours = official_solutions.for_problem(pid, answer) or {}
     # Its topics are a person's reading. Without one, tagged from the text each
@@ -623,9 +644,9 @@ def _shape(row):
         'topic': tags[0],
         'also': tags[1:],
         'technique': 'official',
-        'rating': rating_at(contest['level'], number),
-        'aops': aops_at(contest['level'], number),
-        'difficulty': difficulty_at(contest['level'], number),
+        'rating': rating,
+        'aops': rating / 2,
+        'difficulty': _tier(rating),
         'statement': row['statement'],
         'choices': choices,
         'answer': answer,

@@ -39,7 +39,9 @@ moves away only as evidence comes in.
 * **Points at stake by topic**: how many points on their contest it would add
   to bring each weak topic up to their overall level (or 1.2 points above it, for
   a topic already there), from how often the topic appears and where on the
-  paper. The focus list is sorted by it.
+  paper. The focus list is sorted by it, and holds only topics the student has
+  answered: one never tried is not known to be weak, so it is not called a
+  weakness (here, in the AI coach's reading, or for "my weakest topic").
 * **What to do next**: unsolved problems in those topics that they get right
   between half and three-quarters of the time (hard enough to teach, easy
   enough to finish), no more than two from one topic.
@@ -464,7 +466,8 @@ def analyze(attempts, hist, review_by_id, mocks, plan, today=None):
             techniques.append({'id': tid, 'name': catalog.technique_name(tid), 'answered': len(pts), 'theta': th})
     techniques.sort(key=lambda r: r['theta'])
 
-    focus = sorted([t for t in topics if t['relevant'] and (t['theta'] is None or t['theta'] < theta + 0.6)],
+    # Weak topics are ones the student has touched and does worse in than overall.
+    focus = sorted([t for t in topics if t['relevant'] and t['answered'] and t['theta'] < theta + 0.6],
                    key=lambda t: (-t['points'], t['name']))[:5]
     strong = sorted([t for t in topics if t['theta'] is not None and t['answered'] >= 2 and t['theta'] >= theta],
                     key=lambda t: -t['theta'])[:4]
@@ -512,10 +515,10 @@ def ai_brief(stats, plan):
         'from {} timed answers).'.format(pace['at_level'], pace['easy'], pace['hard'], pace['contest'],
                                          pace['timed_answers']),
         'Weekly ability trend (oldest first): {}.'.format(', '.join(str(w['theta']) for w in stats['trend'] if w['theta'] is not None) or 'none yet'),
-        'Topics worth the most points (id, name, ability, answered, points it would add): {}.'.format(
-            '; '.join('{} ({}, {}, {}, +{})'.format(t['id'], t['name'], t['theta'] if t['theta'] is not None else 'untested',
-                                                     t['answered'], t['points'])
-                      for t in stats['focus'])),
+        'Weakest topics they have answered, worth the most points (id, name, ability, answered, points it would '
+        'add); topics they have not tried are not weaknesses: {}.'.format(
+            '; '.join('{} ({}, {}, {}, +{})'.format(t['id'], t['name'], t['theta'], t['answered'], t['points'])
+                      for t in stats['focus']) or 'none yet'),
         'Strongest topics: {}.'.format('; '.join('{} ({})'.format(t['name'], t['theta']) for t in stats['strong']) or 'none yet'),
         'Weakest techniques: {}.'.format('; '.join('{} ({})'.format(t['name'], t['theta']) for t in stats['techniques'][:4]) or 'none yet'),
         'Patterns: {}'.format(' '.join(p['text'] for p in stats['patterns']) or 'none flagged.'),

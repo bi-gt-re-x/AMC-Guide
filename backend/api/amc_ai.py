@@ -66,6 +66,12 @@ DIAGNOSE_SCHEMA = {
 }
 
 
+def _named(items):
+    """A model that answers with topic ids (`modular-arithmetic`) gets them read
+    back as the topic's name, as the page writes it."""
+    return [catalog.TOPIC_BY_ID[s.strip()]['name'] if s.strip() in catalog.TOPIC_BY_ID else s for s in items]
+
+
 def _clean_diagnosis(found):
     week = []
     for item in (found.get('this_week') or [])[:6]:
@@ -80,7 +86,8 @@ def _clean_diagnosis(found):
                       'minutes': minutes, 'topic': topic,
                       'topic_name': catalog.TOPIC_BY_ID[topic]['name'] if topic else ''})
     return {'headline': ai.text(found.get('headline'), 300), 'diagnosis': ai.text(found.get('diagnosis'), 1500),
-            'strengths': ai.strings(found.get('strengths'), 5), 'weaknesses': ai.strings(found.get('weaknesses'), 5),
+            'strengths': _named(ai.strings(found.get('strengths'), 5)),
+            'weaknesses': _named(ai.strings(found.get('weaknesses'), 5)),
             'this_week': [w for w in week if w['action']],
             'contest_strategy': ai.text(found.get('contest_strategy'), 1000)}
 

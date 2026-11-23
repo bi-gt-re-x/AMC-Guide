@@ -4,8 +4,8 @@
 
 Every problem on the site carries a `rating` from 1 to 12. It is the AoPS
 competition rating, which runs from 0.5 (the easiest AMC 8 problems) to 6
-(AIME 14 and 15, and the easiest olympiad problems), times 2. AoPS rates in
-half points, so every AMC Guide rating is a whole number. On the AoPS scale a
+(AIME 14 and 15, and the easiest olympiad problems), times 2, to the nearest
+half: a 5.5 sits between a typical #15 and #18 of an AMC 10. On the AoPS scale a
 student working through these contests only ever sees numbers up to 6, and a
 level of "2.1" reads as failing when it is a solid start on the AMC 10.
 
@@ -20,12 +20,16 @@ writer is told about), and converted here, once, on the way in.
 ## Where a problem sits on a real paper
 
 `RATING_BY_NUMBER` is the AoPS rating of each problem number on a typical
-recent paper, in half points, checked against the 2023-2026 AMC 10s worked
-through for this site: an AMC 10 runs from 1 to about 4, an AMC 12 from 1 to
-4.5, and an AIME from 2.5 to 6. Real papers vary from year to year, so this is
-where a problem sits on a typical paper, not a measurement of that problem.
+recent paper, in quarter points (half steps on AMC Guide's scale), checked
+against the 2023-2026 AMC 10s worked through for this site: an AMC 10 runs from
+1 to about 4, an AMC 12 from 1 to 4.5, and an AIME from 2.5 to 6. Real papers
+vary from year to year, so this is where a problem sits on a typical paper, not
+a measurement of that problem.
 
-Imported official problems are rated from it (backend/amc/official.py). The
+Imported official problems are rated by their own difficulty where the MAA's
+share of students answering correctly is known (backend/amc/maa_ratings.json,
+from scripts/rate_from_maa.py), and from this table otherwise
+(backend/amc/official.py). The
 AMC Guide Mock sets carry their own per-problem ratings, from a review of each
 problem against real papers (backend/amc/sets/ratings.py), because a problem
 written for slot #20 is not always as hard as a real #20. It has no imports so
@@ -39,11 +43,11 @@ FACTOR = 2
 TOP = AOPS_TOP * FACTOR
 
 RATING_BY_NUMBER = {
-    'AMC 10': [1, 1, 1, 1, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2, 2, 2, 2.5,
-               2.5, 2.5, 2.5, 3, 3, 3, 3.5, 3.5, 3.5, 4],
-    'AMC 12': [1, 1, 1, 1.5, 1.5, 1.5, 1.5, 1.5, 2, 2, 2, 2, 2.5, 2.5, 2.5,
-               2.5, 3, 3, 3, 3.5, 3.5, 3.5, 4, 4, 4.5],
-    'AIME': [2.5, 3, 3, 3.5, 3.5, 4, 4, 4.5, 4.5, 5, 5, 5.5, 5.5, 6, 6],
+    'AMC 10': [1, 1, 1.25, 1.25, 1.5, 1.5, 1.5, 1.75, 1.75, 2, 2, 2, 2.25,
+               2.25, 2.5, 2.5, 2.5, 2.75, 2.75, 3, 3.25, 3.25, 3.5, 3.75, 4],
+    'AMC 12': [1, 1, 1.25, 1.25, 1.5, 1.5, 1.5, 1.75, 1.75, 2, 2, 2.25, 2.25,
+               2.5, 2.5, 2.75, 2.75, 3, 3, 3.25, 3.5, 3.75, 4, 4.25, 4.5],
+    'AIME': [2.5, 2.75, 3, 3.25, 3.5, 3.75, 4, 4.25, 4.5, 4.75, 5, 5.25, 5.5, 5.75, 6],
 }
 
 

@@ -155,3 +155,109 @@ def test_grok_is_preferred_whenever_its_key_is_set(monkeypatch):
     assert ai.provider() == 'groq'
     monkeypatch.setenv('XAI_API_KEY', 'xai-test')
     assert ai.provider() == 'grok' and ai.label().startswith('Grok')
+
+
+def test_gemini_is_preferred_whenever_its_key_is_set(monkeypatch):
+    monkeypatch.setenv('XAI_API_KEY', 'xai-test')
+    assert ai.provider() == 'grok'
+    monkeypatch.setenv('GEMINI_API_KEY', 'gemini-test')
+    assert ai.provider() == 'gemini' and ai.label() == 'Gemini · gemini-3.8-flash'
+    monkeypatch.setenv('GEMINI_MODEL', 'gemini-2.5-pro')
+    assert ai.label() == 'Gemini · gemini-2.5-pro'
+    monkeypatch.delenv('GEMINI_API_KEY')
+    monkeypatch.setenv('GOOGLE_API_KEY', 'google-test')        # the name Google's SDKs read
+    assert ai.provider() == 'gemini'
+    assert 'GEMINI_API_KEY' in ai.status()['setup'] or ai.status()['available']
+
+
+def test_a_gemini_call_goes_to_googles_endpoint_with_the_schema(monkeypatch):
+    import httpx
+    from backend.tracking import planner
+    sent = {}
+
+    class Reply:
+        status_code = 200
+        text = ''
+
+        def json(self):
+            return {'choices': [{'message': {'content': '{"hint": "Look at the units digit."}'}}]}
+
+    def post(url, headers=None, json=None, timeout=None):
+        sent.update(url=url, headers=headers, body=json)
+        return Reply()
+
+    monkeypatch.setattr(httpx, 'post', post)
+    monkeypatch.setenv('GEMINI_API_KEY', 'gemini-test')
+    schema = {'type': 'object', 'properties': {'hint': {'type': 'string'}}, 'required': ['hint'],
+              'additionalProperties': False}
+    text = ai._call('Be brief.', 'A problem.', schema, 'One hint.', 500)
+    assert json.loads(text) == {'hint': 'Look at the units digit.'}
+    assert sent['url'] == planner.GEMINI_URL
+    assert sent['headers'] == {'Authorization': 'Bearer gemini-test'}
+    assert sent['body']['model'] == 'gemini-3.8-flash'
+    assert sent['body']['response_format']['json_schema']['schema'] == schema
+    assert sent['body']['max_tokens'] >= planner.GEMINI_MAX_TOKENS   # room for the model to think
+
+
+def test_a_busy_gemini_model_falls_back_to_the_next(monkeypatch):
+    import httpx
+    from backend.tracking import planner
+    tried = []
+
+    class Reply:
+        def __init__(self, status, body):
+            self.status_code, self._body, self.text = status, body, json.dumps(body)
+
+        def json(self):
+            return self._body
+
+    def post(url, headers=None, json=None, timeout=None):
+        tried.append(json['model'])
+        if json['model'] != 'gemini-flash-lite-latest':
+            return Reply(503, {'error': {'message': 'This model is currently experiencing high demand.'}})
+        return Reply(200, {'choices': [{'message': {'content': '{"hint": "ok"}'}}]})
+
+    monkeypatch.setattr(httpx, 'post', post)
+    monkeypatch.setattr(planner, 'GEMINI_PAUSE', 0)
+    monkeypatch.setenv('GEMINI_API_KEY', 'gemini-test')
+    assert planner._from_gemini('b', 's', 'i', None, 100) == '{"hint": "ok"}'
+    assert tried == ['gemini-3.8-flash', 'gemini-flash-latest', 'gemini-3.5-flash-lite', 'gemini-flash-lite-latest']
+
+    tried.clear()
+    monkeypatch.setenv('GEMINI_FALLBACK_MODELS', '')            # turned off: one model, then a plain message
+    with pytest.raises(planner.PlannerUnavailable, match='busy on every model'):
+        planner._from_gemini('b', 's', 'i', None, 100)
+    assert tried == ['gemini-3.8-flash'] * planner.GEMINI_ROUNDS     # each pass tries it again
+
+
+def test_the_coachs_topic_ids_read_as_names():
+    from backend.api import amc_ai
+    found = amc_ai._clean_diagnosis({'headline': 'h', 'diagnosis': 'd', 'strengths': ['casework'],
+                                     'weaknesses': ['modular-arithmetic', 'Rushing the last five'],
+                                     'this_week': [], 'contest_strategy': 's'})
+    assert found['weaknesses'] == ['Modular Arithmetic', 'Rushing the last five']
+    assert found['strengths'] == [__import__('backend.amc.catalog', fromlist=['x']).TOPIC_BY_ID['casework']['name']]
+
+
+def test_a_rate_limited_gemini_model_is_skipped_not_a_crash(monkeypatch):
+    import httpx
+    from backend.tracking import planner
+    tried = []
+
+    class Reply:
+        def __init__(self, status, body):
+            self.status_code, self._body, self.text = status, body, json.dumps(body)
+
+        def json(self):
+            return self._body
+
+    def post(url, headers=None, json=None, timeout=None):
+        tried.append(json['model'])
+        if len(tried) == 1:      # Gemini's 429 body is a list, not an object
+            return Reply(429, [{'error': {'code': 429, 'message': 'Quota exceeded for metric: requests per minute'}}])
+        return Reply(200, {'choices': [{'message': {'content': '{"ok": true}'}}]})
+
+    monkeypatch.setattr(httpx, 'post', post)
+    monkeypatch.setenv('GEMINI_API_KEY', 'gemini-test')
+    assert planner._from_gemini('b', 's', 'i', None, 100) == '{"ok": true}'
+    assert tried == ['gemini-3.8-flash', 'gemini-flash-latest']

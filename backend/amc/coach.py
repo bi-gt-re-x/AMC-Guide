@@ -124,11 +124,14 @@ EXPERIENCE = {
 
 def available():
     """Whether a model that answers in a fixed shape is configured."""
-    return planner.able()
+    return bool(planner._gemini_token()) or planner.able()
 
 
 def provider_label():
-    """What will write the plan, for the page: e.g. "Groq · openai/gpt-oss-120b"."""
+    """What will write the plan, for the page: e.g. "Gemini · gemini-3.8-flash".
+    Gemini, when its key is set, as for every other AI feature (backend/amc/ai.py)."""
+    if planner._gemini_token():
+        return 'Gemini · ' + (planner.GEMINI_ANSWERED['model'] or os.environ.get('GEMINI_MODEL') or planner.GEMINI_MODEL)
     using = planner.provider()
     if using == 'groq':
         return 'Groq · ' + (os.environ.get('GROQ_MODEL') or planner.GROQ_MODEL)
@@ -286,6 +289,15 @@ def _plain(value):
 def write_plan(plan, details, tstats, projected, mocks, review_counts, answers, today):
     """Ask the configured model for a plan. Raises PlannerUnavailable with a
     message meant for the page when it cannot."""
+    if planner._gemini_token():
+        text = planner._from_gemini(
+            brief(plan, details, tstats, projected, mocks, review_counts, answers, today),
+            SYSTEM, 'Write this student’s study plan.', SCHEMA)
+        try:
+            found = json.loads(planner._json_span(text))
+        except (json.JSONDecodeError, ValueError, TypeError) as exc:
+            raise planner.PlannerUnavailable('The model’s answer could not be read. Try again.') from exc
+        return clean(found, plan['target'])
     if not planner.provider():
         raise planner.PlannerUnavailable(
             'The coach needs GROQ_API_KEY in .env (or XAI_API_KEY with MILESTONE_PROVIDER=grok). '

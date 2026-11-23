@@ -2,9 +2,12 @@
 
 ## Which model
 
-Grok (xAI) whenever a Grok key is set (`XAI_API_KEY`, or `GROK_API_KEY`), so an
-install with one gets Grok for every AI feature without also having to set
-MILESTONE_PROVIDER. Without one it falls back to whatever
+Gemini whenever a Google AI Studio key is set (`GEMINI_API_KEY`, or
+`GOOGLE_API_KEY`; model `GEMINI_MODEL`, default gemini-2.5-flash), then Grok
+(xAI) when a Grok key is set (`XAI_API_KEY`, or `GROK_API_KEY`), so an install
+with one gets it for every AI feature (the coach, hints, mistake explanations,
+problem writing) without also having to set MILESTONE_PROVIDER. Without either
+it falls back to whatever
 backend/tracking/planner.py would use (Groq with `GROQ_API_KEY`, then
 Anthropic). Model names come from `GROK_MODEL` / `GROQ_MODEL` there.
 
@@ -43,7 +46,9 @@ def _limit():
 
 
 def provider():
-    """'grok', 'groq', 'anthropic', or '' when nothing that can hold a schema is set."""
+    """'gemini', 'grok', 'groq', 'anthropic', or '' when nothing that can hold a schema is set."""
+    if planner._gemini_token():
+        return 'gemini'
     if planner._grok_token():
         return 'grok'
     using = planner.provider()
@@ -52,6 +57,8 @@ def provider():
 
 def label():
     using = provider()
+    if using == 'gemini':
+        return 'Gemini · ' + (os.environ.get('GEMINI_MODEL') or planner.GEMINI_MODEL)
     if using == 'grok':
         return 'Grok · ' + (os.environ.get('GROK_MODEL') or planner.GROK_MODEL)
     if using == 'groq':
@@ -67,8 +74,9 @@ def status(user=''):
     return {
         'available': bool(using), 'provider': using, 'label': label(),
         'used_today': used_today(user) if user else 0, 'limit': _limit(),
-        'setup': '' if using else ('Add XAI_API_KEY (Grok) to .env and restart the server to turn on the AI '
-                                   'coach, hints and problem writing. GROQ_API_KEY works too.'),
+        'setup': '' if using else ('Add GEMINI_API_KEY (Google AI Studio) to .env and restart the server to turn '
+                                   'on the AI coach, hints and problem writing. XAI_API_KEY (Grok) or '
+                                   'GROQ_API_KEY work too.'),
     }
 
 
@@ -128,6 +136,8 @@ def used_today(user):
 def _call(system, brief, schema, instruction, max_tokens):
     """One schema-shaped answer as text. Separate so tests can replace it."""
     using = provider()
+    if using == 'gemini':
+        return planner._from_gemini(brief, system, instruction, schema, max_tokens)
     if using == 'grok':
         return planner._from_grok(brief, system, instruction, schema, max_tokens)
     return planner.from_provider(brief, system=system, schema=schema, instruction=instruction,

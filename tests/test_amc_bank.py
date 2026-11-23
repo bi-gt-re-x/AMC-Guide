@@ -206,19 +206,39 @@ def test_summit_scale_puts_the_hardest_aime_problem_at_twelve():
 def test_official_positions_follow_the_aops_bands():
     from backend.amc import official
     from backend.amc.scale import aops_at
-    assert [aops_at('AMC 10', n) for n in (1, 6, 11, 16, 21, 25)] == [1, 1.5, 2, 2.5, 3, 4]
-    assert [official.rating_at('AMC 10', n) for n in (1, 6, 11, 16, 21, 25)] == [2, 3, 4, 5, 6, 8]
-    assert [official.rating_at('AMC 12', n) for n in (1, 10, 20, 25)] == [2, 4, 7, 9]
-    assert [official.rating_at('AIME', n) for n in (1, 4, 7, 11, 15)] == [5, 7, 8, 10, 12]
+    assert [aops_at('AMC 10', n) for n in (1, 6, 11, 16, 21, 25)] == [1, 1.5, 2, 2.5, 3.25, 4]
+    assert [official.rating_at('AMC 10', n) for n in (1, 4, 6, 11, 16, 21, 25)] == [2, 2.5, 3, 4, 5, 6.5, 8]
+    assert [official.rating_at('AMC 12', n) for n in (1, 10, 20, 25)] == [2, 4, 6.5, 9]
+    assert [official.rating_at('AIME', n) for n in (1, 4, 7, 11, 15)] == [5, 6.5, 8, 10, 12]
     for level, table in official.RATING_BY_NUMBER.items():
         assert len(table) == {'AIME': 15}.get(level, 25)
         assert table == sorted(table), level            # never easier further in
-        assert all(1 <= r <= 10 and r * 2 == int(r * 2) for r in table)
+        # AoPS quarter points: half steps on AMC Guide's scale.
+        assert all(0.5 <= r <= 6 and r * 4 == int(r * 4) for r in table)
+    assert any(official.rating_at(level, n) % 1 for level in official.RATING_BY_NUMBER for n in range(1, 16))
+
+
+def test_official_problems_are_rated_by_their_own_difficulty():
+    from backend.amc import official
+    from backend.amc.scale import SCALE_BY_NUMBER
+    ratings = official.MAA_RATINGS
+    assert len(ratings) > 1500
+    assert all(1 <= r <= 12 and r * 2 == int(r * 2) for r in ratings.values())     # half steps
+    assert sum(1 for r in ratings.values() if r % 1) > 500
+    # Each slot still averages about its table rating; problems spread around it.
+    for level, mark in (('AMC 10', '-amc-10'), ('AMC 12', '-amc-12'), ('AIME', '-aime-')):
+        for n, typical in enumerate(SCALE_BY_NUMBER[level], start=1):
+            found = [r for pid, r in ratings.items() if mark in pid and pid.endswith('-%d' % n)]
+            if len(found) >= 10:
+                assert abs(sum(found) / len(found) - typical) <= 0.5, (level, n)
+                assert all(abs(r - typical) <= 2 for r in found)
+    # Where it is not known, the slot's rating.
+    assert official.problem_rating('2026-amc-10a-25', 'AMC 10', 25) == official.rating_at('AMC 10', 25)
 
 
 def test_every_rating_is_on_the_one_to_ten_scale():
     for p in PROBLEMS:
-        assert 1 <= p['rating'] <= 12 and p['rating'] == int(p['rating']), p['id']
+        assert 1 <= p['rating'] <= 12 and p['rating'] * 2 == int(p['rating'] * 2), p['id']
 
 
 def test_mocks_run_in_rating_order():

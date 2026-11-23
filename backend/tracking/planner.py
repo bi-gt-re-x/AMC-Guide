@@ -64,6 +64,7 @@ the plan; the account owns it.
 import json
 import os
 import re
+import time
 from backend.tracking import sources
 from backend.tracking.plainwords import STYLE, plain
 from typing import List, Sequence
@@ -449,6 +450,12 @@ def _grok_token() -> str:
     return (os.environ.get('XAI_API_KEY')
             or os.environ.get('GROK_API_KEY')
             or '')
+
+
+def _gemini_token() -> str:
+    """The Google AI Studio key: `GEMINI_API_KEY`, or `GOOGLE_API_KEY`, the name
+    Google's own SDKs read."""
+    return os.environ.get('GEMINI_API_KEY') or os.environ.get('GOOGLE_API_KEY') or ''
 
 
 def _keyed(provider: str) -> bool:
@@ -922,7 +929,11 @@ def _from_openai_chat(url: str, token: str, model_id: str, label: str,
         # hundred nodes it cannot write.
         detail = ''
         try:
-            detail = ((response.json() or {}).get('error') or {}).get('message') or ''
+            body = response.json() or {}
+            # Gemini wraps its error in a one-item list; the others send the object.
+            if isinstance(body, list):
+                body = body[0] if body and isinstance(body[0], dict) else {}
+            detail = ((body.get('error') or {}).get('message') or '') if isinstance(body, dict) else ''
         except ValueError:
             detail = ''
         lower = detail.lower()
@@ -981,6 +992,80 @@ def _from_grok(brief: str, system: str = None, instruction: str = '',
         brief, system, instruction, schema,
         max_tokens or GROK_MAX_TOKENS,
         GROK_TEMPERATURE, GROK_TIMEOUT, GROK_REASONING)
+
+
+#: Gemini, through Google's OpenAI-compatible endpoint, which takes the same
+#: `messages` and a strict `json_schema` response format, so it goes through
+#: `_from_openai_chat` like Grok and Groq. The key is the AI Studio one.
+GEMINI_URL = 'https://generativelanguage.googleapis.com/v1beta/openai/chat/completions'
+#: gemini-3.8-flash: the model Google points new keys to (gemini-2.5-flash is
+#: closed to keys made after it was superseded; checked 2026-11-23). `GET
+#: https://generativelanguage.googleapis.com/v1beta/models` with the key lists
+#: what it can use.
+GEMINI_MODEL = os.environ.get('GEMINI_MODEL') or 'gemini-3.8-flash'
+#: Tried in order when the model is busy (Google answers 503 "high demand"
+#: often on free keys, model by model and minute by minute), closed to this
+#: key, or does not answer in time: the newest Flash, then the Flash-Lites. A
+#: comma-separated GEMINI_FALLBACK_MODELS replaces the list; an empty one turns
+#: it off.
+GEMINI_FALLBACK_MODELS = ('gemini-flash-latest', 'gemini-3.5-flash-lite', 'gemini-flash-lite-latest',
+                          'gemini-3.1-flash-lite')
+#: Passes over the list before giving up, and the pause between them: a model
+#: busy one moment is often free a few seconds later.
+GEMINI_ROUNDS = 2
+GEMINI_PAUSE = 3.0
+#: Generous: Gemini thinks before it answers, and the thinking counts against
+#: this, so a tight budget comes back as JSON cut off mid-object.
+GEMINI_MAX_TOKENS = 12000
+GEMINI_TIMEOUT = 60.0
+
+
+#: The model that wrote the last answer, so a page can say which one did when a
+#: fallback stood in (backend/amc/coach.py labels the plan with it).
+GEMINI_ANSWERED = {'model': ''}
+
+
+def _gemini_models() -> List[str]:
+    first = os.environ.get('GEMINI_MODEL') or GEMINI_MODEL
+    named = os.environ.get('GEMINI_FALLBACK_MODELS')
+    rest = [m.strip() for m in named.split(',')] if named is not None else list(GEMINI_FALLBACK_MODELS)
+    out = []
+    for m in [first] + rest:
+        if m and m not in out:
+            out.append(m)
+    return out
+
+
+def _gemini_busy(exc: Exception) -> bool:
+    """A failure another model might not have: busy, not served, no answer in time."""
+    text = str(exc)
+    # A rate limit counts too: free-tier allowances are per model.
+    return any(mark in text for mark in ('returned 503', 'returned 500', 'returned 502', 'returned 504',
+                                         'is not being served', 'Could not reach', 'rate-limiting',
+                                         'allowance for the day'))
+
+
+def _from_gemini(brief: str, system: str = None, instruction: str = '',
+                 schema: dict = None, max_tokens: int = 0) -> str:
+    """Gemini, through the same POST, with the schema sent; the next model in
+    `_gemini_models()` when one is busy."""
+    last = None
+    for round_no in range(GEMINI_ROUNDS):
+        if round_no:
+            time.sleep(GEMINI_PAUSE)
+        for model_id in _gemini_models():
+            try:
+                text = _from_openai_chat(
+                    GEMINI_URL, _gemini_token(), model_id, 'Gemini',
+                    brief, system, instruction, schema,
+                    max(max_tokens or 0, GEMINI_MAX_TOKENS), GROK_TEMPERATURE, GEMINI_TIMEOUT)
+                GEMINI_ANSWERED['model'] = model_id
+                return text
+            except PlannerUnavailable as exc:
+                if not _gemini_busy(exc):
+                    raise
+                last = exc
+    raise PlannerUnavailable('Gemini is busy on every model this key can use. Try again in a minute.') from last
 
 
 def _from_groq(brief: str, system: str = None, instruction: str = '',

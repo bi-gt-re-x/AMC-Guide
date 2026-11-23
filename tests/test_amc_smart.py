@@ -67,6 +67,19 @@ def test_focus_topics_are_ranked_by_points():
     assert all(0 <= t['points'] <= 60 for t in stats['topics'])
 
 
+def test_weak_topics_are_only_ones_the_student_has_touched():
+    # Answers in a handful of topics only: every other topic is untouched, and
+    # untouched is not weak (the focus list, the AI brief, "my weakest topic").
+    picks = _amc10(1, 4.5)[:40]
+    hist = engine.history(_attempts([(p['id'], i % 3 != 0, '2026-11-10', 150) for i, p in enumerate(picks)]))
+    stats = smart.analyze([], hist, {}, [], None, TODAY)
+    touched = {t['id'] for t in stats['topics'] if t['answered']}
+    assert stats['focus'] and all(t['id'] in touched and t['answered'] for t in stats['focus'])
+    assert 'untested' not in smart.ai_brief(stats, None)
+    empty = smart.analyze([], {}, {}, [], None, TODAY)
+    assert empty['focus'] == [] and 'none yet' in smart.ai_brief(empty, None)
+
+
 def test_a_timed_mock_well_below_the_model_is_flagged():
     picks = _amc10(1, 4.5)[:30]
     hist = engine.history(_attempts([(p['id'], True, '2026-11-10', 100) for p in picks]))
