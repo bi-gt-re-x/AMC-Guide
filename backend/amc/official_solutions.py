@@ -12,7 +12,7 @@ key the solution is left off rather than shown beside the wrong answer
 on its answer.
 
 Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A, 10B, 12A and 12B, the 2024 AMC 10A,
-10B, 12A and 12B, the 2023 AMC 10A, 10B, 12A and 12B, the 2022 AMC 10A and 10B, the 2021 AMC 10A and 10B, the 2021
+10B, 12A and 12B, the 2023 AMC 10A, 10B, 12A and 12B, the 2022 AMC 10A, 10B, 12A and 12B, the 2021 AMC 10A and 10B, the 2021
 Fall AMC 10A and 10B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, the
 2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, the 2016 AMC 10A and 10B, the 2015 AMC 10A and 10B, the 2014 AMC 10A and 10B, the 2013 AMC 10A and 10B, and the 2012 AMC 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
@@ -3778,6 +3778,294 @@ SOLUTIONS = {
             r"New area $= (1 + \sqrt5) \cdot \frac{2}{3 + \sqrt5} = \frac{2(1 + \sqrt5)(3 - \sqrt5)}{4} = \sqrt5 - 1$. The answer is $\textbf{(B)}~\sqrt{5}-1$.",
         ],
         'trap': r"Assuming the new pentagon has half the side length, which gives a quarter of the area.",
+    },
+    # ------------------------------------------------------------------ 2022 AMC 12A
+    # Problems 1, 2, 4, 6, 7, 9, 10, 15, 18, 19, 20 and 24 are the 10A's 1, 3, 7,
+    # 8, 9, 12, 14, 16, 18, 22, 23 and 24, and use its write-ups (_SAME_AS_10 below).
+    '2022-amc-12a-3': {
+        'topics': ['area', 'quadrilaterals'],
+        'answer': 'B',
+        'insight': r"The five areas add up to the square's area, which fixes its side; then the long rectangles can only go in a few places.",
+        'steps': [
+            r"$6 + 8 + 30 + 14 + 6 = 64$, so the square is $8 \times 8$.",
+            r"Lay $D$ along the top with its side $7$. The gap of $1$ beside it takes $A$ upright in the corner, $1 \times 6$, which leaves $2$ on the right side below it.",
+            r"That $2$ takes $E$ lying flat, $3$ wide, at the bottom right, and the $5$ left on the bottom takes $C$, $5 \times 6$, whose top meets the underside of $D$ at height $6$.",
+            r"The hole is $2$ wide (from $5$ to $7$) and $4$ tall (from $2$ to $6$): $2 \times 4$. The answer is $\textbf{(B) }B$.",
+        ],
+        'trap': r"Trusting the figure, which is not to scale, and picking the smallest rectangle for the middle.",
+    },
+    '2022-amc-12a-5': {
+        'topics': ['coordinate-geometry', 'basic-counting'],
+        'answer': 'C',
+        'insight': r"Count column by column: at $x = k$, $y$ can be anything with $|y| \le 20 - |k|$.",
+        'steps': [
+            r"For $x = k$ there are $2(20 - |k|) + 1 = 41 - 2|k|$ choices of $y$.",
+            r"Summing over $k = -20, \dots, 20$: $41 \cdot 41 - 2 \cdot 2(1 + 2 + \cdots + 20) = 1681 - 840 = 841$.",
+            r"(The diamond is $20^2 + 21^2$ points.) The answer is $\textbf{(C)} \, 841$.",
+        ],
+        'trap': r"Counting one quadrant's $231$ points and multiplying by $4$, which counts the points on the axes twice and gives $924$.",
+    },
+    '2022-amc-12a-8': {
+        'topics': ['exponents', 'sequences-series'],
+        'answer': 'A',
+        'insight': r"Write every factor as a power of $10$; the product's exponent is a geometric series.",
+        'steps': [
+            r"The factors are $10^{1/3}, 10^{1/9}, 10^{1/27}, \dots$",
+            r"The exponents add to $\dfrac{1/3}{1 - 1/3} = \dfrac12$.",
+            r"The product is $10^{1/2}$. The answer is $\textbf{(A) }\sqrt{10}$.",
+        ],
+        'trap': r"Starting the series at $1$ instead of $\frac13$, or taking its sum to be $1$ and answering $10$.",
+    },
+    '2022-amc-12a-11': {
+        'topics': ['logarithms', 'absolute-value'],
+        'answer': 'E',
+        'insight': r"The two solutions sit symmetrically about $\log_6 9$, so their logs add to $2\log_6 9$.",
+        'steps': [
+            r"The condition is $|\log_6 x - \log_6 9| = 2|\log_6 10 - 1| = 2\log_6\frac{10}{6}$.",
+            r"So $\log_6 x = \log_6 9 \pm 2\log_6 \frac53$, two real solutions $x_1 = 9 \cdot \frac{25}{9} = 25$ and $x_2 = 9 \cdot \frac{9}{25}$.",
+            r"$\log_6 x_1 + \log_6 x_2 = 2\log_6 9$, so $x_1 x_2 = 81$. The answer is $\textbf{(E) } 81$.",
+        ],
+        'trap': r"Keeping only the $+$ case and answering $25$.",
+    },
+    '2022-amc-12a-12': {
+        'topics': ['solid-geometry', 'trigonometry'],
+        'answer': 'B',
+        'insight': r"$MC$ and $MD$ are medians of equilateral faces; the Law of Cosines in $\triangle CMD$ does the rest.",
+        'steps': [
+            r"Take edge $1$. $MC$ and $MD$ are altitudes of equilateral triangles $ABC$ and $ABD$, so $MC = MD = \frac{\sqrt3}{2}$, and $CD = 1$.",
+            r"$\cos\angle CMD = \dfrac{\frac34 + \frac34 - 1}{2 \cdot \frac34} = \dfrac{1/2}{3/2}$.",
+            r"$\cos\angle CMD = \frac13$. The answer is $\textbf{(B) } \frac13$.",
+        ],
+        'trap': r"Using $MC = MD = 1$, which makes the triangle equilateral and gives $\frac12$.",
+    },
+    '2022-amc-12a-13': {
+        'topics': ['complex-numbers', 'area'],
+        'answer': 'A',
+        'insight': r"Sweeping a unit disk along a segment gives a stadium: a rectangle plus two half-disks.",
+        'steps': [
+            r"The segment from $3$ to $4i$ has length $5$.",
+            r"The region is a $5 \times 2$ rectangle along the segment with a half-disk of radius $1$ on each end.",
+            r"Area $= 10 + \pi \approx 13.14$. The answer is $\textbf{(A) } 13$.",
+        ],
+        'trap': r"Adding a full disk at each end ($10 + 2\pi \approx 16.3$) or leaving the ends off ($10$).",
+    },
+    '2022-amc-12a-14': {
+        'topics': ['logarithms', 'polynomials'],
+        'answer': 'C',
+        'insight': r"Write everything in $b = \log 2$, using $\log 5 = 1 - b$ and $\log 20 = 1 + b$.",
+        'steps': [
+            r"$\log 8 = 3b$ and $\log 0.25 = -2b$, so the last term is $-6b^2$.",
+            r"$(1 - b)^3 + (1 + b)^3 = 2 + 6b^2$.",
+            r"The total is $2 + 6b^2 - 6b^2 = 2$. The answer is $\textbf{(C) } 2$.",
+        ],
+        'trap': r"Taking $\log 0.25$ as $+2\log 2$; it is negative, and the $b^2$ terms only cancel with the minus sign.",
+    },
+    '2022-amc-12a-16': {
+        'topics': ['perfect-powers', 'diophantine'],
+        'answer': 'D',
+        'insight': r"$t_n = m^2$ is a Pell equation, so the square roots $1, 6, 35, \dots$ follow $m_{k+1} = 6m_k - m_{k-1}$.",
+        'steps': [
+            r"$\frac{n(n+1)}{2} = m^2$ becomes $(2n+1)^2 - 8m^2 = 1$, whose solutions come from powers of $3 + \sqrt8$, so each $m$ is $6$ times the last minus the one before.",
+            r"$m = 1, 6, 35$, then $6 \cdot 35 - 6 = 204$.",
+            r"$204^2 = 41616 = t_{288}$, whose digits add to $4 + 1 + 6 + 1 + 6 = 18$. The answer is $\textbf{(D)} ~18$.",
+        ],
+        'trap': r"Guessing the next root as $6 \cdot 35 = 210$; the recursion subtracts the term two back.",
+    },
+    '2022-amc-12a-17': {
+        'topics': ['trigonometry', 'functions'],
+        'answer': 'A',
+        'insight': r"Factor both sides by $\sin x$; $x = \frac{2\pi}{3}$ is always a solution, and the rest is linear in $\cos x$.",
+        'steps': [
+            r"With $c = \cos x$: $\sin x + \sin 2x = \sin x(1 + 2c)$ and $\sin 3x = \sin x(4c^2 - 1) = \sin x(2c - 1)(2c + 1)$.",
+            r"$\sin x \ne 0$ on $(0, \pi)$, so $(2c + 1)(a - 2c + 1) = 0$: either $c = -\frac12$ (always), or $c = \frac{a + 1}{2}$.",
+            r"A second solution needs $\frac{a+1}{2} \in (-1, 1)$, so $a \in (-3, 1)$, and $\frac{a+1}{2} \ne -\frac12$, so $a \ne -2$.",
+            r"The set is $(-3, -2) \cup (-2, 1)$, and $p + q + r = -4$. The answer is $\textbf{(A) } {-}4$.",
+        ],
+        'trap': r"Dividing by $1 + 2\cos x$ and losing the root $x = \frac{2\pi}{3}$, so $a = -2$ is not excluded.",
+    },
+    '2022-amc-12a-21': {
+        'topics': ['polynomials', 'complex-numbers'],
+        'answer': 'E',
+        'insight': r"With $y = x^{1011}$, $P = y^2 + y + 1$, whose roots are $x$ with $x^{1011}$ a primitive cube root of unity.",
+        'steps': [
+            r"A factor's roots must all make $x^{1011}$ a primitive cube root of $1$.",
+            r"The roots of $x^6 + x^3 + 1 = \frac{x^9 - 1}{x^3 - 1}$ have $x^9 = 1$ but $x^3 \ne 1$. Since $1011 = 9 \cdot 112 + 3$, $x^{1011} = x^3$, a primitive cube root of $1$.",
+            r"So every root of $x^6 + x^3 + 1$ is a root of $P$. The answer is $\textbf{(E)} \, x^6 + x^3 + 1$.",
+        ],
+        'trap': r"Choosing $x^2 + x + 1$ because $P$ looks like it; $1011$ is a multiple of $3$, so $P(\omega) = 3$.",
+    },
+    '2022-amc-12a-22': {
+        'topics': ['complex-numbers', 'trigonometry'],
+        'answer': 'A',
+        'insight': r"The roots are conjugates with $|z|^2 = 10$, so $\frac1{z_1} = \frac{z_2}{10}$: the quadrilateral is a trapezoid symmetric about the real axis.",
+        'steps': [
+            r"Write $z_1 = \sqrt{10}\,e^{i\theta}$ and $z_2 = \overline{z_1}$. The other two vertices are $\frac{z_2}{10}$ and $\frac{z_1}{10}$.",
+            r"The parallel sides are $2\sqrt{10}\sin\theta$ and $\frac{2}{\sqrt{10}}\sin\theta$, a distance $\left(\sqrt{10} - \frac{1}{\sqrt{10}}\right)\cos\theta$ apart.",
+            r"Area $= \sin\theta\cos\theta\left(10 - \frac1{10}\right) = \frac{99}{20}\sin 2\theta$, largest at $\theta = 45^\circ$.",
+            r"$c = z_1 + z_2 = 2\sqrt{10}\cos 45^\circ = 2\sqrt5 \approx 4.47$. The answer is $\textbf{(A) }4.5$.",
+        ],
+        'trap': r"Answering with $|z_1| = \sqrt{10}$ or $\operatorname{Re} z_1$ instead of $c = 2\operatorname{Re} z_1$.",
+    },
+    '2022-amc-12a-23': {
+        'topics': ['divisibility', 'gcd-lcm'],
+        'answer': 'D',
+        'insight': r"Over the denominator $L_n$, the numerator is $\sum L_n/i$; $k_n < L_n$ exactly when a prime $p$ divides it, and only the multiples of the top power of $p$ matter.",
+        'steps': [
+            r"If $p^a$ is the largest power of $p$ up to $n$, $L_n/i$ is a multiple of $p$ unless $p^a \mid i$. So the numerator is $\equiv \frac{L_n}{p^a}\sum \frac1j \pmod p$ over the $j$ with $jp^a \le n$.",
+            r"One such $j$ never cancels. $j = 1, 2$ gives $\frac32$, a multiple of $3$ only: $p^a = 3$ with $n = 6, 7, 8$, and $p^a = 9$ with $n = 18, \dots, 22$.",
+            r"$j = 1, \dots, 4$ gives $\frac{25}{12}$, a multiple of $5$, for $n = 20, 21, 22$ (already counted); $1 + \frac12 + \frac13 = \frac{11}{6}$ helps no prime.",
+            r"That is $n = 6, 7, 8, 18, 19, 20, 21, 22$. The answer is $\textbf{(D) }8$.",
+        ],
+        'trap': r"Assuming the reduced denominator is always $L_n$ because that is the common denominator used to add.",
+    },
+    '2022-amc-12a-25': {
+        'topics': ['right-triangles', 'factors-divisors'],
+        'answer': 'E',
+        'insight': r"The circle touches both axes, so with a tangent segment it is the incircle or the excircle beyond the hypotenuse of a right triangle with legs $a, b$.",
+        'steps': [
+            r"Incircle: $r = \frac{a + b - c}{2}$, which with $a^2 + b^2 = c^2$ becomes $(a - 2r)(b - 2r) = 2r^2$: one segment per divisor of $2r^2$.",
+            r"Excircle: $r = \frac{a + b + c}{2}$ becomes $(2r - a)(2r - b) = 2r^2$ with both factors between $r$ and $2r$.",
+            r"For $r \le 5$ there are at most $6$. At $r = 6$, $72$ has $12$ divisors, and $72 = 8 \cdot 9$ adds the $3$-$4$-$5$ triangle both ways: $14$.",
+            r"The shortest is $c_1 = 5$ and the longest comes from $72 = 1 \cdot 72$: legs $13, 84$, $c_{14} = 85$. The ratio is $17$. The answer is $\textbf{(E)} ~17$.",
+        ],
+        'trap': r"Counting only the incircle segments, which gives $12$ at $r = 6$, and moving on to a larger $r$.",
+    },
+    # ------------------------------------------------------------------ 2022 AMC 12B
+    # Problems 1, 2, 3, 4, 6, 7, 13, 15, 18, 20, 21, 22 and 23 are the 10B's 1, 2,
+    # 6, 7, 8, 10, 16, 17, 19, 21, 22, 23 and 25, and use its write-ups (_SAME_AS_10 below).
+    '2022-amc-12b-5': {
+        'topics': ['transformations', 'coordinate-geometry'],
+        'answer': 'B',
+        'insight': r"$270^\circ$ counterclockwise is $90^\circ$ clockwise: $(x, y) \mapsto (y, -x)$ about the center.",
+        'steps': [
+            r"From the center $(3, 1)$, the point is at offset $(-4, -3)$.",
+            r"Turning it $90^\circ$ clockwise gives $(-3, 4)$.",
+            r"Adding back the center: $(0, 5)$. The answer is $\textbf{(B) }\ (0,5)$.",
+        ],
+        'trap': r"Turning $270^\circ$ clockwise instead, which lands on $(6, -3)$.",
+    },
+    '2022-amc-12b-8': {
+        'topics': ['conics', 'polynomials'],
+        'answer': 'D',
+        'insight': r"Move $2y^2$ over: the left side is $(y^2 - 1)^2$, a difference of squares with $x^4$.",
+        'steps': [
+            r"$y^4 - 2y^2 + 1 = x^4$ is $(y^2 - 1)^2 = (x^2)^2$.",
+            r"So $y^2 - 1 = x^2$ or $y^2 - 1 = -x^2$.",
+            r"These are the hyperbola $y^2 - x^2 = 1$ and the circle $x^2 + y^2 = 1$. The answer is $\textbf{(D) }\ \text{a circle and a hyperbola}$.",
+        ],
+        'trap': r"Taking only the positive square root and finding just the hyperbola.",
+    },
+    '2022-amc-12b-9': {
+        'topics': ['sequences-series', 'exponents'],
+        'answer': 'B',
+        'insight': r"$a_7 = 2^{a_7 - 27}$ makes $a_7$ a power of $2$; then make the common difference as large as positivity allows.",
+        'steps': [
+            r"$a_7 = 2^k$ with $2^k - 27 = k$. Since $2^k - k$ increases, $k = 5$ is the only solution: $a_7 = 32$.",
+            r"With difference $d$, $a_0 = 32 - 7d \ge 1$, so $d \le 4$.",
+            r"$a_2 = 32 - 5d \ge 32 - 20 = 12$. The answer is $\textbf{(B) }\ 12$.",
+        ],
+        'trap': r"Only asking that $a_2$ be positive; the sequence starts at $a_0$, which must be positive too.",
+    },
+    '2022-amc-12b-10': {
+        'topics': ['polygons', 'coordinate-geometry'],
+        'answer': 'D',
+        'insight': r"Put the hexagon's center at the origin; $GCHF$ is symmetric through the center, and all four sides come out equal.",
+        'steps': [
+            r"Take $A = (2, 0)$, $B = (1, \sqrt3)$, $C = (-1, \sqrt3)$, $D = (-2, 0)$, $E = (-1, -\sqrt3)$, $F = (1, -\sqrt3)$. Then $G = \left(\frac32, \frac{\sqrt3}{2}\right)$ and $H = -G$.",
+            r"$GC^2 = \frac{25}{4} + \frac34 = 7$ and $CH^2 = \frac14 + \frac{27}{4} = 7$.",
+            r"By symmetry through the center, $HF = GC$ and $FG = CH$, so the perimeter is $4\sqrt7$. The answer is $\textbf{(D) }\ 4\sqrt7$.",
+        ],
+        'trap': r"Assuming $GCHF$ is a rectangle and using the hexagon's width and height for its sides.",
+    },
+    '2022-amc-12b-11': {
+        'topics': ['complex-numbers', 'exponents'],
+        'answer': 'E',
+        'insight': r"The two bases are the cube roots of unity $\omega$ and $\overline{\omega}$, so only $n \bmod 3$ matters.",
+        'steps': [
+            r"$\omega^3 = \overline{\omega}^3 = 1$.",
+            r"$2022 = 3 \cdot 674$, so $\omega^{2022} = \overline{\omega}^{2022} = 1$.",
+            r"$f(2022) = 1 + 1 = 2$. The answer is $\textbf{(E) }\ 2$.",
+        ],
+        'trap': r"Remembering $\omega + \overline{\omega} = -1$ and using it for every $n$; it only holds when $3 \nmid n$.",
+    },
+    '2022-amc-12b-12': {
+        'topics': ['probability', 'casework'],
+        'answer': 'D',
+        'insight': r"Sort each die as low ($1$-$2$), middle ($3$-$4$) or high ($5$-$6$), each with probability $\frac13$, and count the complement.",
+        'steps': [
+            r"The condition fails if no die is high: $\left(\frac23\right)^4 = \frac{16}{81}$.",
+            r"It also fails if some die is high but it is the only die above $2$: one high and three low, $4 \cdot \left(\frac13\right)^4 = \frac{4}{81}$.",
+            r"$1 - \frac{20}{81} = \frac{61}{81}$. The answer is $\textbf{(D) }\frac{61}{81}$.",
+        ],
+        'trap': r"Multiplying the chances of the two conditions as if they were independent; a high die also counts as above $2$.",
+    },
+    '2022-amc-12b-14': {
+        'topics': ['trigonometry', 'quadratics'],
+        'answer': 'E',
+        'insight': r"$A$ and $C$ lie on opposite sides of the $y$-axis, so angle $ABC$ is the sum of two angles measured from the axis.",
+        'steps': [
+            r"$x^2 + 2x - 15 = (x + 5)(x - 3)$, so $A = (-5, 0)$, $C = (3, 0)$, and $B = (0, -15)$.",
+            r"From $B$, the angles to $A$ and $C$ measured from the $y$-axis have tangents $\frac{5}{15} = \frac13$ and $\frac{3}{15} = \frac15$.",
+            r"$\tan\angle ABC = \dfrac{\frac13 + \frac15}{1 - \frac1{15}} = \dfrac{8/15}{14/15} = \frac47$. The answer is $\textbf{(E) }\frac{4}{7}$.",
+        ],
+        'trap': r"Subtracting the two angles as if $A$ and $C$ were on the same side of the axis.",
+    },
+    '2022-amc-12b-16': {
+        'topics': ['logarithms', 'quadratics'],
+        'answer': 'C',
+        'insight': r"Take $\log_2$ of both equations and set $u = \log_2 x$, $v = \log_2 y$.",
+        'steps': [
+            r"The first equation gives $y \cdot u = 64$, that is $u \cdot 2^v = 2^6$, so $\log_2 u = 6 - v$.",
+            r"The second gives $v \log_2 u = 7$, so $v(6 - v) = 7$ and $v^2 - 6v + 7 = 0$.",
+            r"$v = 3 \pm \sqrt2$, and the larger is $3 + \sqrt2$. The answer is $\textbf{(C) }3+\sqrt{2}$.",
+        ],
+        'trap': r"Writing $\log_2(x^y)$ as $\log_2 x \cdot \log_2 y$; it is $y \log_2 x$.",
+    },
+    '2022-amc-12b-17': {
+        'topics': ['basic-counting', 'permutations'],
+        'answer': 'D',
+        'insight': r"Once you choose which row gets each sum and which column gets each sum, the whole array is forced.",
+        'steps': [
+            r"The sum-$4$ row and sum-$4$ column are all ones. So the sum-$1$ row's only one is in the sum-$4$ column, and the sum-$1$ column's only one is in the sum-$4$ row.",
+            r"The sum-$3$ row now needs its other two ones in the sum-$3$ and sum-$2$ columns; the sum-$2$ row needs one more, and the sum-$3$ column needs it. That fills everything consistently.",
+            r"Each of the $4!$ row orders and $4!$ column orders gives exactly one array: $24^2 = 576$. The answer is $\textbf{(D) }576$.",
+        ],
+        'trap': r"Placing the ones row by row with free choices, which overcounts arrays whose column sums come out wrong.",
+    },
+    '2022-amc-12b-19': {
+        'topics': ['triangle-centers', 'coordinate-geometry'],
+        'answer': 'A',
+        'insight': r"The centroid splits medians $2:1$, so an equilateral $\triangle AGE$ fixes $A$, $E$, $C$ and $G$; then $B = 3G - A - C$.",
+        'steps': [
+            r"Let the side of $\triangle AGE$ be $2$. Put $A = (0, 0)$, $E = (2, 0)$, so $C = (4, 0)$ and $G = (1, \sqrt3)$.",
+            r"$B = 3G - A - C = (-1, 3\sqrt3)$, so $\overrightarrow{CB} = (-5, 3\sqrt3)$ with length $\sqrt{25 + 27} = 2\sqrt{13}$.",
+            r"$\cos C = \dfrac{\overrightarrow{CA} \cdot \overrightarrow{CB}}{|CA||CB|} = \dfrac{20}{4 \cdot 2\sqrt{13}} = \dfrac{5\sqrt{13}}{26}$.",
+            r"$m + n + p = 5 + 26 + 13 = 44$. The answer is $\textbf{(A) }44$.",
+        ],
+        'trap': r"Taking $AC = AE$; $E$ is the midpoint of $AC$, so $AC = 2AE$.",
+    },
+    '2022-amc-12b-24': {
+        'topics': ['trigonometry', 'polygons'],
+        'answer': 'C',
+        'insight': r"A chord across $k$ steps has $L^2 = 2 - 2\cos\frac{2\pi k}{7}$; square that and use $\sum \cos = -1$ over the seventh roots of unity.",
+        'steps': [
+            r"$L^4 = (2 - 2\cos\theta)^2 = 6 - 8\cos\theta + 2\cos 2\theta$.",
+            r"Over the six chords from one vertex, $\theta = \frac{2\pi k}{7}$ for $k = 1, \dots, 6$, and both $\sum\cos\theta$ and $\sum\cos 2\theta$ are $-1$: the total is $36 + 8 - 2 = 42$.",
+            r"Seven vertices count each of the $21$ segments twice: $\frac{7 \cdot 42}{2} = 147$. The answer is $\textbf{(C) }147$.",
+        ],
+        'trap': r"Multiplying $42$ by $7$ without halving, which counts every segment from both ends.",
+    },
+    '2022-amc-12b-25': {
+        'topics': ['area', 'polygons'],
+        'answer': 'B',
+        'insight': r"Each hexagon lies across the square from the edge it shares, so the outline fits in a square of side $2\sqrt3 - 1$ with four small corner notches cut out.",
+        'steps': [
+            r"With the square at $[0, 1]^2$, the hexagon on the top edge reaches down to $y = 1 - \sqrt3$, and the others likewise, so the polygon spans $1 - \sqrt3$ to $\sqrt3$ both ways: side $2\sqrt3 - 1$.",
+            r"Each corner notch has legs $t = \sqrt3 - 1$ along the box edges, and two hexagon edges (at $60^\circ$ and $30^\circ$) meet on the corner's diagonal at $s = 2\sqrt3 - 3$ from each side.",
+            r"The notch is two triangles of area $\frac12 ts$, so it has area $ts = (\sqrt3 - 1)(2\sqrt3 - 3) = 9 - 5\sqrt3$.",
+            r"Area $= (2\sqrt3 - 1)^2 - 4(9 - 5\sqrt3) = 13 - 4\sqrt3 - 36 + 20\sqrt3 = 16\sqrt3 - 23$, and $m + n + p = 16 + 3 - 23 = -4$. The answer is $\textbf{(B) }-4$.",
+        ],
+        'trap': r"Adding the square and four hexagons; the hexagons overlap the square and each other.",
     },
     # ------------------------------------------------------------------ 2022 AMC 10B
     '2022-amc-10b-1': {
@@ -9817,8 +10105,8 @@ SOLUTIONS = {
 }
 
 
-# The 2024 and 2023 AMC 12A and 12B each share eleven problems with that year's
-# 10A and 10B, the same problem with the same answer, so they carry the 10's
+# The 2024, 2023 and 2022 AMC 12A and 12B each share eleven to thirteen problems
+# with that year's 10A and 10B, the same problem with the same answer, so they carry the 10's
 # write-up rather than a copy of it. (Some differ only in how the paste wrote a
 # choice: `\frac13` for `\frac{1}{3}`, `46` for `\$46`.)
 _SAME_AS_10 = {
@@ -9830,6 +10118,10 @@ _SAME_AS_10 = {
        [(1, 1), (2, 2), (3, 3), (4, 5), (5, 7), (7, 9), (8, 10), (9, 11), (13, 16), (18, 22), (21, 25)]},
     **{'2023-amc-12b-%d' % twelve: '2023-amc-10b-%d' % ten for twelve, ten in
        [(1, 1), (2, 2), (3, 3), (4, 4), (5, 10), (6, 12), (9, 13), (13, 17), (15, 18), (19, 21), (25, 25)]},
+    **{'2022-amc-12a-%d' % twelve: '2022-amc-10a-%d' % ten for twelve, ten in
+       [(1, 1), (2, 3), (4, 7), (6, 8), (7, 9), (9, 12), (10, 14), (15, 16), (18, 18), (19, 22), (20, 23), (24, 24)]},
+    **{'2022-amc-12b-%d' % twelve: '2022-amc-10b-%d' % ten for twelve, ten in
+       [(1, 1), (2, 2), (3, 6), (4, 7), (6, 8), (7, 10), (13, 16), (15, 17), (18, 19), (20, 21), (21, 22), (22, 23), (23, 25)]},
 }
 for _twelve, _ten in _SAME_AS_10.items():
     SOLUTIONS[_twelve] = SOLUTIONS[_ten]

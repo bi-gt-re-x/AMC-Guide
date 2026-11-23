@@ -97,7 +97,7 @@ const LIBRARY: { year: string; slots: string }[] = [
   ...Array.from({ length: 8 }, (_, i) => ({ year: String(2013 + i), slots: 'ssoooo' })),
   { year: '2021', slots: 'ssoooo' },
   { year: '2021 Fall', slots: 'ssoo--' },
-  { year: '2022', slots: 'ssoooo' },
+  { year: '2022', slots: 'ssssoo' },
   { year: '2023', slots: 'ssssoo' },
   { year: '2024', slots: 'ssssoo' },
   { year: '2025', slots: 'ssssoo' },
@@ -720,7 +720,7 @@ export default function Landing() {
             <ul className="lp-ticks">
               <li><b>162 papers</b>: every AMC 10, AMC 12 and AIME from 2000 to 2026.</li>
               <li>Read one whole, like the AoPS page, or sit it timed and graded.</li>
-              <li><b>946 worked solutions</b> written by AMC Guide, across 38 papers.</li>
+              <li><b>996 worked solutions</b> written by AMC Guide, across 40 papers.</li>
               <li>Locked until your first sitting, so you can still take it cold.</li>
             </ul>
           </Reveal>
