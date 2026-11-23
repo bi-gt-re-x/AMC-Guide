@@ -1650,3 +1650,31 @@ html[data-theme="dark"] .am-predict-tag { color: #0d1117; }
 .am-kind-approach { margin: 8px 0; font-size: 13px; line-height: 1.5; }
 .am-kind-topics { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 13px; }
 .am-week-focus .am-mode { margin-left: 4px; }
+
+/* Difficulty mix across the five levels, and the Analytics summary tiles. */
+.am-mix { display: grid; gap: 3px; min-width: 120px; }
+.am-mix-bar { display: flex; height: 7px; border-radius: 999px; overflow: hidden; background: var(--am-line); }
+.am-mix-seg { display: block; min-width: 3px; }
+.am-mix-seg + .am-mix-seg { border-left: 1px solid var(--am-card); }
+.am-mix-seg.is-l1 { background: color-mix(in srgb, var(--am-green) 55%, transparent); }
+.am-mix-seg.is-l2 { background: var(--am-green); }
+.am-mix-seg.is-l3 { background: var(--am-amber); }
+.am-mix-seg.is-l4 { background: var(--am-rose); }
+.am-mix-seg.is-l5 { background: color-mix(in srgb, var(--am-rose) 60%, var(--am-ink)); }
+.am-mix-labels { display: flex; font-size: 10px; color: var(--am-muted); white-space: nowrap; }
+.am-mix-labels span { min-width: 0; overflow: hidden; }
+.am-takeaways { display: grid; gap: var(--space-3); grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+    margin-bottom: var(--space-4); }
+.am-take { display: grid; gap: 4px; align-content: start; text-decoration: none; color: inherit; }
+a.am-take:hover { border-color: var(--am-sage); }
+.am-take-value { font-family: var(--am-serif); font-size: 24px; font-weight: 500; color: var(--am-ink); line-height: 1.15;
+    overflow-wrap: anywhere; }
+.am-take-value.is-good { color: var(--am-good); }
+.am-take-value.is-warn { color: var(--am-warn); }
+.am-take-value.is-bad { color: var(--am-bad); }
+.am-take-note { font-size: 12px; }
+.am-take-value.is-long { font-size: 18px; }
+.am-kind-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 13px; }
+.am-kind-lines li { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; align-items: baseline; }
+.am-kind-lines li .am-muted { grid-column: 2; font-size: 12px; }
+.am-focus-row { display: grid; gap: 4px; margin-top: 6px; }

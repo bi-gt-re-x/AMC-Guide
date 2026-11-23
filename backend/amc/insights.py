@@ -397,6 +397,46 @@ def _clock(seconds):
     return '{}:{:02d}'.format(m, s)
 
 
+SHORT_MODE = {'learn': 'learn the ideas', 'accuracy': 'accuracy drills', 'timed': 'timed sets',
+              'mixed': 'mixed sets', 'spaced': 'spaced review', 'practice': 'practice'}
+
+
+def takeaways(level, goal, projected, study):
+    """The page in four lines: where you stand against the goal, what difficulty
+    to practise at, what to study next, and the weakness holding you back most.
+    Each is a label, one value and one short note, and a link where it leads."""
+    out = []
+    if projected is None:
+        out.append({'id': 'projected', 'label': 'Projected', 'value': '—', 'tone': '',
+                    'note': 'answer a few more problems'})
+    else:
+        gap = round(goal - projected, 1)
+        out.append({'id': 'projected', 'label': 'Projected', 'value': '{:g}'.format(projected),
+                    'tone': 'good' if gap <= 0 else 'warn',
+                    'note': 'goal {:g} · {}'.format(goal, 'on track' if gap <= 0 else '{:g} to go'.format(gap))})
+    mix = study['mix']
+    main = [m['level'] for m in mix if m['share'] >= 0.2] or [max(mix, key=lambda m: m['share'])['level']]
+    out.append({'id': 'level', 'label': 'Practise at',
+                'value': 'Level {}'.format(main[0]) if len(main) == 1 else 'Levels {}–{}'.format(main[0], main[-1]),
+                'note': 'goal needs level {}'.format(study['ceiling']), 'mix': mix, 'tone': '',
+                'to': '/problems?level={}&rating={}'.format(level.replace(' ', '+'), ','.join(
+                    str(r) for L in main for r in next(x['ratings'] for x in planning.LEVELS if x['level'] == L)))})
+    top = study['topics'][0] if study['topics'] else None
+    if top:
+        out.append({'id': 'next', 'label': 'Study next', 'value': top['name'], 'tone': '',
+                    'note': '+{:g} pts · {}'.format(top['gain'], SHORT_MODE[top['mode']]), 'to': '/topics/' + top['id']})
+    found = [k for k in study['kinds'] if k['topics']]
+    if found:
+        k = max(found, key=lambda k: (sum(t['score'] for t in k['topics']), len(k['topics'])))
+        out.append({'id': 'weakness', 'label': 'Main weakness', 'value': k['name'], 'tone': 'bad',
+                    'note': '{} topic{} · {}'.format(len(k['topics']), '' if len(k['topics']) == 1 else 's',
+                                                    SHORT_MODE[k['mode']])})
+    else:
+        out.append({'id': 'weakness', 'label': 'Main weakness', 'value': 'Too early', 'tone': '',
+                    'note': 'a few answers per topic first'})
+    return out
+
+
 def analytics(attempts, hist, review_by_id, reviews, mocks, plan, today):
     tstats = engine.topic_stats(hist, review_by_id)
     target = plan['target'] if plan else 'AMC 10'
@@ -418,12 +458,14 @@ def analytics(attempts, hist, review_by_id, reviews, mocks, plan, today):
     if plan and plan.get('exam_date'):
         days_left = (date.fromisoformat(plan['exam_date']) - today).days
     mock_rows = [m for m in mocks if m['kind'] in ('mock', 'logged')]
-    study = planning.analyze(attempts, hist, target, today)
+    study = planning.analyze(attempts, hist, target, today, goal)
     return {
         # What to study for the most points, and the kinds of weakness behind
         # each topic, with the training each wants (backend/amc/planning.py).
         'priorities': study['topics'][:8],
         'kinds': study['kinds'],
+        'difficulty': {'ceiling': study['ceiling'], 'mix': study['mix'], 'levels': planning.LEVELS},
+        'takeaways': takeaways(target, goal, projected[target], study),
         'target': target,
         'goal': goal,
         'has_plan': bool(plan),

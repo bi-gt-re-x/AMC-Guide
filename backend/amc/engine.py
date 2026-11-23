@@ -370,7 +370,7 @@ def plan_weeks(settings, tstats, mocks_taken, today, priorities=None):
             'phase': phase, 'note': notes[phase],
             'focus': [{'id': t['id'], 'name': t['name'], 'category': t['category'],
                        'mode': t.get('mode', 'practice'), 'mode_label': t.get('mode_label', 'practice'),
-                       'gain': t.get('gain')} for t in focus],
+                       'gain': t.get('gain'), 'mix': t.get('mix')} for t in focus],
             'problems': 0 if phase == 'Taper' else per_week,
             'mock': mock, 'mock_done': mock and mock_done,
             'current': week_start <= today <= week_end,
@@ -380,7 +380,21 @@ def plan_weeks(settings, tstats, mocks_taken, today, priorities=None):
 
 
 def _practice_label(focus, daily):
-    """Today's practice for a focus topic, trained the way its weakness wants."""
+    """Today's practice for a focus topic, trained the way its weakness wants,
+    at the difficulty its mix prescribes (backend/amc/planning.py)."""
+    label, to = _practice_kind(focus, daily)
+    mix = focus.get('mix')
+    if mix:
+        from backend.amc import planning
+        split = planning.split_count(mix, daily)
+        label += ': ' + ', '.join('{} at level {}'.format(c['count'], c['level']) for c in split)
+        main = max(split, key=lambda c: c['count'])['level']
+        if 'rating=' not in to and to.startswith('/problems?topic='):
+            to += '&rating=' + ','.join(str(r) for r in planning.level_ratings(main))
+    return label, to
+
+
+def _practice_kind(focus, daily):
     name, tid = focus['name'], focus['id']
     mode = focus.get('mode', 'practice')
     if mode == 'learn':

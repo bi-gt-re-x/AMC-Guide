@@ -922,7 +922,7 @@ def _plan_payload(username):
     attempts, reviews, hist, review_by_id = _context(username)
     tstats = engine.topic_stats(hist, review_by_id)
     mocks = [m for m in store.mocks(username) if m['kind'] == 'mock']
-    study = planning.analyze(attempts, hist, plan['target'], today)
+    study = planning.analyze(attempts, hist, plan['target'], today, plan['goal_score'])
     weeks = engine.plan_weeks(plan, tstats, mocks, today, study['topics'])
     due = sum(1 for r in reviews if r['status'] == 'active' and r['due'] <= today.isoformat())
     practiced = {a['problem_id'] for a in attempts
@@ -937,6 +937,7 @@ def _plan_payload(username):
                          'mastery': tstats[t['id']]['mastery'], 'weight': t['weight']}
                         for t in sorted(relevant, key=lambda t: (t['category'], t['name']))],
               priorities=study['topics'][:10], kinds=study['kinds'],
+              difficulty={'ceiling': study['ceiling'], 'mix': study['mix'], 'levels': planning.LEVELS},
               defaults=_defaults())
 
 
@@ -1041,7 +1042,7 @@ def coach_plan(body: CoachBody, username: str = Depends(current_username)):
     answers = {str(q)[:300]: str(a)[:600] for q, a in (body.answers or {}).items()}
     try:
         written = coach.write_plan(plan, plan['details'], tstats, projected, mocks, counts, answers, today,
-                                   planning.analyze(attempts, hist, plan['target'], today))
+                                   planning.analyze(attempts, hist, plan['target'], today, plan['goal_score']))
     except planner.PlannerUnavailable as exc:
         return fail(str(exc))
     store.save_coach(username, written, coach.provider_label())

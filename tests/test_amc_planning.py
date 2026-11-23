@@ -166,3 +166,40 @@ def test_the_plan_is_built_from_it(client):
     assert first[0]['name'] in practice['label']
     analytics = client.get('/api/amc/analytics').json()
     assert analytics['priorities'] and len(analytics['kinds']) == 5
+
+
+def test_the_difficulty_mix_follows_ability_and_goal():
+    levels = lambda mix: {m['level']: m['share'] for m in mix}
+    qualify, high = planning.goal_level('AMC 10', 100), planning.goal_level('AMC 10', 125)
+    assert qualify < high <= 5
+    weak, strong = levels(planning.difficulty_mix(3.5, qualify)), levels(planning.difficulty_mix(5.5, qualify))
+    for mix in (weak, strong):
+        assert abs(sum(mix.values()) - 1) < 1e-9 and all(v * 20 == round(v * 20) for v in mix.values())
+    mean = lambda mix: sum(k * v for k, v in mix.items())
+    # Better at the topic: harder problems, less of the fundamentals.
+    assert mean(strong) > mean(weak) and strong.get(1, 0) < weak.get(1, 0)
+    assert weak.get(1, 0) + weak.get(2, 0) >= 0.6                  # 40%-ish: mostly levels 1-2
+    assert strong.get(2, 0) + strong.get(3, 0) >= 0.7              # 80%-ish: mostly levels 2-3
+    # A higher goal at the same ability: a harder mix.
+    assert mean(levels(planning.difficulty_mix(5.5, high))) > mean(strong)
+    # Levels well beyond the goal get little.
+    assert levels(planning.difficulty_mix(4.0, 1)).get(5, 0) <= 0.05
+    # Splitting a day's problems keeps the count.
+    split = planning.split_count(planning.difficulty_mix(5.5, qualify), 7)
+    assert sum(c['count'] for c in split) == 7
+    assert [planning.level_of(r) for r in (2, 2.5, 3, 4.5, 5, 6.5, 7, 8.5, 9, 12)] == [1, 1, 2, 2, 3, 3, 4, 4, 5, 5]
+
+
+def test_todays_practice_and_analytics_carry_the_mix(client):
+    client.put('/api/amc/plan', json={'target': 'AMC 10', 'exam_date': '2027-11-05', 'goal_score': 120, 'hours': 6})
+    body = client.get('/api/amc/plan').json()
+    assert body['difficulty']['ceiling'] >= 2 and body['difficulty']['mix']
+    focus = body['weeks'][0]['focus'][0]
+    assert focus['mix'] and abs(sum(m['share'] for m in focus['mix']) - 1) < 1e-9
+    practice = next(i for i in body['today'] if i['key'] == 'practice')
+    assert 'at level' in practice['label'] and '&rating=' in practice['to']
+    analytics = client.get('/api/amc/analytics').json()
+    tiles = {t['id']: t for t in analytics['takeaways']}
+    assert set(tiles) == {'projected', 'level', 'next', 'weakness'}
+    assert tiles['level']['mix'] and tiles['level']['value'].startswith('Level')
+    assert all(len(t['note']) <= 60 for t in tiles.values())     # short: a glance, not a paragraph

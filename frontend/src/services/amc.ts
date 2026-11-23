@@ -272,6 +272,22 @@ export interface TodayItem {
 export type StudyMode = 'learn' | 'accuracy' | 'timed' | 'mixed' | 'spaced' | 'practice';
 export type WeaknessKindId = 'conceptual' | 'execution' | 'speed' | 'recognition' | 'retention';
 
+/** One of the five difficulty levels, and a practice mix across them. */
+export interface DifficultyLevel { level: number; name: string; means: string; ratings: number[]; top: number; typical: number }
+export type DifficultyMix = { level: number; share: number }[];
+export interface DifficultyPlan { ceiling: number; mix: DifficultyMix; levels: DifficultyLevel[] }
+
+/** One line of the Analytics summary: a label, one value, a short note. */
+export interface Takeaway {
+  id: 'projected' | 'level' | 'next' | 'weakness';
+  label: string;
+  value: string;
+  note: string;
+  tone: '' | 'good' | 'warn' | 'bad';
+  to?: string;
+  mix?: DifficultyMix;
+}
+
 /** One topic's study priority: expected points from studying it, and why. */
 export interface StudyPriority {
   id: string;
@@ -290,6 +306,8 @@ export interface StudyPriority {
   mode: StudyMode;
   mode_label: string;
   why: string;
+  /** What difficulty to practise it at. */
+  mix: DifficultyMix;
 }
 
 /** One kind of weakness, the topics showing it, and how to train it. */
@@ -309,7 +327,8 @@ export interface PlanWeek {
   end: string;
   phase: 'Foundations' | 'Core' | 'Contest mode' | 'Taper';
   note: string;
-  focus: { id: string; name: string; category: CategoryId; mode?: StudyMode; mode_label?: string; gain?: number }[];
+  focus: { id: string; name: string; category: CategoryId; mode?: StudyMode; mode_label?: string; gain?: number;
+           mix?: DifficultyMix }[];
   problems: number;
   mock: boolean;
   mock_done: boolean;
@@ -438,6 +457,9 @@ export interface Analytics {
   /** Topics by expected score gain, and the kinds of weakness (backend/amc/planning.py). */
   priorities: StudyPriority[];
   kinds: WeaknessKind[];
+  difficulty?: DifficultyPlan;
+  /** The page in four lines, shown first. */
+  takeaways?: Takeaway[];
   target: Level;
   goal: number;
   has_plan: boolean;
@@ -752,6 +774,7 @@ export interface PlanPayload {
   coverage?: { id: string; name: string; category: CategoryId; mastery: number; weight: number }[];
   priorities?: StudyPriority[];
   kinds?: WeaknessKind[];
+  difficulty?: DifficultyPlan;
   defaults: { dates: Record<Level, string>; goals: Record<Level, number> };
 }
 

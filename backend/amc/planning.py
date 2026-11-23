@@ -41,6 +41,21 @@ called when there is enough of it:
 * **Recognition**: right in topic-by-topic practice, wrong when the same kind
   of problem comes unlabelled in a sitting. Mixed-topic sets.
 * **Retention**: solved once, missed again later. Spaced repetition.
+
+## Five difficulty levels, mixed to the student
+
+`LEVELS` cuts AMC Guide's 1-12 rating into five: fundamental (an AMC 10's
+#1-4), standard (#5-14), challenging (#15-22 and an AIME's opening), extremely
+difficult AMC / AIME entry, and advanced AIME. `difficulty_mix` says what share
+of a topic's practice to take from each: weighted by how likely the student is
+to get a problem at that level right (their topic ability, through the same
+model as everything else), aiming at the productive zone: about 70% right,
+or 60% when their goal needs harder problems than they can do now. Problems
+that are too easy fall away faster than ones a little too hard, and levels
+more than one beyond what the goal needs are cut back. As a topic improves
+the mix moves up: 40% gets mostly levels 1-2 with some 3; 80% mostly 2-3 with
+some 4. Someone aiming to qualify and someone aiming at 120+ get different
+mixes from the same answers.
 """
 import math
 from datetime import date
@@ -97,6 +112,74 @@ KINDS = {
 }
 MODE_LABEL = {'learn': 'learn the ideas', 'accuracy': 'accuracy drill', 'timed': 'timed set',
               'mixed': 'mixed set', 'spaced': 'spaced review', 'practice': 'practice'}
+
+#: The five difficulty levels on AMC Guide's 1-12 scale: the whole ratings each
+#: covers (a half step goes with the whole below it, as the Problems filter
+#: reads them) and a typical rating, to weigh a level by.
+LEVELS = [
+    {'level': 1, 'name': 'Fundamental', 'means': 'Fundamental concepts and straightforward applications',
+     'ratings': [1, 2], 'top': 2.5, 'typical': 2.0},
+    {'level': 2, 'name': 'Standard', 'means': 'Standard AMC problems', 'ratings': [3, 4], 'top': 4.5, 'typical': 3.75},
+    {'level': 3, 'name': 'Challenging', 'means': 'Challenging AMC problems', 'ratings': [5, 6], 'top': 6.5,
+     'typical': 5.75},
+    {'level': 4, 'name': 'Very hard', 'means': 'Extremely difficult AMC problems, AIME entry level',
+     'ratings': [7, 8], 'top': 8.5, 'typical': 7.75},
+    {'level': 5, 'name': 'Advanced', 'means': 'Advanced AIME problems', 'ratings': [9, 10, 11, 12], 'top': 12,
+     'typical': 10.0},
+]
+#: Share of right answers the practice should aim at: the productive zone.
+AIM, AIM_STRETCH = 0.7, 0.6
+
+
+def level_of(rating):
+    """The difficulty level (1-5) of a 1-12 rating."""
+    return next(L['level'] for L in LEVELS if rating <= L['top'])
+
+
+def goal_level(level, goal):
+    """The hardest difficulty level the goal needs solved reliably: the level
+    of the last problem the goal needs right (with the rest left blank)."""
+    from backend.amc import insights, official
+    need = insights.needed_right(level, goal) if goal is not None else 0
+    return level_of(official.rating_at(level, max(1, need))) if need else 1
+
+
+def difficulty_mix(topic_theta, ceiling):
+    """[{level, share}] summing to 1, in fives of a percent, for practice at
+    `topic_theta` when the goal needs up to level `ceiling`."""
+    working = max(LEVELS, key=lambda L: -abs(smart.chance(topic_theta, L['typical']) - 0.65))['level']
+    aim = AIM_STRETCH if ceiling > working else AIM
+    weights = {}
+    for L in LEVELS:
+        p = smart.chance(topic_theta, L['typical'])
+        sd = 0.13 if p > aim else 0.3            # too easy falls away faster than a little too hard
+        w = math.exp(-((p - aim) ** 2) / (2 * sd * sd))
+        if L['level'] > ceiling + 1:
+            w *= 0.25                            # beyond what the goal needs
+        weights[L['level']] = w
+    total = sum(weights.values()) or 1
+    twentieths = _largest_remainder({k: v / total * 20 for k, v in weights.items()}, 20)
+    return [{'level': k, 'share': round(n / 20, 2)} for k, n in sorted(twentieths.items()) if n]
+
+
+def _largest_remainder(values, total):
+    """Whole numbers summing to `total`, nearest to `values` (which sum to it)."""
+    floors = {k: int(v) for k, v in values.items()}
+    left = total - sum(floors.values())
+    for k in sorted(values, key=lambda k: -(values[k] - floors[k]))[:left]:
+        floors[k] += 1
+    return floors
+
+
+def split_count(mix, n):
+    """`n` problems split by a mix: [{level, count}] for the levels that get any."""
+    counts = _largest_remainder({m['level']: m['share'] * n for m in mix}, n)
+    return [{'level': k, 'count': c} for k, c in sorted(counts.items()) if c]
+
+
+def level_ratings(level):
+    return next(L['ratings'] for L in LEVELS if L['level'] == level)
+
 
 #: Least evidence before a kind of weakness is called.
 MIN_ANSWERED = 3
@@ -246,11 +329,15 @@ def classify(level, theta, problems, topic_theta=None):
     return out
 
 
-def analyze(attempts, hist, level, today=None):
-    """Priorities and weaknesses for a `level` student.
+def analyze(attempts, hist, level, today=None, goal=None):
+    """Priorities, weaknesses and difficulty mixes for a `level` student aiming at `goal`.
 
-    Returns {'theta', 'topics': [priority rows, highest first], 'kinds': [per kind]}."""
+    Returns {'theta', 'ceiling', 'mix', 'topics': [priority rows, highest first], 'kinds': [per kind]}."""
     today = today or date.today()
+    if goal is None:
+        from backend.amc import engine
+        goal = engine.DEFAULT_GOALS[level]
+    ceiling = goal_level(level, goal)
     points = smart._first_points(hist, today)
     theta, _ = smart.fit([(r, ok, w) for r, ok, w, _ in points])
     by_topic = {}
@@ -301,6 +388,9 @@ def analyze(attempts, hist, level, today=None):
                         'importance': importance, 'builds': builds.get(t['id'], 0)},
             'kinds': kinds, 'kind': main, 'mode': mode, 'mode_label': MODE_LABEL[mode],
             'why': _why(t, gain, answered, right, feasibility, days, builds.get(t['id'], 0), main),
+            # What difficulty to practise it at: from the topic's ability, or a
+            # little below the overall level for a topic not tried yet.
+            'mix': difficulty_mix(th if th is not None else theta - 0.3, ceiling),
         })
     out.sort(key=lambda r: (-r['priority'], r['name']))
 
@@ -311,7 +401,8 @@ def analyze(attempts, hist, level, today=None):
             {'id': r['id'], 'name': r['name'], 'category': r['category'], 'evidence': r['kinds'][key]['evidence'],
              'score': round(r['kinds'][key]['score'], 2)} for r in hit],
             'count': sum(r['kinds'][key]['count'] for r in hit)})
-    return {'theta': round(theta, 2), 'topics': out, 'kinds': kinds}
+    return {'theta': round(theta, 2), 'ceiling': ceiling, 'goal': goal,
+            'mix': difficulty_mix(theta, ceiling), 'topics': out, 'kinds': kinds}
 
 
 def _why(t, gain, answered, right, feasibility, days, builds, kind):
@@ -360,9 +451,16 @@ def schedule(priorities, weeks, per_week=2, decay=0.55, coached=()):
     return out
 
 
+def mix_text(mix):
+    """'50% level 1, 35% level 2, 15% level 3'."""
+    return ', '.join('{:.0%} level {}'.format(m['share'], m['level']) for m in mix)
+
+
 def brief(study, top=6):
     """The priorities and kinds of weakness in a few lines, for an AI coach's brief."""
-    lines = ['Study priorities by expected score gain (topic id: about +points from a few weeks on it; '
+    lines = ['Difficulty levels: 1 fundamental (AMC 10 #1-4), 2 standard AMC, 3 challenging AMC, 4 extremely '
+             'difficult AMC / AIME entry, 5 advanced AIME. Their goal needs up to level {}; overall they should '
+             'practise at {}.'.format(study.get('ceiling'), mix_text(study.get('mix') or []))] + ['Study priorities by expected score gain (topic id: about +points from a few weeks on it; '
              'first-try right; kind of weakness and how to train it):']
     for r in study['topics'][:top]:
         f = r['factors']
@@ -370,7 +468,7 @@ def brief(study, top=6):
             r['id'], r['name'], r['gain'],
             '{}/{} right'.format(f['right'], f['answered']) if f['answered'] else 'not tried yet',
             '{} weakness, train by {}'.format(KINDS[r['kind']]['name'].lower(), r['mode_label'])
-            if r['kind'] else 'train by ' + r['mode_label']))
+            if r['kind'] else 'train by ' + r['mode_label']) + '; practise at ' + mix_text(r['mix']))
     called = [k for k in study['kinds'] if k['topics']]
     if called:
         lines.append('Kinds of weakness found (with the topics and the evidence): ' + ' '.join(

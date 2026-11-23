@@ -22,7 +22,7 @@ import {
   type PlanPayload,
   type PlanSettings,
 } from '@/services/amc';
-import { ModeTag, PrioritiesCard, WeaknessKinds } from '@/components/Amc/Study';
+import { MixBar, ModeTag, PrioritiesCard, WeaknessKinds } from '@/components/Amc/Study';
 import { TodayList } from './Dashboard';
 import '@/styles/amc.css';
 
@@ -459,11 +459,14 @@ export default function StudyPlan() {
         <section className="am-card">
           <span className="am-kicker">This week</span>
           {current?.focus.length ? (
-            <div className="am-week-focus" style={{ marginTop: 6 }}>
+            <div className="am-focus-row">
               {current.focus.map((f) => (
-                <Link key={f.id} className="am-tag" to={`/topics/${f.id}`}>
-                  <CategoryDot category={f.category} />{f.name}<ModeTag mode={f.mode} label={f.mode_label} />
-                </Link>
+                <div key={f.id} className="am-focus-row">
+                  <Link className="am-tag" to={`/topics/${f.id}`} style={{ justifySelf: 'start' }}>
+                    <CategoryDot category={f.category} />{f.name}<ModeTag mode={f.mode} label={f.mode_label} />
+                  </Link>
+                  <MixBar mix={f.mix} />
+                </div>
               ))}
             </div>
           ) : (

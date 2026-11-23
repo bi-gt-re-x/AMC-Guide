@@ -6,7 +6,7 @@
  */
 import { Link } from 'react-router-dom';
 import { CategoryDot } from './bits';
-import type { StudyMode, StudyPriority, WeaknessKind } from '@/services/amc';
+import type { DifficultyMix, StudyMode, StudyPriority, Takeaway, WeaknessKind } from '@/services/amc';
 
 const MODE_TONE: Record<StudyMode, string> = {
   learn: 'is-learn', accuracy: 'is-accuracy', timed: 'is-timed', mixed: 'is-mixed', spaced: 'is-spaced', practice: '',
@@ -39,14 +39,11 @@ export function PrioritiesCard({ priorities, limit = 6, title = 'Where the point
               <ModeTag mode={r.mode} label={r.mode_label} />
               <span className="am-muted">{r.why}</span>
             </div>
+            <MixBar mix={r.mix} labels={false} />
           </li>
         ))}
       </ol>
-      <p className="am-muted am-card-note">
-        Ranked by the points a few weeks on each would add to your contest: how often it appears, how far it is
-        below your level, whether its problems are within reach, how long since you practised it, and how many
-        topics build on it.
-      </p>
+      <p className="am-muted am-card-note">Ranked by the points a few weeks on each would add. Bars: the difficulty mix to practise it at.</p>
     </section>
   );
 }
@@ -89,6 +86,74 @@ export function WeaknessKinds({ kinds }: { kinds?: WeaknessKind[] }) {
           </div>
         ))}
       </div>
+    </section>
+  );
+}
+
+/** A practice mix across the five difficulty levels, as one thin stacked bar. */
+export function MixBar({ mix, labels = true }: { mix?: DifficultyMix; labels?: boolean }) {
+  if (!mix?.length) return null;
+  const text = mix.map((m) => `${Math.round(m.share * 100)}% level ${m.level}`).join(', ');
+  return (
+    <div className="am-mix" title={text} aria-label={`Practice mix: ${text}`} role="img">
+      <div className="am-mix-bar">
+        {mix.map((m) => (
+          <span key={m.level} className={`am-mix-seg is-l${m.level}`} style={{ flexGrow: m.share }} />
+        ))}
+      </div>
+      {labels && (
+        <div className="am-mix-labels">
+          {mix.map((m) => (
+            <span key={m.level} style={{ flexGrow: m.share }}>{m.share >= 0.15 ? `L${m.level} ${Math.round(m.share * 100)}%` : ''}</span>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
+
+/** The Analytics page in four tiles: projected vs goal, level, next topic, main weakness. */
+export function Takeaways({ items }: { items?: Takeaway[] }) {
+  if (!items?.length) return null;
+  return (
+    <div className="am-takeaways">
+      {items.map((t) => {
+        const body = (
+          <>
+            <span className="am-kicker">{t.label}</span>
+            <strong className={`am-take-value${t.tone ? ` is-${t.tone}` : ''}${t.value.length > 16 ? ' is-long' : ''}`}>{t.value}</strong>
+            {t.mix ? <MixBar mix={t.mix} labels={false} /> : null}
+            <span className="am-muted am-take-note">{t.note}</span>
+          </>
+        );
+        return t.to
+          ? <Link key={t.id} className="am-card am-take" to={t.to}>{body}</Link>
+          : <div key={t.id} className="am-card am-take">{body}</div>;
+      })}
+    </div>
+  );
+}
+
+/** Only the kinds of weakness found, one line each: for Analytics, where the
+ *  study plan has the full card. */
+export function WeaknessLines({ kinds }: { kinds?: WeaknessKind[] }) {
+  const found = (kinds ?? []).filter((k) => k.topics.length);
+  return (
+    <section className="am-card">
+      <div className="am-card-head"><h2>Kinds of weakness</h2><Link to="/study-plan">Plan</Link></div>
+      {found.length ? (
+        <ul className="am-kind-lines">
+          {found.map((k) => (
+            <li key={k.id} title={k.means}>
+              <ModeTag mode={k.mode} label={k.name} />
+              <span>{k.topics.slice(0, 2).map((t) => t.name).join(', ')}{k.topics.length > 2 ? ` +${k.topics.length - 2}` : ''}</span>
+              <span className="am-muted">{k.approach.split(/[:.]/)[0] ?? k.approach}</span>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <p className="am-muted" style={{ margin: 0, fontSize: 13 }}>Too early to tell: a few answers per topic first.</p>
+      )}
     </section>
   );
 }

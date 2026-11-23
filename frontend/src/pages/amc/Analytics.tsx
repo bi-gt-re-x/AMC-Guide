@@ -22,7 +22,7 @@ import { Link } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
 import { DifficultyChart, PerformanceChart, ScoreChart } from '@/components/Amc/AnalyticsCharts';
 import { Coach } from '@/components/Amc/Insights';
-import { PrioritiesCard, WeaknessKinds } from '@/components/Amc/Study';
+import { PrioritiesCard, Takeaways, WeaknessLines } from '@/components/Amc/Study';
 import { CategoryDot, Empty, Meter, PageHeader, ratingText } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
 import { amc, pct, type Analytics as AnalyticsData, type CategoryId } from '@/services/amc';
@@ -98,6 +98,7 @@ export default function Analytics() {
         <ErrorState message={error ?? 'Could not load analytics.'} onRetry={reload} />
       ) : (
         <div className="am-stack">
+          <Takeaways items={data.takeaways} />
           <section className="am-card">
             <div className="am-card-head">
               <h2>Mock contest scores</h2>
@@ -145,7 +146,7 @@ export default function Analytics() {
 
           <div className="am-grid am-an-split">
             <PrioritiesCard priorities={data.priorities} />
-            <WeaknessKinds kinds={data.kinds} />
+            <WeaknessLines kinds={data.kinds} />
           </div>
 
           <CoachSection />

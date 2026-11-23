@@ -125,7 +125,7 @@ def diagnose(body: DiagnoseBody, username: str = Depends(current_username)):
     plan = store.plan(username)
     stats = smart.analyze(attempts, hist, review_by_id, store.mocks(username), plan)
     try:
-        study = planning.analyze(attempts, hist, stats['level'])
+        study = planning.analyze(attempts, hist, stats['level'], goal=stats['goal'])
         found = ai.ask(username, DIAGNOSE_SYSTEM, smart.ai_brief(stats, plan) + '\n' + planning.brief(study),
                        DIAGNOSE_SCHEMA,
                        instruction='Read these results and tell the student what to do this week.')
