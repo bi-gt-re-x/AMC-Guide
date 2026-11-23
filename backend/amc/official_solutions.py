@@ -13,7 +13,7 @@ on its answer.
 
 Written so far: the 2026 AMC 10A, 10B and 12A, the 2025 AMC 10A, 10B, 12A and 12B, the 2024 AMC 10A,
 10B, 12A and 12B, the 2023 AMC 10A, 10B, 12A and 12B, the 2022 AMC 10A, 10B, 12A and 12B, the 2021 AMC 10A, 10B, 12A and 12B, the 2021
-Fall AMC 10A, 10B, 12A and 12B, the 2020 AMC 10A and 10B, the 2019 AMC 10A and 10B, the
+Fall AMC 10A, 10B, 12A and 12B, the 2020 AMC 10A, 10B, 12A and 12B, the 2019 AMC 10A and 10B, the
 2018 AMC 10A and 10B, the 2017 AMC 10A and 10B, the 2016 AMC 10A and 10B, the 2015 AMC 10A and 10B, the 2014 AMC 10A and 10B, the 2013 AMC 10A and 10B, and the 2012 AMC 10B. A problem whose numbers are only in a picture the
 paste did not carry (2024 10A 12, 16 and 22; 2024 10B 19) has none yet. Strings with an
 apostrophe in them use r"..." so the apostrophe cannot end the raw string.
@@ -6279,6 +6279,310 @@ SOLUTIONS = {
         ],
         'trap': r"Making the larger target $h + t$ touch the minimum; it is always above it.",
     },
+    # ------------------------------------------------------------------ 2020 AMC 12A
+    # Problems 3, 4, 5, 7, 8, 11, 16, 18, 19, 20 and 23 are the 10A's 4, 6, 7, 10,
+    # 11, 13, 16, 20, 21, 23 and 25, and use its write-ups (_SAME_AS_10 below).
+    '2020-amc-12a-1': {
+        'topics': ['decimals-fractions', 'word-problems'],
+        'answer': 'C',
+        'insight': r"Maria's third is a third of what Carlos left, not of the whole pie.",
+        'steps': [
+            r"Carlos leaves $30\%$ of the pie.",
+            r"Maria takes $\frac13$ of that, $10\%$, leaving two thirds of $30\%$.",
+            r"$20\%$ is left. The answer is $\textbf{(C)}\ 20\%$.",
+        ],
+        'trap': r"Taking a third of the whole pie instead of a third of what was left.",
+    },
+    '2020-amc-12a-2': {
+        'topics': ['right-triangles', 'arithmetic'],
+        'answer': 'C',
+        'insight': r"Sort the segments into grid-aligned ones (whole lengths) and diagonals (multiples of $\sqrt2$).",
+        'steps': [
+            r"A: a diagonal across a $2 \times 2$ block ($2\sqrt2$), a vertical $2$ and a crossbar $1$.",
+            r"M: two verticals of $2$ and two unit diagonals of $\sqrt2$. C: three segments of $2$.",
+            r"Whole lengths: $2 + 1 + 4 + 6 = 13$; diagonals: $2\sqrt2 + 2\sqrt2 = 4\sqrt2$. The answer is $\textbf{(C) } 13 + 4\sqrt{2}$.",
+        ],
+        'trap': r"Measuring the A's long diagonal as $2$ or as $\sqrt2$; it crosses a $2 \times 2$ block.",
+    },
+    '2020-amc-12a-6': {
+        'topics': ['symmetry-counting', 'transformations'],
+        'answer': 'D',
+        'insight': r"The grid is $5 \times 4$, so the two lines must be its vertical and horizontal midlines, and every shaded square forces its mirror images.",
+        'steps': [
+            r"Number columns $0$ to $4$ and rows $0$ to $3$ from the bottom left. The shaded squares are $(1, 3)$, $(2, 1)$ and $(4, 0)$; the reflections are $x \mapsto 4 - x$ and $y \mapsto 3 - y$.",
+            r"$(1, 3)$ forces $(3, 3), (1, 0), (3, 0)$; $(2, 1)$ sits on the middle column and forces only $(2, 2)$; $(4, 0)$ forces $(0, 0), (4, 3), (0, 3)$.",
+            r"That is $10$ squares in all, so $7$ more. The answer is $\textbf{(D) } 7$.",
+        ],
+        'trap': r"Reflecting $(2, 1)$ across the vertical midline too; it lies on it, so it maps to itself.",
+    },
+    '2020-amc-12a-9': {
+        'topics': ['trigonometry', 'functions'],
+        'answer': 'E',
+        'insight': r"$\tan 2x$ sweeps through every real value on each branch, while $\cos\frac x2$ stays between $-1$ and $1$.",
+        'steps': [
+            r"$\tan 2x$ has asymptotes at $x = \frac\pi4, \frac{3\pi}4, \frac{5\pi}4, \frac{7\pi}4$, splitting $[0, 2\pi]$ into three full branches and two half branches.",
+            r"Each full branch runs from $-\infty$ to $\infty$ and crosses the bounded curve once. On $\left[0, \frac\pi4\right)$, $\tan 2x$ rises from $0$ past $\cos\frac x2 \approx 1$: once. On $\left(\frac{7\pi}4, 2\pi\right]$ it rises from $-\infty$ to $0$, past $\cos\frac x2 \in [-1, -0.92]$: once.",
+            r"$3 + 1 + 1 = 5$. The answer is $\textbf{(E) } 5$.",
+        ],
+        'trap': r"Forgetting the two half branches at the ends of the interval.",
+    },
+    '2020-amc-12a-10': {
+        'topics': ['logarithms'],
+        'answer': 'E',
+        'insight': r"Write everything in $u = \log_4 n$: $\log_{16} n = \frac u2$ and $\log_4 u = \frac12\log_2 u$.",
+        'steps': [
+            r"The equation becomes $\log_2\frac u2 = \frac12\log_2 u$, that is $\log_2 u - 1 = \frac12\log_2 u$.",
+            r"So $\log_2 u = 2$, $u = 4$, and $n = 4^4 = 256$.",
+            r"$2 + 5 + 6 = 13$. The answer is $\textbf{(E) } 13$.",
+        ],
+        'trap': r"Treating $\log_4(\log_4 n)$ as $\log_2(\log_2 n)$ halved twice, which changes $u$.",
+    },
+    '2020-amc-12a-12': {
+        'topics': ['coordinate-geometry', 'trigonometry'],
+        'answer': 'B',
+        'insight': r"$(20, 20)$ lies on $\ell$, so line $k$ goes through it too; only the slope changes, by $\tan(\theta + 45^\circ)$.",
+        'steps': [
+            r"$3 \cdot 20 - 5 \cdot 20 + 40 = 0$, so the pivot is on $\ell$, whose slope is $\frac35$.",
+            r"The new slope is $\dfrac{\frac35 + 1}{1 - \frac35} = 4$, so $k$ is $y - 20 = 4(x - 20)$.",
+            r"At $y = 0$, $x = 20 - 5 = 15$. The answer is $\textbf{(B) } 15$.",
+        ],
+        'trap': r"Rotating the slope by adding $1$, or rotating clockwise and getting slope $-\frac14$.",
+    },
+    '2020-amc-12a-13': {
+        'topics': ['exponents', 'diophantine'],
+        'answer': 'B',
+        'insight': r"The left side is $N^{\frac1a + \frac1{ab} + \frac1{abc}}$; match the exponent to $\frac{25}{36}$ and bound $a$, then $b$.",
+        'steps': [
+            r"$\frac1a + \frac1{ab} + \frac1{abc} = \frac{25}{36}$. If $a \ge 3$ the left side is at most $\frac13 \cdot \frac74 = \frac7{12} < \frac{25}{36}$, so $a = 2$.",
+            r"Then $\frac1b\left(1 + \frac1c\right) = \frac7{18}$. $b = 2$ would need $1 + \frac1c = \frac79 < 1$, and $b \ge 4$ gives at most $\frac38 < \frac7{18}$.",
+            r"$b = 3$ gives $1 + \frac1c = \frac76$, so $c = 6$. The answer is $\textbf{(B)}\ 3$.",
+        ],
+        'trap': r"Multiplying the root indices, $abc = 36$, as if the inner $N$'s weren't there.",
+    },
+    '2020-amc-12a-14': {
+        'topics': ['polygons', 'area'],
+        'answer': 'B',
+        'insight': r"$ACEG$ is a square inscribed in the octagon's circumcircle; compare both to $R^2$.",
+        'steps': [
+            r"The octagon is $8$ triangles with apex angle $45^\circ$: $n = 8 \cdot \frac12R^2\sin 45^\circ = 2\sqrt2R^2$.",
+            r"$ACEG$ is a square with diagonal $2R$, so $m = 2R^2$.",
+            r"$\frac mn = \frac{1}{\sqrt2} = \frac{\sqrt2}{2}$. The answer is $\textbf{(B) } \frac{\sqrt{2}}{2}$.",
+        ],
+        'trap': r"Guessing $\frac12$ from the picture; the four corner triangles are smaller than the square's half.",
+    },
+    '2020-amc-12a-15': {
+        'topics': ['complex-numbers', 'polynomials'],
+        'answer': 'D',
+        'insight': r"Factor $B$'s polynomial by grouping; then the farthest pair is easy to spot.",
+        'steps': [
+            r"$A$: $2$ and $-1 \pm \sqrt3 i$. $B$: $z^2(z - 8) - 8(z - 8) = (z - 8)(z^2 - 8)$, so $8$ and $\pm 2\sqrt2$.",
+            r"The farthest pair is $-1 \pm \sqrt3 i$ and $8$: the distance is $\sqrt{81 + 3} = \sqrt{84}$.",
+            r"$\sqrt{84} = 2\sqrt{21}$. The answer is $\textbf{(D) } 2\sqrt{21}$.",
+        ],
+        'trap': r"Using only the real cube root $2$ of $8$, which gives $6$.",
+    },
+    '2020-amc-12a-17': {
+        'topics': ['logarithms', 'area'],
+        'answer': 'D',
+        'insight': r"The quadrilateral is three trapezoids under the curve minus one big trapezoid, and the logs combine into one.",
+        'steps': [
+            r"With vertices at $x = n, \dots, n+3$: area $= \ln(n+1) + \ln(n+2) - \ln n - \ln(n+3) = \ln\frac{(n+1)(n+2)}{n(n+3)}$.",
+            r"$\frac{(n+1)(n+2)}{n(n+3)} = 1 + \frac{2}{n^2 + 3n} = \frac{91}{90}$, so $n^2 + 3n = 180$.",
+            r"$n = 12$. The answer is $\textbf{(D)}\ 12$.",
+        ],
+        'trap': r"Using the shoelace formula with a sign slip, which turns $\frac{91}{90}$ into its reciprocal.",
+    },
+    '2020-amc-12a-21': {
+        'topics': ['gcd-lcm', 'factors-divisors'],
+        'answer': 'D',
+        'insight': r"Compare exponents prime by prime: $5! = 2^3 \cdot 3 \cdot 5$ and $10! = 2^8 \cdot 3^4 \cdot 5^2 \cdot 7$.",
+        'steps': [
+            r"For $2$: $\max(3, a) = \min(8, a)$, so $3 \le a \le 8$ ($6$ ways). For $3$: $\max(1, b) = \min(4, b)$, so $1 \le b \le 4$ ($4$ ways).",
+            r"For $5$: $\max(1, c) = 1 + \min(2, c)$ holds only at $c = 3$. For $7$: $\max(0, d) = \min(1, d)$, so $d = 0$ or $1$. No other prime can divide $n$.",
+            r"$6 \cdot 4 \cdot 1 \cdot 2 = 48$. The answer is $\textbf{(D) } 48$.",
+        ],
+        'trap': r"Forgetting the extra $5$ on the right, which is what pins the exponent of $5$ at $3$.",
+    },
+    '2020-amc-12a-22': {
+        'topics': ['complex-numbers', 'sequences-series'],
+        'answer': 'B',
+        'insight': r"$a_nb_n = \frac12\operatorname{Im}\left((2+i)^{2n}\right) = \frac12\operatorname{Im}\left((3+4i)^n\right)$, so the sum is half the imaginary part of a geometric series.",
+        'steps': [
+            r"For $w = a + bi$, $\operatorname{Im}(w^2) = 2ab$, so $a_nb_n = \frac12\operatorname{Im}(3 + 4i)^n$.",
+            r"$\sum_{n \ge 0}\left(\frac{3 + 4i}{7}\right)^n = \frac{1}{1 - \frac{3+4i}{7}} = \frac{7}{4 - 4i} = \frac{7(1 + i)}{8}$.",
+            r"Half its imaginary part is $\frac{7}{16}$. The answer is $\textbf{(B) }\frac7{16}$.",
+        ],
+        'trap': r"Dropping the $\frac12$ from $\operatorname{Im}(w^2) = 2ab$ and answering $\frac78$.",
+    },
+    '2020-amc-12a-24': {
+        'topics': ['triangles', 'transformations'],
+        'answer': 'B',
+        'insight': r"Rotate $P$ by $60^\circ$ about $B$ so that $A$ goes to $C$: the image $P'$ makes an equilateral $\triangle BPP'$ and a $1$-$\sqrt3$-$2$ right triangle $CPP'$.",
+        'steps': [
+            r"$BP' = PP' = \sqrt3$ and $CP' = AP = 1$. In $\triangle CPP'$, $1 + 3 = 4 = CP^2$, so $\angle CP'P = 90^\circ$.",
+            r"Then $\angle BP'C = 60^\circ + 90^\circ = 150^\circ$.",
+            r"$s^2 = BC^2 = 3 + 1 - 2\sqrt3\cos 150^\circ = 4 + 3 = 7$, so $s = \sqrt7$. The answer is $\textbf{(B) } \sqrt{7}$.",
+        ],
+        'trap': r"Taking $\angle BP'C = 90^\circ - 60^\circ = 30^\circ$, which gives $s = 1$ and puts $P$ outside.",
+    },
+    '2020-amc-12a-25': {
+        'topics': ['floor-ceiling', 'quadratics'],
+        'answer': 'C',
+        'insight': r"Write $x = n + f$ and $f = tn$: the equation becomes $at^2 + (2a - 1)t + a = 0$ for every $n$, the same $t$ each time.",
+        'steps': [
+            r"Negative $x$ make the left side $\le 0$ and only $x = 0$ works there. For $n \ge 1$, $nf = a(n + f)^2$ with $t = \frac fn$ gives $t = a(1 + t)^2$; the roots have product $1$, so one root $t$ is in $(0, 1)$.",
+            r"Each $n$ with $nt < 1$ gives $x = n(1 + t)$. If $n = 1, \dots, N$ work, the sum is $(1 + t)\frac{N(N+1)}{2} = 420$ with $\frac1{N+1} \le t < \frac1N$.",
+            r"$N = 28$ gives $\frac{N(N+1)}{2} = 406$ and $1 + t = \frac{30}{29}$, so $t = \frac1{29}$, which fits.",
+            r"$a = \frac{t}{(1+t)^2} = \frac{1/29}{900/841} = \frac{29}{900}$, and $p + q = 929$. The answer is $\textbf{(C) } 929$.",
+        ],
+        'trap': r"Allowing $n = 29$, which needs $f = 1$; the fractional part is less than $1$.",
+    },
+    # ------------------------------------------------------------------ 2020 AMC 12B
+    # Problems 3, 4, 8, 9, 11, 14, 15, 16, 18, 19, 21 and 24 are the 10B's 3, 4, 9,
+    # 10, 14, 16, 17, 18, 21, 23, 24 and 25, and use its write-ups (_SAME_AS_10 below).
+    '2020-amc-12b-1': {
+        'topics': ['perfect-powers', 'sequences-series'],
+        'answer': 'C',
+        'insight': r"The sum of the first $k$ odd numbers is $k^2$.",
+        'steps': [
+            r"The four sums are $1, 4, 9, 16$.",
+            r"Their square roots are $1, 2, 3, 4$.",
+            r"$1 + 2 + 3 + 4 = 10$. The answer is $\textbf{(C) } 10$.",
+        ],
+        'trap': r"Adding the numbers under the roots first, as if $\sqrt a + \sqrt b = \sqrt{a + b}$.",
+    },
+    '2020-amc-12b-2': {
+        'topics': ['arithmetic', 'polynomials'],
+        'answer': 'A',
+        'insight': r"Each difference of squares in the first fraction is written out factored in the second.",
+        'steps': [
+            r"$100^2 - 7^2 = (100 - 7)(100 + 7)$ and $70^2 - 11^2 = (70 - 11)(70 + 11)$.",
+            r"So the second fraction is exactly the reciprocal of the first.",
+            r"The product is $1$. The answer is $\textbf{(A) } 1$.",
+        ],
+        'trap': r"Multiplying everything out instead of spotting the difference of squares.",
+    },
+    '2020-amc-12b-5': {
+        'topics': ['word-problems', 'linear-equations'],
+        'answer': 'C',
+        'insight': r"Give team $A$ $2a$ wins and $a$ losses; then $B$'s record is $2a + 7$ and $a + 7$.",
+        'steps': [
+            r"$B$ wins $\frac58$ of its games: $\frac{2a + 7}{3a + 14} = \frac58$.",
+            r"$16a + 56 = 15a + 70$, so $a = 14$.",
+            r"$A$ has played $3a = 42$ games. The answer is $\textbf{(C) } 42$.",
+        ],
+        'trap': r"Answering with $B$'s $56$ games.",
+    },
+    '2020-amc-12b-6': {
+        'topics': ['factorials', 'perfect-powers'],
+        'answer': 'D',
+        'insight': r"Factor $(n+1)!$ out of the numerator.",
+        'steps': [
+            r"$(n+2)! - (n+1)! = (n+1)!\,(n + 2 - 1) = (n+1)!\,(n+1)$.",
+            r"Dividing by $n!$ leaves $(n+1)(n+1)$.",
+            r"$(n+1)^2$ is always a perfect square. The answer is $\textbf{(D) } \text{a perfect square}$.",
+        ],
+        'trap': r"Testing only $n = 9$, where $100$ also looks like a multiple of $4$ and of $10$.",
+    },
+    '2020-amc-12b-7': {
+        'topics': ['coordinate-geometry', 'trigonometry'],
+        'answer': 'C',
+        'insight': r"The angle between slopes $m_1, m_2$ has $\tan\theta = \left|\frac{m_1 - m_2}{1 + m_1m_2}\right|$; set it to $1$.",
+        'steps': [
+            r"With slopes $m$ and $6m$: $\left|\frac{5m}{1 + 6m^2}\right| = 1$, so $6m^2 - 5|m| + 1 = 0$.",
+            r"$|m| = \frac12$ or $\frac13$, giving products $6m^2 = \frac32$ or $\frac23$.",
+            r"The greatest is $\frac32$. The answer is $\textbf{(C)}\  \frac32$.",
+        ],
+        'trap': r"Keeping only one root of the quadratic and answering $\frac23$.",
+    },
+    '2020-amc-12b-10': {
+        'topics': ['circles', 'coordinate-geometry'],
+        'answer': 'B',
+        'insight': r"The power of $A$ with respect to $\omega$ is $AP \cdot AM$, and it equals the squared tangent length from $A$.",
+        'steps': [
+            r"Put $A = (0, 0)$ and $D = (0, 1)$, $C = (1, 1)$. $\omega$ has center $\left(\frac12, \frac12\right)$ and radius $\frac12$, and touches $CD$ at $M = \left(\frac12, 1\right)$, so $AM = \frac{\sqrt5}{2}$.",
+            r"The power of $A$ is $\frac12 - \frac14 = \frac14$, so $AP \cdot \frac{\sqrt5}{2} = \frac14$.",
+            r"$AP = \frac{1}{2\sqrt5} = \frac{\sqrt5}{10}$. The answer is $\textbf{(B) } \frac{\sqrt5}{10}$.",
+        ],
+        'trap': r"Using the distance from $A$ to the center, $\frac{\sqrt2}{2}$, as the tangent length.",
+    },
+    '2020-amc-12b-12': {
+        'topics': ['circles', 'right-triangles'],
+        'answer': 'E',
+        'insight': r"Drop the perpendicular from the center to the chord: $CE^2 + DE^2 = 2(\text{half-chord}^2 + EM^2)$, and at $45^\circ$ the two pieces of $OE$ cancel.",
+        'steps': [
+            r"Let $M$ be the chord's midpoint, $h = CM$ and $m = EM$. Then $CE = h + m$, $DE = h - m$, so $CE^2 + DE^2 = 2h^2 + 2m^2$.",
+            r"$h^2 = R^2 - OM^2$, and at $45^\circ$, $OM = EM = \frac{OE}{\sqrt2}$, so $2h^2 + 2m^2 = 2R^2 - 2OM^2 + 2EM^2 = 2R^2$.",
+            r"$2R^2 = 2 \cdot 50 = 100$; $BE$ doesn't matter. The answer is $\textbf{(E)}\ 100$.",
+        ],
+        'trap': r"Solving for $CE$ and $DE$ separately with messy radicals; their squares add to a clean constant.",
+    },
+    '2020-amc-12b-13': {
+        'topics': ['logarithms', 'perfect-powers'],
+        'answer': 'D',
+        'insight': r"With $u = \log_2 3$, the sum is $2 + u + \frac1u$, a perfect square.",
+        'steps': [
+            r"$\log_2 6 + \log_3 6 = (1 + \log_2 3) + (1 + \log_3 2) = 2 + u + \frac1u$.",
+            r"$2 + u + \frac1u = \left(\sqrt u + \frac1{\sqrt u}\right)^2$.",
+            r"So the root is $\sqrt{\log_2 3} + \sqrt{\log_3 2}$. The answer is $\textbf{(D) } \sqrt{\log_2{3}}+\sqrt{\log_3{2}}$.",
+        ],
+        'trap': r"Splitting the square root over the sum, which is choice (E).",
+    },
+    '2020-amc-12b-17': {
+        'topics': ['polynomials', 'complex-numbers'],
+        'answer': 'C',
+        'insight': r"The root set is closed under multiplying by $\omega$, so it is made of triples $\{r, \omega r, \omega^2r\}$; with only five roots, it is one triple with multiplicities.",
+        'steps': [
+            r"$0$ is not a root (constant $2020$), and two triples would be six distinct roots, so the roots are $s, \omega s, \omega^2s$ with multiplicities adding to $5$.",
+            r"Real coefficients need the triple closed under conjugation, so $s$ can be taken real, and $\omega s$, $\omega^2s$ have equal multiplicity: $(1, 2, 2)$ or $(3, 1, 1)$.",
+            r"Each is $(x - s)^a(x^2 + sx + s^2)^b$ with constant $-s^5 = 2020$, which fixes $s$. So there are $2$ polynomials. The answer is $\textbf{(C) } 2$.",
+        ],
+        'trap': r"Requiring five distinct roots, which is impossible, and answering $0$.",
+    },
+    '2020-amc-12b-20': {
+        'topics': ['symmetry-counting', 'probability'],
+        'answer': 'D',
+        'insight': r"Group the $64$ colorings into classes that rotate into each other; two random cubes match with probability $\sum \left(\frac{\text{class size}}{64}\right)^2$.",
+        'steps': [
+            r"By number of black faces: $0$ and $6$ give classes of size $1$; $1$ and $5$ give size $6$; $2$ and $4$ give opposite pairs (size $3$) and adjacent pairs (size $12$); $3$ gives a corner (size $8$) and a strip (size $12$).",
+            r"$\sum s^2 = 2(1 + 36 + 9 + 144) + 64 + 144 = 588$.",
+            r"$\frac{588}{4096} = \frac{147}{1024}$. The answer is $\textbf{(D)}\ \frac{147}{1024}$.",
+        ],
+        'trap': r"Counting the $10$ classes and using $\frac{1}{10}$; the classes are not equally likely.",
+    },
+    '2020-amc-12b-22': {
+        'topics': ['exponents', 'quadratics'],
+        'answer': 'C',
+        'insight': r"With $x = \frac{t}{2^t}$, the expression is $x - 3x^2$.",
+        'steps': [
+            r"$\frac{(2^t - 3t)t}{4^t} = \frac{t}{2^t} - 3\left(\frac{t}{2^t}\right)^2 = x - 3x^2$.",
+            r"$x - 3x^2$ peaks at $x = \frac16$ with value $\frac1{12}$, and $\frac{t}{2^t}$ does reach $\frac16$ (it climbs from $0$ past $0.5$).",
+            r"The maximum is $\frac1{12}$. The answer is $\textbf{(C)}\ \frac{1}{12}$.",
+        ],
+        'trap': r"Differentiating directly and getting lost in $\ln 2$ terms.",
+    },
+    '2020-amc-12b-23': {
+        'topics': ['complex-numbers', 'polygons'],
+        'answer': 'B',
+        'insight': r"For $n \ge 4$, combine smaller balanced sets that are rotated against each other; for $n = 2, 3$ the condition forces a regular shape.",
+        'steps': [
+            r"$n = 2$: $z_2 = -z_1$, opposite points. $n = 3$: three unit vectors summing to $0$ form an equilateral triangle.",
+            r"$n = 4$: two pairs of opposite points at any angle sum to $0$ without being a square. Any $n \ge 4$ is $2a + 3b$, so mixing opposite pairs and triangles rotated slightly breaks equal spacing.",
+            r"Only $n = 2$ and $3$ work. The answer is $\textbf{(B)}\ 2$.",
+        ],
+        'trap': r"Thinking every $n$ works because regular polygons always sum to $0$; the converse is what is asked.",
+    },
+    '2020-amc-12b-25': {
+        'topics': ['geometric-probability', 'trigonometry'],
+        'answer': 'B',
+        'insight': r"$\sin^2\pi y > 1 - \sin^2\pi x = \cos^2\pi x$; for a fixed $x$, the good $y$ form an interval of length $2x$ when $x \le \frac12$ and $2(1 - x)$ when $x \ge \frac12$.",
+        'steps': [
+            r"$P(a)$ averages that length over $x \in [0, a]$. For $a \le \frac12$ it is $a$.",
+            r"For $a > \frac12$: $P(a) = \frac1a\left(\frac14 + \int_{1/2}^{a} 2(1 - x)\,dx\right) = 2 - a - \frac1{2a}$.",
+            r"This peaks at $a = \frac{1}{\sqrt2}$ with value $2 - \sqrt2$. The answer is $\textbf{(B)}\ 2 - \sqrt{2}$.",
+        ],
+        'trap': r"Taking $a = 1$ as best; past $\frac{1}{\sqrt2}$, adding more $x$ near $1$ lowers the average.",
+    },
     # ------------------------------------------------------------------ 2020 AMC 10A
     '2020-amc-10a-1': {
         'topics': ['decimals-fractions', 'linear-equations'],
@@ -10730,7 +11034,7 @@ SOLUTIONS = {
 }
 
 
-# The 2024, 2023, 2022, 2021 and 2021 Fall AMC 12A and 12B each share eleven to thirteen problems
+# The 2024 to 2020 (and 2021 Fall) AMC 12A and 12B each share eleven to thirteen problems
 # with that year's 10A and 10B, the same problem with the same answer, so they carry the 10's
 # write-up rather than a copy of it. (Some differ only in how the paste wrote a
 # choice: `\frac13` for `\frac{1}{3}`, `46` for `\$46`.)
@@ -10755,6 +11059,10 @@ _SAME_AS_10 = {
        [(1, 1), (2, 2), (3, 4), (4, 5), (5, 6), (6, 7), (7, 10), (10, 12), (17, 20), (18, 21), (20, 23), (23, 25)]},
     **{'2021-fall-amc-12b-%d' % twelve: '2021-fall-amc-10b-%d' % ten for twelve, ten in
        [(1, 1), (2, 2), (3, 4), (4, 5), (5, 7), (6, 8), (7, 12), (11, 14), (15, 18), (19, 21), (20, 24)]},
+    **{'2020-amc-12a-%d' % twelve: '2020-amc-10a-%d' % ten for twelve, ten in
+       [(3, 4), (4, 6), (5, 7), (7, 10), (8, 11), (11, 13), (16, 16), (18, 20), (19, 21), (20, 23), (23, 25)]},
+    **{'2020-amc-12b-%d' % twelve: '2020-amc-10b-%d' % ten for twelve, ten in
+       [(3, 3), (4, 4), (8, 9), (9, 10), (11, 14), (14, 16), (15, 17), (16, 18), (18, 21), (19, 23), (21, 24), (24, 25)]},
 }
 for _twelve, _ten in _SAME_AS_10.items():
     SOLUTIONS[_twelve] = SOLUTIONS[_ten]
