@@ -94,7 +94,8 @@ const LIBRARY: { year: string; slots: string }[] = [
   ...Array.from({ length: 2 }, (_, i) => ({ year: String(2000 + i), slots: 'o-o-oo' })),
   ...Array.from({ length: 10 }, (_, i) => ({ year: String(2002 + i), slots: 'oooooo' })),
   { year: '2012', slots: 'osoooo' },
-  ...Array.from({ length: 8 }, (_, i) => ({ year: String(2013 + i), slots: 'ssoooo' })),
+  ...Array.from({ length: 7 }, (_, i) => ({ year: String(2013 + i), slots: 'ssoooo' })),
+  { year: '2020', slots: 'ssssoo' },
   { year: '2021', slots: 'ssssoo' },
   { year: '2021 Fall', slots: 'ssss--' },
   { year: '2022', slots: 'ssssoo' },
@@ -720,7 +721,7 @@ export default function Landing() {
             <ul className="lp-ticks">
               <li><b>162 papers</b>: every AMC 10, AMC 12 and AIME from 2000 to 2026.</li>
               <li>Read one whole, like the AoPS page, or sit it timed and graded.</li>
-              <li><b>1,096 worked solutions</b> written by AMC Guide, across 44 papers.</li>
+              <li><b>1,146 worked solutions</b> written by AMC Guide, across 46 papers.</li>
               <li>Locked until your first sitting, so you can still take it cold.</li>
             </ul>
           </Reveal>

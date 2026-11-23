@@ -1,11 +1,13 @@
 /**
  * A timed sitting is kept on the account, not in the browser: it resumes from
  * what the server holds, every answer and flag is saved as it is made, and
- * handing in or leaving ends it on the server too. A sitting an older build
- * left in localStorage is carried over once and then removed.
+ * handing in or discarding ends it on the server too. Leaving (the Leave
+ * button or a link elsewhere) asks first, says the sitting is saved, and keeps
+ * it. A sitting an older build left in localStorage is carried over once and
+ * then removed.
  */
 import { fireEvent, render, screen, waitFor, within } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { Link, MemoryRouter, Route, Routes } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NoticesProvider } from '@/components';
 import TakeMock from './TakeMock';
@@ -36,6 +38,7 @@ function show() {
   render(
     <NoticesProvider>
       <MemoryRouter initialEntries={['/mock-contests/step-mock-10/take']}>
+        <Link to="/mock-contests">Sidebar link</Link>
         <Routes>
           <Route path="/mock-contests/:contestId/take" element={<TakeMock />} />
           <Route path="/mocks/:id" element={<p>Result page</p>} />
@@ -122,14 +125,41 @@ describe('TakeMock sitting storage', () => {
     expect(submit).toHaveBeenCalledWith('step-mock-10', { 1: 'A' }, 0);
   });
 
-  it('discards the sitting on the server when the reader leaves', async () => {
+  it('discards the sitting on the server only through Discard', async () => {
     vi.spyOn(amc, 'contest').mockResolvedValue({ success: true, ...detail({ used: 0, answers: {}, flags: [] }) });
     const discard = vi.spyOn(amc, 'discardSitting').mockResolvedValue({ success: true });
     show();
-    fireEvent.click(await screen.findByRole('button', { name: 'Leave' }));
-    fireEvent.click(within(await screen.findByRole('alertdialog')).getByRole('button', { name: 'Leave and discard' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Discard' }));
+    fireEvent.click(within(await screen.findByRole('alertdialog')).getByRole('button', { name: 'Discard' }));
     expect(await screen.findByText('Mock list')).toBeInTheDocument();
     expect(discard).toHaveBeenCalledWith('step-mock-10');
+  });
+
+  it('asks before Leave, says the sitting is saved, and keeps it', async () => {
+    vi.spyOn(amc, 'contest').mockResolvedValue({ success: true, ...detail({ used: 0, answers: { 1: 'A' }, flags: [] }) });
+    const discard = vi.spyOn(amc, 'discardSitting');
+    show();
+    fireEvent.click(await screen.findByRole('button', { name: 'Leave' }));
+    const dialog = await screen.findByRole('alertdialog');
+    expect(dialog).toHaveTextContent(/saved to your account/);
+    save.mockClear();
+    fireEvent.click(within(dialog).getByRole('button', { name: 'Save and leave' }));
+    expect(await screen.findByText('Mock list')).toBeInTheDocument();
+    expect(save).toHaveBeenCalledWith('step-mock-10', expect.objectContaining({ answers: { 1: 'A' } }));
+    expect(discard).not.toHaveBeenCalled();
+  });
+
+  it('asks before following a link elsewhere, and staying keeps the paper open', async () => {
+    vi.spyOn(amc, 'contest').mockResolvedValue({ success: true, ...detail({ used: 0, answers: {}, flags: [] }) });
+    show();
+    expect(await screen.findByText('Andy rides north.')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('link', { name: 'Sidebar link' }));
+    fireEvent.click(within(await screen.findByRole('alertdialog')).getByRole('button', { name: 'Keep working' }));
+    await waitFor(() => expect(screen.queryByRole('alertdialog')).not.toBeInTheDocument());
+    expect(screen.getByText('Andy rides north.')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('link', { name: 'Sidebar link' }));
+    fireEvent.click(within(await screen.findByRole('alertdialog')).getByRole('button', { name: 'Save and leave' }));
+    expect(await screen.findByText('Mock list')).toBeInTheDocument();
   });
 
   it('says so when a save does not reach the account', async () => {
