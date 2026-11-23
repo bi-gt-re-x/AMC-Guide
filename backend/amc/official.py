@@ -712,23 +712,91 @@ def imported_contests():
     return out
 
 
+def is_drawn(diagram):
+    """True for a figure redrawn as SVG (drawn on the page), not Asymptote or a missing picture."""
+    return bool(diagram) and diagram.lstrip().startswith('<svg')
+
+
 def save_contest(contest_id, problems, key, username):
-    """Store a parsed contest with its key, replacing any earlier import."""
+    """Store a parsed contest with its key, replacing any earlier import.
+
+    A figure already redrawn as SVG is kept: the paste and the dataset imports
+    bring Asymptote or a missing picture, and replacing a paper must not throw
+    away the drawing (set with `set_figure`, scripts/figures.py)."""
     now = datetime.now().isoformat(timespec='seconds')
     con = connect()
     try:
         with con:
+            drawn = {int(r[0]): r[1] for r in con.execute(
+                'SELECT number, diagram FROM amc_official WHERE contest_id = ?', (contest_id,)).fetchall()
+                if is_drawn(r[1])}
             con.execute('DELETE FROM amc_official WHERE contest_id = ?', (contest_id,))
             for p in problems:
+                diagram = p['diagram'] if is_drawn(p['diagram']) else drawn.get(p['number'], p['diagram'])
                 con.execute(
                     'INSERT INTO amc_official (contest_id, number, statement, choices, answer, diagram, topic, '
                     'imported_by, imported_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
                     (contest_id, p['number'], p['statement'],
                      json.dumps(p['choices']) if p['choices'] else None,
-                     str(key[p['number'] - 1]), p['diagram'], guess_topic(p['statement']), username, now))
+                     str(key[p['number'] - 1]), diagram, guess_topic(p['statement']), username, now))
     finally:
         con.close()
     forget()
+
+
+_SVG_BANNED = re.compile(r'<script|<foreignObject|\bon[a-z]+\s*=|javascript:|<image\b|href\s*=\s*["\'](?!#)', re.I)
+
+
+def set_figure(pid, svg):
+    """Store a problem's figure, redrawn as SVG. The page shows it as an image
+    (data: URL), but it is checked anyway: one self-contained <svg>, no script,
+    event handlers or outside references. Returns an error sentence, or ''."""
+    found = split_id(pid)
+    if not found:
+        return 'No such official problem: {}.'.format(pid)
+    text = (svg or '').strip()
+    if not (text.startswith('<svg') and text.endswith('</svg>')):
+        return 'A figure must be one <svg>...</svg> element.'
+    if _SVG_BANNED.search(text):
+        return 'A figure may not hold scripts, event handlers, embedded images or outside links.'
+    if len(text) > 200_000:
+        return 'That figure is far larger than a drawing needs.'
+    contest_id, number = found
+    con = connect()
+    try:
+        with con:
+            cur = con.execute('UPDATE amc_official SET diagram = ? WHERE contest_id = ? AND number = ?',
+                              (text, contest_id, number))
+            changed = getattr(cur, 'rowcount', 1)
+    finally:
+        con.close()
+    forget()
+    return '' if changed else '{} has not been imported.'.format(pid)
+
+
+#: A problem that speaks of a figure (when it arrived with none at all).
+_MENTIONS_FIGURE = re.compile(r'\b(?:as shown|shown below|shown above|shown in the|the figure|the diagram|'
+                              r'pictured|figure below|diagram below)\b', re.I)
+#: "Shown below" about an array already in the text is not a missing figure.
+_IN_TEXT = re.compile(r'\\begin\{(?:array|tabular|matrix)', re.I)
+
+
+def undrawn():
+    """Problems whose figure is not drawn yet, contest by contest: [(problem, why)],
+    why being 'asy' (Asymptote kept, not drawn), 'image' (a picture we do not have)
+    or 'mentioned' (no figure came with it, but the text speaks of one)."""
+    out = []
+    for p in all_problems():
+        d = p['diagram'] or ''
+        if is_drawn(d):
+            continue
+        if d == 'image':
+            out.append((p, 'image'))
+        elif d:
+            out.append((p, 'asy'))
+        elif _MENTIONS_FIGURE.search(p['statement']) and not _IN_TEXT.search(p['statement']):
+            out.append((p, 'mentioned'))
+    return out
 
 
 save = save_contest

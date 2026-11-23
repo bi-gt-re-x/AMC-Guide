@@ -1424,7 +1424,7 @@ html[data-theme="dark"] .am-predict-tag { color: #0d1117; }
 /* A problem's figure, redrawn as SVG (DiagramNote). Drawn in black on white,
    so it sits on a white card of its own in both themes. */
 .am-figure { margin: 0 0 var(--space-4); display: flex; justify-content: center; }
-.am-figure img { display: block; max-width: min(100%, 360px); height: auto; padding: 10px; border-radius: 12px;
+.am-figure img { display: block; max-width: min(100%, 620px); height: auto; padding: 10px; border-radius: 12px;
     background: #ffffff; border: 1px solid var(--am-line); }
 
 /* An official paper's page (pages/amc/Contest.tsx): a tile per problem showing
