@@ -67,6 +67,13 @@ that has no AMC rows yet (`--replace` to reseed, `--clear` to remove):
 
     .venv-fastapi/bin/python scripts/seed_amc_history.py --user myles
 
+The official AMC 12 papers not yet imported (2000-2019 in a fresh database)
+can be filled in from the Hugging Face dataset `edev2000/amc12-full` (problem
+text, answer key and diagrams), through the same parser and checks as a pasted
+paper; papers already imported are left alone (`--dry-run` to check only):
+
+    .venv-fastapi/bin/python scripts/import_amc12_hf.py --user myles
+
 The productivity app this grew out of is described below; its pages are no
 longer routed (their old URLs redirect to the dashboard).
 
