@@ -573,6 +573,9 @@ export interface ContestDetail {
   unlocked?: boolean;
   /** The timed sitting in progress on this paper, kept on the account. */
   sitting?: SittingState | null;
+  /** An official paper only part brought in: the numbers of the problems that
+   *  are (each can be practised; the paper is sat once all of them are in). */
+  partial?: number[];
 }
 
 /** A timed contest in progress, as the server keeps it (table `amc_sittings`). */

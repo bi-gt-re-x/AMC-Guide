@@ -645,7 +645,11 @@ def contest(contest_id: str, username: str = Depends(current_username)):
     mine = [_mock_brief(m) for m in store.mocks(username) if m['contest_id'] == contest_id]
     gradable = _gradable(contest_id)
     if c['kind'] == 'past' and not gradable:
-        return ok(contest={**c, 'imported': False}, problems=[], history=mine, can_import=can_import(username))
+        # Part brought in (the dataset imports leave gaps): those problems can
+        # be practised one at a time, so the page says which they are.
+        partial = sorted(p['number'] for p in official.all_problems() if p['contest'] == contest_id)
+        return ok(contest={**c, 'imported': False}, problems=[], history=mine, can_import=can_import(username),
+                  partial=partial)
     _, _, hist, review_by_id = _context(username)
     problems = []
     for number, pid in enumerate(gradable['problems'], start=1):

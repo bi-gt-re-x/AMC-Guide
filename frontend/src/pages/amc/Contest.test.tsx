@@ -95,3 +95,26 @@ describe('Contest page lock', () => {
     expect(screen.getByText('Answer key')).toBeInTheDocument();
   });
 });
+
+describe('A paper only part brought in', () => {
+  function partly(partial: number[], canImport = false): ContestDetail {
+    return {
+      contest: { ...PAPER, id: '2008-amc-10a', name: '2008 AMC 10A', count: 25, imported: false },
+      history: [], problems: [], can_import: canImport, partial,
+    } as unknown as ContestDetail;
+  }
+
+  it('says how many problems are in and links each one', async () => {
+    vi.spyOn(amc, 'contest').mockResolvedValue({ success: true, ...partly([2, 3, 24]) });
+    show();
+    expect(await screen.findByText('3 of 25 problems in AMC Guide')).toBeInTheDocument();
+    expect(screen.queryByText('Not in AMC Guide yet')).not.toBeInTheDocument();
+    expect(screen.getByRole('link', { name: '#24' })).toHaveAttribute('href', '/problems/2008-amc-10a-24');
+  });
+
+  it('keeps the plain note for a paper with none of its problems in', async () => {
+    vi.spyOn(amc, 'contest').mockResolvedValue({ success: true, ...partly([]) });
+    show();
+    expect(await screen.findByText('Not in AMC Guide yet')).toBeInTheDocument();
+  });
+});

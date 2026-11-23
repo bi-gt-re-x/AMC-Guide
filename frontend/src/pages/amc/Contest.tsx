@@ -264,6 +264,22 @@ export default function Contest() {
   // An official paper nobody has brought in yet: the importer, and a place to
   // log a score taken elsewhere.
   if (c.kind === 'past' && !c.imported) {
+    const partial = data.partial ?? [];
+    const partialCard = partial.length > 0 && (
+      <section className="am-card">
+        <div className="am-card-head"><h2>{partial.length} of {c.count} problems in AMC Guide</h2></div>
+        <p className="am-muted" style={{ margin: '0 0 10px' }}>
+          The rest haven't been brought in, so this can't be sat as a timed paper yet. Practice the ones
+          that are here, or read the whole paper on the{' '}
+          <a className="am-link" href={c.problems_url} target="_blank" rel="noreferrer">AoPS wiki ↗</a>.
+        </p>
+        <div style={{ display: 'flex', flexWrap: 'wrap', gap: 6 }}>
+          {partial.map((n) => (
+            <Link key={n} to={`/problems/${c.id}-${n}`} className="am-chip">#{n}</Link>
+          ))}
+        </div>
+      </section>
+    );
     return (
       <div className="amc-page">
         {back}
@@ -274,8 +290,11 @@ export default function Contest() {
         </PageHeader>
         <div className="am-grid am-grid-main">
           {data.can_import ? (
-            <Importer contest={{ ...c, imported: 0 }} onSaved={reload} />
-          ) : (
+            <div className="am-stack">
+              {partialCard}
+              <Importer contest={{ ...c, imported: 0 }} onSaved={reload} />
+            </div>
+          ) : partialCard || (
             <section className="am-card">
               <div className="am-card-head"><h2>Not in AMC Guide yet</h2></div>
               <p className="am-muted" style={{ margin: 0 }}>

@@ -101,7 +101,9 @@ def test_a_part_imported_paper_serves_its_problems_but_is_not_a_contest(client):
     assert reply['correct']
 
     # The paper itself waits for all 25: not shown as imported, not sittable.
-    assert client.get('/api/amc/contests/2005-amc-10a').json()['contest']['imported'] is False
+    page = client.get('/api/amc/contests/2005-amc-10a').json()
+    assert page['contest']['imported'] is False and page['problems'] == []
+    assert page['partial'] == [1, 2, 5]           # the page lists what can be practised
     assert not client.post('/api/amc/contests/2005-amc-10a/submit', json={'answers': {}}).json()['success']
     listing = client.get('/api/amc/contests').json()
     row = next(c for y in listing['years'] for c in y['contests'] if c['id'] == '2005-amc-10a')

@@ -79,10 +79,17 @@ missing papers (2000-2012A) problem by problem from `pkuAI4M/AOPS`, the AMC 10
 rows of `furonghuang-lab/Easy2Hard-Bench` (matched to the same year's AMC 12
 twin or to NuminaMath for their choices, their value answers picking the
 letter) and saves what it finds: about 445 of the 575 problems, one paper
-whole. The rest of a part-imported paper's problems can be read and practised;
-the paper becomes a sittable contest once pasting its AoPS page fills it in:
+whole. A part-imported paper's page says how many of its problems are in and
+links each one to practise; it becomes a sittable contest once pasting its
+AoPS page fills it in:
 
     .venv-fastapi/bin/python scripts/import_amc10_hf.py --user myles --cache /tmp/amc10-rows
+
+Every AIME from 2000 I to 2025 II comes whole from `allenai/aime-2022-2025`,
+`gneubig/aime-1983-2024` and, for the problems those two leave out,
+`pkuAI4M/AOPS`, with answers checked across them:
+
+    .venv-fastapi/bin/python scripts/import_aime_hf.py --user myles
 
 The productivity app this grew out of is described below; its pages are no
 longer routed (their old URLs redirect to the dashboard).
