@@ -8,6 +8,9 @@
  *                        were, and your best test score that week.
  *   By difficulty        first-try accuracy at each point of the 1-12 rating,
  *                        beside the list of topics costing you the most.
+ *   Where the points are topics by the points studying them would add, and the
+ *                        five kinds of weakness with the training each wants
+ *                        (backend/amc/planning.py).
  *   AI coach             the model (Grok when XAI_API_KEY is set) reads all of
  *                        it and says what to do this week.
  *
@@ -19,6 +22,7 @@ import { Link } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
 import { DifficultyChart, PerformanceChart, ScoreChart } from '@/components/Amc/AnalyticsCharts';
 import { Coach } from '@/components/Amc/Insights';
+import { PrioritiesCard, WeaknessKinds } from '@/components/Amc/Study';
 import { CategoryDot, Empty, Meter, PageHeader, ratingText } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
 import { amc, pct, type Analytics as AnalyticsData, type CategoryId } from '@/services/amc';
@@ -137,6 +141,11 @@ export default function Analytics() {
               )}
             </section>
             <Weaknesses data={data} />
+          </div>
+
+          <div className="am-grid am-an-split">
+            <PrioritiesCard priorities={data.priorities} />
+            <WeaknessKinds kinds={data.kinds} />
           </div>
 
           <CoachSection />

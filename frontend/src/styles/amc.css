@@ -1629,3 +1629,24 @@ html[data-theme="dark"] .am-predict-tag { color: #0d1117; }
 .am-an-split { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); align-items: stretch; }
 @media (max-width: 1100px) { .am-an-split { grid-template-columns: minmax(0, 1fr); } }
 .am-mini-stats.am-an-weak-misses { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+/* What to study and how (components/Amc/Study.tsx): topics by expected points,
+   and the five kinds of weakness, each tagged with the training it wants. */
+.am-mode { display: inline-block; padding: 1px 8px; border-radius: 999px; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.02em; color: var(--am-ink); background: var(--am-line); white-space: nowrap; }
+.am-mode.is-learn { background: color-mix(in srgb, var(--am-blue) 22%, transparent); }
+.am-mode.is-accuracy { background: color-mix(in srgb, var(--am-amber) 24%, transparent); }
+.am-mode.is-timed { background: color-mix(in srgb, var(--am-rose) 24%, transparent); }
+.am-mode.is-mixed { background: color-mix(in srgb, var(--am-green) 26%, transparent); }
+.am-mode.is-spaced { background: color-mix(in srgb, var(--am-slate) 26%, transparent); }
+.am-priorities { list-style: none; margin: 0; padding: 0; display: grid; gap: 12px; }
+.am-priority-head { display: flex; justify-content: space-between; gap: 8px; align-items: baseline; }
+.am-priority-why { display: flex; gap: 8px; align-items: baseline; margin-top: 3px; font-size: 12px; line-height: 1.5; }
+.am-kinds { display: grid; gap: 14px; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); }
+.am-kind { border: 1px solid var(--am-line); border-radius: 12px; padding: 12px; }
+.am-kind.is-clear { opacity: 0.72; }
+.am-kind-head { display: grid; gap: 6px; font-size: 13px; }
+.am-kind-head .am-mode { justify-self: start; font-size: 12px; }
+.am-kind-approach { margin: 8px 0; font-size: 13px; line-height: 1.5; }
+.am-kind-topics { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; font-size: 13px; }
+.am-week-focus .am-mode { margin-left: 4px; }

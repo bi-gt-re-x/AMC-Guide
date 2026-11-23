@@ -294,14 +294,18 @@ def _monday(day):
     return day - timedelta(days=day.weekday())
 
 
-def plan_weeks(settings, tstats, mocks_taken, today):
+def plan_weeks(settings, tstats, mocks_taken, today, priorities=None):
     """The week-by-week plan from today to the exam.
 
     Phases: Foundations (first ~40%), Core (~35%), Contest mode (the rest),
-    and a taper in the exam's own week. Each week takes the two highest
-    priority topics not yet covered — priority being how often a topic appears
-    times how much of it is not yet in hand — and a mock every third week of
-    Core and every week of Contest mode.
+    and a taper in the exam's own week, with a mock every third week of Core
+    and every week of Contest mode.
+
+    With `priorities` (backend/amc/planning.py `analyze`), each week takes the
+    two topics worth the most expected points still to be had, a topic's value
+    shrinking once scheduled so the most valuable come back spaced out; each
+    carries how to train it (`mode`, from its kind of weakness). Without, the
+    older rule: how often a topic appears times how much is not yet in hand.
     """
     exam = date.fromisoformat(settings['exam_date'])
     level = settings['target']
@@ -324,6 +328,10 @@ def plan_weeks(settings, tstats, mocks_taken, today):
     if coached:
         first = [t for tid in coached for t in relevant if t['id'] == tid]
         ranked = first + [t for t in ranked if t not in first]
+    schedule = None
+    if priorities:
+        from backend.amc import planning
+        schedule = planning.schedule(priorities, count, coached=coached)
     foundations = max(1, round(count * 0.4)) if count >= 4 else 0
     core = max(1, round(count * 0.35)) if count >= 3 else 0
     per_week = max(5, int(settings['hours']) * 6)
@@ -343,6 +351,8 @@ def plan_weeks(settings, tstats, mocks_taken, today):
             phase = 'Contest mode'
         if phase == 'Taper':
             focus = []
+        elif schedule is not None:
+            focus = schedule[i]
         else:
             focus = [ranked[(cursor + k) % len(ranked)] for k in range(2)] if ranked else []
             cursor += 2
@@ -358,13 +368,35 @@ def plan_weeks(settings, tstats, mocks_taken, today):
         weeks.append({
             'number': i + 1, 'start': week_start.isoformat(), 'end': week_end.isoformat(),
             'phase': phase, 'note': notes[phase],
-            'focus': [{'id': t['id'], 'name': t['name'], 'category': t['category']} for t in focus],
+            'focus': [{'id': t['id'], 'name': t['name'], 'category': t['category'],
+                       'mode': t.get('mode', 'practice'), 'mode_label': t.get('mode_label', 'practice'),
+                       'gain': t.get('gain')} for t in focus],
             'problems': 0 if phase == 'Taper' else per_week,
             'mock': mock, 'mock_done': mock and mock_done,
             'current': week_start <= today <= week_end,
             'past': week_end < today,
         })
     return weeks
+
+
+def _practice_label(focus, daily):
+    """Today's practice for a focus topic, trained the way its weakness wants."""
+    name, tid = focus['name'], focus['id']
+    mode = focus.get('mode', 'practice')
+    if mode == 'learn':
+        return ('Solve {} introductory {} problems, untimed, easiest first'.format(daily, name),
+                '/problems?topic={}&sort=difficulty'.format(tid))
+    if mode == 'accuracy':
+        return ('Accuracy drill: {} {} problems, untimed, check each answer before submitting'.format(daily, name),
+                '/problems?topic=' + tid)
+    if mode == 'timed':
+        return ('Timed set: {} {} problems, 3 minutes each'.format(daily, name), '/problems?topic=' + tid)
+    if mode == 'mixed':
+        return ('Mixed set: {} problems from different topics, {} among them; name the technique first'.format(
+            daily, name), '/problems')
+    if mode == 'spaced':
+        return ('Revisit {} {} problems you have solved before'.format(daily, name), '/problems?topic={}&status=solved'.format(tid))
+    return 'Solve {} problems in {}'.format(daily, name), '/problems?topic=' + tid
 
 
 def today_items(settings, weeks, due_count, today, checks, practiced_today):
@@ -380,12 +412,15 @@ def today_items(settings, weeks, due_count, today, checks, practiced_today):
                       'to': '/review', 'auto': False})
     if week and week['focus']:
         focus = week['focus'][0]
-        items.append({'key': 'read', 'label': 'Read the ideas for {}'.format(focus['name']),
-                      'to': '/topics/' + focus['id'], 'auto': False})
+        # Theory first for a topic to learn or practise; not for one whose
+        # weakness is speed, recognition or retention, which want other work.
+        if focus.get('mode', 'practice') in ('learn', 'practice', 'accuracy'):
+            items.append({'key': 'read', 'label': 'Read the ideas for {}'.format(focus['name']),
+                          'to': '/topics/' + focus['id'], 'auto': False})
         done = sum(1 for pid in practiced_today
                    if bank_of.get(pid) and focus['id'] in [bank_of.get(pid)['topic']] + bank_of.get(pid)['also'])
-        items.append({'key': 'practice', 'label': 'Solve {} problems in {}'.format(daily, focus['name']),
-                      'to': '/problems?topic=' + focus['id'], 'auto': False,
+        label, to = _practice_label(focus, daily)
+        items.append({'key': 'practice', 'label': label, 'to': to, 'auto': False, 'mode': focus.get('mode', 'practice'),
                       'progress': min(done, daily), 'goal': daily})
     if week and week['mock'] and not week['mock_done']:
         mock_id = {'AMC 10': 'step-mock-10', 'AMC 12': 'step-mock-12', 'AIME': 'step-mock-aime'}[level]

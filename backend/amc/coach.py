@@ -158,7 +158,7 @@ def _read(st):
     return ' [' + ', '.join(bits) + ']'
 
 
-def brief(plan, details, tstats, projected, mocks, review_counts, answers, today):
+def brief(plan, details, tstats, projected, mocks, review_counts, answers, today, study=None):
     """Everything the model is told, as plain text."""
     target = plan['target']
     exam = date.fromisoformat(plan['exam_date'])
@@ -214,6 +214,12 @@ def brief(plan, details, tstats, projected, mocks, review_counts, answers, today
             if str(answer).strip():
                 lines.append('- Q: {}\n  A: {}'.format(question, str(answer).strip()))
 
+    if study:
+        from backend.amc import planning
+        lines.append('')
+        lines.append(planning.brief(study))
+        lines.append('Order focus_order by these priorities unless what the student told you says otherwise, '
+                     'and give each phase the training its topics\' kinds of weakness want.')
     lines.append('')
     lines.append('Topic ids you may use (id: name, how often it appears 1-3):')
     for t in relevant:
@@ -301,12 +307,12 @@ def _plain(value):
     return value
 
 
-def write_plan(plan, details, tstats, projected, mocks, review_counts, answers, today):
+def write_plan(plan, details, tstats, projected, mocks, review_counts, answers, today, study=None):
     """Ask the configured model for a plan. Raises PlannerUnavailable with a
     message meant for the page when it cannot."""
     if planner._gemini_token():
         text = planner._from_gemini(
-            brief(plan, details, tstats, projected, mocks, review_counts, answers, today),
+            brief(plan, details, tstats, projected, mocks, review_counts, answers, today, study),
             SYSTEM, 'Write this student’s study plan.', SCHEMA)
         try:
             found = json.loads(planner._json_span(text))
@@ -322,7 +328,7 @@ def write_plan(plan, details, tstats, projected, mocks, review_counts, answers, 
             'The configured model cannot answer in the fixed shape a plan needs. '
             'Use GROQ_API_KEY, XAI_API_KEY or ANTHROPIC_API_KEY.')
     text = planner.from_provider(
-        brief(plan, details, tstats, projected, mocks, review_counts, answers, today),
+        brief(plan, details, tstats, projected, mocks, review_counts, answers, today, study),
         system=SYSTEM, schema=SCHEMA,
         instruction='Write this student’s study plan.')
     try:

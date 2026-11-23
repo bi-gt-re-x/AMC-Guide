@@ -3,7 +3,9 @@
  * weeks are rebuilt from those four answers and your results every time the
  * page opens (backend/amc/engine.py plan_weeks), so the focus topics follow
  * your weak spots as they move: Foundations, Core, Contest mode, then a taper
- * in the exam's own week.
+ * in the exam's own week. Topics are scheduled by the points studying them
+ * would add, each trained the way its kind of weakness wants
+ * (backend/amc/planning.py).
  */
 import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
@@ -20,6 +22,7 @@ import {
   type PlanPayload,
   type PlanSettings,
 } from '@/services/amc';
+import { ModeTag, PrioritiesCard, WeaknessKinds } from '@/components/Amc/Study';
 import { TodayList } from './Dashboard';
 import '@/styles/amc.css';
 
@@ -458,7 +461,9 @@ export default function StudyPlan() {
           {current?.focus.length ? (
             <div className="am-week-focus" style={{ marginTop: 6 }}>
               {current.focus.map((f) => (
-                <Link key={f.id} className="am-tag" to={`/topics/${f.id}`}><CategoryDot category={f.category} />{f.name}</Link>
+                <Link key={f.id} className="am-tag" to={`/topics/${f.id}`}>
+                  <CategoryDot category={f.category} />{f.name}<ModeTag mode={f.mode} label={f.mode_label} />
+                </Link>
               ))}
             </div>
           ) : (
@@ -476,6 +481,7 @@ export default function StudyPlan() {
 
       <div className="am-grid am-grid-main">
         <section>
+          <div style={{ marginBottom: 16 }}><WeaknessKinds kinds={payload.kinds} /></div>
           <h2 className="am-h2" style={{ marginBottom: 12 }}>Week by week</h2>
           <div className="am-weeks">
             {weeks.map((w) => (
@@ -488,7 +494,9 @@ export default function StudyPlan() {
                   <span className={`am-phase am-phase-${w.phase.split(' ')[0]}`}>{w.phase}</span>
                   <div className="am-week-focus">
                     {w.focus.map((f) => (
-                      <Link key={f.id} className="am-tag" to={`/topics/${f.id}`}><CategoryDot category={f.category} />{f.name}</Link>
+                      <Link key={f.id} className="am-tag" to={`/topics/${f.id}`}>
+                        <CategoryDot category={f.category} />{f.name}<ModeTag mode={f.mode} label={f.mode_label} />
+                      </Link>
                     ))}
                     {!w.focus.length && <span className="am-muted" style={{ fontSize: 13 }}>{w.note}</span>}
                   </div>
@@ -508,6 +516,7 @@ export default function StudyPlan() {
             <TodayList items={payload.today ?? []} onToggle={(item) => void toggle(item.key, !item.done)} />
             {current && <p className="am-muted" style={{ fontSize: 13, lineHeight: 1.5, margin: '12px 0 0' }}>{current.note}</p>}
           </section>
+          <PrioritiesCard priorities={payload.priorities} limit={5} title="This plan's priorities" />
           <section className="am-card">
             <div className="am-card-head"><h2>Topic coverage</h2></div>
             <div className="am-bars">

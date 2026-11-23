@@ -11,7 +11,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from backend.amc import ai, catalog, create, engine, smart, store
+from backend.amc import ai, catalog, create, engine, planning, smart, store
 from backend.amc import problems as pb
 from backend.api.guard import current_username
 from backend.api.reply import fail, ok
@@ -38,7 +38,10 @@ You are an experienced AMC 10, AMC 12 and AIME coach reading one student's
 results. You get a model of their ability on AMC Guide's 1-12 rating scale (the
 AoPS rating times 2: an AMC 10 #1 is 2, 12 the hardest AIME problem; the rating they solve half the
 time), their predicted score untimed and at their own pace, the topics worth
-the most points, patterns in their mistakes, and their trend. Quote ratings on
+the most points, patterns in their mistakes, and their trend, then the study
+priorities ranked by expected score gain and the kind of weakness behind each
+topic (conceptual, execution, speed, recognition, retention), each to be
+trained its own way: say which kind it is and prescribe that training. Quote ratings on
 this 1-12 scale, never as AoPS ratings. Explain what the
 numbers mean for them and what to do this week. Be specific and honest: if
 there is little data, say so and keep advice general. Use only topic ids from
@@ -122,7 +125,9 @@ def diagnose(body: DiagnoseBody, username: str = Depends(current_username)):
     plan = store.plan(username)
     stats = smart.analyze(attempts, hist, review_by_id, store.mocks(username), plan)
     try:
-        found = ai.ask(username, DIAGNOSE_SYSTEM, smart.ai_brief(stats, plan), DIAGNOSE_SCHEMA,
+        study = planning.analyze(attempts, hist, stats['level'])
+        found = ai.ask(username, DIAGNOSE_SYSTEM, smart.ai_brief(stats, plan) + '\n' + planning.brief(study),
+                       DIAGNOSE_SCHEMA,
                        instruction='Read these results and tell the student what to do this week.')
     except ai.AIUnavailable as exc:
         return fail(str(exc))

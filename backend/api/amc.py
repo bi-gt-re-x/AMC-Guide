@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Union
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from backend.amc import catalog, coach, engine, insights, results, store, weak
+from backend.amc import catalog, coach, engine, insights, planning, results, store, weak
 from backend.amc import official
 from backend.amc import problems as pb
 from backend.amc.scale import TOP
@@ -922,7 +922,8 @@ def _plan_payload(username):
     attempts, reviews, hist, review_by_id = _context(username)
     tstats = engine.topic_stats(hist, review_by_id)
     mocks = [m for m in store.mocks(username) if m['kind'] == 'mock']
-    weeks = engine.plan_weeks(plan, tstats, mocks, today)
+    study = planning.analyze(attempts, hist, plan['target'], today)
+    weeks = engine.plan_weeks(plan, tstats, mocks, today, study['topics'])
     due = sum(1 for r in reviews if r['status'] == 'active' and r['due'] <= today.isoformat())
     practiced = {a['problem_id'] for a in attempts
                  if a['at'][:10] == today.isoformat() and a['source'] == 'practice'}
@@ -935,6 +936,7 @@ def _plan_payload(username):
               coverage=[{'id': t['id'], 'name': t['name'], 'category': t['category'],
                          'mastery': tstats[t['id']]['mastery'], 'weight': t['weight']}
                         for t in sorted(relevant, key=lambda t: (t['category'], t['name']))],
+              priorities=study['topics'][:10], kinds=study['kinds'],
               defaults=_defaults())
 
 
@@ -1038,7 +1040,8 @@ def coach_plan(body: CoachBody, username: str = Depends(current_username)):
               'mastered': sum(1 for r in reviews if r['status'] == 'mastered')}
     answers = {str(q)[:300]: str(a)[:600] for q, a in (body.answers or {}).items()}
     try:
-        written = coach.write_plan(plan, plan['details'], tstats, projected, mocks, counts, answers, today)
+        written = coach.write_plan(plan, plan['details'], tstats, projected, mocks, counts, answers, today,
+                                   planning.analyze(attempts, hist, plan['target'], today))
     except planner.PlannerUnavailable as exc:
         return fail(str(exc))
     store.save_coach(username, written, coach.provider_label())

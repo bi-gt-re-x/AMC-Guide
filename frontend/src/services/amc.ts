@@ -268,13 +268,48 @@ export interface TodayItem {
   goal?: number;
 }
 
+/** How a topic is trained, from its kind of weakness (backend/amc/planning.py). */
+export type StudyMode = 'learn' | 'accuracy' | 'timed' | 'mixed' | 'spaced' | 'practice';
+export type WeaknessKindId = 'conceptual' | 'execution' | 'speed' | 'recognition' | 'retention';
+
+/** One topic's study priority: expected points from studying it, and why. */
+export interface StudyPriority {
+  id: string;
+  name: string;
+  category: CategoryId;
+  priority: number;
+  /** About how many points a few weeks on it would add. */
+  gain: number;
+  factors: {
+    frequency: number; share: number; mastery: number | null; answered: number; right: number;
+    level: number | null; feasibility: number; recency: number; days_since: number | null;
+    importance: number; builds: number;
+  };
+  kinds: Partial<Record<WeaknessKindId, { score: number; evidence: string; count: number }>>;
+  kind: WeaknessKindId | null;
+  mode: StudyMode;
+  mode_label: string;
+  why: string;
+}
+
+/** One kind of weakness, the topics showing it, and how to train it. */
+export interface WeaknessKind {
+  id: WeaknessKindId;
+  name: string;
+  mode: StudyMode;
+  means: string;
+  approach: string;
+  count: number;
+  topics: { id: string; name: string; category: CategoryId; evidence: string; score: number }[];
+}
+
 export interface PlanWeek {
   number: number;
   start: string;
   end: string;
   phase: 'Foundations' | 'Core' | 'Contest mode' | 'Taper';
   note: string;
-  focus: { id: string; name: string; category: CategoryId }[];
+  focus: { id: string; name: string; category: CategoryId; mode?: StudyMode; mode_label?: string; gain?: number }[];
   problems: number;
   mock: boolean;
   mock_done: boolean;
@@ -400,6 +435,9 @@ export interface PerformanceWeek {
 }
 
 export interface Analytics {
+  /** Topics by expected score gain, and the kinds of weakness (backend/amc/planning.py). */
+  priorities: StudyPriority[];
+  kinds: WeaknessKind[];
   target: Level;
   goal: number;
   has_plan: boolean;
@@ -712,6 +750,8 @@ export interface PlanPayload {
   today?: TodayItem[];
   projected?: number | null;
   coverage?: { id: string; name: string; category: CategoryId; mastery: number; weight: number }[];
+  priorities?: StudyPriority[];
+  kinds?: WeaknessKind[];
   defaults: { dates: Record<Level, string>; goals: Record<Level, number> };
 }
 

@@ -9,7 +9,7 @@ site, and kept beside the topic map in catalog.py.
 import math
 from datetime import date, timedelta
 
-from backend.amc import catalog, engine, results
+from backend.amc import catalog, engine, planning, results
 from backend.amc import official
 from backend.amc import problems as pb
 
@@ -418,7 +418,12 @@ def analytics(attempts, hist, review_by_id, reviews, mocks, plan, today):
     if plan and plan.get('exam_date'):
         days_left = (date.fromisoformat(plan['exam_date']) - today).days
     mock_rows = [m for m in mocks if m['kind'] in ('mock', 'logged')]
+    study = planning.analyze(attempts, hist, target, today)
     return {
+        # What to study for the most points, and the kinds of weakness behind
+        # each topic, with the training each wants (backend/amc/planning.py).
+        'priorities': study['topics'][:8],
+        'kinds': study['kinds'],
         'target': target,
         'goal': goal,
         'has_plan': bool(plan),
