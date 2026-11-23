@@ -74,6 +74,16 @@ paper; papers already imported are left alone (`--dry-run` to check only):
 
     .venv-fastapi/bin/python scripts/import_amc12_hf.py --user myles
 
+The AMC 10 has no such dataset. `scripts/import_amc10_hf.py` gathers the
+missing papers (2000-2012A) problem by problem from `pkuAI4M/AOPS`, the AMC 10
+rows of `furonghuang-lab/Easy2Hard-Bench` (matched to the same year's AMC 12
+twin or to NuminaMath for their choices, their value answers picking the
+letter) and saves what it finds: about 445 of the 575 problems, one paper
+whole. The rest of a part-imported paper's problems can be read and practised;
+the paper becomes a sittable contest once pasting its AoPS page fills it in:
+
+    .venv-fastapi/bin/python scripts/import_amc10_hf.py --user myles --cache /tmp/amc10-rows
+
 The productivity app this grew out of is described below; its pages are no
 longer routed (their old URLs redirect to the dashboard).
 

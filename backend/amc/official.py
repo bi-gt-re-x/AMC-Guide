@@ -45,7 +45,8 @@ LETTERS = 'ABCDE'
 # Parsing a contest
 # ---------------------------------------------------------------------------
 _CHOICE_MARK = re.compile(
-    r'(?:\\(?:textbf|mathrm|text|textrm|mathbf|bf|rm)\s*\{\s*\(\s*([A-E])\s*\)\s*\}'   # \textbf{(A)}
+    # \textbf{(A)}, and the older pages' \mathrm{(A) \ } with its spacing inside the braces.
+    r'(?:\\(?:textbf|mathrm|text|textrm|mathbf|bf|rm)\s*\{\s*\(\s*([A-E])\s*\)(?:\s|\\[ ,;:]|~)*\}'
     r'|\(\s*\\(?:textbf|mathrm|text|textrm|mathbf)\s*\{\s*([A-E])\s*\}\s*\)'               # (\mathrm{A})
     r'|\\(?:textbf|mathrm|text|textrm|mathbf)\s*\{\s*([A-E])\s*\}'                          # \textbf{A}
     r'|\(\s*([A-E])\s*\))')                                                                 # (A)

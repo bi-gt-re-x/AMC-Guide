@@ -89,3 +89,33 @@ def test_two_accepted_answers_settle_to_the_keys_letter():
     rows[11]['answer'] = 'D or E (both were accepted)'
     _, key, _ = hf.build(rows)['2012-amc-12b']
     assert '12. D' in key.splitlines()
+
+
+def test_the_older_pages_choice_markup():
+    # `\mathrm{(A) \ }` (2002-2007): the spacing sits inside the letter's braces.
+    spaced = ('Find it.\n\n$\\mathrm{(A) \\ } 31\\qquad \\mathrm{(B) \\ } 32\\qquad \\mathrm{(C) \\ } 33'
+              '\\qquad \\mathrm{(D) \\ } 34\\qquad \\mathrm{(E) \\ } 35$')
+    # The choice inside the braces too: `\text{(B) 10:24 PM}`, `\mathrm{(A) \ 48 }`.
+    inside = ('When?\n\n$\\text {(A) 10:22 PM and 24 seconds} \\qquad \\text {(B) 10:24 PM} \\qquad '
+              '\\text {(C) 10:25 PM} \\qquad \\text {(D) 10:27 PM} \\qquad \\text {(E) 10:30 PM}$')
+    mixed = ('How many?\n\n$\\mathrm{(A) \\ 0 } \\qquad \\mathrm{(B) \\ 1 } \\qquad \\mathrm{(C) \\ 2 } \\qquad '
+             '\\mathrm{(D) \\ 3 } \\qquad \\mathrm{(E) \\ \\mathrm{infinitely \\ many} }$')
+    # Braces three deep, which the wiki would read as a template.
+    deep = ('Which?\n\n$\\mathrm{(A)}\\ {{{0.063}}} \\qquad \\mathrm{(B)}\\ {{{0.189}}} \\qquad '
+            '\\mathrm{(C)}\\ {{{0.233}}} \\qquad \\mathrm{(D)}\\ {{{0.333}}} \\qquad \\mathrm{(E)}\\ {{{0.441}}}$')
+    source, key, _ = hf.build(_rows(overrides={1: spaced, 2: inside, 3: mixed, 4: deep}))['2010-amc-12a']
+    problems, _, issues, complete = official.check('2010-amc-12a', source, key)
+    assert complete and not issues
+    assert problems[0]['choices'] == ['$31$', '$32$', '$33$', '$34$', '$35$']
+    assert problems[1]['choices'] == ['10:22 PM and 24 seconds', '10:24 PM', '10:25 PM', '10:27 PM', '10:30 PM']
+    assert problems[2]['choices'] == ['$0$', '$1$', '$2$', '$3$', 'infinitely many']
+    assert problems[3]['choices'] == ['$0.063$', '$0.189$', '$0.233$', '$0.333$', '$0.441$']
+
+
+def test_the_paste_parser_reads_spaced_letters():
+    # Pasted AoPS source of the same era goes through the parser directly.
+    page = ('==Problem 1==\nFind it.\n\n<math>\\mathrm{(A) \\ } 31\\qquad \\mathrm{(B) \\ } 32\\qquad '
+            '\\mathrm{(C) \\ } 33\\qquad \\mathrm{(D) \\ } 34\\qquad \\mathrm{(E) \\ } 35</math>')
+    problem = official.parse_contest(page, 'AMC 12')[0]
+    assert problem['statement'] == 'Find it.'
+    assert problem['choices'] == ['$31$', '$32$', '$33$', '$34$', '$35$']

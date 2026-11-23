@@ -5,6 +5,7 @@ difficulty and problem id for each problem).
     .venv-fastapi/bin/python scripts/import_amc12_hf.py --user temu --dry-run   # check only
     .venv-fastapi/bin/python scripts/import_amc12_hf.py --user temu             # import
     .venv-fastapi/bin/python scripts/import_amc12_hf.py --user temu --replace   # redo all
+    .venv-fastapi/bin/python scripts/import_amc12_hf.py --user temu --only 2003-amc-12a  # redo one
 
 Papers already imported are left alone unless --replace says otherwise, so the
 ones pasted in from the AoPS wiki (better text, worked solutions) keep theirs.
@@ -52,12 +53,12 @@ PAGE = 100
 ANSWER_OVERRIDES = {'2012B-P12': 'D'}
 
 
-def fetch_rows(dataset=DATASET):
-    """Every row of the dataset's train split."""
+def fetch_rows(dataset=DATASET, config='default', split='train'):
+    """Every row of one split of a dataset (the train split by default)."""
     rows, offset = [], 0
     while True:
         url = ROWS_URL + '?' + urllib.parse.urlencode(
-            dict(dataset=dataset, config='default', split='train', offset=offset, length=PAGE))
+            dict(dataset=dataset, config=config, split=split, offset=offset, length=PAGE))
         for attempt in range(6):
             try:
                 with urllib.request.urlopen(url, timeout=60) as resp:
@@ -88,12 +89,31 @@ _CHOICE_START = re.compile(r'^\s*(?:\\(?:textbf|mathrm|text|textrm|mathbf)\s*\{\
 _LAST_MARK = re.compile(r'\\(?:textbf|mathrm|text)\s*\{\s*\(E\)\s*\}\s*$')
 
 
+def _own_letter(letter, inside):
+    """`\\textbf{(X)}` followed by what shared its braces: words as \\text, math as is."""
+    inside = re.sub(r'^(?:\s|\\[ ,;:]|~)+|(?:\s|\\[ ,;:]|~)+$', '', inside)
+    mark = r'\textbf{(%s)}' % letter
+    if not inside:
+        return mark
+    words = re.sub(r'\\[A-Za-z]+', '', inside)
+    if re.search(r'[A-Za-z]{2}', words):
+        inside = re.sub(r'\\mathrm\{([^{}]*)\}', r'\1', inside).replace('\\ ', ' ')
+        return mark + r'\ \text{' + inside + ' }'
+    return mark + r'\ ' + inside
+
+
 def repair(pid, question):
     """Mend the few rows the dataset scraped out of order."""
     text = question.replace('\r\n', '\n')
+    # `\mathrm{(A)}\ {{{0.063}}}`: braces three deep read as a wiki template and vanish.
+    text = re.sub(r'\{\{\{([^{}]*)\}\}\}', r'\1', text)
     # A wiki section heading caught mid-problem (2012 AMC 12B #25) would end the
     # problem there and lose its choices.
     text = re.sub(r'\n\s*==+\s*See also\s*==+\s*\n', '\n\n', text, flags=re.I)
+    # The older pages put a choice inside its letter's braces: `\text{(B) 10:24 PM}`,
+    # `\mathrm{(A) \ 48 }`, `\text{(E) more than }4`. The letter comes out on its own.
+    text = re.sub(r'\\(?:text|mathrm|textrm|textbf)\s*\{\s*\(\s*([A-E])\s*\)((?:[^{}]|\{[^{}]*\})*?)\}',
+                  lambda m: _own_letter(m.group(1), m.group(2)), text)
     # Choice (E)'s words scraped to before the choices, which then end on a bare
     # `\textbf{(E)}` (2013 AMC 12B #18, 2017 AMC 12B #7 and #17): move them back.
     paras = re.split(r'\n\s*\n', text.strip())
@@ -163,6 +183,7 @@ def main():
     ap.add_argument('--user', required=True, help='username recorded as the importer')
     ap.add_argument('--dry-run', action='store_true', help='check every paper, save nothing')
     ap.add_argument('--replace', action='store_true', help='re-import papers already in the database')
+    ap.add_argument('--only', help='comma-separated contest ids to (re-)import, e.g. 2003-amc-12a,2006-amc-12a')
     ap.add_argument('--rows', help='read the dataset from this JSON file instead of fetching it')
     args = ap.parse_args()
 
@@ -174,9 +195,12 @@ def main():
     print('{} rows from {}'.format(len(rows), DATASET))
 
     have = official.imported_contests()
+    only = set(filter(None, (args.only or '').split(',')))
     saved, skipped, failed = [], [], []
     for cid, (source, key_source, bands) in sorted(build(rows).items()):
-        if cid in have and not args.replace:
+        if only and cid not in only:
+            continue
+        if cid in have and not (args.replace or only):
             skipped.append(cid)
             continue
         problems, key, issues, complete = official.check(cid, source, key_source)
