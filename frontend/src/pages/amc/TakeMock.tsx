@@ -14,6 +14,13 @@
  * accidental back or another device resumes the same sitting where its clock
  * left off; time with the page closed does not count either. An answer or a
  * flag is saved at once, the clock every few seconds and whenever it pauses.
+ *
+ * **Leaving asks first.** Mid-sitting, the Leave button, any link elsewhere in
+ * the app and the browser's Back all ask before going, and say the sitting is
+ * saved and resumes where it left off. Leave keeps the sitting; Discard is the
+ * separate way to throw it away. (Closing the tab or reloading can't show a
+ * custom question; the sitting is saved by then all the same, give or take
+ * the last few seconds of clock.)
  */
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
@@ -130,6 +137,18 @@ export default function TakeMock() {
   const left = minutes * 60 - elapsed;
   const problems = useMemo(() => data?.problems ?? [], [data]);
 
+  // The copy of this page that guards Back (see below). Handing in or
+  // discarding takes it off first, so Back from the result skips the paper.
+  const guarded = useRef(false);
+  const dropGuard = useCallback(() => new Promise<void>((resolve) => {
+    if (!guarded.current) { resolve(); return; }
+    guarded.current = false;
+    const done = () => { window.clearTimeout(timer); resolve(); };
+    const timer = window.setTimeout(() => { window.removeEventListener('popstate', done); resolve(); }, 400);
+    window.addEventListener('popstate', done, { once: true });
+    window.history.back();
+  }), []);
+
   const submit = useCallback(async () => {
     if (submitted.current || !sitting) return;
     submitted.current = true;
@@ -139,6 +158,7 @@ export default function TakeMock() {
       await inFlight.current;
       const reply = await amc.submit(contestId, sitting.answers, Math.min(elapsed, minutes * 60));
       if (reply.success) {
+        await dropGuard();
         announceAmcChanged();
         notify('Handed in', { body: 'Your paper is graded. Misses and blanks are in Review.' });
         navigate(`/mocks/${reply.id}`, { replace: true });
@@ -155,7 +175,7 @@ export default function TakeMock() {
     } finally {
       setBusy(false);
     }
-  }, [contestId, elapsed, minutes, navigate, notify, sitting]);
+  }, [contestId, dropGuard, elapsed, minutes, navigate, notify, sitting]);
 
   // Time is up: hand it in as it stands.
   useEffect(() => {
@@ -165,6 +185,74 @@ export default function TakeMock() {
   const setAnswerFor = useCallback((n: number, value: string) => {
     setSitting((s) => (s ? { ...s, answers: { ...s.answers, [String(n)]: value } } : s));
   }, []);
+
+  // Leaving mid-sitting asks first and says the sitting is kept. Going on
+  // saves once more and replaces this page in history, so Back from wherever
+  // the reader went returns to the paper rather than to the guard entry below.
+  const askToLeave = useCallback(() => confirm({
+    title: 'Leave this contest?',
+    body: 'Your answers, flags and time so far are saved to your account. The clock stops while you’re away, '
+      + 'and the paper picks up where you left off when you come back.',
+    confirmLabel: 'Save and leave',
+    cancelLabel: 'Keep working',
+  }), [confirm]);
+  const leaving = useRef(false);
+  const leaveTo = useCallback(async (to: string) => {
+    leaving.current = true;
+    await persist();
+    navigate(to, { replace: true });
+  }, [navigate, persist]);
+
+  const inSitting = Boolean(sitting);
+  // A link anywhere else in the app (the sidebar, a header link) asks first.
+  useEffect(() => {
+    if (!inSitting) return undefined;
+    const onClick = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0 || submitted.current || leaving.current) return;
+      if (event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const link = (event.target as Element | null)?.closest?.('a[href]');
+      if (!(link instanceof HTMLAnchorElement) || link.hasAttribute('download')) return;
+      if (link.target && link.target !== '_self') return;
+      const url = new URL(link.href, window.location.href);
+      if (url.origin !== window.location.origin || url.pathname === window.location.pathname) return;
+      event.preventDefault();
+      event.stopPropagation();
+      void (async () => {
+        if (await askToLeave()) await leaveTo(url.pathname + url.search + url.hash);
+      })();
+    };
+    document.addEventListener('click', onClick, true);
+    return () => document.removeEventListener('click', onClick, true);
+  }, [inSitting, askToLeave, leaveTo]);
+
+  // The browser's Back: a copy of this entry sits on top of the history, so
+  // Back lands on the same page and can ask; staying puts the copy back.
+  useEffect(() => {
+    if (!inSitting) return undefined;
+    if (!guarded.current) {
+      window.history.pushState(window.history.state, '', window.location.href);
+      guarded.current = true;
+    }
+    let asking = false;
+    const onPop = () => {
+      if (submitted.current || leaving.current || asking) return;
+      asking = true;
+      void (async () => {
+        const yes = await askToLeave();
+        asking = false;
+        if (yes) {
+          leaving.current = true;
+          guarded.current = false;
+          await persist();
+          window.history.back();
+        } else {
+          window.history.pushState(window.history.state, '', window.location.href);
+        }
+      })();
+    };
+    window.addEventListener('popstate', onPop);
+    return () => window.removeEventListener('popstate', onPop);
+  }, [inSitting, askToLeave, persist]);
 
   // Arrow keys move between problems; A-E mark (or clear) a bubble.
   useEffect(() => {
@@ -252,12 +340,15 @@ export default function TakeMock() {
     });
     if (yes) void submit();
   };
+  const leave = async () => {
+    if (await askToLeave()) await leaveTo(back);
+  };
   const abandon = async () => {
     const yes = await confirm({
-      title: 'Leave this contest?',
-      body: 'Your answers are discarded and nothing is graded.',
-      confirmLabel: 'Leave and discard',
-      cancelLabel: 'Stay',
+      title: 'Discard this sitting?',
+      body: 'Your answers and time so far are thrown away and nothing is graded. This can’t be undone.',
+      confirmLabel: 'Discard',
+      cancelLabel: 'Keep working',
       danger: true,
     });
     if (!yes) return;
@@ -273,8 +364,10 @@ export default function TakeMock() {
       });
       return;
     }
+    leaving.current = true;
+    await dropGuard();
     notify('Contest discarded', { tone: 'info' });
-    navigate(back);
+    navigate(back, { replace: true });
   };
 
   return (
@@ -288,7 +381,8 @@ export default function TakeMock() {
         </span>
         <span className="am-muted" style={{ fontSize: 13 }}>{answered}/{problems.length} answered</span>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button type="button" className="am-btn am-btn-ghost am-btn-sm" onClick={() => void abandon()}>Leave</button>
+          <button type="button" className="am-btn am-btn-ghost am-btn-sm" onClick={() => void abandon()}>Discard</button>
+          <button type="button" className="am-btn am-btn-sm" onClick={() => void leave()}>Leave</button>
           <button type="button" className="am-btn am-btn-primary am-btn-sm" disabled={busy} onClick={() => void handIn()}>
             Hand in
           </button>
