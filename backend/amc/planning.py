@@ -454,6 +454,33 @@ def schedule(priorities, weeks, per_week=2, decay=0.55, coached=()):
     return out
 
 
+#: How a topic is trained as the plan comes back to it, when the answers have
+#: not said what kind of weakness it has: learn the ideas, practise them, then
+#: at contest pace, then unlabelled among other topics as on the day.
+LADDER = ('learn', 'practice', 'timed', 'mixed')
+#: The lowest rung each phase trains a topic it has met before at. A topic
+#: seen for the first time is still learned first, whatever the phase.
+PHASE_FLOOR = {'Foundations': 0, 'Core': 1, 'Contest mode': 2, 'Taper': 3}
+
+
+def week_mode(row, phase, visits):
+    """How to train topic `row` in a week of `phase`, the plan's `visits`-th
+    return to it (0 the first time).
+
+    A topic whose answers show accuracy or retention trouble keeps the
+    training that wants (`KINDS`). Otherwise it climbs `LADDER` one rung per
+    visit, and no lower than the phase asks once it has been met: a plan that
+    said "learn the ideas" for the same topic in week 1 and week 41 was
+    teaching it from scratch in the weeks meant for timed papers."""
+    mode = row.get('mode') or 'practice'
+    if mode not in LADDER:
+        return mode
+    rung = LADDER.index(mode) + visits
+    if visits or mode != 'learn':
+        rung = max(rung, PHASE_FLOOR.get(phase, 0))
+    return LADDER[min(rung, len(LADDER) - 1)]
+
+
 def mix_text(mix):
     """'50% level 1, 35% level 2, 15% level 3'."""
     return ', '.join('{:.0%} level {}'.format(m['share'], m['level']) for m in mix)

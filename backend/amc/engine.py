@@ -339,8 +339,14 @@ def plan_weeks(settings, tstats, mocks_taken, today, priorities=None, stage=None
     shape = _planning.SHAPES.get(stage or 'unknown', _planning.SHAPES['unknown'])
     foundations = max(1, round(count * shape['foundations'])) if count >= 4 else 0
     core = max(1, round(count * shape['core'])) if count >= 3 else 0
+    # About ten minutes a problem, but no more than a set of eight on each day
+    # the student said they study: six hours over two days is not 36 problems.
     per_week = max(5, int(settings['hours']) * 6)
+    days = (settings.get('details') or {}).get('days_per_week')
+    if days:
+        per_week = max(5, min(per_week, int(days) * 8))
     taken = {m['at'][:10] for m in mocks_taken}
+    visits = {}
 
     weeks = []
     cursor = 0
@@ -361,6 +367,12 @@ def plan_weeks(settings, tstats, mocks_taken, today, priorities=None, stage=None
         else:
             focus = [ranked[(cursor + k) % len(ranked)] for k in range(2)] if ranked else []
             cursor += 2
+        # Each return to a topic trains it a step further along, and the later
+        # phases at contest pace (planning.week_mode).
+        modes = []
+        for t in focus:
+            modes.append(_planning.week_mode(t, phase, visits.get(t['id'], 0)))
+            visits[t['id']] = visits.get(t['id'], 0) + 1
         every = shape['core_mock_every']
         mock = phase == 'Contest mode' or (phase == 'Core' and (i - foundations) % every == every - 1)
         week_end = week_start + timedelta(days=6)
@@ -375,8 +387,8 @@ def plan_weeks(settings, tstats, mocks_taken, today, priorities=None, stage=None
             'number': i + 1, 'start': week_start.isoformat(), 'end': week_end.isoformat(),
             'phase': phase, 'note': notes[phase],
             'focus': [{'id': t['id'], 'name': t['name'], 'category': t['category'],
-                       'mode': t.get('mode', 'practice'), 'mode_label': t.get('mode_label', 'practice'),
-                       'gain': t.get('gain'), 'mix': t.get('mix')} for t in focus],
+                       'mode': mode, 'mode_label': _planning.MODE_LABEL[mode],
+                       'gain': t.get('gain'), 'mix': t.get('mix')} for t, mode in zip(focus, modes)],
             'problems': 0 if phase == 'Taper' else per_week,
             'mock': mock, 'mock_done': mock and mock_done,
             'current': week_start <= today <= week_end,

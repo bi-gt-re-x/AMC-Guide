@@ -205,3 +205,46 @@ def test_todays_practice_and_analytics_carry_the_mix(client):
     assert set(tiles) == {'projected', 'level', 'next', 'weakness'}
     assert tiles['level']['mix'] and tiles['level']['value'].startswith('Level')
     assert all(len(t['note']) <= 60 for t in tiles.values())     # short: a glance, not a paragraph
+
+
+def test_a_topic_the_plan_comes_back_to_is_trained_further_along():
+    untried = {'mode': 'learn', 'kind': None}
+    practised = {'mode': 'practice', 'kind': None}
+    # Met for the first time: learned, whatever the phase.
+    assert planning.week_mode(untried, 'Contest mode', 0) == 'learn'
+    # Each return climbs: learn, practise, timed, mixed.
+    assert [planning.week_mode(untried, 'Foundations', v) for v in range(5)] == \
+        ['learn', 'practice', 'timed', 'mixed', 'mixed']
+    # The later phases train what has been met at contest pace.
+    assert planning.week_mode(practised, 'Core', 0) == 'practice'
+    assert planning.week_mode(practised, 'Contest mode', 0) == 'timed'
+    assert planning.week_mode(untried, 'Contest mode', 1) == 'timed'
+    # Accuracy and retention trouble keep the training they want.
+    assert planning.week_mode({'mode': 'accuracy', 'kind': 'execution'}, 'Contest mode', 3) == 'accuracy'
+    assert planning.week_mode({'mode': 'spaced', 'kind': 'retention'}, 'Core', 2) == 'spaced'
+
+
+def test_the_weeks_move_on_from_learning_and_count_what_was_done(client):
+    client.put('/api/amc/plan', json={'target': 'AMC 10', 'exam_date': '2027-11-05', 'goal_score': 100, 'hours': 6,
+                                      'details': {'days_per_week': 3}})
+    pid = next(p['id'] for p in PROBLEMS if p['level'] == 'AMC 10')
+    client.post('/api/amc/problems/{}/attempt'.format(pid), json={'answer': 'A', 'seconds': 60})
+    body = client.get('/api/amc/plan').json()
+    weeks = body['weeks']
+    # Three days a week: three sets of eight, not hours x 6.
+    assert weeks[0]['problems'] == 24
+    current = next(w for w in weeks if w['current'])
+    assert current['answered'] == 1
+    assert 'answered' not in weeks[-1]
+    # No topic is "learn the ideas" on a return visit, and Contest mode never is.
+    seen = set()
+    for w in weeks:
+        for f in w['focus']:
+            if f['id'] in seen:
+                assert f['mode'] != 'learn', (w['number'], f)
+            seen.add(f['id'])
+    contest = [f['mode'] for w in weeks if w['phase'] == 'Contest mode' for f in w['focus'] if f['id'] in seen]
+    assert contest and contest.count('learn') < len(contest)
+    # The dashboard's Today list is the plan's.
+    dash = client.get('/api/amc/dashboard').json()
+    assert [i['label'] for i in dash['plan']['today']] == [i['label'] for i in body['today']]

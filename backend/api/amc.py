@@ -135,11 +135,9 @@ def dashboard(username: str = Depends(current_username)):
 
     plan_view = None
     if plan:
-        weeks = engine.plan_weeks(plan, tstats, [m for m in mocks if m['kind'] == 'mock'], today)
-        practiced = {a['problem_id'] for a in attempts if a['at'][:10] == today.isoformat()
-                     and a['source'] == 'practice'}
-        items = engine.today_items(plan, weeks, len(due), today, plan['checks'], practiced)
-        week = next((w for w in weeks if w['current']), None)
+        built = _build_plan(plan, today, attempts, reviews, hist, tstats, mocks)
+        items = built['today']
+        week = next((w for w in built['weeks'] if w['current']), None)
         plan_view = {'target': plan['target'], 'exam_date': plan['exam_date'], 'goal_score': plan['goal_score'],
                      'days_left': (date.fromisoformat(plan['exam_date']) - today).days,
                      'week': week, 'today': items}
@@ -939,15 +937,12 @@ def delete_mock(mock_id: str, username: str = Depends(current_username)):
 # ---------------------------------------------------------------------------
 # Study plan
 # ---------------------------------------------------------------------------
-def _plan_payload(username):
-    plan = store.plan(username)
-    if not plan:
-        return ok(plan=None, defaults=_defaults(),
-                  ai={'available': coach.available(), 'label': coach.provider_label()})
-    today = _today()
-    attempts, reviews, hist, review_by_id = _context(username)
-    tstats = engine.topic_stats(hist, review_by_id)
-    every_score = store.mocks(username)
+def _build_plan(plan, today, attempts, reviews, hist, tstats, every_score):
+    """The weeks, today's checklist and what they were built from.
+
+    One builder for the study plan page and the dashboard: the dashboard used
+    to lay the weeks out by an older rule of its own, so its Today list could
+    name a different focus topic from the plan's for the same day."""
     mocks = [m for m in every_score if m['kind'] == 'mock']
     study = planning.analyze(attempts, hist, plan['target'], today, plan['goal_score'], plan['details'])
     projected_now = engine.projected(hist, plan['target']) if len(hist) >= engine.PROJECTION_MIN else None
@@ -956,17 +951,44 @@ def _plan_payload(username):
     start = planning.starting_point(plan['target'], plan['goal_score'], projected_now, every_score,
                                     {**plan['details'], '_exam': plan['exam_date']}, today)
     weeks = engine.plan_weeks(plan, tstats, mocks, today, study['topics'], start['stage'])
+    # How much of each week's practice has been done: distinct problems
+    # answered (not solutions looked at) between its Monday and Sunday.
+    answered = {}
+    for a in attempts:
+        if a.get('source') != 'reveal':
+            answered.setdefault(a['at'][:10], set()).add(a['problem_id'])
+    for w in weeks:
+        if w['past'] or w['current']:
+            done = set()
+            for day, ids in answered.items():
+                if w['start'] <= day <= w['end']:
+                    done |= ids
+            w['answered'] = len(done)
     due = sum(1 for r in reviews if r['status'] == 'active' and r['due'] <= today.isoformat())
     practiced = {a['problem_id'] for a in attempts
                  if a['at'][:10] == today.isoformat() and a['source'] == 'practice'}
     items = engine.today_items(plan, weeks, due, today, plan['checks'], practiced)
+    return {'study': study, 'projected': projected_now, 'start': start, 'weeks': weeks, 'today': items}
+
+
+def _plan_payload(username):
+    plan = store.plan(username)
+    if not plan:
+        return ok(plan=None, defaults=_defaults(),
+                  ai={'available': coach.available(), 'label': coach.provider_label()})
+    today = _today()
+    attempts, reviews, hist, review_by_id = _context(username)
+    tstats = engine.topic_stats(hist, review_by_id)
+    built = _build_plan(plan, today, attempts, reviews, hist, tstats, store.mocks(username))
+    study, weeks = built['study'], built['weeks']
     relevant = [t for t in catalog.TOPICS if plan['target'] in t['levels']]
     return ok(plan={**plan, 'days_left': (date.fromisoformat(plan['exam_date']) - today).days},
               ai={'available': coach.available(), 'label': coach.provider_label()},
-              weeks=weeks, today=items,
-              projected=projected_now, start=start,
+              weeks=weeks, today=built['today'],
+              projected=built['projected'], start=built['start'],
               coverage=[{'id': t['id'], 'name': t['name'], 'category': t['category'],
-                         'mastery': tstats[t['id']]['mastery'], 'weight': t['weight']}
+                         'mastery': tstats[t['id']]['mastery'], 'weight': t['weight'],
+                         'attempted': tstats[t['id']]['attempted']}
                         for t in sorted(relevant, key=lambda t: (t['category'], t['name']))],
               priorities=study['topics'][:10], kinds=study['kinds'],
               difficulty={'ceiling': study['ceiling'], 'mix': study['mix'], 'levels': planning.LEVELS},

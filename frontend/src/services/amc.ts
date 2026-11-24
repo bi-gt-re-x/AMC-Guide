@@ -349,6 +349,8 @@ export interface PlanWeek {
   mock_done: boolean;
   current: boolean;
   past: boolean;
+  /** Distinct problems answered that week; on past weeks and this one only. */
+  answered?: number;
 }
 
 export interface Dashboard {
@@ -793,7 +795,7 @@ export interface PlanPayload {
   weeks?: PlanWeek[];
   today?: TodayItem[];
   projected?: number | null;
-  coverage?: { id: string; name: string; category: CategoryId; mastery: number; weight: number }[];
+  coverage?: { id: string; name: string; category: CategoryId; mastery: number; weight: number; attempted?: number }[];
   priorities?: StudyPriority[];
   kinds?: WeaknessKind[];
   difficulty?: DifficultyPlan;

@@ -21,6 +21,7 @@ import {
   type PlanDetails,
   type PlanPayload,
   type PlanSettings,
+  type PlanWeek,
   type SubjectStrength,
 } from '@/services/amc';
 import { MixBar, ModeTag, PrioritiesCard, WeaknessKinds } from '@/components/Amc/Study';
@@ -384,6 +385,169 @@ function CoachCard({
   );
 }
 
+type Phase = PlanWeek['phase'];
+const PHASE_ABOUT: Record<Phase, string> = {
+  Foundations: 'Learn each topic and work its easier problems untimed.',
+  Core: 'Practise the topics again, faster, with a mock every few weeks.',
+  'Contest mode': 'A timed mock each week; topics at contest pace and mixed together.',
+  Taper: 'Light review, nothing new, rest.',
+};
+const phaseClass = (p: Phase) => `am-phase-${p.split(' ')[0]}`;
+
+/** The weeks in runs of one phase each, in order. */
+function phaseRuns(weeks: PlanWeek[]) {
+  const runs: { phase: Phase; weeks: PlanWeek[] }[] = [];
+  for (const w of weeks) {
+    const last = runs[runs.length - 1];
+    if (last && last.phase === w.phase) last.weeks.push(w);
+    else runs.push({ phase: w.phase, weeks: [w] });
+  }
+  return runs;
+}
+
+/** The plan's phases as one bar to the exam, sized by weeks, with where you are on it. */
+function PhaseStrip({ weeks }: { weeks: PlanWeek[] }) {
+  const runs = phaseRuns(weeks);
+  if (runs.length < 2) return null;
+  return (
+    <section className="am-card am-phases" aria-label="The plan's phases">
+      <div className="am-phases-bar">
+        {runs.map((r) => {
+          const first = r.weeks[0]!.number;
+          const last = r.weeks[r.weeks.length - 1]!.number;
+          const at = r.weeks.findIndex((w) => w.current);
+          return (
+            <div key={first} className={`am-phases-seg${at >= 0 ? ' is-here' : ''}`} style={{ flexGrow: r.weeks.length }}>
+              <span className={`am-phases-fill ${phaseClass(r.phase)}`}>
+                {at >= 0 && (
+                  <span className="am-phases-you" style={{ left: `${((at + 0.5) / r.weeks.length) * 100}%` }}
+                        title={`You are in week ${first + at} of ${weeks.length}`} />
+                )}
+              </span>
+              <strong className={`am-phase ${phaseClass(r.phase)}`}>{r.phase}</strong>
+              <span className="am-muted">{first === last ? `Week ${first}` : `Weeks ${first}–${last}`}</span>
+              <p className="am-phases-about">{PHASE_ABOUT[r.phase]}</p>
+            </div>
+          );
+        })}
+      </div>
+    </section>
+  );
+}
+
+function WeekRow({ w }: { w: PlanWeek }) {
+  const tracked = w.answered !== undefined && w.problems > 0;
+  return (
+    <div className={`am-week${w.current ? ' is-current' : ''}${w.past ? ' is-past' : ''}`}>
+      <div className="am-week-when">
+        <strong>Week {w.number}{w.current ? ' · now' : ''}</strong>
+        {shortDate(w.start)} – {shortDate(w.end)}
+      </div>
+      <div>
+        <div className="am-week-focus">
+          {w.focus.map((f) => (
+            <Link key={f.id} className="am-tag" to={`/topics/${f.id}`}>
+              <CategoryDot category={f.category} />{f.name}<ModeTag mode={f.mode} label={f.mode_label} />
+            </Link>
+          ))}
+          {!w.focus.length && <span className="am-muted" style={{ fontSize: 13 }}>{w.note}</span>}
+        </div>
+      </div>
+      <div className="am-week-side">
+        {tracked ? (
+          <span className="am-week-progress" title={`${w.answered} of ${w.problems} problems answered`}>
+            {w.answered}/{w.problems}
+            <Meter value={w.answered! / w.problems} tone={w.answered! >= w.problems ? 'good' : 'sage'} />
+          </span>
+        ) : w.problems > 0 && <span>{w.problems} problems</span>}
+        {w.mock && <span className={`am-pill ${w.mock_done ? 'am-pill-solved' : 'am-pill-review'}`}>{w.mock_done ? 'Mock done' : 'Mock'}</span>}
+      </div>
+    </div>
+  );
+}
+
+/** How many weeks ahead show before "Show all". */
+const AHEAD = 4;
+
+/**
+ * Week by week, under a heading for each phase. A long plan is fifty rows, so
+ * the weeks already done fold into one line and only this week and the next
+ * few show until asked for the rest.
+ */
+function WeekList({ weeks }: { weeks: PlanWeek[] }) {
+  const [all, setAll] = useState(false);
+  const [showPast, setShowPast] = useState(false);
+  const past = weeks.filter((w) => w.past);
+  const ahead = weeks.filter((w) => !w.past);
+  const shown = [...(showPast ? past : []), ...(all ? ahead : ahead.slice(0, AHEAD))];
+  const hidden = ahead.length - Math.min(ahead.length, all ? ahead.length : AHEAD);
+  const pastAnswered = past.reduce((n, w) => n + (w.answered ?? 0), 0);
+  const pastGoal = past.reduce((n, w) => n + w.problems, 0);
+  return (
+    <>
+      {past.length > 0 && (
+        <button type="button" className="am-weeks-fold" onClick={() => setShowPast((v) => !v)} aria-expanded={showPast}>
+          {showPast ? 'Hide' : 'Show'} {past.length} week{past.length === 1 ? '' : 's'} done
+          <span className="am-muted"> · {pastAnswered} of {pastGoal} problems answered</span>
+        </button>
+      )}
+      <div className="am-weeks">
+        {phaseRuns(shown).map((r) => (
+          <div key={r.weeks[0]!.number} className="am-weeks-run">
+            <div className="am-weeks-head">
+              <span className={`am-phase ${phaseClass(r.phase)}`}>{r.phase}</span>
+              <span className="am-muted">{PHASE_ABOUT[r.phase]}</span>
+            </div>
+            {r.weeks.map((w) => <WeekRow key={w.number} w={w} />)}
+          </div>
+        ))}
+      </div>
+      {(hidden > 0 || all) && ahead.length > AHEAD && (
+        <button type="button" className="am-btn am-btn-ghost am-weeks-more" onClick={() => setAll((v) => !v)}>
+          {all ? 'Show fewer weeks' : `Show all ${ahead.length} weeks to the exam`}
+        </button>
+      )}
+    </>
+  );
+}
+
+/** Which topics have been touched at all, and the weakest of those that have. */
+function CoverageCard({ coverage, target }: { coverage: NonNullable<PlanPayload['coverage']>; target: Level }) {
+  const tried = coverage.filter((t) => (t.attempted ?? 0) > 0);
+  const untried = coverage.filter((t) => !(t.attempted ?? 0)).sort((a, b) => b.weight - a.weight);
+  const weakest = [...tried].sort((a, b) => a.mastery - b.mastery).slice(0, 6);
+  return (
+    <section className="am-card">
+      <div className="am-card-head"><h2>Topic coverage</h2></div>
+      <div className="am-coverage-sum">
+        <strong>{tried.length}</strong><span className="am-muted"> of {coverage.length} {target} topics practised</span>
+      </div>
+      <Meter value={coverage.length ? tried.length / coverage.length : 0} />
+      {weakest.length > 0 && (
+        <>
+          <h3 className="am-form-sub">Weakest so far</h3>
+          <div className="am-bars">
+            {weakest.map((t) => (
+              <div key={t.id} className="am-bar-row">
+                <Link className="am-bar-label" to={`/topics/${t.id}`}><CategoryDot category={t.category} />{t.name}</Link>
+                <span className="am-muted" style={{ fontSize: 12 }}>{Math.round(t.mastery * 100)}%</span>
+                <Meter value={t.mastery} />
+              </div>
+            ))}
+          </div>
+        </>
+      )}
+      {untried.length > 0 && (
+        <p className="am-muted am-card-note">
+          Not started: {untried.slice(0, 4).map((t, i) => (
+            <span key={t.id}>{i ? ', ' : ''}<Link className="am-link" to={`/topics/${t.id}`}>{t.name}</Link></span>
+          ))}{untried.length > 4 ? ` and ${untried.length - 4} more` : ''}.
+        </p>
+      )}
+    </section>
+  );
+}
+
 export default function StudyPlan() {
   useDocumentTitle('Study Plan');
   const { data, error, loading, reload } = useApi(() => amc.plan(), []);
@@ -446,6 +610,7 @@ export default function StudyPlan() {
   const weeks = payload.weeks ?? [];
   const current = weeks.find((w) => w.current);
   const projected = payload.projected ?? null;
+  const practice = (payload.today ?? []).find((i) => i.key === 'practice');
 
   async function toggle(key: string, done: boolean) {
     const reply = await amc.check(key, done);
@@ -528,11 +693,22 @@ export default function StudyPlan() {
           ) : (
             <p style={{ margin: '6px 0 0' }}>Taper: review only.</p>
           )}
-          <p className="am-muted" style={{ margin: '8px 0 0', fontSize: 13 }}>
-            {current ? `${current.problems} problems${current.mock ? ' + a timed mock' : ''}` : ''}
-          </p>
+          {current && current.problems > 0 ? (
+            <div className="am-week-goal">
+              <span className="am-muted">
+                {current.answered ?? 0} of {current.problems} problems this week{current.mock ? (current.mock_done ? ' · mock done' : ' + a timed mock') : ''}
+              </span>
+              <Meter value={(current.answered ?? 0) / current.problems}
+                     tone={(current.answered ?? 0) >= current.problems ? 'good' : 'sage'} />
+            </div>
+          ) : null}
+          {practice && !practice.done && (
+            <Link className="am-btn am-btn-primary am-week-start" to={practice.to}>Start today's set</Link>
+          )}
         </section>
       </div>
+
+      <div style={{ marginBottom: 16 }}><PhaseStrip weeks={weeks} /></div>
 
       <div style={{ marginBottom: 16 }}>
         <CoachCard payload={payload} busy={coaching} error={coachError} onRun={(a) => void runCoach(a)} />
@@ -542,31 +718,7 @@ export default function StudyPlan() {
         <section>
           <div style={{ marginBottom: 16 }}><WeaknessKinds kinds={payload.kinds} /></div>
           <h2 className="am-h2" style={{ marginBottom: 12 }}>Week by week</h2>
-          <div className="am-weeks">
-            {weeks.map((w) => (
-              <div key={w.number} className={`am-week${w.current ? ' is-current' : ''}${w.past ? ' is-past' : ''}`}>
-                <div className="am-week-when">
-                  <strong>Week {w.number}</strong>
-                  {shortDate(w.start)} – {shortDate(w.end)}
-                </div>
-                <div>
-                  <span className={`am-phase am-phase-${w.phase.split(' ')[0]}`}>{w.phase}</span>
-                  <div className="am-week-focus">
-                    {w.focus.map((f) => (
-                      <Link key={f.id} className="am-tag" to={`/topics/${f.id}`}>
-                        <CategoryDot category={f.category} />{f.name}<ModeTag mode={f.mode} label={f.mode_label} />
-                      </Link>
-                    ))}
-                    {!w.focus.length && <span className="am-muted" style={{ fontSize: 13 }}>{w.note}</span>}
-                  </div>
-                </div>
-                <div className="am-week-side">
-                  {w.problems > 0 && <span>{w.problems} problems</span>}
-                  {w.mock && <span className={`am-pill ${w.mock_done ? 'am-pill-solved' : 'am-pill-review'}`}>{w.mock_done ? 'Mock done' : 'Mock'}</span>}
-                </div>
-              </div>
-            ))}
-          </div>
+          <WeekList weeks={weeks} />
         </section>
 
         <aside className="am-stack">
@@ -576,19 +728,7 @@ export default function StudyPlan() {
             {current && <p className="am-muted" style={{ fontSize: 13, lineHeight: 1.5, margin: '12px 0 0' }}>{current.note}</p>}
           </section>
           <PrioritiesCard priorities={payload.priorities} limit={5} title="This plan's priorities" />
-          <section className="am-card">
-            <div className="am-card-head"><h2>Topic coverage</h2></div>
-            <div className="am-bars">
-              {(payload.coverage ?? []).sort((a, b) => a.mastery - b.mastery).slice(0, 10).map((t) => (
-                <div key={t.id} className="am-bar-row">
-                  <Link className="am-bar-label" to={`/topics/${t.id}`}><CategoryDot category={t.category} />{t.name}</Link>
-                  <span className="am-muted" style={{ fontSize: 12 }}>{Math.round(t.mastery * 100)}%</span>
-                  <Meter value={t.mastery} />
-                </div>
-              ))}
-            </div>
-            <p className="am-muted" style={{ fontSize: 12, margin: '12px 0 0' }}>Least covered for the {plan.target}.</p>
-          </section>
+          <CoverageCard coverage={payload.coverage ?? []} target={plan.target} />
         </aside>
       </div>
     </div>

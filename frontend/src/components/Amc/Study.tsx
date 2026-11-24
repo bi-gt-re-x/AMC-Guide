@@ -53,15 +53,27 @@ export function WeaknessKinds({ kinds }: { kinds?: WeaknessKind[] }) {
   const list = kinds ?? [];
   if (!list.length) return null;
   const any = list.some((k) => k.topics.length);
+  // Five empty boxes saying "None found" say one thing five times: say it once,
+  // with the kinds the plan will be looking for.
+  if (!any) {
+    return (
+      <section className="am-card">
+        <div className="am-card-head"><h2>Kinds of weakness</h2></div>
+        <p className="am-muted" style={{ margin: '0 0 10px', fontSize: 13, lineHeight: 1.55 }}>
+          Not enough answers yet to tell what kind of weakness any topic has. After a few answers in a topic, the
+          plan looks for these and changes how it trains that topic:
+        </p>
+        <div className="am-kind-tags">
+          {list.map((k) => (
+            <span key={k.id} title={`${k.means} ${k.approach}`}><ModeTag mode={k.mode} label={k.name} /></span>
+          ))}
+        </div>
+      </section>
+    );
+  }
   return (
     <section className="am-card">
       <div className="am-card-head"><h2>Kinds of weakness</h2></div>
-      {!any && (
-        <p className="am-muted" style={{ margin: '0 0 12px', fontSize: 13 }}>
-          Not enough answers yet to tell what kind of weakness any topic has. Each kind needs a few answers in a
-          topic first.
-        </p>
-      )}
       <div className="am-kinds">
         {list.map((k) => (
           <div key={k.id} className={`am-kind${k.topics.length ? '' : ' is-clear'}`}>
