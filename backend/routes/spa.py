@@ -44,6 +44,8 @@ SPA_ROUTES = (
     '/about-us',
     '/privacy-policy',
     '/terms-of-service',
+    '/cookie-policy',
+    '/your-data',
     '/goals',
     '/growth',
     '/analytics',

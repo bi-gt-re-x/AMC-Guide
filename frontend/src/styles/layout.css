@@ -11,6 +11,12 @@
       480px  phone
    ========================================================================== */
 
+/* No browser margin round the page. The reset used to be the always-loaded
+ * body rule in styles/dashboard.css; when that sheet went, every page got the
+ * user agent's 8px back — a pale strip down the left and across the top, with
+ * the fixed rail and top bar sitting over it out of line. */
+html, body { margin: 0; }
+
 /* Every signed-in page fills the width beside the rail.
  *
  * `body` is a centred flex column (dashboard.css), so its one child, `#root`,

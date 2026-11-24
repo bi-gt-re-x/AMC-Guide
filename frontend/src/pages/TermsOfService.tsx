@@ -1,7 +1,12 @@
 /**
  * The terms of service.
  *
- * Rewritten in full on 2026-10-17. The earlier version was nine short
+ * Rewritten in full on 2026-10-17; on 2026-11-24 the sections on what the
+ * Service is, your content, AI and study habits were brought up to date for the
+ * contest-prep site (they still described the old tracker's tasks and
+ * calendar), and a section on contest problems and the MAA was added.
+ *
+ * The earlier version was nine short
  * sections; this one covers what a hosted app with accounts, AI features and
  * an audience of students needs to say: who may sign up (13 and up, with a
  * parent's OK under 18), one account per email, what the AI features are and
@@ -71,49 +76,57 @@ const SECTIONS: LegalSection[] = [
     id: 'service',
     title: 'What AMC Guide provides',
     body: [
-      'AMC Guide is a study and productivity tracker. It lets you keep tasks, goals and checkpoints, a calendar, Spaces and a private Log, and it turns your activity into streaks, XP, levels, achievements, analytics and suggestions such as recommended study sessions and when to schedule them.',
+      'AMC Guide is a study site for the AMC 10, AMC 12 and AIME. It gives you practice problems tagged by topic and technique, a review log that brings your misses back on a schedule, timed mock contests, past official papers, a study plan to contest day, analytics and a predicted score, and AI hints, explanations and coaching.',
       'AMC Guide is free. There are no paid plans, subscriptions, ads or in-app purchases. If we ever introduce paid features, we will tell you first, and nothing you already have will be charged for without your clear agreement.',
-      'AMC Guide is still being built. We may add, change, limit or remove features at any time, including how XP, streaks, levels and analytics are worked out. We will try to give notice of changes that matter, but we can\'t promise that every number you see today will carry over unchanged.',
+      'AMC Guide is still being built. We may add, change, limit or remove features at any time, including how ratings, levels, predicted scores and study plans are worked out. We will try to give notice of changes that matter.',
     ],
   },
   {
     id: 'content',
     title: 'Your content',
     body: [
-      '"Your content" means everything you put into AMC Guide: task titles and notes, goals, calendar events, notes, Spaces, Log entries, ratings, settings, answers you give about yourself, and anything else you type or upload.',
+      '"Your content" means what you put into AMC Guide: your answers, your study plan and what you tell it about yourself, the scores you log, your settings, and anything you post on the Posts page.',
       {
         list: [
           <><strong>You own it.</strong> We don't claim ownership of your content.</>,
-          <><strong>The permission you give us.</strong> So that we can run the Service, you give us a worldwide, non-exclusive, royalty-free license to store, copy, process, analyze and display your content, only as needed to provide, protect and improve the Service for you. This includes sending parts of it to the AI providers described in our {privacy} when you use a feature that needs them. This license ends when you delete the content or your account, except for copies we must keep by law.</>,
+          <><strong>The permission you give us.</strong> So that we can run the Service, you give us a worldwide, non-exclusive, royalty-free license to store, copy, process and display your content, only as needed to provide, protect and improve the Service. This includes sending parts of it to the AI providers described in our {privacy} when you use a feature that needs them. This license ends when you delete the content or your account, except for what you chose to share.</>,
+          <><strong>What you share.</strong> A post on the Posts page is visible to every account, with your username. By posting, you let other users read and practise it, and let us keep showing it after your account is deleted unless you ask us to remove it. Post only problems and solutions you wrote yourself or are allowed to share, and credit the source.</>,
           <><strong>Your responsibility for it.</strong> You confirm that you have the right to put your content into AMC Guide and that it doesn't break any law or anyone else's rights.</>,
-          <><strong>Keep your own copies.</strong> Settings lets you export your data. We work to keep your content safe, but you are responsible for keeping any backups you need.</>,
-          <><strong>Private by design.</strong> Your content isn't shown to other users. AMC Guide never ranks or compares you against other people.</>,
+          <><strong>Private by design.</strong> Apart from your posts, your content isn't shown to other users, and AMC Guide never ranks or compares you against other people.</>,
         ],
       },
+    ],
+  },
+  {
+    id: 'contest-problems',
+    title: 'Contest problems and the MAA',
+    body: [
+      'The AMC 10, AMC 12 and AIME are run by the Mathematical Association of America (MAA). AMC and AIME problems are © the MAA, and AMC Guide is not affiliated with, sponsored by or endorsed by the MAA.',
+      'Official problems appear in AMC Guide for personal study, each with a link to its source. AMC Guide\'s mock and step problems, and the worked solutions it writes, are original.',
+      'Ratings, predicted scores and study plans are AMC Guide\'s own estimates. They aren\'t official scores, cutoffs or results, and they don\'t predict how you will do on contest day.',
     ],
   },
   {
     id: 'ai',
     title: 'AI features',
     body: [
-      'Some features use artificial intelligence to write suggestions: checkpoints for a goal, study sessions and their plans, readings of a subject, free resources, insights from your Log, and the like. Some of these run when you press a button, and the Log reads each entry in the background after you save it.',
+      'Some features use artificial intelligence: hints, "Explain my mistake", the AI coach, and new problems written on request. Each runs only when you ask for it.',
       {
         list: [
-          <><strong>Suggestions, not instructions.</strong> AI output is generated automatically from your own records. It can be wrong, out of date, incomplete or unsuitable for you. Use your own judgment before acting on it.</>,
-          <><strong>Not professional advice.</strong> Nothing AMC Guide produces is academic, medical, mental-health, legal, financial or other professional advice, and it isn't an official grade, score or assessment of anything.</>,
-          <><strong>Outside links.</strong> Suggested resources may link to other websites. We try to suggest only free, reputable sites, but we don't control them and aren't responsible for them.</>,
-          <><strong>Don't misuse it.</strong> Don't try to make the AI features produce harmful, illegal or abusive content, extract other people's information, or get around their limits.</>,
-          <><strong>Usage limits.</strong> AI features cost money to run, so we limit how often they can be used and may change or switch them off.</>,
+          <><strong>It can be wrong.</strong> AI output is generated automatically. A hint can mislead, an explanation can contain an error, and a written problem can be flawed even after it is checked. Use your own judgment, and check against the reference solution.</>,
+          <><strong>Not professional advice.</strong> Nothing AMC Guide produces is academic, legal, medical or other professional advice.</>,
+          <><strong>Don't misuse it.</strong> Don't try to make the AI features produce harmful, illegal or abusive content, or get around their limits.</>,
+          <><strong>Usage limits.</strong> AI features cost money to run, so each account has a daily limit, and we may change or switch them off.</>,
         ],
       },
     ],
   },
   {
     id: 'wellbeing',
-    title: 'Health, safety and study habits',
+    title: 'Contests, honesty and study habits',
     body: [
-      'AMC Guide may suggest focus sessions, study schedules, breaks and, for some subjects, physical practice or exercise. You decide whether a suggestion is right for you. Take breaks, sleep, and stop any activity that causes pain or discomfort. Check with a doctor or a qualified coach before starting new physical training, especially if you have a health condition.',
-      'Streaks, XP and analytics are there to help and motivate you. If tracking your work starts to feel stressful, step back. AMC Guide is meant to serve you, not the other way around.',
+      'Use AMC Guide to prepare, never during a real contest. Using it, or any outside help, while sitting an official AMC or AIME breaks the MAA\'s rules.',
+      'Study plans suggest hours and pacing; you decide what\'s right for you. Take breaks and sleep. Scores and streaks are there to help, and if tracking starts to feel stressful, step back.',
     ],
   },
   {
@@ -144,8 +157,8 @@ const SECTIONS: LegalSection[] = [
     id: 'ownership',
     title: 'Our property',
     body: [
-      'The Service, including its name, logo, design, software, text, graphics, skill trees, rules and everything else we provide (but not your content), belongs to us or to the people who license it to us, and is protected by copyright, trademark and other laws.',
-      'We give you a personal, limited, non-exclusive, non-transferable, revocable license to use the Service for your own study and productivity, as these Terms allow. Nothing in these Terms gives you any other right to our property, and you may not use our name or logo without our written permission.',
+      'The Service, including its name, logo, design, software, text, graphics, original problems and solutions, and everything else we provide (but not your content, and not the MAA\'s problems), belongs to us or to the people who license it to us, and is protected by copyright, trademark and other laws.',
+      'We give you a personal, limited, non-exclusive, non-transferable, revocable license to use the Service for your own study, as these Terms allow. Nothing in these Terms gives you any other right to our property, and you may not use our name or logo without our written permission.',
     ],
   },
   {
@@ -159,7 +172,7 @@ const SECTIONS: LegalSection[] = [
     id: 'third-parties',
     title: 'Other services and links',
     body: [
-      'The Service relies on, and links to, services run by others: Google for sign-in, sending email and fonts; AI providers for some features; and outside websites suggested as study resources. Their own terms and privacy policies apply to your use of them. We aren\'t responsible for their content, availability or practices.',
+      'The Service relies on, and links to, services run by others: Google for sign-in, sending email and fonts; AI providers for some features; and outside websites such as the AoPS wiki, where official problems and their discussions live. Their own terms and privacy policies apply to your use of them. We aren\'t responsible for their content, availability or practices.',
     ],
   },
   {
@@ -207,7 +220,7 @@ const SECTIONS: LegalSection[] = [
         <strong>
           To the fullest extent the law allows, AMC Guide and the people who build and run it will
           not be liable for any indirect, incidental, special, consequential or punitive damages,
-          or for any loss of data, progress, XP, streaks, grades, opportunities, profits or
+          or for any loss of data, progress, scores, grades, opportunities, profits or
           goodwill, arising from or related to your use of, or inability to use, the Service,
           even if we were told such damages were possible.
         </strong>
@@ -283,15 +296,17 @@ export default function TermsOfService() {
   return (
     <LegalDocument
       title="Terms of Service"
-      effective="October 17, 2026"
+      effective="November 24, 2026"
       intro={[
         'Please read these Terms carefully. They explain the rules for using AMC Guide, what you can expect from us, what we expect from you, and the limits on our responsibility.',
       ]}
       summary={[
         'You need to be 13 or older, and under 18 you need a parent or guardian\'s OK.',
         'One account per person and per email address. Keep your password to yourself.',
-        'What you write in AMC Guide is yours. We only use it to run AMC Guide for you.',
-        'AI suggestions can be wrong. They aren\'t professional advice.',
+        'What you put in AMC Guide is yours. Only your Posts are visible to others.',
+        'AMC and AIME problems are © the MAA. AMC Guide isn\'t affiliated with the MAA.',
+        'AI hints and explanations can be wrong. Ratings and predicted scores are estimates.',
+        'Prepare here; never use AMC Guide during a real contest.',
         'Don\'t break, overload or try to get into anything that isn\'t yours.',
         'AMC Guide is free and provided as is, and our liability is limited.',
         'You can delete your account any time in Settings.',

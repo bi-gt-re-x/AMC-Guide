@@ -3,25 +3,22 @@
  *
  * ## It says what the code does
  *
- * An earlier version said data stayed in the browser, which stopped being
- * true when AMC Guide moved to a server; a later one said notes never went to an
- * AI provider, which stopped being true when task notes and the Log started
- * feeding the prompts. A policy that is wrong in the reader's favor is worse
- * than none. So each section is checkable against the code, and if one of
- * these changes, this page changes with it:
+ * Rewritten on 2026-11-24 for AMC Guide as it is now: a study site for the
+ * AMC 10, AMC 12 and AIME. The version before it still described the study
+ * tracker this codebase grew out of (tasks, a calendar, a journal), none of
+ * which a reader of this site can reach. A policy that describes another
+ * product is worse than none. So each section is checkable against the code,
+ * and if one of these changes, this page changes with it:
  *
  *   account, email, verification   backend/routes/auth.py, tracking/auth.py
- *   what's stored, and where       backend/database/schema.sql, connection.py
- *   what goes to AI providers      tracking/planner.py (providers), subject_ai.py
- *                                  and next_sessions.py (task titles, ratings,
- *                                  first 160 characters of task notes),
- *                                  journal.py (Log entries, read after saving),
- *                                  background.py (About you answers)
- *   sensitive-topic filter         `sensitive` in tracking/journal.py
- *   scheduling from your habits    tracking/session_timing.py
+ *   what's stored, and where       data/sql/amc.sql, data/sql/users.sql
+ *   what goes to AI providers      backend/amc/ai.py (providers),
+ *                                  backend/api/amc_ai.py (what each feature sends)
+ *   shared with every account      amc_posts, amc_generated (data/sql/amc.sql)
  *   IP addresses                   middleware/limit.py (memory only)
- *   cookies                        main.py (session, 14 days), routes/theme.py
- *   deletion and export            the Reset and delete and Data sections of Settings
+ *   cookies                        main.py (session, 14 days), routes/theme.py;
+ *                                  the full list is pages/CookiePolicy.tsx
+ *   export, reset and deletion     ACCOUNT_TABLES in backend/api/settings.py
  *
  * **It is a careful draft, not legal advice**, and should be read by a lawyer
  * before AMC Guide is offered widely. The contact address is utils/contact.ts.
@@ -31,11 +28,11 @@
 import { Link } from 'react-router-dom';
 import { LegalDocument, type LegalSection } from '@/components/LegalDocument';
 import { CONTACT_EMAIL } from '@/utils/contact';
-import { RULES } from '@/utils/sharedRules';
 
 const mail = <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>;
 const terms = <Link to="/terms-of-service">Terms of Service</Link>;
-const FEELING_DAYS = RULES.log.feeling_days;
+const cookies = <Link to="/cookie-policy">Cookie Policy</Link>;
+const yourData = <Link to="/your-data">Your Data</Link>;
 
 const SECTIONS: LegalSection[] = [
   {
@@ -43,10 +40,10 @@ const SECTIONS: LegalSection[] = [
     title: 'Who we are and what this covers',
     body: [
       <>
-        AMC Guide ("we", "us" or "our") is a study and productivity tracker. This Privacy Policy
-        explains what personal information we collect when you use the AMC Guide website and web
-        app (the "Service"), how we use it, who we share it with, how long we keep it, and the
-        choices and rights you have. It's part of our {terms}.
+        AMC Guide ("we", "us" or "our") is a study site for the American Mathematics Competitions:
+        the AMC 10, AMC 12 and AIME. This Privacy Policy explains what personal information we
+        collect when you use the AMC Guide website and web app (the "Service"), how we use it, who
+        we share it with, how long we keep it, and the choices you have. It's part of our {terms}.
       </>,
       <>
         For the purposes of data protection laws such as the GDPR, AMC Guide is the "controller" of
@@ -62,27 +59,22 @@ const SECTIONS: LegalSection[] = [
       {
         list: [
           <><strong>Name and email address.</strong> Your email confirms your account, lets you sign in and receives account emails. Your name is used to greet you.</>,
-          <><strong>Username.</strong> You pick it when you finish setting up. It's how your account is known inside AMC Guide and is never shown to other users.</>,
-          <><strong>Password.</strong> Stored only as a salted, one-way hash (PBKDF2-SHA256). Nobody, including us, can read your password from it.</>,
-          <><strong>Google sign-in.</strong> If you choose "Continue with Google", Google sends us your name and email address and confirms the address is yours. We never see your Google password.</>,
-          <><strong>About you.</strong> The optional answers you give during setup and in Settings, such as what you study, your goals, and how you like to work.</>,
+          <><strong>Username.</strong> How your account is known inside AMC Guide. It's shown next to anything you choose to share on the Posts page.</>,
+          <><strong>Password.</strong> Stored only as a salted, one-way hash (PBKDF2). Nobody, including us, can read your password from it.</>,
+          <><strong>Google sign-in.</strong> If it's offered and you choose it, Google sends us your name and email address and confirms the address is yours. We never see your Google password.</>,
         ],
       },
-      { sub: 'As you use AMC Guide' },
+      { sub: 'As you study' },
       {
         list: [
-          <><strong>Tasks:</strong> titles, notes, subjects, due dates and times, how hard each was, how it went, the reasons you pick, and the XP they're worth.</>,
-          <><strong>Goals and checkpoints,</strong> including the scores and progress you log.</>,
-          <><strong>Calendar:</strong> events, times and the daily focus notes you write.</>,
-          <><strong>Focus timer:</strong> each sitting's length, breaks, the task it was for and what you meant to get done.</>,
-          <><strong>Notes, Spaces and links</strong> you save, including any outside resources you keep.</>,
-          <><strong>The Log:</strong> your journal entries, and the short insights AMC Guide learns from them (see section 6).</>,
-          <><strong>Recommendations</strong> we suggested, and whether you planned or finished them.</>,
-          <><strong>Settings and preferences,</strong> such as your theme, start page, daily goal and notification choices.</>,
-          <><strong>Messages you send us,</strong> such as support emails.</>,
+          <><strong>Your answers:</strong> each answer you give, whether it was right, how long you took and where you answered it (practice, review, a set or a timed contest).</>,
+          <><strong>Your review log:</strong> the problems you missed and when each comes back.</>,
+          <><strong>Mock contests and past papers:</strong> timed sittings in progress, finished sittings and their scores, scores you log yourself, and which papers you've unlocked.</>,
+          <><strong>Your study plan:</strong> the contest, date, goal score and hours you choose, how strong you say you are in each subject, and anything you add about your experience, past scores, resources or constraints.</>,
+          <><strong>Settings and profile:</strong> your theme, display preferences and profile picture.</>,
+          <><strong>What you share:</strong> problems and solutions you post on the Posts page, and problems you ask the AI to write.</>,
         ],
       },
-      'We don\'t ask for and don\'t want payment details, government ID numbers, your precise location, your contacts, or information about your health, religion, politics, sexuality or ethnicity. Please don\'t put that kind of information into AMC Guide.',
     ],
   },
   {
@@ -91,220 +83,116 @@ const SECTIONS: LegalSection[] = [
     body: [
       {
         list: [
-          <><strong>Activity we work out from your data.</strong> Streaks, XP, levels, achievements, analytics, focus totals, the times of day and days of the week you usually work, and how well work goes at those times. These are calculated from what you've entered and stored with your account.</>,
-          <><strong>IP address.</strong> Used briefly, in the server's memory only, to slow down repeated sign-in attempts, sign-ups and other requests that could be abused. It isn't saved to our database.</>,
-          <><strong>Technical logs.</strong> Like any web server, ours may briefly record requests and errors (such as the page asked for and the time) to keep the Service working and secure.</>,
-          <><strong>Cookies and browser storage.</strong> Described in section 9.</>,
+          <><strong>Cookies.</strong> Two: one that keeps you signed in and one that remembers your light or dark theme. There are no advertising or analytics cookies. Our {cookies} lists them.</>,
+          <><strong>IP addresses.</strong> Used only to limit repeated sign-in attempts, held in the server's memory for a short time and never written to the database.</>,
+          <><strong>Server logs.</strong> Like any web server, ours records requests (the page asked for, the time and the result) to keep the Service running and find faults.</>,
         ],
       },
-      'We don\'t use advertising networks, analytics trackers, tracking pixels, fingerprinting or third-party cookies.',
+      'We don\'t use advertising networks, tracking pixels or third-party analytics, and we don\'t follow you across other websites.',
     ],
   },
   {
     id: 'use',
     title: 'How we use your information',
     body: [
-      'We use your information only to run AMC Guide for you:',
       {
         list: [
-          'To create and secure your account, confirm your email and sign you in.',
-          'To store and show your tasks, goals, calendar, notes, Spaces and Log.',
-          'To work out your streaks, XP, levels, achievements and analytics.',
-          'To personalize suggestions, such as recommended study sessions and free resources, and to schedule planned sessions at the times your own history shows you work best, spaced apart from your other sessions.',
-          'To send account emails, such as the link that confirms your address.',
-          'To protect the Service and its users, including limiting abuse, investigating problems and enforcing our Terms.',
-          'To fix bugs and improve how AMC Guide works.',
-          'To meet legal obligations.',
+          'To run your account and sign you in.',
+          'To grade your answers, schedule your reviews, work out your level and predicted scores, and build your study plan and practice sets.',
+          'To send account emails, such as the link that confirms your address. We don\'t send marketing email.',
+          'To keep the Service secure and stop abuse, such as password guessing.',
+          'To find and fix problems with the Service.',
         ],
       },
-      { sub: 'What we never do' },
-      {
-        list: [
-          'We never sell or rent your personal information, and we never "share" it for cross-context behavioral advertising.',
-          'We never show you ads or use your data to target ads anywhere else.',
-          'We never compare or rank you against other users. Every number you see comes from your own work.',
-          'We never send marketing email.',
-          'We don\'t use your content to train our own AI models.',
-        ],
-      },
+      'We don\'t sell your personal information, rent it, or use it for advertising.',
     ],
   },
   {
     id: 'legal-bases',
-    title: 'Legal bases (EEA, UK and similar laws)',
+    title: 'Our legal bases',
     body: [
-      'If you live in the European Economic Area, the United Kingdom or another place with similar laws, we rely on these legal bases:',
-      {
-        list: [
-          <><strong>Contract:</strong> to provide the Service you signed up for, including your account, your content and the features you use.</>,
-          <><strong>Legitimate interests:</strong> to keep the Service secure, prevent abuse, fix problems and improve it, in ways that don't override your rights.</>,
-          <><strong>Consent:</strong> for optional things you choose, such as signing in with Google, sharing About you answers, and using the Log's learning. You can withdraw consent at any time by removing that information or not using the feature.</>,
-          <><strong>Legal obligation:</strong> when the law requires us to keep or disclose information.</>,
-        ],
-      },
+      'Where laws like the GDPR apply, we rely on: performing our agreement with you (running your account and the features you use); our legitimate interests (keeping the Service secure and working); your consent, where we ask for it; and legal obligations, where we have them.',
     ],
   },
   {
     id: 'ai',
-    title: 'AI features and what they receive',
+    title: 'AI features',
     body: [
-      'Some features send a summary of your records to an outside AI provider, which writes a response that we show to you. Depending on how AMC Guide is set up, the provider is Groq, Hugging Face, xAI (Grok) or Anthropic. Each processes the request under its own API terms and privacy policy.',
-      { sub: 'When it happens' },
+      'Some features send information to an AI provider to write a response. Each runs only when you press its button.',
       {
         list: [
-          <><strong>When you press a button</strong> that drafts checkpoints, a goal plan, recommended sessions, a reading of a subject or similar.</>,
-          <><strong>After you save a Log entry.</strong> A model reads the entry in the background, about {RULES.log.quiet_seconds} seconds after you stop typing or right away when you press Save, and turns it into a few short insights.</>,
+          <><strong>Hints:</strong> the problem, and its reference solution so the hint points the right way.</>,
+          <><strong>Explain my mistake:</strong> the problem, the right answer, the answer you gave and the reference solution.</>,
+          <><strong>The AI coach</strong> (on Analytics and the Study Plan): a summary of your results (accuracy and timing by topic, recent scores, predicted scores) and your study plan, including anything you typed into the plan form.</>,
+          <><strong>Writing new problems:</strong> the contest, topic and difficulty you choose, and the problem you started from for "More like this".</>,
         ],
       },
-      { sub: 'What it can include' },
-      {
-        list: [
-          'Your goal text, checkpoint names and progress.',
-          'Recent task titles, their subjects, dates, how hard they were, how they went, the reasons you picked, how long they took, and the first 160 characters of each task\'s notes.',
-          'Counts and averages worked out from your tasks.',
-          'Your About you answers and the insights learned from your Log.',
-          'For the Log, the text of the entry being read.',
-          'Links you keep for a subject.',
-        ],
-      },
-      { sub: 'What it never includes' },
-      {
-        list: [
-          'Your email address, password, name, username or IP address.',
-          'Other people\'s data.',
-        ],
-      },
-      { sub: 'Limits on what the Log learns' },
-      <>
-        The Log is told never to infer anything about health, sexuality, gender identity,
-        religion, politics or ethnicity, and AMC Guide throws away any insight that touches those
-        topics anyway. Insights about how you felt fade after {FEELING_DAYS} days and are never
-        treated as lasting facts. You can see every insight on the Log page and remove any of
-        them, and AMC Guide won't learn a removed one again.
-      </>,
-      'If you don\'t want your information sent to an AI provider, don\'t use the AI buttons and don\'t write in the Log. Everything else in AMC Guide works without them.',
+      'We never send your email address, your password or your name. The providers we use are Google (Gemini), xAI (Grok) and Groq, depending on which is available. Each handles what we send under its own terms for developers, which limit how it may be used.',
+      'Answers are saved so the same request isn\'t sent twice. A hint for a problem is saved without your account attached and can be shown to anyone who asks for the same hint. Problems the AI writes for you are added to the shared problem bank, which every account can see.',
     ],
   },
   {
     id: 'sharing',
-    title: 'Who we share information with',
+    title: 'Who can see your information',
     body: [
-      'We share personal information only with these service providers, only as much as each needs, and only to run AMC Guide:',
       {
         list: [
-          <><strong>AI providers</strong> (Groq, Hugging Face, xAI, Anthropic), as described in section 6.</>,
-          <><strong>Google,</strong> if you sign in with Google; to deliver our emails, which are sent through Gmail; and to load the fonts the site uses from Google Fonts, which means your browser asks Google's servers for them and Google sees your IP address.</>,
-          <><strong>Hosting and database providers</strong> that run the servers AMC Guide is stored on.</>,
+          <><strong>Other users</strong> see only what you post on the Posts page, with your username. Your answers, scores, reviews and plan are never shown to anyone else, and AMC Guide never ranks you against other people.</>,
+          <><strong>Service providers</strong> who help us run AMC Guide: our hosting and database, Google (sign-in, sending email and the site's fonts) and the AI providers in section 6. They may use your information only to provide their service to us.</>,
+          <><strong>The law.</strong> We will share information if the law requires it, or to protect someone's safety or the Service from abuse.</>,
+          <><strong>A change of ownership.</strong> If AMC Guide is ever transferred to someone else, your information would go with it under this policy, and we would tell you first.</>,
         ],
       },
-      'We may also disclose information if the law requires it (for example a valid court order), to protect the safety, rights or property of our users, the public or AMC Guide, or as part of a merger, sale or reorganization, in which case this policy will continue to protect your information.',
-      'Other AMC Guide users can\'t see your account or your content.',
-    ],
-  },
-  {
-    id: 'email',
-    title: 'Emails we send',
-    body: [
-      'We email you only about your account: today, that means the link that confirms your email address, and a new one if you ask us to send it again. Our emails come from joverdam722@gmail.com and are sent through Gmail.',
-      'We never send marketing email, we never sell or share your address, and we will never ask for your password by email. If you get an email claiming to be from AMC Guide that asks for your password, don\'t answer it, and let us know.',
-    ],
-  },
-  {
-    id: 'cookies',
-    title: 'Cookies and browser storage',
-    body: [
-      'AMC Guide uses only what it needs to work:',
-      {
-        list: [
-          <><strong>Sign-in cookie.</strong> Keeps you signed in for up to 14 days. It's signed so it can't be forged, marked HttpOnly so page scripts can't read it, sent only over secure connections when the site is served over HTTPS, and limited to AMC Guide (SameSite=Lax).</>,
-          <><strong>Theme cookie.</strong> Remembers light or dark mode so the page doesn't flash the wrong colors.</>,
-          <><strong>Browser storage.</strong> Your browser keeps small conveniences on your device, such as which tab or view you last had open and drafts you haven't saved. It stays on your device, and clearing your browser's site data removes it.</>,
-        ],
-      },
-      'We don\'t use advertising or analytics cookies, so there is nothing to opt out of. Because we don\'t track you across sites, we treat every visitor as if they had sent a "Do Not Track" or Global Privacy Control signal.',
     ],
   },
   {
     id: 'retention',
-    title: 'How long we keep information',
+    title: 'How long we keep it',
     body: [
-      {
-        list: [
-          <><strong>Your account and content</strong> are kept until you delete them or your account.</>,
-          <><strong>Deleting your account</strong> (Settings, Reset and delete) removes it and everything in it from our live database right away. We don't keep a separate backup of deleted accounts.</>,
-          <><strong>Smaller resets</strong> in Settings can clear finished tasks, all tasks, your level and XP, or all your content while keeping the account.</>,
-          <><strong>Email confirmation links</strong> stop working once used, and a new one replaces the old.</>,
-          <><strong>Log feelings</strong> fade after {FEELING_DAYS} days, as section 6 explains.</>,
-          <><strong>Technical logs</strong> are kept only as long as needed to run and secure the Service.</>,
-          <><strong>Unconfirmed or long-inactive accounts</strong> may be deleted, as our {terms} describe.</>,
-        ],
-      },
-      'We may keep information longer only where the law requires it, or to deal with a dispute or abuse.',
+      'We keep your account and study record for as long as you have an account. Resetting your AMC progress in Settings deletes your answers, review log, mock scores and study plan straight away. Deleting your account deletes all of that and the account itself.',
+      'What you shared stays shared: a post on the Posts page and a problem the AI wrote at your request remain after your account is gone, because others may be using them. Email us and we will remove your posts or take your username off them.',
     ],
   },
   {
     id: 'security',
-    title: 'How we protect information',
+    title: 'Security',
     body: [
-      {
-        list: [
-          'Passwords are stored only as salted, one-way hashes, never as plain text.',
-          'New passwords must meet minimum strength rules.',
-          'Sign-in sessions use signed, HttpOnly cookies.',
-          'Repeated sign-in attempts, sign-ups, email requests and checks are rate limited.',
-          'Each account can reach only its own data, and every request is checked for that.',
-          'Access to the servers and database is limited to the people who run AMC Guide.',
-        ],
-      },
-      'No system is perfectly secure, so we can\'t promise that information will never be accessed without permission. If a breach affects your personal information, we will tell you and any authorities as the law requires. You can help by using a password you don\'t use anywhere else.',
+      'Passwords are stored only as salted hashes. The session cookie is signed so it can\'t be forged, can\'t be read by the page\'s scripts, and is sent only over a secure connection on the live site. Sign-in attempts are rate-limited.',
+      'No system is perfectly secure. If we learn of a breach that affects your information, we will tell you and, where the law requires it, the authorities.',
     ],
   },
   {
     id: 'rights',
-    title: 'Your rights and choices',
+    title: 'Your choices and rights',
     body: [
-      'Wherever you live, you can:',
-      {
-        list: [
-          <><strong>See and export</strong> your data: Settings, Data &amp; export, gives you everything as JSON, or one table at a time as CSV.</>,
-          <><strong>Correct</strong> it: edit your name, tasks, goals and everything else in the app. Email us to change anything you can't edit yourself.</>,
-          <><strong>Delete</strong> it: remove single items, use the resets in Settings, or delete your whole account.</>,
-          <><strong>Remove what the Log learned</strong> about you, one insight at a time.</>,
-          <><strong>Ask us</strong> anything about your data, or for help with any of the above, at {mail}.</>,
-        ],
-      },
-      { sub: 'EEA, UK and similar laws' },
-      'You also have the right to access, correct, delete, restrict or object to our use of your personal information, to receive it in a portable format, and to withdraw consent at any time. You can complain to your local data protection authority, though we\'d like the chance to fix the problem first.',
-      { sub: 'California and other US states' },
-      'Depending on your state, you have the right to know what personal information we collect and how we use it, to access, correct and delete it, and to opt out of its sale or sharing for targeted advertising. We don\'t sell or share personal information for advertising, and we don\'t use it to make decisions with legal or similarly significant effects about you. We will never treat you differently for using your rights.',
-      { sub: 'How to make a request' },
-      'Email us from the address on your account so we can confirm it\'s you. We will answer within 30 days (or sooner if your local law requires it). A parent or guardian, or someone you authorize, can make a request for you, and we may ask them to show that they are allowed to.',
-    ],
-  },
-  {
-    id: 'children',
-    title: 'Children',
-    body: [
-      'AMC Guide is built for students, but it isn\'t for children under 13. Everyone must confirm they are 13 or older to sign up, and we don\'t knowingly collect personal information from children under 13. Users under 18 need a parent or guardian\'s permission.',
       <>
-        If you believe a child under 13 has made an account, email {mail} and we will delete it.
-        Parents and guardians of users under 18 can also ask to see, correct or delete their
-        child's information.
+        You can see, download, correct and delete your information at any time. Our {yourData}{' '}
+        page explains how. Depending on where you live, you may also have the right to object to or
+        restrict how we use it, to withdraw consent you gave, and to complain to your data protection
+        authority. Email {mail} for anything you can't do in Settings, and we will reply within 30 days.
       </>,
     ],
   },
   {
-    id: 'transfers',
-    title: 'International transfers',
+    id: 'children',
+    title: 'Children and students',
     body: [
-      'AMC Guide\'s servers and the providers listed in section 7 may be in a different country from you, including the United States. When we move personal information from the EEA, the UK or Switzerland to another country, we rely on the safeguards the law allows, such as the European Commission\'s Standard Contractual Clauses in our providers\' terms.',
+      'AMC Guide is for students preparing for contests, and many of them are under 18. You must be 13 or older to make an account, and under 18 you need the permission of a parent or guardian. We don\'t knowingly collect information from children under 13. If you believe a child under 13 has made an account, email us and we will delete it.',
+      'Parents and guardians can ask us to see, export or delete their child\'s information at the address below.',
+    ],
+  },
+  {
+    id: 'transfers',
+    title: 'Where your information is processed',
+    body: [
+      'AMC Guide\'s servers and the providers in section 7 may be in a different country from you, including the United States. When we move personal information from the EEA, the UK or Switzerland to another country, we rely on the safeguards the law allows, such as the Standard Contractual Clauses in our providers\' terms.',
     ],
   },
   {
     id: 'changes',
     title: 'Changes to this policy',
     body: [
-      'We will post any change to this policy on this page with a new effective date. If a change affects what we collect, how we use it or who we share it with, we will tell you in the app before it takes effect, and where the law requires it, we will ask for your consent.',
+      'We will post any change to this policy on this page with a new effective date. If a change affects what we collect, how we use it or who we share it with, we will tell you in the app before it takes effect and, where the law requires it, ask for your consent.',
     ],
   },
   {
@@ -323,17 +211,17 @@ export default function PrivacyPolicy() {
   return (
     <LegalDocument
       title="Privacy Policy"
-      effective="October 17, 2026"
+      effective="November 24, 2026"
       intro={[
-        'Your privacy matters to us. This policy explains what AMC Guide collects, why, who sees it, and what you can do about it, in as plain words as we can manage.',
+        'This policy explains what AMC Guide collects, why, who sees it, and what you can do about it, in words as plain as we can manage.',
       ]}
       summary={[
-        'We collect what you put into AMC Guide, plus your name, email and a hashed password.',
+        'We keep your name, email, a hashed password, and your study record: answers, reviews, mock scores and your plan.',
         'We use it only to run AMC Guide for you. No ads, no selling, no tracking across sites.',
-        'Some features send a summary of your tasks, or a Log entry, to an AI provider. Never your email or password.',
-        'Only you can see your data. We never compare you with other people.',
-        'Export or delete everything from Settings, any time.',
-        'AMC Guide is for people 13 and older.',
+        'Hints, explanations and the AI coach send the problem, your answer or a summary of your results to an AI provider. Never your name, email or password.',
+        'Only what you post on the Posts page is visible to other people.',
+        'Download, reset or delete everything from Settings, any time.',
+        'AMC Guide is for people 13 and older, with a parent\'s OK under 18.',
       ]}
       sections={SECTIONS}
     />

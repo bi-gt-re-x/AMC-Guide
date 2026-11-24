@@ -8,7 +8,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
-import { Empty, PageHeader, ProblemRow } from '@/components/Amc/bits';
+import { Empty, PageHeader, ProblemRow, problemHref } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
 import { amc, RATING_TOP, type ProblemFilters, type Status } from '@/services/amc';
 import '@/styles/amc.css';
@@ -280,7 +280,7 @@ export default function Problems() {
               )}
               {data.problems.length ? (
                 <div className="am-rows">
-                  {data.problems.map((p) => <ProblemRow key={p.id} problem={p} />)}
+                  {data.problems.map((p) => <ProblemRow key={p.id} problem={p} to={problemHref(p.id, filters.topic)} />)}
                 </div>
               ) : (
                 <Empty title="No problems match">Loosen a filter, or clear them all.</Empty>

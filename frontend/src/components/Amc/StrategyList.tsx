@@ -10,12 +10,12 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { MathText } from './MathText';
-import { Difficulty, StatusPill } from './bits';
+import { Difficulty, problemHref, StatusPill } from './bits';
 import type { StrategyGroup, TopicRow } from '@/services/amc';
 
 type Group = Omit<StrategyGroup, 'pills'> & { pills: TopicRow[] };
 
-export function StrategyList({ groups }: { groups: Group[] }) {
+export function StrategyList({ groups, topic }: { groups: Group[]; topic?: string }) {
   const [open, setOpen] = useState<Set<string>>(() => new Set(groups.slice(0, 1).map((g) => g.id)));
   const allOpen = open.size === groups.length;
   const total = groups.reduce((n, g) => n + g.pills.length, 0);
@@ -59,7 +59,7 @@ export function StrategyList({ groups }: { groups: Group[] }) {
               <ol id={panel} className="am-slist-rows">
                 {g.pills.map((p) => (
                   <li key={p.id}>
-                    <Link to={`/problems/${p.id}`} className={`am-slist-row is-${p.status}`}>
+                    <Link to={problemHref(p.id, topic)} className={`am-slist-row is-${p.status}`}>
                       <div className="am-slist-meta">
                         <strong>{p.short}</strong>
                         <span className="am-slist-source">{p.source}</span>

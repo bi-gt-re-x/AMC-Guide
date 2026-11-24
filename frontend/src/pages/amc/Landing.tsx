@@ -778,8 +778,14 @@ export default function Landing() {
       </main>
 
       <footer className="lp-foot lp-wrap">
-        <span>AMC Guide’s mock and step problems are original. AMC and AIME problems are © MAA. Not affiliated with the MAA.</span>
-        <span><Link to="/privacy-policy">Privacy</Link> · <Link to="/terms-of-service">Terms</Link></span>
+        <nav className="lp-foot-links" aria-label="Legal">
+          <Link to="/terms-of-service">Terms of Service</Link>
+          <Link to="/privacy-policy">Privacy Policy</Link>
+          <Link to="/cookie-policy">Cookie Policy</Link>
+          <Link to="/your-data">Your Data</Link>
+          <Link to="/about-us">About</Link>
+        </nav>
+        <span>© {new Date().getFullYear()} AMC Guide. Its mock and step problems are original. AMC and AIME problems are © MAA. Not affiliated with the MAA.</span>
       </footer>
     </div>
   );

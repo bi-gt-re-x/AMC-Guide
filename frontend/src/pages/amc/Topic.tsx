@@ -5,7 +5,7 @@
 import { Link, useParams } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
 import { MathText } from '@/components/Amc/MathText';
-import { Difficulty, Empty, Meter, PageHeader } from '@/components/Amc/bits';
+import { Difficulty, Empty, Meter, PageHeader, problemHref } from '@/components/Amc/bits';
 import { StrategyList } from '@/components/Amc/StrategyList';
 import { useApi, useDocumentTitle } from '@/hooks';
 import { amc, pct, type NextPick } from '@/services/amc';
@@ -13,10 +13,10 @@ import '@/styles/amc.css';
 
 const PICK_LABEL: Record<NextPick['kind'], string> = { retry: 'Retry', next: 'Next step', stretch: 'Stretch' };
 
-function Pick({ pick }: { pick: NextPick }) {
+function Pick({ pick, topic }: { pick: NextPick; topic: string }) {
   return (
     <li>
-      <Link to={`/problems/${pick.id}`} className={`am-pick is-${pick.kind}`}>
+      <Link to={problemHref(pick.id, topic)} className={`am-pick is-${pick.kind}`}>
         <span className="am-pick-kind">{PICK_LABEL[pick.kind]}</span>
         <span className="am-pick-body">
           <strong>{pick.short ?? pick.id}</strong> <span className="am-muted">{pick.source}</span>
@@ -69,7 +69,7 @@ export default function Topic() {
             <section className="am-card">
               <div className="am-card-head"><h2>Do these next</h2></div>
               <ol className="am-picks">
-                {data.next.map((p) => <Pick key={p.kind} pick={p} />)}
+                {data.next.map((p) => <Pick key={p.kind} pick={p} topic={topic.id} />)}
               </ol>
             </section>
           )}
@@ -102,7 +102,7 @@ export default function Topic() {
               <h2>Problems by strategy</h2>
               <Link to={`/problems?topic=${topic.id}`}>Open in Problems</Link>
             </div>
-            {data.by_strategy.length ? <StrategyList groups={data.by_strategy} /> : <Empty title="No problems yet" />}
+            {data.by_strategy.length ? <StrategyList groups={data.by_strategy} topic={topic.id} /> : <Empty title="No problems yet" />}
           </section>
         </div>
         <aside className="am-stack">
@@ -121,7 +121,7 @@ export default function Topic() {
               <div className="am-card-head"><h2>Techniques</h2></div>
               <div className="am-chips">
                 {data.techniques.map((t) => (
-                  <Link key={t.id} className="am-chip" to={`/problems?technique=${t.id}`}>
+                  <Link key={t.id} className="am-chip" to={`/problems?topic=${topic.id}&technique=${t.id}`}>
                     {t.name} <small>{t.count}</small>
                   </Link>
                 ))}

@@ -34,6 +34,8 @@ const Settings = lazy(() => import('@/pages/Settings'));
 const AboutUs = lazy(() => import('@/pages/AboutUs'));
 const PrivacyPolicy = lazy(() => import('@/pages/PrivacyPolicy'));
 const TermsOfService = lazy(() => import('@/pages/TermsOfService'));
+const CookiePolicy = lazy(() => import('@/pages/CookiePolicy'));
+const YourData = lazy(() => import('@/pages/YourData'));
 
 /* The AMC prep site: one page per section in the rail, plus the detail pages
    under them. See backend/api/amc.py for what each one reads. */
@@ -303,6 +305,8 @@ export default function App() {
             <Route path="/about-us" element={<AboutUs />} />
             <Route path="/privacy-policy" element={<PrivacyPolicy />} />
             <Route path="/terms-of-service" element={<TermsOfService />} />
+            <Route path="/cookie-policy" element={<CookiePolicy />} />
+            <Route path="/your-data" element={<YourData />} />
 
             {/* Account required — the same paths the backend gates.
                 See backend/middleware/gate.py GATED_PATHS. */}

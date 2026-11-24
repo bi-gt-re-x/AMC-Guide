@@ -137,7 +137,13 @@ describe('AMC pages render the API as it is', () => {
   it('One problem', async () => {
     show('/problems/step-10-01', '/problems/:problemId', <Problem />);
     await settled(/What is the value of/);
-    expect(amc.problem).toHaveBeenCalledWith('step-10-01');
+    expect(amc.problem).toHaveBeenCalledWith('step-10-01', '');
+  });
+
+  it('One problem, opened from a topic, asks for that topic\'s Previous and Next', async () => {
+    show('/problems/step-10-01?topic=circles', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    expect(amc.problem).toHaveBeenCalledWith('step-10-01', 'circles');
   });
 
   it('Topics', async () => {

@@ -46,6 +46,11 @@ export function CategoryDot({ category }: { category: CategoryId }) {
   return <i className={`am-dot am-tone-${CATEGORY_TONE[category]}`} aria-hidden="true" />;
 }
 
+/** A problem's page; from a topic, Previous and Next stay inside that topic. */
+export function problemHref(id: string, topic?: string | null) {
+  return `/problems/${id}${topic ? `?topic=${encodeURIComponent(topic)}` : ''}`;
+}
+
 export function ProblemRow({ problem, extra, to }: { problem: ProblemSummary; extra?: ReactNode; to?: string }) {
   return (
     <Link to={to ?? `/problems/${problem.id}`} className="am-row">
@@ -319,12 +324,12 @@ export function DiagramNote({ diagram, href }: { diagram: string; href?: string 
  * A topic's or a strategy's problems as wrapping rows of pills: the short
  * label, coloured by status, easiest first. Each pill opens the problem.
  */
-export function ProblemPills({ pills, empty = 'No problems yet.' }: { pills: Pill[]; empty?: string }) {
+export function ProblemPills({ pills, empty = 'No problems yet.', topic }: { pills: Pill[]; empty?: string; topic?: string }) {
   if (!pills.length) return <p className="am-muted am-pills-empty">{empty}</p>;
   return (
     <div className="am-pills">
       {pills.map((p) => (
-        <Link key={p.id} to={`/problems/${p.id}`} className={`am-pill-link is-${p.status}`}
+        <Link key={p.id} to={problemHref(p.id, topic)} className={`am-pill-link is-${p.status}`}
               title={`${p.title} — ${STATUS_LABEL[p.status]}, rated ${ratingText(p.rating ?? p.difficulty)}`}>
           <i className={`am-pill-diff d${p.difficulty}`} aria-hidden="true" />
           {p.short}

@@ -293,8 +293,12 @@ html .lp .lp-sample.amc-page {
 .lp-final-ridge { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 180px; fill: #2C3630; }
 
 /* Footer -------------------------------------------------------------------------- */
-.lp-foot { display: flex; justify-content: space-between; gap: 16px; flex-wrap: wrap; padding-top: 28px; padding-bottom: 36px;
+.lp-foot { display: flex; justify-content: space-between; align-items: baseline; gap: 12px 24px; flex-wrap: wrap;
+    padding-top: 28px; padding-bottom: 36px; border-top: 1px solid var(--lp-line);
     color: var(--lp-muted); font-size: 12px; line-height: 1.6; }
+.lp-foot-links { display: flex; flex-wrap: wrap; gap: 6px 20px; font-size: 13px; }
+.lp-foot-links a { color: var(--lp-body); text-decoration: none; }
+.lp-foot-links a:hover, .lp-foot-links a:focus-visible { color: var(--lp-ink); text-decoration: underline; text-underline-offset: 3px; }
 
 /* Study plan and weak topics (bento) ---------------------------------------------- */
 .lp-plan { display: grid; gap: 16px; }

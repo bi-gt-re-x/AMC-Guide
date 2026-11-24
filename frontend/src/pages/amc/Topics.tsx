@@ -91,7 +91,7 @@ function TopicView({ query }: { query: string }) {
                 </div>
                 <p className="am-topic-block-summary">{t.summary}</p>
                 <Meter value={t.problems ? t.solved / t.problems : 0} />
-                <ProblemPills pills={t.pills ?? []} />
+                <ProblemPills pills={t.pills ?? []} topic={t.id} />
                 <div className="am-topic-block-foot">
                   <span className="am-topic-levels">
                     {t.levels.map((l) => <span key={l}>{l.replace('AMC ', '')}</span>)}

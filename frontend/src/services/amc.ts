@@ -557,6 +557,8 @@ export interface ProblemDetail {
   attempts: { answer: string; correct: boolean; at: string; source: string; seconds: number }[];
   review: ReviewItem | null;
   related: ProblemSummary[];
+  /** The topic Previous and Next walk, when the problem was opened from one. */
+  topic?: string | null;
   prev: string | null;
   next: string | null;
 }
@@ -967,7 +969,9 @@ export const amc = {
   createProblem: (body: { like?: string; level?: string; topic?: string; technique?: string; rating?: number }) =>
     post<{ id: string }>('/api/amc/ai/create', body),
   problems: (filters: ProblemFilters) => get<ProblemList>('/api/amc/problems', { ...filters }),
-  problem: (id: string) => get<ProblemDetail>(`/api/amc/problems/${encodeURIComponent(id)}`),
+  /** One problem. With `topic`, its Previous and Next step through that topic's problems. */
+  problem: (id: string, topic = '') =>
+    get<ProblemDetail>(`/api/amc/problems/${encodeURIComponent(id)}`, topic ? { topic } : {}),
   attempt: (id: string, answer: string, seconds: number, source: 'practice' | 'review' = 'practice') =>
     post<AttemptReply>(`/api/amc/problems/${encodeURIComponent(id)}/attempt`, { answer, seconds, source }),
   reveal: (id: string) => post<{ problem: Problem }>(`/api/amc/problems/${encodeURIComponent(id)}/reveal`),

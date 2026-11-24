@@ -301,7 +301,7 @@ def list_problems(level: str = '', category: str = '', topic: str = '', difficul
 
 
 @router.get('/api/amc/problems/{problem_id}')
-def get_problem(problem_id: str, username: str = Depends(current_username)):
+def get_problem(problem_id: str, topic: str = '', username: str = Depends(current_username)):
     p = pb.get(problem_id)
     if not p:
         return fail('No such problem.')
@@ -311,9 +311,17 @@ def get_problem(problem_id: str, username: str = Depends(current_username)):
     rev = review_by_id.get(problem_id)
     related = [_summary(username, q['id'], hist, review_by_id) for q in pb.all_problems()
                if q['id'] != problem_id and (q['topic'] == p['topic'] or p['topic'] in q['also'])][:5]
-    # Previous and next stay inside the same set: an official problem steps
-    # through its own contest, a bank problem through the bank.
-    if p.get('official'):
+    # Previous and next stay inside the set the problem was opened from. From a
+    # topic (`?topic=`), that is the topic's own problems, easiest first as the
+    # topic page lists them — not the rest of the paper, which walked a reader
+    # who came for one topic through every problem of that year's contest.
+    # Otherwise an official problem steps through its own contest, a bank
+    # problem through the bank.
+    in_topic = topic in catalog.TOPIC_BY_ID and (p['topic'] == topic or topic in p['also'])
+    if in_topic:
+        family = sorted((q for q in pb.all_problems() if q['topic'] == topic or topic in q['also']),
+                        key=lambda q: (q['rating'], _source_rank(q['id'])))
+    elif p.get('official'):
         family = [q for q in pb.all_problems() if q.get('contest') == p['contest']]
     else:
         family = sorted((q for q in pb.all_problems() if not q.get('official')), key=lambda q: _source_rank(q['id']))
@@ -325,6 +333,7 @@ def get_problem(problem_id: str, username: str = Depends(current_username)):
                          'source': a['source'], 'seconds': a['seconds']} for a in mine],
               review=_review_view(rev, hist, review_by_id, _today()) if rev else None,
               related=related,
+              topic=topic if in_topic else None,
               prev=order[i - 1] if i > 0 else None,
               next=order[i + 1] if i + 1 < len(order) else None)
 

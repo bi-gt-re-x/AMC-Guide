@@ -20,6 +20,7 @@ import {
   DiagramNote,
   Difficulty,
   ProblemRow,
+  problemHref,
   ratingText,
   Solution,
   StatusPill,
@@ -55,8 +56,10 @@ export default function Problem() {
   const setAt = setIds.indexOf(problemId);
   const setNext = setAt >= 0 ? setIds[setAt + 1] : undefined;
   const setHome = practiceSet ? `/practice/${practiceSet.topic}?mode=${practiceSet.mode}` : '/topics';
+  // Opened from a topic: Previous and Next walk that topic, not the whole paper.
+  const fromTopic = params.get('topic') ?? '';
   const navigate = useNavigate();
-  const { data, error, loading, reload } = useApi(() => amc.problem(problemId), [problemId]);
+  const { data, error, loading, reload } = useApi(() => amc.problem(problemId, fromTopic), [problemId, fromTopic]);
   const { notify } = useNotice();
   useDocumentTitle(data ? data.problem.sources[0] ? `${data.problem.sources[0].name} #${data.problem.sources[0].number}` : 'Problem' : 'Problem');
 
@@ -315,10 +318,10 @@ export default function Problem() {
 
             <div className="am-nav-row">
               {data.prev ? (
-                <button type="button" className="am-btn" onClick={() => navigate(`/problems/${data.prev}`)}>← Previous</button>
+                <button type="button" className="am-btn" onClick={() => navigate(problemHref(data.prev!, data.topic))}>← Previous</button>
               ) : <span />}
               {data.next && (
-                <button type="button" className="am-btn" onClick={() => navigate(`/problems/${data.next}`)}>Next →</button>
+                <button type="button" className="am-btn" onClick={() => navigate(problemHref(data.next!, data.topic))}>Next →</button>
               )}
             </div>
           </article>
@@ -409,7 +412,7 @@ export default function Problem() {
             <section>
               <h2 className="am-h2" style={{ marginBottom: 10 }}>Same topic</h2>
               <div className="am-rows">
-                {data.related.map((r) => <ProblemRow key={r.id} problem={r} />)}
+                {data.related.map((r) => <ProblemRow key={r.id} problem={r} to={problemHref(r.id, data.problem.topic)} />)}
               </div>
             </section>
           )}

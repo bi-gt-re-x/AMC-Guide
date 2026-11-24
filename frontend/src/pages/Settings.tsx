@@ -707,6 +707,8 @@ export default function Settings() {
               <div className="st-links">
                 <Link className="st-btn is-small" to="/terms-of-service">Terms</Link>
                 <Link className="st-btn is-small" to="/privacy-policy">Privacy</Link>
+                <Link className="st-btn is-small" to="/cookie-policy">Cookies</Link>
+                <Link className="st-btn is-small" to="/your-data">Your data</Link>
                 <Link className="st-btn is-small" to="/about-us">About</Link>
               </div>
             ),
