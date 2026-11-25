@@ -13,6 +13,11 @@ way of training it (backend/amc/planning.py `KINDS`).
 * spaced   — problems they have answered before, the longest ago and the ones
              due for review first.
 * practice — the topic's difficulty mix (planning.difficulty_mix), level by level.
+* challenge — five problems above where the student is in the topic, on a
+             longer clock: the study plan's weekly stretch.
+
+A set is eight problems unless asked for fewer or more (`size`): the study
+plan sizes each day's set to the minutes the student has that day.
 
 ## Pitched to the student, and harder as it goes
 
@@ -37,8 +42,14 @@ from backend.amc import catalog, engine, planning, smart
 from backend.amc import problems as pb
 
 SIZE = 8
-MODES = ('learn', 'accuracy', 'timed', 'mixed', 'spaced', 'practice')
+MODES = ('learn', 'accuracy', 'timed', 'mixed', 'spaced', 'practice', 'challenge')
+#: The sets that run on a clock, and how long each problem gets.
+TIMED = ('timed', 'challenge')
+CHALLENGE_SIZE = 5
+SIZES = (3, 12)
 SECONDS = {'AMC 10': 180, 'AMC 12': 180, 'AIME': 720}
+#: A challenge problem gets half as long again as a timed one.
+CHALLENGE_STRETCH = 1.5
 INSTRUCTIONS = {
     'learn': 'Read the ideas first, then work these easiest-first. No clock; check the solution after each.',
     'accuracy': 'No clock. Write each step and check your answer before you submit.',
@@ -46,9 +57,10 @@ INSTRUCTIONS = {
     'mixed': "The topic's name is hidden: decide which idea each one needs before you start.",
     'spaced': "Problems you have met before, the longest ago first. Solve them fresh.",
     'practice': 'A mix of difficulty levels for where you are in this topic.',
+    'challenge': 'Harder than you usually solve, {} a problem on the clock. Two right is a good set.',
 }
 TITLES = {'learn': 'Learn the ideas', 'accuracy': 'Accuracy drill', 'timed': 'Timed set', 'mixed': 'Mixed set',
-          'spaced': 'Spaced review', 'practice': 'Practice set'}
+          'spaced': 'Spaced review', 'practice': 'Practice set', 'challenge': 'Challenge set'}
 
 
 #: The fewest of each kind, real contest problems and mock ones, a set holds
@@ -57,7 +69,7 @@ TITLES = {'learn': 'Learn the ideas', 'accuracy': 'Accuracy drill', 'timed': 'Ti
 MIN_EACH = 2
 
 
-def _balance(picked, candidates):
+def _balance(picked, candidates, size=SIZE):
     """`picked` with at least MIN_EACH real and MIN_EACH mock problems where
     `candidates` (best first) has them, swapping out the least wanted picks
     of the kind there are more of."""
@@ -70,10 +82,10 @@ def _balance(picked, candidates):
         extra = [p for p in candidates if pb.is_official(p['id']) == want and p['id'] not in ids]
         extra = extra[:MIN_EACH - have]
         spare = [p for p in picked if pb.is_official(p['id']) != want]
-        drop = spare[len(spare) - len(extra):] if len(picked) + len(extra) > SIZE else []
+        drop = spare[len(spare) - len(extra):] if len(picked) + len(extra) > size else []
         if len(spare) - len(drop) < MIN_EACH and spare:
             drop = drop[:max(0, len(spare) - MIN_EACH)]
-            extra = extra[:len(drop) + max(0, SIZE - len(picked))]
+            extra = extra[:len(drop) + max(0, size - len(picked))]
         dropped = {p['id'] for p in drop}
         picked = [p for p in picked if p['id'] not in dropped] + extra
     return picked
@@ -85,7 +97,9 @@ def _balance(picked, candidates):
 RAMPS = {'learn': (0.92, 0.65), 'accuracy': (0.9, 0.6), 'timed': (0.85, 0.55),
          # The widest spread, for recognising the topic at every difficulty, but
          # still from where the student is, not the topic's hardest.
-         'mixed': (0.92, 0.35)}
+         'mixed': (0.92, 0.35),
+         # A stretch: from a little under even odds to well beyond them.
+         'challenge': (0.5, 0.2)}
 
 
 def _ramp(rows, chance, first, last, n, cost):
@@ -107,10 +121,26 @@ def _in_topic(p, topic_id):
     return p['topic'] == topic_id or topic_id in p['also']
 
 
-def build(topic_id, mode, level, theta, topic_theta, mix, hist, review_by_id, user='', today=None):
+def size_for(mode, size=None):
+    """How many problems a set holds: `size` if given, within SIZES; else eight, or five for a challenge."""
+    if size:
+        return max(SIZES[0], min(SIZES[1], int(size)))
+    return CHALLENGE_SIZE if mode == 'challenge' else SIZE
+
+
+def seconds_for(mode, level):
+    """Seconds a problem gets in a set that runs on a clock, else None."""
+    if mode not in TIMED:
+        return None
+    base = SECONDS.get(level, 180)
+    return int(base * CHALLENGE_STRETCH) if mode == 'challenge' else base
+
+
+def build(topic_id, mode, level, theta, topic_theta, mix, hist, review_by_id, user='', today=None, size=None):
     """{'topic', 'mode', 'title', 'instructions', 'seconds', 'hide_topic', 'problems': [ids]}."""
     today = today or date.today()
     mode = mode if mode in MODES else 'practice'
+    n = size_for(mode, size)
     th = topic_theta if topic_theta is not None else theta - 0.3
     rng = random.Random('{}|{}|{}|{}'.format(user, topic_id, mode, today.isoformat()))
     pool = [p for p in pb.all_problems() if _in_topic(p, topic_id)]
@@ -135,32 +165,35 @@ def build(topic_id, mode, level, theta, topic_theta, mix, hist, review_by_id, us
             + (0.06 if solution and not p.get('solution') else 0) + jitter[p['id']] * 0.02
 
     if mode == 'learn':
-        order = _ramp(mine, chance, *RAMPS['learn'], SIZE, lambda p: cost(p, solution=True))
+        order = _ramp(mine, chance, *RAMPS['learn'], n, lambda p: cost(p, solution=True))
     elif mode == 'accuracy':
         # Missed and not yet put right first: those are the point. Then new
         # problems within reach, getting harder.
         missed = take([p for p in mine if seen(p) and not solved(p) and chance(p) >= 0.45],
-                      lambda p: -chance(p))[:SIZE // 2]
+                      lambda p: -chance(p))[:n // 2]
         order = missed + _ramp([p for p in mine if p not in missed], chance, *RAMPS['accuracy'],
-                               SIZE - len(missed), cost)
+                               n - len(missed), cost)
     elif mode == 'timed':
-        order = _ramp(mine, chance, *RAMPS['timed'], SIZE, cost)
+        order = _ramp(mine, chance, *RAMPS['timed'], n, cost)
     elif mode == 'spaced':
         def due_rank(p):
             rev = review_by_id.get(p['id'])
             due = rev and rev['status'] == 'active' and rev['due'] <= today.isoformat()
             return (0 if due else 1, hist[p['id']]['last_at'])
         order = take([p for p in mine if seen(p)], due_rank)
-        if len(order) < SIZE:                    # too few met before: the nearest new ones
+        if len(order) < n:                    # too few met before: the nearest new ones
             order += take([p for p in mine if not seen(p)], lambda p: abs(chance(p) - 0.7))
     elif mode == 'mixed':
-        order = _ramp(mine, chance, *RAMPS['mixed'], SIZE, cost)
+        order = _ramp(mine, chance, *RAMPS['mixed'], n, cost)
+    elif mode == 'challenge':
+        # Untried first: a stretch is no stretch if the answer is remembered.
+        order = _ramp(mine, chance, *RAMPS['challenge'], n, lambda p: cost(p) + (0.3 if solved(p) else 0))
     else:
-        counts = {c['level']: c['count'] for c in planning.split_count(mix, SIZE)} if mix else {}
+        counts = {c['level']: c['count'] for c in planning.split_count(mix, n)} if mix else {}
         order = []
-        for lvl, n in sorted(counts.items()):
+        for lvl, k in sorted(counts.items()):
             order += take([p for p in mine if planning.level_of(p['rating']) == lvl and p not in order],
-                          lambda p: (seen(p), round(abs(chance(p) - 0.7), 1)))[:n]
+                          lambda p: (seen(p), round(abs(chance(p) - 0.7), 1)))[:k]
         order += take([p for p in mine if p not in order], lambda p: (seen(p), abs(chance(p) - 0.65)))
 
     # Fill to eight: the mode's picks from the topic's own problems, then its
@@ -176,31 +209,32 @@ def build(topic_id, mode, level, theta, topic_theta, mix, hist, review_by_id, us
     for p in candidates:
         if p['id'] not in {q['id'] for q in picked}:
             picked.append(p)
-        if len(picked) == SIZE:
+        if len(picked) == n:
             break
     if mode != 'spaced':
-        picked = _balance(picked, candidates)
+        picked = _balance(picked, candidates, n)
     # Every set easiest first, so it gets harder as it goes; real and mock
     # problems of the same rating mixed, not every mock first.
     picked = pb.mix_sources(sorted(picked, key=lambda p: (p['rating'], p['id'])), key=lambda p: p['rating'])
-    seconds = SECONDS.get(level, 180) if mode == 'timed' else None
+    seconds = seconds_for(mode, level)
     text = INSTRUCTIONS[mode]
     if seconds:
-        text = text.format('{} minutes'.format(seconds // 60))
+        text = text.format('{:g} minutes'.format(seconds / 60))
     topic = catalog.TOPIC_BY_ID[topic_id]
     return {'topic': {'id': topic_id, 'name': topic['name'], 'category': topic['category']},
             'mode': mode, 'title': TITLES[mode], 'instructions': text, 'seconds': seconds,
-            'hide_topic': mode == 'mixed', 'level': level,
+            'hide_topic': mode == 'mixed', 'level': level, 'size': n,
+            'total_seconds': seconds * len(picked) if seconds else None,
             'problems': [p['id'] for p in picked]}
 
 
-def for_user(topic_id, mode, attempts, hist, review_by_id, level, goal, user, today):
+def for_user(topic_id, mode, attempts, hist, review_by_id, level, goal, user, today, size=None):
     """`build` from an account's own history and plan."""
     study = planning.analyze(attempts, hist, level, today, goal)
     row = next((r for r in study['topics'] if r['id'] == topic_id), None)
     topic_theta = row['factors']['level'] if row else None
     mix = row['mix'] if row else study['mix']
-    out = build(topic_id, mode, level, study['theta'], topic_theta, mix, hist, review_by_id, user, today)
+    out = build(topic_id, mode, level, study['theta'], topic_theta, mix, hist, review_by_id, user, today, size)
     out['mix'] = mix
     out['suggested'] = row['mode'] if row else 'practice'
     return out

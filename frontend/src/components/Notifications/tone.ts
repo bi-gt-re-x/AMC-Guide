@@ -16,12 +16,10 @@ import type { NotificationChannel, NotificationTone } from '@/services/notificat
  * the channel — see the Notifications section in pages/Settings.tsx.
  */
 export const CHANNEL_NAMES: Record<NotificationChannel, string> = {
-  tasks: 'Tasks',
-  calendar: 'Calendar',
-  analytics: 'Analytics',
-  goals: 'Goals',
+  plan: 'Study plan',
+  review: 'Review',
+  mocks: 'Mocks',
   streak: 'Streak',
-  progress: 'Progress',
 };
 
 /**
@@ -35,7 +33,7 @@ export const CHANNEL_NAMES: Record<NotificationChannel, string> = {
 export const TONE_NAMES: Record<NotificationTone, string> = {
   urgent: 'Needs you',
   warn: 'Soon',
-  info: 'For information',
+  info: 'Note',
   good: 'Good news',
 };
 

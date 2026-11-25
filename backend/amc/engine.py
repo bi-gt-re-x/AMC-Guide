@@ -415,7 +415,166 @@ def plan_weeks(settings, tstats, mocks_taken, today, priorities=None, stage=None
             'current': week_start <= today <= week_end,
             'past': week_end < today,
         })
+    # Each week as seven days, sized to the time the student has a day; the
+    # week's problem count is what its days hold.
+    weekdays, minutes = study_schedule(settings)
+    for w in weeks:
+        w['days'] = week_days(w, weekdays, minutes, level, today)
+        if w['phase'] != 'Taper':
+            w['problems'] = sum(b.get('count', 0) for d in w['days'] for b in d['blocks']
+                                if b['kind'] in ('practice', 'challenge'))
     return weeks
+
+
+# ---------------------------------------------------------------------------
+# Days: each week as seven, sized to the time the student has
+# ---------------------------------------------------------------------------
+#: Which weekdays a student studies, by how many days a week they study
+#: (Monday is 0): Saturday, Tuesday and Thursday first, so the rest days fall
+#: on Friday and midweek before they reach a weekend.
+STUDY_ORDER = (5, 1, 3, 6, 0, 2, 4)
+WEEKDAY = ('Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun')
+
+#: Minutes a problem takes in a plan: on the clock, and untimed (time to check).
+PACE = {'AMC 10': 3, 'AMC 12': 3, 'AIME': 12}
+UNTIMED_EXTRA = 2
+#: A challenge problem gets half as long again (backend/amc/practice.py).
+CHALLENGE_PACE = 1.5
+MOCK_MINUTES = {'AMC 10': 75, 'AMC 12': 75, 'AIME': 180}
+#: The fewest and most problems a day's set holds; a challenge set holds up to five.
+SET_RANGE = (3, 8)
+CHALLENGE_MAX = 5
+
+
+def study_schedule(settings):
+    """(the weekdays studied, minutes on each), from the plan's hours a week
+    and, if given, days a week. Without days, about an hour a day: two to six."""
+    hours = max(1, int(settings.get('hours') or 1))
+    days = (settings.get('details') or {}).get('days_per_week')
+    n = max(1, min(7, int(days) if days else min(6, max(2, hours))))
+    minutes = max(15, int(round(hours * 60 / n / 5.0)) * 5)
+    return tuple(sorted(STUDY_ORDER[:n])), minutes
+
+
+def _fit(minutes, per, top):
+    """How many problems at `per` minutes fit in `minutes`, within SET_RANGE and `top`."""
+    return max(SET_RANGE[0], min(top, int(minutes // per)))
+
+
+def _set_block(topic, mode, n, per, kind='practice'):
+    tid, name = topic['id'], topic['name']
+    timed = mode in ('timed', 'challenge')
+    if kind == 'challenge':
+        label, detail = 'Challenge set: ' + name, '{} harder problems, {:g} minutes each on the clock.'.format(n, per)
+    else:
+        label = '{}: {}'.format(SET_TITLE.get(mode, 'Practice set'), name)
+        detail = '{} problems, {}.'.format(n, '{:g} minutes each, on one clock'.format(per) if timed else {
+            'learn': 'easiest first, no clock', 'accuracy': 'no clock, check each answer',
+            'mixed': 'topic hidden', 'spaced': 'ones you have seen before'}.get(mode, 'no clock'))
+    levels = sorted({c['level'] for c in (topic.get('mix') or []) if c.get('share')})
+    if levels and kind != 'challenge':
+        detail = detail[:-1] + ', ' + ('level {}'.format(levels[0]) if len(levels) == 1
+                                       else 'levels {}–{}'.format(levels[0], levels[-1])) + '.'
+    if topic.get('reason'):
+        detail += ' ' + topic['reason']
+    return {'kind': kind, 'label': label, 'detail': detail, 'minutes': int(round(n * per)), 'count': n,
+            'mode': mode, 'topic': tid, 'to': '/practice/{}?mode={}&n={}'.format(tid, mode, n)}
+
+
+def _study_day(week, minutes, k, level, challenge, mock_here, read):
+    """What one study day holds, in order, within `minutes`.
+
+    A mock day is the mock and going over it. The taper is light reading and
+    review. Otherwise: a short review set, then a set in one of the week's
+    focus topics (the two take turns down the week), its key ideas first while
+    it is still being learned, and a second set in the other topic if the
+    time runs to it. One day a week the set is a challenge set: fewer, harder
+    problems on a longer clock."""
+    pace = PACE.get(level, 3)
+    if mock_here:
+        mock = MOCK_MINUTES.get(level, 75)
+        blocks = [{'kind': 'mock', 'label': 'Timed mock: a full {}'.format(level),
+                   'detail': 'One sitting, on the clock, as on the day.', 'minutes': mock, 'to': '/mock-contests'}]
+        if minutes - mock >= 15:
+            blocks.append({'kind': 'review', 'label': 'Go over the mock',
+                           'detail': 'Each problem you missed or guessed, with its solution.',
+                           'minutes': min(30, minutes - mock), 'to': '/review'})
+        return blocks
+    if week['phase'] == 'Taper':
+        blocks = [{'kind': 'read', 'label': 'Skim the key ideas', 'detail': 'A quick read, nothing new.',
+                   'minutes': min(20, minutes), 'to': '/topics'}]
+        if minutes >= 30:
+            blocks.append({'kind': 'review', 'label': 'Review set', 'detail': 'A few problems you missed, for a fresh try.',
+                           'minutes': min(15, minutes - 20), 'count': max(2, min(15, minutes - 20) // pace),
+                           'to': '/review?start=1'})
+        return blocks
+    blocks, left = [], minutes
+    if minutes >= 30:
+        review = max(5, min(15, minutes // 4) // 5 * 5)
+        blocks.append({'kind': 'review', 'label': 'Review set', 'detail': 'Problems you missed, back for a fresh try.',
+                       'minutes': review, 'count': max(2, review // pace), 'to': '/review?start=1'})
+        left -= review
+    focus = week['focus']
+    if not focus:
+        n = _fit(left, pace + UNTIMED_EXTRA, SET_RANGE[1])
+        blocks.append({'kind': 'practice', 'label': 'Practice set', 'detail': '{} problems at your level.'.format(n),
+                       'minutes': n * (pace + UNTIMED_EXTRA), 'count': n, 'to': '/problems'})
+        return blocks
+    topic = focus[k % len(focus)]
+    if challenge:
+        per = pace * CHALLENGE_PACE
+        block = _set_block(topic, 'challenge', _fit(left, per, CHALLENGE_MAX), per, 'challenge')
+    else:
+        mode = topic.get('mode', 'practice')
+        if read:
+            blocks.append({'kind': 'read', 'label': 'Read the key ideas: ' + topic['name'],
+                           'detail': 'The topic page: its ideas and worked examples.', 'minutes': 10,
+                           'to': '/topics/' + topic['id']})
+            left -= 10
+        per = pace if mode == 'timed' else pace + UNTIMED_EXTRA
+        block = _set_block(topic, mode, _fit(left, per, SET_RANGE[1]), per)
+    blocks.append(block)
+    left -= block['minutes']
+    if len(focus) > 1:
+        other = focus[(k + 1) % len(focus)]
+        mode = other.get('mode', 'practice')
+        per = pace if mode == 'timed' else pace + UNTIMED_EXTRA
+        if left >= SET_RANGE[0] * per:
+            blocks.append(_set_block(other, mode, _fit(left, per, SET_RANGE[1]), per))
+    return blocks
+
+
+def week_days(week, weekdays, minutes, level, today):
+    """The week's seven days: {'date', 'weekday', 'rest', 'minutes', 'blocks', 'today', 'past'}.
+
+    The mock goes on the week's last weekend study day (else its last), the
+    challenge set on the last study day before it."""
+    start = date.fromisoformat(week['start'])
+    studied = [d for d in range(7) if d in weekdays]
+    mock_day = None
+    if week['mock'] and studied:
+        weekend = [d for d in studied if d >= 5]
+        mock_day = (weekend or studied)[-1]
+    rest_of = [d for d in studied if d != mock_day]
+    challenge_day = rest_of[-1] if len(rest_of) >= 2 and week['phase'] != 'Taper' else None
+    days, k, met = [], 0, set()
+    for d in range(7):
+        day = start + timedelta(days=d)
+        entry = {'date': day.isoformat(), 'weekday': WEEKDAY[d], 'rest': d not in weekdays,
+                 'today': day == today, 'past': day < today, 'blocks': []}
+        if d in weekdays:
+            topic = week['focus'][k % len(week['focus'])] if week['focus'] else None
+            read = bool(topic) and topic.get('mode') == 'learn' and topic['id'] not in met
+            entry['blocks'] = _study_day(week, minutes, k, level, d == challenge_day, d == mock_day, read)
+            for b in entry['blocks']:
+                if b['kind'] == 'mock':
+                    b['done'] = bool(week.get('mock_done'))
+            if topic and d != mock_day:
+                met.add(topic['id'])
+                k += 1
+        entry['minutes'] = sum(b['minutes'] for b in entry['blocks'])
+        days.append(entry)
+    return days
 
 
 def _practice_label(focus, daily):
@@ -494,6 +653,9 @@ def today_items(settings, weeks, due_count, today, checks, practiced_today, revi
     problem ids practised today; `reviewed_today` how many reviews were
     answered today. Reviews are one set of REVIEW_SET, not the whole backlog."""
     week = next((w for w in weeks if w['current']), weeks[0] if weeks else None)
+    day = next((d for d in (week or {}).get('days') or [] if d['date'] == today.isoformat()), None)
+    if day is not None:
+        return _day_items(settings, week, day, due_count, today, checks, practiced_today, reviewed_today)
     level = settings['target']
     # One handpicked set of eight a day (backend/amc/practice.py SIZE).
     daily = 8 if week and week['problems'] else 0
@@ -536,6 +698,71 @@ def today_items(settings, weeks, due_count, today, checks, practiced_today, revi
     for item in items:
         item['done'] = item['key'] in ticked or (
             'goal' in item and item['goal'] > 0 and item['progress'] >= item['goal'])
+    return items
+
+
+def _day_items(settings, week, day, due_count, today, checks, practiced_today, reviewed_today):
+    """Today's checklist from today's day of the plan (`week_days`): its blocks,
+    with what has been done of each. A rest day has nothing on it but a
+    review set when one is due; a mock not yet sat this week stays on."""
+    level = settings['target']
+    pace = PACE.get(level, 3)
+    ticked = set(checks.get(today.isoformat(), []))
+    items, keys = [], {}
+
+    def key(kind):
+        keys[kind] = keys.get(kind, 0) + 1
+        return kind if keys[kind] == 1 else '{}-{}'.format(kind, keys[kind])
+
+    def review_item(planned):
+        goal = min(REVIEW_SET, due_count + reviewed_today)
+        if not goal:
+            return None
+        left = due_count + reviewed_today - goal
+        return {'key': key('review'), 'label': 'Review set: {} problem{} you missed'.format(goal, '' if goal == 1 else 's'),
+                'detail': ('Weakest topics first. {} more wait for the next sets; one set a day is enough.'.format(left)
+                           if left else 'Each one back for a fresh try.'),
+                'minutes': planned or goal * pace, 'to': '/review?start=1', 'auto': False,
+                'progress': min(reviewed_today, goal), 'goal': goal}
+
+    blocks = day['blocks']
+    if day['rest'] and due_count:
+        item = review_item(None)
+        if item:
+            items.append(item)
+    for b in blocks:
+        if b['kind'] == 'review' and b['to'].startswith('/review?'):
+            item = review_item(b['minutes'])
+            if item:
+                items.append(item)
+        elif b['kind'] == 'review':
+            items.append({'key': key('review'), 'label': b['label'], 'detail': b['detail'], 'minutes': b['minutes'],
+                          'to': b['to'], 'auto': False})
+        elif b['kind'] in ('practice', 'challenge'):
+            topic = b.get('topic')
+            done = sum(1 for pid in practiced_today
+                       if topic and bank_of.get(pid) and topic in [bank_of.get(pid)['topic']] + bank_of.get(pid)['also'])
+            items.append({'key': key(b['kind']), 'label': b['label'], 'detail': b['detail'], 'minutes': b['minutes'],
+                          'to': b['to'], 'auto': False, 'mode': b.get('mode', 'practice'),
+                          'progress': min(done, b['count']), 'goal': b['count']})
+        elif b['kind'] == 'mock':
+            items.append({'key': key('mock'), 'label': 'Timed mock: this week’s {}'.format(level),
+                          'detail': b['detail'], 'minutes': b['minutes'], 'to': b['to'], 'auto': False})
+        else:
+            items.append({'key': key('read' if b['to'].startswith('/topics/') else 'formulas'), 'label': b['label'],
+                          'detail': b['detail'], 'minutes': b['minutes'], 'to': b['to'], 'auto': False})
+    # This week's mock, if its day has gone by unsat: still on, until it is.
+    mock_days = [d for d in week.get('days') or [] if any(b['kind'] == 'mock' for b in d['blocks'])]
+    if (week.get('mock') and not week.get('mock_done') and mock_days and mock_days[0]['date'] < day['date']
+            and not any(i['key'].startswith('mock') for i in items)):
+        items.append({'key': 'mock', 'label': 'Timed mock: this week’s {}'.format(level),
+                      'detail': 'Still to sit this week. One sitting, on the clock.',
+                      'minutes': MOCK_MINUTES.get(level, 75), 'to': '/mock-contests', 'auto': False})
+    for item in items:
+        item['done'] = item['key'] in ticked or (
+            'goal' in item and item['goal'] > 0 and item['progress'] >= item['goal'])
+        if item['key'].startswith('mock') and week.get('mock_done'):
+            item['done'] = True
     return items
 
 

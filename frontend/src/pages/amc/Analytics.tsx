@@ -131,7 +131,7 @@ function CoachSection() {
   if (loading && !data) return <section className="am-card"><Loading label="Waking the coach" /></section>;
   if (error || !data) return <ErrorState message={error ?? 'Could not load the coach.'} onRetry={reload} />;
   return (
-    <Coach initial={data.diagnosis} available={data.ai.available} setup={data.ai.setup} label={data.ai.label} />
+    <Coach initial={data.diagnosis} available={data.ai.available} setup={data.ai.setup} />
   );
 }
 

@@ -28,7 +28,7 @@ import {
 } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
 import { amc, announceAmcChanged, shortDate, type AttemptReply, type Problem as ProblemData } from '@/services/amc';
-import { readPracticeSet } from './practiceSetStore';
+import { practiceSetHome, readPracticeSet } from './practiceSetStore';
 import { readWeakSet } from './weakSet';
 import { readReviewSet } from './reviewSet';
 import '@/styles/amc.css';
@@ -77,7 +77,7 @@ export default function Problem() {
   const setIds = practiceSet?.ids ?? [];
   const setAt = setIds.indexOf(problemId);
   const setNext = setAt >= 0 ? setIds[setAt + 1] : undefined;
-  const setHome = practiceSet ? `/practice/${practiceSet.topic}?mode=${practiceSet.mode}` : '/topics';
+  const setHome = practiceSet ? practiceSetHome(practiceSet) : '/topics';
   // Previous and Next walk the list the problem was opened from, and only
   // that list: a topic (`?topic=`), the Problems page's filters (`?list=1&…`),
   // or, opened from neither, the problem's own paper. The walk's parameters
@@ -131,6 +131,13 @@ export default function Problem() {
   const hideTopic = Boolean(practiceSet?.hideTopic) && !answered;
   const [seconds, setSeconds] = useStopwatch(!locked && !loading);
   useEffect(() => setSeconds(0), [problemId, retry, setSeconds]);
+  // A timed or challenge set runs on one clock for the whole set: when it is
+  // out, the set is over, answered or not, and its page says so.
+  const setLeft = useCountdown(inSet ? practiceSet?.deadline ?? null : null);
+  const timeUp = setLeft === 0;
+  useEffect(() => {
+    if (timeUp) navigate(`${setHome}&done=1&timeup=1`, { replace: true });
+  }, [timeUp, navigate, setHome]);
 
   if (loading && !data) return <Loading label="Loading problem" />;
   if (error || !data) return <ErrorState message={error ?? 'Could not load this problem.'} onRetry={reload} />;
@@ -226,6 +233,11 @@ export default function Problem() {
           </>
         )}
         {inSet && setAt >= 0 && <span>· {setAt + 1} of {setIds.length}</span>}
+        {setLeft !== null && (
+          <span className={`am-set-clock${setLeft <= 60 ? ' is-low' : ''}`} role="timer" aria-label="Time left for the set">
+            {clock(setLeft)} left
+          </span>
+        )}
         {reviewing && reviewAt >= 0 && <span>· Review set, {reviewAt + 1} of {reviewSet.length}</span>}
       </nav>
 
@@ -258,7 +270,12 @@ export default function Problem() {
 
             {!locked && (
               <div className="am-answer-bar">
-                {practiceSet?.seconds ? (
+                {setLeft !== null ? (
+                  <span className="am-timer" aria-label="Time left for the set, and time on this problem">
+                    <strong className={`am-set-clock${setLeft <= 60 ? ' is-low' : ''}`}>{clock(setLeft)}</strong> left for the set
+                    <span className={`am-pace${seconds > (practiceSet?.seconds ?? Infinity) ? ' is-over' : ''}`}> · {clock(seconds)} on this one</span>
+                  </span>
+                ) : practiceSet?.seconds ? (
                   <span className={`am-timer${seconds > practiceSet.seconds ? ' is-over' : ''}`}
                         aria-label="Time on this problem, against the set's pace">
                     {clock(seconds)} / {clock(practiceSet.seconds)}
@@ -474,4 +491,19 @@ export default function Problem() {
       </div>
     </div>
   );
+}
+
+
+/** Whole seconds until `deadline` (ms since the epoch), ticking each second; null without one. */
+function useCountdown(deadline: number | null): number | null {
+  const left = () => (deadline == null ? null : Math.max(0, Math.ceil((deadline - Date.now()) / 1000)));
+  const [value, setValue] = useState(left);
+  useEffect(() => {
+    setValue(left());
+    if (deadline == null) return undefined;
+    const id = window.setInterval(() => setValue(left()), 1000);
+    return () => window.clearInterval(id);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [deadline]);
+  return value;
 }

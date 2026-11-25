@@ -12,7 +12,7 @@ from fastapi import APIRouter, Depends, Query, Request
 from pydantic import BaseModel
 
 from backend.amc import catalog, coach, engine, insights, mockscore, planning, practice, results, store, weak
-from backend.amc import official
+from backend.amc import official, plan_view
 from backend.amc import problems as pb
 from backend.amc.scale import TOP
 from backend.api.guard import current_username
@@ -582,7 +582,7 @@ def _topic_next(problems):
 
 
 @router.get('/api/amc/topics/{topic_id}/set')
-def topic_set(topic_id: str, mode: str = 'practice', username: str = Depends(current_username)):
+def topic_set(topic_id: str, mode: str = 'practice', n: int = 0, username: str = Depends(current_username)):
     """Eight problems in this topic only, picked for one way of training it
     (backend/amc/practice.py): learn, accuracy, timed, mixed, spaced, practice."""
     if topic_id not in catalog.TOPIC_BY_ID:
@@ -591,7 +591,8 @@ def topic_set(topic_id: str, mode: str = 'practice', username: str = Depends(cur
     plan = store.plan(username)
     level = plan['target'] if plan else 'AMC 10'
     goal = plan['goal_score'] if plan else engine.DEFAULT_GOALS[level]
-    found = practice.for_user(topic_id, mode, attempts, hist, review_by_id, level, goal, username, _today())
+    # `n`: the study plan's size for today's set (0 for the usual eight, five for a challenge).
+    found = practice.for_user(topic_id, mode, attempts, hist, review_by_id, level, goal, username, _today(), n or None)
     found['problems'] = [_summary(username, pid, hist, review_by_id) for pid in found['problems']]
     for row in found['problems']:
         row['level_of'] = planning.level_of(row['rating'])
@@ -980,67 +981,8 @@ def delete_mock(mock_id: str, username: str = Depends(current_username)):
 # Study plan
 # ---------------------------------------------------------------------------
 def _build_plan(plan, today, attempts, reviews, hist, tstats, every_score):
-    """The weeks, today's checklist and what they were built from.
-
-    One builder for the study plan page and the dashboard: the dashboard used
-    to lay the weeks out by an older rule of its own, so its Today list could
-    name a different focus topic from the plan's for the same day."""
-    mocks = [m for m in every_score if m['kind'] == 'mock']
-    # Mock mistakes weigh in the priorities, so the weeks target them.
-    study = planning.analyze(attempts, hist, plan['target'], today, plan['goal_score'], plan['details'],
-                             mocks=every_score)
-    model = engine.projected(hist, plan['target']) if len(hist) >= engine.PROJECTION_MIN else None
-    # Where the student starts against the goal, from their scores and answers;
-    # it sets the plan's shape (more skills when far, more papers when close).
-    start = planning.starting_point(plan['target'], plan['goal_score'], model, every_score,
-                                    {**plan['details'], '_exam': plan['exam_date']}, today)
-    weeks = engine.plan_weeks(plan, tstats, mocks, today, study['topics'], start['stage'])
-    # How much of each week's practice has been done: distinct problems
-    # answered (not solutions looked at) between its Monday and Sunday.
-    answered = {}
-    for a in attempts:
-        if a.get('source') != 'reveal':
-            answered.setdefault(a['at'][:10], set()).add(a['problem_id'])
-    for w in weeks:
-        if w['past'] or w['current']:
-            done = set()
-            for day, ids in answered.items():
-                if w['start'] <= day <= w['end']:
-                    done |= ids
-            w['answered'] = len(done)
-    due = sum(1 for r in reviews if r['status'] == 'active' and r['due'] <= today.isoformat())
-    practiced = {a['problem_id'] for a in attempts
-                 if a['at'][:10] == today.isoformat() and a['source'] == 'practice'}
-    reviewed = len({a['problem_id'] for a in attempts
-                    if a['at'][:10] == today.isoformat() and a['source'] == 'review'})
-    items = engine.today_items(plan, weeks, due, today, plan['checks'], practiced, reviewed)
-    projected_now = mockscore.projected_score(hist, plan['target'], every_score, today)
-    return {'study': study, 'projected': projected_now, 'start': start, 'weeks': weeks, 'today': items,
-            'level': _level_now(study, attempts, weeks, today)}
-
-
-def _level_now(study, attempts, weeks, today):
-    """Where the student is working now, which the plan is built from: their
-    level on the five-step difficulty scale (from every answer), what their goal
-    needs, the last two weeks' answers against the two before, and their pace
-    against the plan's weekly target."""
-    def window(days_from, days_to):
-        lo = (today - timedelta(days=days_to)).isoformat()
-        hi = (today - timedelta(days=days_from)).isoformat()
-        rows = [a for a in attempts if lo < a['at'][:10] <= hi]
-        right = sum(1 for a in rows if a['correct'] and a.get('source') != 'reveal')
-        return {'answered': len(rows), 'right': right,
-                'accuracy': round(right / len(rows), 3) if rows else None}
-    level = planning.level_of(study['theta'])
-    info = planning.LEVELS[level - 1]
-    goal = planning.LEVELS[max(1, min(5, study['ceiling'])) - 1]
-    recent, before = window(0, 14), window(14, 28)
-    done = [w for w in weeks if w['past'] and w['problems']][-2:]
-    pace = {'per_week': round(sum(w.get('answered', 0) for w in done) / len(done), 1),
-            'planned': done[-1]['problems']} if done else None
-    return {'level': level, 'name': info['name'], 'means': info['means'], 'measured': len({a['problem_id'] for a in attempts}),
-            'goal_level': goal['level'], 'goal_name': goal['name'], 'mix': study['mix'],
-            'recent': recent, 'before': before, 'pace': pace}
+    """The weeks, today's checklist and what they were built from (backend/amc/plan_view.py)."""
+    return plan_view.build(plan, today, attempts, reviews, hist, tstats, every_score)
 
 
 def _plan_payload(username):

@@ -273,7 +273,7 @@ export interface TodayItem {
 }
 
 /** How a topic is trained, from its kind of weakness (backend/amc/planning.py). */
-export type StudyMode = 'learn' | 'accuracy' | 'timed' | 'mixed' | 'spaced' | 'practice';
+export type StudyMode = 'learn' | 'accuracy' | 'timed' | 'mixed' | 'spaced' | 'practice' | 'challenge';
 export type WeaknessKindId = 'conceptual' | 'execution' | 'speed' | 'recognition' | 'retention';
 
 /** One of the five difficulty levels, and a practice mix across them. */
@@ -299,6 +299,9 @@ export interface PracticeSetPayload {
   title: string;
   instructions: string;
   seconds: number | null;
+  /** The whole set's time on the clock (seconds a problem times the set's size), or null for an untimed set. */
+  total_seconds: number | null;
+  size: number;
   hide_topic: boolean;
   level: Level;
   mix: DifficultyMix;
@@ -355,6 +358,31 @@ export interface PlanWeek {
   past: boolean;
   /** Distinct problems answered that week; on past weeks and this one only. */
   answered?: number;
+  /** The week's seven days, Monday first, each sized to the plan's minutes a study day. */
+  days?: PlanDay[];
+}
+
+/** One thing on a day of the plan: a review set, a practice or challenge set, the key ideas, a mock. */
+export interface PlanBlock {
+  kind: 'review' | 'practice' | 'challenge' | 'read' | 'mock';
+  label: string;
+  detail: string;
+  minutes: number;
+  to: string;
+  count?: number;
+  mode?: StudyMode;
+  topic?: string;
+  done?: boolean;
+}
+
+export interface PlanDay {
+  date: string;
+  weekday: 'Mon' | 'Tue' | 'Wed' | 'Thu' | 'Fri' | 'Sat' | 'Sun';
+  rest: boolean;
+  minutes: number;
+  blocks: PlanBlock[];
+  today: boolean;
+  past: boolean;
 }
 
 export interface Dashboard {
@@ -973,8 +1001,8 @@ export interface SearchResults {
 export const amc = {
   dashboard: () => get<Dashboard>('/api/amc/dashboard'),
   analytics: () => get<Analytics>('/api/amc/analytics'),
-  topicSet: (topic: string, mode: string) =>
-    get<PracticeSetPayload>(`/api/amc/topics/${encodeURIComponent(topic)}/set?mode=${encodeURIComponent(mode)}`),
+  topicSet: (topic: string, mode: string, n?: number | null) =>
+    get<PracticeSetPayload>(`/api/amc/topics/${encodeURIComponent(topic)}/set?mode=${encodeURIComponent(mode)}${n ? `&n=${n}` : ''}`),
   insights: () => get<InsightsPayload>('/api/amc/insights'),
   diagnose: (refresh = false) =>
     post<{ diagnosis: Diagnosis; at: string; cached: boolean }>('/api/amc/insights/ai', { refresh }),

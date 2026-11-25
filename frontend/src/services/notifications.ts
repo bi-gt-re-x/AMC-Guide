@@ -31,17 +31,16 @@ import type { ApiResult } from '@/types';
 /**
  * Which switch in Settings governs a notification.
  *
- * The same six as `CHANNELS` in backend/tracking/notify.py. Written out rather
- * than derived, so a channel added on one side and not the other fails to
- * compile here the moment anything switches on it.
+ * The same four as `CHANNELS` in backend/tracking/notify.py (what each can say
+ * is in backend/amc/alerts.py). Written out rather than derived, so a channel
+ * added on one side and not the other fails to compile here the moment
+ * anything switches on it.
  */
 export type NotificationChannel =
-  | 'tasks'
-  | 'calendar'
-  | 'analytics'
-  | 'goals'
-  | 'streak'
-  | 'progress';
+  | 'plan'
+  | 'review'
+  | 'mocks'
+  | 'streak';
 
 /** How it is painted. Four, because three of them are not problems. */
 export type NotificationTone = 'urgent' | 'warn' | 'info' | 'good';

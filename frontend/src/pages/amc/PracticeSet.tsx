@@ -2,13 +2,16 @@
  * A topic's practice set: eight problems handpicked from that one topic for a
  * way of training it (backend/amc/practice.py) — learn the ideas, an accuracy
  * drill, a timed set, a mixed set with the topic hidden, spaced review, or a
- * plain practice set at the topic's difficulty mix. The mode the student's
- * data suggests is marked. Starting walks the eight on the problem page
- * (`?set=1`); finishing comes back here with how it went.
+ * plain practice set at the topic's difficulty mix, or a challenge set of
+ * harder ones. The mode the student's data suggests is marked. `?n=` is the
+ * size the study plan asked for today. Starting walks the set on the problem
+ * page (`?set=1`); a timed or challenge set starts its clock then, the whole
+ * set's time, and ends when it runs out. Finishing comes back here with how
+ * it went (`?done=1`, and `&timeup=1` if the clock ended it).
  */
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
-import { CategoryDot, PageHeader, StatusPill } from '@/components/Amc/bits';
+import { CategoryDot, clock, PageHeader, StatusPill } from '@/components/Amc/bits';
 import { MixBar } from '@/components/Amc/Study';
 import { useApi, useDocumentTitle } from '@/hooks';
 import { amc } from '@/services/amc';
@@ -20,8 +23,10 @@ export default function PracticeSet() {
   const [params, setParams] = useSearchParams();
   const mode = params.get('mode') || 'practice';
   const done = params.get('done') === '1';
+  const timeUp = done && params.get('timeup') === '1';
+  const size = Number(params.get('n')) || null;
   const navigate = useNavigate();
-  const { data, error, loading, reload } = useApi(() => amc.topicSet(topicId, mode), [topicId, mode]);
+  const { data, error, loading, reload } = useApi(() => amc.topicSet(topicId, mode, size), [topicId, mode, size]);
   useDocumentTitle(data ? `${data.topic.name} · ${data.title}` : 'Practice set');
 
   if (loading && !data) return <Loading label="Picking eight problems" />;
@@ -34,7 +39,9 @@ export default function PracticeSet() {
     if (!data) return;
     writePracticeSet({
       ids: data.problems.map((p) => p.id), topic: data.topic.id, mode: data.mode, title: data.title,
-      seconds: data.seconds, hideTopic: data.hide_topic,
+      seconds: data.seconds, hideTopic: data.hide_topic, size,
+      // The clock is the whole set's, from now: it does not wait between problems.
+      deadline: data.total_seconds ? Date.now() + data.total_seconds * 1000 : null,
     });
     const first = data.problems[from];
     if (first) navigate(`/problems/${first.id}?set=1`);
@@ -50,12 +57,17 @@ export default function PracticeSet() {
                     {done ? 'Go again' : 'Start set'}
                   </button>}>
         <p>{data.instructions}</p>
+        {data.total_seconds ? (
+          <p className="am-set-clock-note">
+            {clock(data.total_seconds)} for the {data.problems.length} problems. The clock starts when you press Start and stops for nothing.
+          </p>
+        ) : null}
       </PageHeader>
 
       <div className="am-seg am-set-modes" role="group" aria-label="Kind of set">
         {data.modes.map((m) => (
           <button key={m.id} type="button" className={m.id === data.mode ? 'is-on' : ''}
-                  onClick={() => setParams({ mode: m.id })}>
+                  onClick={() => setParams(size ? { mode: m.id, n: String(size) } : { mode: m.id })}>
             {m.title}{m.id === data.suggested ? ' ★' : ''}
           </button>
         ))}
@@ -64,6 +76,7 @@ export default function PracticeSet() {
 
       {done && (
         <section className="am-card am-set-done" role="status">
+          {timeUp && <span className="am-set-timeup">Time's up. </span>}
           <strong>{right} of {data.problems.length}</strong> solved
           {open ? <span className="am-muted"> · {open} not tried yet</span> : null}
         </section>

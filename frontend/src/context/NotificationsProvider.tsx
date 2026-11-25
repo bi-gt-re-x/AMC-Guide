@@ -120,17 +120,15 @@ export function NotificationsProvider({ children }: { children: ReactNode }) {
 
   /* Every notification switch, as one string. The effect above cannot depend
      on `prefs` itself — it is a fresh object on every settings read — and
-     these eight booleans are the whole of what the server's answer depends
+     these six booleans are the whole of what the server's answer depends
      on. */
   const switches = [
     prefs.notifications_enabled,
     prefs.notify_popups,
-    prefs.notify_tasks,
-    prefs.notify_calendar,
-    prefs.notify_analytics,
-    prefs.notify_goals,
+    prefs.notify_plan,
+    prefs.notify_review,
+    prefs.notify_mocks,
     prefs.notify_streak,
-    prefs.notify_progress,
   ].join();
 
   useEffect(() => {

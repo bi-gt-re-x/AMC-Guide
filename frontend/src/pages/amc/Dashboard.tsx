@@ -18,6 +18,7 @@ import {
   shortDate,
   type Dashboard as DashboardData,
   type Level,
+  type PlanWeek,
   type TodayItem,
 } from '@/services/amc';
 import '@/styles/amc.css';
@@ -46,9 +47,18 @@ export function Check({ on, onToggle, label }: { on: boolean; onToggle: () => vo
   );
 }
 
-export function TodayList({ items, onToggle }: { items: TodayItem[]; onToggle: (item: TodayItem) => void }) {
+/** Whether today is a rest day in this week of the plan. */
+export function isRestDay(week: PlanWeek | null | undefined): boolean {
+  return Boolean(week?.days?.find((d) => d.today)?.rest);
+}
+
+export function TodayList({ items, onToggle, rest = false }: {
+  items: TodayItem[]; onToggle: (item: TodayItem) => void; rest?: boolean;
+}) {
   if (!items.length) {
-    return <Empty title="Done for today">Solve any problem to keep your streak.</Empty>;
+    return rest
+      ? <Empty title="Rest day">Nothing on the plan today.</Empty>
+      : <Empty title="Done for today">Solve any problem to keep your streak.</Empty>;
   }
   return (
     <ul className="am-today">
@@ -191,7 +201,7 @@ export default function Dashboard() {
               <Link to="/study-plan">{plan ? 'Full plan' : 'Make a plan'}</Link>
             </div>
             {plan ? (
-              <TodayList items={plan.today} onToggle={(item) => void toggle(item)} />
+              <TodayList items={plan.today} onToggle={(item) => void toggle(item)} rest={isRestDay(plan.week)} />
             ) : (
               <Empty title="No study plan yet">
                 Pick your contest and date to get a weekly plan.

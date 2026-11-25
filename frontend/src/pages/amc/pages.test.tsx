@@ -7,7 +7,7 @@
  * or crashes on a shape it really gets, fails here rather than in the browser.
  */
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { MemoryRouter, Route, Routes } from 'react-router-dom';
+import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NoticesProvider } from '@/components';
 import { AuthContext, type AuthValue } from '@/context/contexts';
@@ -83,6 +83,12 @@ afterEach(() => {
 const SIGNED_IN = {
   status: 'authenticated', username: 'student', profileComplete: true, emailVerified: true, avatar: '',
 } as unknown as AuthValue;
+
+/** The route a test ended up on. */
+function WhereAmI() {
+  const at = useLocation();
+  return <p data-testid="where">{at.pathname + at.search}</p>;
+}
 
 function show(path: string, route: string, element: React.ReactElement) {
   render(
@@ -302,7 +308,7 @@ describe('A topic practice set', () => {
 
   it('walks a timed set on the problem page with its clock and position', async () => {
     writePracticeSet({ ids: ['step-10-01', 'step-10-02'], topic: 'circles', mode: 'timed', title: 'Timed set',
-                       seconds: 180, hideTopic: false });
+                       seconds: 180, hideTopic: false, size: null, deadline: null });
     show('/problems/step-10-01?set=1', '/problems/:problemId', <Problem />);
     await settled(/What is the value of/);
     expect(screen.getByText('← Timed set')).toBeInTheDocument();
@@ -313,9 +319,48 @@ describe('A topic practice set', () => {
     expect(screen.queryByRole('button', { name: 'Next →' })).not.toBeInTheDocument();
   });
 
+  it('starts a timed set on one clock for the whole set', async () => {
+    vi.spyOn(amc, 'topicSet').mockResolvedValue({ ...payload('timed'), total_seconds: 1440, size: 8 } as any);
+    show('/practice/circles?mode=timed', '/practice/:topicId', <PracticeSet />);
+    await settled('Timed set');
+    expect(screen.getByText(/24:00 for the 8 problems/)).toBeInTheDocument();
+    const before = Date.now();
+    fireEvent.click(screen.getByRole('button', { name: 'Start set' }));
+    const { deadline } = JSON.parse(sessionStorage.getItem('amc-practice-set')!);
+    expect(deadline).toBeGreaterThanOrEqual(before + 1440 * 1000);
+    expect(deadline).toBeLessThan(before + 1440 * 1000 + 5000);
+  });
+
+  it('counts the set down on the problem page', async () => {
+    writePracticeSet({ ids: ['step-10-01', 'step-10-02'], topic: 'circles', mode: 'timed', title: 'Timed set',
+                       seconds: 180, hideTopic: false, size: null, deadline: Date.now() + 10 * 60 * 1000 });
+    show('/problems/step-10-01?set=1', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    expect(screen.getAllByRole('timer')[0]).toHaveTextContent(/^(10:00|9:59) left$/);
+    expect(screen.getByLabelText(/Time left for the set, and time on this problem/)).toHaveTextContent('left for the set');
+  });
+
+  it('ends the set when its clock runs out', async () => {
+    writePracticeSet({ ids: ['step-10-01'], topic: 'circles', mode: 'timed', title: 'Timed set',
+                       seconds: 180, hideTopic: false, size: 5, deadline: Date.now() - 1000 });
+    render(
+      <AuthContext.Provider value={SIGNED_IN}>
+        <NoticesProvider>
+          <MemoryRouter initialEntries={['/problems/step-10-01?set=1']}>
+            <Routes>
+              <Route path="/problems/:problemId" element={<Problem />} />
+              <Route path="/practice/:topicId" element={<WhereAmI />} />
+            </Routes>
+          </MemoryRouter>
+        </NoticesProvider>
+      </AuthContext.Provider>,
+    );
+    expect(await screen.findByTestId('where')).toHaveTextContent('/practice/circles?mode=timed&n=5&done=1&timeup=1');
+  });
+
   it('hides the topic on a mixed set until it is answered', async () => {
     writePracticeSet({ ids: ['step-10-01'], topic: 'circles', mode: 'mixed', title: 'Mixed set',
-                       seconds: null, hideTopic: true });
+                       seconds: null, hideTopic: true, size: null, deadline: null });
     show('/problems/step-10-01?set=1', '/problems/:problemId', <Problem />);
     await settled(/What is the value of/);
     expect(screen.queryByRole('link', { name: problem.problem.topic_name })).not.toBeInTheDocument();

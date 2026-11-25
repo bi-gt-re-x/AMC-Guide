@@ -46,7 +46,6 @@ from typing import List, Optional
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from backend.api import achievements
 from backend.api.guard import current_user
 from backend.api.reply import fail, ok as _ok
 from backend.tracking.plainwords import plain
@@ -136,13 +135,13 @@ def sweep_notifications(day: str = '', at: str = '',
     """The account's live notifications, newest first, swept first.
 
     A POST because the sweep writes: it files whatever has become true since
-    the last one, and works out badges first. The bell polls this.
+    the last one. The bell polls this.
 
     `day` and `at` are the reader's own clock — the local ISO day and 'HH:MM'.
     Both are parameters rather than something computed here because stored
     stamps carry no timezone (backend/tracking/xp.py): the server's idea of
-    today is only right for readers who happen to share its clock, and "your
-    next calendar block" is meaningless without the second one.
+    today is only right for readers who happen to share its clock, and
+    "today's plan" is the plan for the reader's day, not the server's.
 
     `popups` comes back with the list because the client needs both to decide
     anything: a notification it has not shown yet is only put on screen if the
@@ -157,28 +156,6 @@ def sweep_notifications(day: str = '', at: str = '',
         # exactly where they are — turning notifications off is not a delete,
         # and turning them back on should not have lost anything.
         return ok(notifications=[], popups=False, enabled=False)
-
-    # Badges before the sweep, and the order is the whole point.
-    #
-    # `notification_facts` reads what this account has earned out of
-    # `user_achievements`, and until now the only thing that ever wrote to that
-    # table was somebody opening the Achievements page. So the bell could
-    # announce a badge, but only after the wall had already told the reader —
-    # which is not a notification, it is an echo.
-    #
-    # Working the badges out here closes that. It has to happen before the
-    # sweep or a row written now would not be in the facts it reads, and the
-    # badge would wait for the next poll a minute on.
-    #
-    # Here rather than inside `notify.sweep` because tracking modules do not
-    # import from api — the sweep is the rules, and this is the endpoint
-    # arranging what the rules get to see. Gated on the same 'progress' switch
-    # the resulting notification is filed under: a reader who turned that off
-    # is not asking for the work to be done silently. It is guarded and
-    # normally free; see `check_earned` in backend/api/achievements.py for what
-    # it costs when it is not.
-    if 'progress' in channels:
-        achievements.check_earned(username, user)
 
     notify.sweep(user, _iso_day(day), at, channels)
     return ok(notifications=db.notifications_for(username, channels),

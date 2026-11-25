@@ -28,6 +28,7 @@ ALLOWED = {
     'utils/rankTitle.ts': 'a title from the easter-egg chain, kept where that chain lives',
     'pages/amc/weakSet.ts': 'per-tab: the weak-topics set being walked on the Review page',
     'pages/amc/practiceSetStore.ts': 'per-tab: the topic practice set being walked from its page',
+    'pages/amc/reviewSet.ts': 'per-tab: the review set of ten being walked on the problem page',
     'pages/amc/Review.tsx': 'a view setting: whether the weak-topics set draws from the mocks',
 }
 

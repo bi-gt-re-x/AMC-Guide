@@ -22,12 +22,13 @@ import {
   type PlanPayload,
   type PlanSettings,
   type PlanLevel,
+  type PlanDay,
   type PlanWeek,
   type SubjectStrength,
   type TodayItem,
 } from '@/services/amc';
 import { MixBar, ModeTag, PrioritiesCard, WeaknessKinds } from '@/components/Amc/Study';
-import { TodayList } from './Dashboard';
+import { isRestDay, TodayList } from './Dashboard';
 import '@/styles/amc.css';
 
 const LEVELS: Level[] = ['AMC 10', 'AMC 12', 'AIME'];
@@ -295,7 +296,7 @@ function CoachCard({
   if (!written) {
     return (
       <section className="am-card am-coach">
-        <div className="am-card-head"><h2>Coach</h2><span className="am-muted" style={{ fontSize: 12 }}>{payload.ai.label}</span></div>
+        <div className="am-card-head"><h2>Coach</h2></div>
         <p style={{ margin: '0 0 12px', lineHeight: 1.6, color: 'var(--am-body)' }}>
           Get a plan written from your details and results: phases, a weekly routine and milestones.
         </p>
@@ -313,7 +314,7 @@ function CoachCard({
       <div className="am-card-head">
         <h2>Coach's plan</h2>
         <span className="am-muted" style={{ fontSize: 12 }}>
-          {payload.plan?.coach_by}{payload.plan?.coach_at ? ` · ${shortDate(payload.plan.coach_at)}` : ''}
+          {payload.plan?.coach_at ? `Written ${shortDate(payload.plan.coach_at)}` : ''}
         </span>
       </div>
       <p className="am-coach-summary">{written.summary}</p>
@@ -498,8 +499,43 @@ function NowCard({ payload, weeks, practice }: {
   );
 }
 
+/** Minutes as "5 h 30 min", "45 min". */
+const hours = (m: number) => (m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? ` ${m % 60} min` : ''}` : `${m} min`);
+
+/** One day of a week: its minutes and what fills them, or a rest day. */
+function DayRow({ d }: { d: PlanDay }) {
+  return (
+    <li className={`am-day${d.today ? ' is-today' : ''}${d.past ? ' is-past' : ''}${d.rest ? ' is-rest' : ''}`}>
+      <div className="am-day-when">
+        <strong>{d.weekday}</strong>
+        <span className="am-muted">{shortDate(d.date)}</span>
+        {d.today && <span className="am-day-now">Today</span>}
+      </div>
+      {d.rest ? (
+        <span className="am-muted am-day-rest">Rest</span>
+      ) : (
+        <ul className="am-day-blocks">
+          {d.blocks.map((b, i) => (
+            <li key={i} className={b.done ? 'is-done' : ''}>
+              <Link className="am-day-label" to={b.to}>{b.label}</Link>
+              {b.kind === 'challenge' && <ModeTag mode="challenge" label="challenge" />}
+              <span className="am-muted am-day-detail">{b.detail}</span>
+              <em>{b.minutes} min</em>
+            </li>
+          ))}
+        </ul>
+      )}
+      {!d.rest && <span className="am-day-total">{d.minutes} min</span>}
+    </li>
+  );
+}
+
 function WeekRow({ w }: { w: PlanWeek }) {
   const tracked = w.answered !== undefined && w.problems > 0;
+  const days = w.past ? [] : w.days ?? [];
+  // This week's days show; the weeks ahead open on request.
+  const [open, setOpen] = useState(w.current);
+  const studyDays = days.filter((d) => !d.rest);
   return (
     <div className={`am-week${w.current ? ' is-current' : ''}${w.past ? ' is-past' : ''}`}>
       <div className="am-week-when">
@@ -525,6 +561,14 @@ function WeekRow({ w }: { w: PlanWeek }) {
         ) : w.problems > 0 && <span>{w.problems} problems</span>}
         {w.mock && <span className={`am-pill ${w.mock_done ? 'am-pill-solved' : 'am-pill-review'}`}>{w.mock_done ? 'Mock done' : 'Mock'}</span>}
       </div>
+      {days.length > 0 && (
+        <div className="am-week-days">
+          <button type="button" className="am-week-days-toggle" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
+            {open ? 'Hide days' : `Day by day · ${studyDays.length} study day${studyDays.length === 1 ? '' : 's'}, ${hours(studyDays.reduce((n, d) => n + d.minutes, 0))}`}
+          </button>
+          {open && <ol className="am-days">{days.map((d) => <DayRow key={d.date} d={d} />)}</ol>}
+        </div>
+      )}
     </div>
   );
 }
@@ -727,7 +771,8 @@ export default function StudyPlan() {
 
   const weeks = payload.weeks ?? [];
   const current = weeks.find((w) => w.current);
-  const practice = (payload.today ?? []).find((i) => i.key === 'practice');
+  // Today's first set, practice or challenge, for the plan's "Start today's set".
+  const practice = (payload.today ?? []).find((i) => i.key === 'practice' || i.key === 'challenge');
 
   async function toggle(key: string, done: boolean) {
     const reply = await amc.check(key, done);
@@ -789,7 +834,7 @@ export default function StudyPlan() {
           <LevelCard level={payload.level} />
           <section className="am-card">
             <div className="am-card-head"><h2>Today</h2></div>
-            <TodayList items={payload.today ?? []} onToggle={(item) => void toggle(item.key, !item.done)} />
+            <TodayList items={payload.today ?? []} onToggle={(item) => void toggle(item.key, !item.done)} rest={isRestDay(current)} />
             {current && <p className="am-muted" style={{ fontSize: 13, lineHeight: 1.5, margin: '12px 0 0' }}>{current.note}</p>}
           </section>
           <PrioritiesCard priorities={payload.priorities} limit={5} title="This plan's priorities" />

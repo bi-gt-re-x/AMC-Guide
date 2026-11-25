@@ -25,9 +25,8 @@ notice. That is exactly the kind of failure worth a test.
 from backend.api import achievements
 from backend.database import connection as db
 
-from tests.conftest import make_account, sign_in
+from tests.conftest import make_account
 
-DAY = '2026-09-01'
 
 
 def _finish(username, subject='mathematics', xp=100, **over):
@@ -115,53 +114,6 @@ def test_the_page_works_it_out_whatever_the_guard_says(app):
     figures, _fresh = achievements.check_earned('reader', _user('reader'), force=True)
     assert figures is not None
     assert figures['tasks'] >= 1
-
-
-# --------------------------------------------------------------------------
-# The bell
-# --------------------------------------------------------------------------
-def test_the_bell_announces_a_badge_earned_since_the_last_look(app):
-    """End to end, through the endpoint the client actually calls.
-
-    The first read settles the account — an account arriving with a shelf of
-    badges did not earn them in the last minute, so the first sweep files the
-    backlog without showing it (see the note in backend/tracking/notify.py).
-    What is asserted is the *second* read, after new work.
-    """
-    make_account('belle')
-    client = sign_in(app, 'belle')
-    client.post('/api/notifications', params={'day': DAY, 'at': '09:00'})
-
-    for _ in range(10):
-        _finish('belle')
-
-    reply = client.post('/api/notifications', params={'day': DAY, 'at': '09:05'}).json()
-    assert reply['success'], reply
-
-    prints = {row['fingerprint'] for row in reply['notifications']}
-    assert 'badge:tasks-10' in prints, sorted(prints)
-
-    said = next(row for row in reply['notifications'] if row['fingerprint'] == 'badge:tasks-10')
-    assert said['title'] == 'Badge earned: Warmed Up'
-    assert said['link'] == '/achievements/badges'
-
-
-def test_the_bell_says_nothing_twice_about_one_badge(app):
-    """The sweep runs on every poll. A badge announced per poll is the bug the
-    fingerprint exists to prevent, and this is that rule for the new caller."""
-    make_account('once')
-    client = sign_in(app, 'once')
-    client.post('/api/notifications', params={'day': DAY, 'at': '09:00'})
-
-    for _ in range(10):
-        _finish('once')
-
-    first = client.post('/api/notifications', params={'day': DAY, 'at': '09:05'}).json()
-    second = client.post('/api/notifications', params={'day': DAY, 'at': '09:06'}).json()
-
-    badges = [row for row in second['notifications'] if row['fingerprint'].startswith('badge:')]
-    assert len(badges) == len({row['fingerprint'] for row in badges})
-    assert len(first['notifications']) == len(second['notifications'])
 
 
 # --------------------------------------------------------------------------

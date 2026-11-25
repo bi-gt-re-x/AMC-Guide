@@ -42,7 +42,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { NotificationPanel } from './Notifications';
-import { NametagText, TitleSelect } from './Nametag';
+import { NametagText } from './Nametag';
 import { SearchField } from './Search';
 import type { SearchFieldHandle } from './Search';
 import { OPEN_SEARCH } from '@/utils/searchBus';
@@ -289,7 +289,7 @@ export function Topbar() {
             onClick={() => toggle('account')}
           >
             <img className="topbar-avatar" src={avatar} alt="" width={34} height={34} />
-            <NametagText className="topbar-name" title={tag.title} name={tag.name} />
+            <NametagText className="topbar-name" title={null} name={tag.name} />
             <svg className="topbar-caret" {...stroke} strokeWidth={2.2}>
               <path d="m6 9 6 6 6-6" />
             </svg>
@@ -299,7 +299,7 @@ export function Topbar() {
             <div className="topbar-panel topbar-account-menu" role="menu">
               <div className="topbar-account-head">
                 <strong>
-                  <NametagText title={tag.title} name={tag.name} />
+                  <NametagText title={null} name={tag.name} />
                 </strong>
                 {/* The username, where it is an answer rather than a label:
                     the menu is where somebody checks which account they are
@@ -317,7 +317,6 @@ export function Topbar() {
               <button type="button" className="topbar-signout" onClick={() => { setOpen(null); void signOut(); }}>
                 Sign out
               </button>
-              {tag.title && <TitleSelect tag={tag} className="topbar-title-pick" />}
               {/* All fifty in one scrolling line, as they were in the rail.
                   A wrapping grid would be ten rows deep and turn a menu into a
                   page; the row is the shape that fits a menu. */}

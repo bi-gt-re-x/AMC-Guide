@@ -10,6 +10,7 @@ import type { DifficultyMix, StudyMode, StudyPriority, Takeaway, WeaknessKind } 
 
 const MODE_TONE: Record<StudyMode, string> = {
   learn: 'is-learn', accuracy: 'is-accuracy', timed: 'is-timed', mixed: 'is-mixed', spaced: 'is-spaced', practice: '',
+  challenge: 'is-challenge',
 };
 
 export function ModeTag({ mode, label }: { mode?: StudyMode; label?: string }) {

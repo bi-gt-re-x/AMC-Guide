@@ -153,7 +153,8 @@ def test_the_schedule_spaces_the_best_topics_and_follows_the_coach():
 
 
 def test_the_plan_is_built_from_it(client):
-    client.put('/api/amc/plan', json={'target': 'AMC 10', 'exam_date': '2027-11-05', 'goal_score': 105, 'hours': 6})
+    client.put('/api/amc/plan', json={'target': 'AMC 10', 'exam_date': '2027-11-05', 'goal_score': 105, 'hours': 6,
+                                      'details': {'days_per_week': 7}})
     for pid in [p['id'] for p in PROBLEMS if p['level'] == 'AMC 10' and p['topic'] == 'casework'][:5]:
         client.post('/api/amc/problems/{}/attempt'.format(pid), json={'answer': 'A', 'seconds': 1500})
     body = client.get('/api/amc/plan').json()
@@ -163,7 +164,8 @@ def test_the_plan_is_built_from_it(client):
     assert [f['id'] for f in first] == [r['id'] for r in body['priorities'][:2]]
     assert all('mode' in f for f in first)
     practice = next(i for i in body['today'] if i['key'] == 'practice')
-    assert first[0]['name'] in practice['label']
+    # The week's two focus topics take turns down its days.
+    assert any(f['name'] in practice['label'] for f in first)
     analytics = client.get('/api/amc/analytics').json()
     assert analytics['priorities'] and len(analytics['kinds']) == 5
 
@@ -191,15 +193,16 @@ def test_the_difficulty_mix_follows_ability_and_goal():
 
 
 def test_todays_practice_and_analytics_carry_the_mix(client):
-    client.put('/api/amc/plan', json={'target': 'AMC 10', 'exam_date': '2027-11-05', 'goal_score': 120, 'hours': 6})
+    client.put('/api/amc/plan', json={'target': 'AMC 10', 'exam_date': '2027-11-05', 'goal_score': 120, 'hours': 6,
+                                      'details': {'days_per_week': 7}})
     body = client.get('/api/amc/plan').json()
     assert body['difficulty']['ceiling'] >= 2 and body['difficulty']['mix']
-    focus = body['weeks'][0]['focus'][0]
-    assert focus['mix'] and abs(sum(m['share'] for m in focus['mix']) - 1) < 1e-9
     practice = next(i for i in body['today'] if i['key'] == 'practice')
+    focus = next(f for f in body['weeks'][0]['focus'] if f['name'] in practice['label'])
+    assert focus['mix'] and abs(sum(m['share'] for m in focus['mix']) - 1) < 1e-9
     assert 'level' in practice['detail'] and focus['name'] in practice['label']
-    # It opens the topic's own handpicked set of eight, in the topic's mode.
-    assert practice['to'] == '/practice/{}?mode={}'.format(focus['id'], focus['mode'])
+    # It opens the topic's own handpicked set, in the topic's mode, sized to today's time.
+    assert practice['to'] == '/practice/{}?mode={}&n={}'.format(focus['id'], focus['mode'], practice['goal'])
     analytics = client.get('/api/amc/analytics').json()
     tiles = {t['id']: t for t in analytics['takeaways']}
     assert set(tiles) == {'projected', 'level', 'next', 'weakness'}
@@ -231,8 +234,10 @@ def test_the_weeks_move_on_from_learning_and_count_what_was_done(client):
     client.post('/api/amc/problems/{}/attempt'.format(pid), json={'answer': 'A', 'seconds': 60})
     body = client.get('/api/amc/plan').json()
     weeks = body['weeks']
-    # Three days a week: three sets of eight, not hours x 6.
-    assert weeks[0]['problems'] == 24
+    # Three days a week: the week's problems are what its three study days hold.
+    assert sum(not d['rest'] for d in weeks[0]['days']) == 3
+    assert weeks[0]['problems'] == sum(b.get('count', 0) for d in weeks[0]['days'] for b in d['blocks']
+                                       if b['kind'] in ('practice', 'challenge'))
     current = next(w for w in weeks if w['current'])
     assert current['answered'] == 1
     assert 'answered' not in weeks[-1]
@@ -316,3 +321,41 @@ def test_todays_set_says_how_big_how_fast_and_why():
     assert practice['minutes'] == 24
     assert next(i for i in items if i['key'] == 'mock')['minutes'] == 75
     assert engine._reason({'factors': {'mock_lost': 9}}) == 'You lost 9 points here in recent mocks.'
+
+
+def test_each_week_is_days_sized_to_the_time_a_day():
+    """Hours a week over days a week: each study day fits its minutes, rest days are empty,
+    one day a week is a challenge set, and the mock goes on the weekend."""
+    tstats = engine.topic_stats({}, {})
+    assert engine.study_schedule(_settings(hours=6)) == ((0, 1, 2, 3, 5, 6), 60)       # Friday off
+    assert engine.study_schedule(_settings(hours=5, details={'days_per_week': 3})) == ((1, 3, 5), 100)
+    weeks = engine.plan_weeks(_settings(exam_date='2027-01-20', created_at='2026-11-20'), tstats, [], date(2026, 11, 25))
+    for w in weeks:
+        assert [d['weekday'] for d in w['days']] == ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun']
+        assert w['days'][4]['rest'] and not w['days'][4]['blocks']
+        for d in w['days']:
+            mock = any(b['kind'] == 'mock' for b in d['blocks'])
+            if not d['rest'] and not mock:
+                assert 0 < d['minutes'] <= 60, (w['number'], d)
+        if w['phase'] != 'Taper' and not w['past']:
+            challenges = [b for d in w['days'] for b in d['blocks'] if b['kind'] == 'challenge']
+            assert len(challenges) == 1 and challenges[0]['to'].startswith('/practice/')
+            assert 'mode=challenge' in challenges[0]['to'] and challenges[0]['count'] <= 5
+        if w['mock']:
+            day = next(d for d in w['days'] if any(b['kind'] == 'mock' for b in d['blocks']))
+            assert day['weekday'] in ('Sat', 'Sun')
+
+
+def test_todays_list_is_todays_day_of_the_plan():
+    tstats = engine.topic_stats({}, {})
+    settings = _settings(created_at='2026-11-20')
+    weeks = engine.plan_weeks(settings, tstats, [], date(2026, 11, 23))              # a Monday
+    monday = next(w for w in weeks if w['current'])['days'][0]
+    items = engine.today_items(settings, weeks, 4, date(2026, 11, 23), {}, set())
+    sets = [b for b in monday['blocks'] if b['kind'] in ('practice', 'challenge')]
+    assert [i['label'] for i in items if i['key'].startswith(('practice', 'challenge'))] == [b['label'] for b in sets]
+    assert next(i for i in items if i['key'] == 'review')['goal'] == 4
+    # Friday is a rest day: only a review set, when one is due.
+    friday = engine.plan_weeks(settings, tstats, [], date(2026, 11, 27))
+    assert [i['key'] for i in engine.today_items(settings, friday, 4, date(2026, 11, 27), {}, set())] == ['review']
+    assert engine.today_items(settings, friday, 0, date(2026, 11, 27), {}, set()) == []

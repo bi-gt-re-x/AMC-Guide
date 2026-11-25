@@ -76,7 +76,6 @@ export function AIHelp({ problemId, answered, wrong }: { problemId: string; answ
         <button type="button" className="am-btn am-btn-ghost am-btn-sm" disabled={Boolean(busy)} onClick={() => void more()}>
           {busy === 'more' ? 'Writing and checking one…' : 'More like this'}
         </button>
-        <span className="am-muted" style={{ fontSize: 11 }}>{status.label}</span>
       </div>
       {message && <p className="am-error" style={{ fontSize: 13 }}>{message}</p>}
     </section>

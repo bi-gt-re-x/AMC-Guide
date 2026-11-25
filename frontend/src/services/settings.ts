@@ -232,12 +232,10 @@ export interface Prefs {
    */
   notifications_enabled: boolean;
   notify_popups: boolean;
-  notify_tasks: boolean;
-  notify_calendar: boolean;
-  notify_analytics: boolean;
-  notify_goals: boolean;
+  notify_plan: boolean;
+  notify_review: boolean;
+  notify_mocks: boolean;
   notify_streak: boolean;
-  notify_progress: boolean;
 }
 
 export interface Settings extends Prefs {
@@ -334,12 +332,10 @@ export const DEFAULTS: Prefs = {
      kind of thing is not worth being told about. */
   notifications_enabled: true,
   notify_popups: true,
-  notify_tasks: true,
-  notify_calendar: true,
-  notify_analytics: true,
-  notify_goals: true,
+  notify_plan: true,
+  notify_review: true,
+  notify_mocks: true,
   notify_streak: true,
-  notify_progress: true,
 };
 
 /** What the API gives an account that has never set one. */

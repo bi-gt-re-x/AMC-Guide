@@ -60,8 +60,8 @@ function Forecast({ stats, level }: { stats: SmartStats; level: Level }) {
   );
 }
 
-export function Coach({ initial, available, setup, label }: {
-  initial: Diagnosis | null; available: boolean; setup: string; label: string;
+export function Coach({ initial, available, setup }: {
+  initial: Diagnosis | null; available: boolean; setup: string;
 }) {
   const [d, setD] = useState<Diagnosis | null>(initial);
   const [busy, setBusy] = useState(false);
@@ -85,7 +85,6 @@ export function Coach({ initial, available, setup, label }: {
     <section className="am-card am-coach">
       <div className="am-card-head">
         <h2>AI coach</h2>
-        {available && <span className="am-muted" style={{ fontSize: 12 }}>{label}</span>}
       </div>
       {!available ? (
         <p className="am-muted" style={{ margin: 0, fontSize: 13 }}>{setup}</p>
@@ -200,7 +199,7 @@ export function Insights() {
       </section>
 
       <div className="am-grid am-grid-main">
-        <Coach initial={data.diagnosis} available={data.ai.available} setup={data.ai.setup} label={data.ai.label} />
+        <Coach initial={data.diagnosis} available={data.ai.available} setup={data.ai.setup} />
         <section className="am-card">
           <div className="am-card-head"><h2>Do next</h2></div>
           {s.next_problems.length ? (

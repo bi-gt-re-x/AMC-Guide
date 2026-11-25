@@ -486,14 +486,13 @@ FIELDS: Dict[str, Any] = {
     #: leaves the bell doing its job and takes away the interruption, which is
     #: the half of this feature people actually turn off.
     'notify_popups': (True, _boolean),
-    #: The six channels. See the candidate functions in
-    #: backend/tracking/notify.py for exactly what each one can say.
-    'notify_tasks': (True, _boolean),
-    'notify_calendar': (True, _boolean),
-    'notify_analytics': (True, _boolean),
-    'notify_goals': (True, _boolean),
+    #: The four channels. See backend/amc/alerts.py for exactly what each one
+    #: can say: today's study plan and the contest coming up, problems due for
+    #: review, the week's mock and a new best on one, and the practice streak.
+    'notify_plan': (True, _boolean),
+    'notify_review': (True, _boolean),
+    'notify_mocks': (True, _boolean),
     'notify_streak': (True, _boolean),
-    'notify_progress': (True, _boolean),
 }
 
 

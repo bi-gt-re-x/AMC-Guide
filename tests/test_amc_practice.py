@@ -25,7 +25,8 @@ def test_every_set_is_eight_from_the_one_topic_and_each_mode_picks_its_own(clien
     for mode in practice.MODES:
         s = practice.build(topic, mode, 'AMC 10', 4.5, 4.2, planning.difficulty_mix(4.2, 2), hist, {}, 'u', TODAY)
         ids = s['problems']
-        assert len(ids) == practice.SIZE and len(set(ids)) == practice.SIZE, mode
+        size = practice.CHALLENGE_SIZE if mode == 'challenge' else practice.SIZE
+        assert len(ids) == size and len(set(ids)) == size, mode
         assert all(pb.get(i)['topic'] == topic or topic in pb.get(i)['also'] for i in ids), mode
         sets[mode] = s
     ratings = {m: [pb.get(i)['rating'] for i in s['problems']] for m, s in sets.items()}
@@ -161,3 +162,21 @@ def test_the_weak_topics_set_is_pitched_to_each_topics_own_level():
     picked = [p['rating'] for p, tid, _ in out['problems'] if tid == 'circles']
     others = [p['rating'] for p, tid, _ in out['problems'] if tid != 'circles']
     assert picked and others and sum(picked) / len(picked) < sum(others) / len(others) + 0.01
+
+
+def test_a_challenge_set_is_harder_and_a_set_takes_the_size_it_is_asked_for(client):
+    topic = 'probability'
+    mix = planning.difficulty_mix(4.2, 2)
+    timed = practice.build(topic, 'timed', 'AMC 10', 4.5, 4.2, mix, {}, {}, 'u', TODAY)
+    challenge = practice.build(topic, 'challenge', 'AMC 10', 4.5, 4.2, mix, {}, {}, 'u', TODAY)
+    rating = lambda s: sum(pb.get(i)['rating'] for i in s['problems']) / len(s['problems'])
+    assert rating(challenge) > rating(timed)
+    # Longer a problem, on one clock for the whole set.
+    assert challenge['seconds'] == 270 and challenge['total_seconds'] == 270 * 5 and challenge['title'] == 'Challenge set'
+    assert timed['total_seconds'] == 180 * 8
+    # The study plan's size for the day, within three to twelve.
+    assert len(practice.build(topic, 'practice', 'AMC 10', 4.5, 4.2, mix, {}, {}, 'u', TODAY, 5)['problems']) == 5
+    assert practice.size_for('timed', 1) == 3 and practice.size_for('timed', 40) == 12
+    body = client.get('/api/amc/topics/circles/set?mode=challenge&n=4').json()
+    assert body['success'] and len(body['problems']) == 4 and body['total_seconds'] == 270 * 4
+    assert 'challenge' in [m['id'] for m in body['modes']]
