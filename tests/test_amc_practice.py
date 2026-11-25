@@ -100,3 +100,59 @@ def test_subject_ratings_are_kept_and_lean_on_priorities_until_answers_come(clie
     assert planning.subject_lean(details, {'circles': 40})['circles'] < lean['circles']
     body = client.get('/api/amc/plan').json()
     assert body['start']['stage'] in ('far', 'near', 'there', 'unknown')
+
+
+def _set(mode, topic_theta, theta=4.0, hist=None, topic='circles'):
+    mix = planning.difficulty_mix(topic_theta if topic_theta is not None else theta - 0.3,
+                                  planning.goal_level('AMC 10', 100))
+    ids = practice.build(topic, mode, 'AMC 10', theta, topic_theta, mix, hist or {}, {}, 'u', date(2026, 11, 24))['problems']
+    return [pb.get(i) for i in ids]
+
+
+def test_every_set_gets_harder_as_it_goes():
+    for mode in practice.MODES:
+        for level in (2.5, 5.0):
+            ratings = [p['rating'] for p in _set(mode, level)]
+            assert ratings == sorted(ratings), (mode, level, ratings)
+
+
+def test_a_set_is_pitched_to_the_students_level_in_the_topic():
+    mean = lambda ps: sum(p['rating'] for p in ps) / len(ps)
+    for mode in ('learn', 'timed', 'accuracy', 'practice'):
+        weak, strong = _set(mode, 2.5), _set(mode, 6.0)
+        assert mean(strong) > mean(weak), mode
+    # A strong student new to a topic does not start at level 1: no topic
+    # answers, so the set leans on their overall level.
+    beginner = _set('learn', None, theta=2.5)
+    expert = _set('learn', None, theta=7.0)
+    assert mean(expert) > mean(beginner)
+
+
+def test_a_ramped_set_opens_in_reach_and_ends_on_a_stretch():
+    from backend.amc import smart
+    ps = _set('timed', 4.5)
+    first, last = smart.chance(4.5, ps[0]['rating']), smart.chance(4.5, ps[-1]['rating'])
+    assert first > last and first >= 0.7
+
+
+def test_the_weak_topics_set_is_pitched_to_each_topics_own_level():
+    from backend.amc import smart, weak
+    from backend.amc.bank import PROBLEMS
+    # Strong overall (right on many problems), but wrong on every circles one.
+    hist = {}
+    for p in [p for p in PROBLEMS if p['level'] == 'AMC 10' and p['topic'] not in ('circles',)
+              and 'circles' not in p['also']][:30]:
+        hist[p['id']] = {'attempts': 1, 'first_correct': True, 'first_at': '2026-11-10T10:00:00',
+                         'first_seconds': 60, 'first_source': 'practice', 'solved': True,
+                         'last_correct': True, 'last_at': '2026-11-10T10:00:00', 'seconds': 60}
+    circles = [p for p in PROBLEMS if p['level'] == 'AMC 10' and p['topic'] == 'circles']
+    for p in circles[:4]:
+        hist[p['id']] = {'attempts': 1, 'first_correct': False, 'first_at': '2026-11-10T10:00:00',
+                         'first_seconds': 60, 'first_source': 'practice', 'solved': False,
+                         'last_correct': False, 'last_at': '2026-11-10T10:00:00', 'seconds': 60}
+    out = weak.bank(hist, {}, 'AMC 10', True, 'u', today=date(2026, 11, 24))
+    ratings = [p['rating'] for p, _, _ in out['problems']]
+    assert ratings == sorted(ratings)
+    picked = [p['rating'] for p, tid, _ in out['problems'] if tid == 'circles']
+    others = [p['rating'] for p, tid, _ in out['problems'] if tid != 'circles']
+    assert picked and others and sum(picked) / len(picked) < sum(others) / len(others) + 0.01

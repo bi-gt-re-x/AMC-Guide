@@ -14,8 +14,10 @@ few answers they rest on.
 (an AMC 12 student also gets AMC 10 problems) from the imported official papers,
 plus the mock problems when asked. A problem already solved, or already waiting
 in the error log, is left out: the log has its own schedule. Within a topic the
-problems the student gets right about two times in three come first (the level
-is backend/amc/smart.py's fit), unseen before missed, and a problem that calls
+problems the student gets right about two times in three come first, judged by
+their level *in that topic* (backend/amc/smart.py's fit of the topic's own
+answers, shrunk toward their overall level, so a topic they are weak in gets
+easier problems than their overall level would pick), unseen before missed, and a problem that calls
 for a technique the student has missed in that topic is moved up: the same
 idea again, in a problem not yet seen. The twelve go to the four weakest
 topics that have problems left, more of them to the topics missed most (at
@@ -122,7 +124,15 @@ def bank(hist, review_by_id, target, include_mocks, username, today=None, draw=0
     """{'topics': [...], 'problems': [(problem, topic id, chance)], 'pool': {...}}."""
     today = today or date.today()
     topics = weak_topics(hist, review_by_id, target)
-    theta = smart.fit([pt[:3] for pt in smart._first_points(hist, today)])[0]
+    points = smart._first_points(hist, today)
+    theta = smart.fit([pt[:3] for pt in points])[0]
+    # Each topic's own level, from its own answers, leaning on the overall
+    # level where it has few: the problems are pitched to the topic.
+    by_topic = {}
+    for rating, ok, w, p in points:
+        for tid in [p['topic']] + list(p.get('also') or []):
+            by_topic.setdefault(tid, []).append((rating, ok, w))
+    topic_theta = {tid: smart.fit(pts, mean=theta, sd=smart.TOPIC_SD)[0] for tid, pts in by_topic.items()}
     rng = random.Random('{}|{}|{}'.format(username, today.isoformat(), int(draw)))
     missed_techniques = _missed_techniques(hist)
 
@@ -139,11 +149,13 @@ def bank(hist, review_by_id, target, include_mocks, username, today=None, draw=0
         if (h and h['solved']) or (rev and rev['status'] == 'active'):
             continue
         pool['official' if official else 'mock'] += 1
-        c = smart.chance(theta, p['rating'])
-        # Closest to two-in-three first; seen-and-missed after unseen; a little
-        # noise so a new draw is a different set, not the same one reshuffled.
-        key = abs(c - SWEET) + (0.15 if h else 0) + rng.random() * 0.12
+        noise = rng.random() * 0.12
         for tid in [p['topic']] + list(p.get('also') or []):
+            c = smart.chance(topic_theta.get(tid, theta), p['rating'])
+            # Closest to two-in-three first; seen-and-missed after unseen; a
+            # little noise so a new draw is a different set, not the same one
+            # reshuffled.
+            key = abs(c - SWEET) + (0.15 if h else 0) + noise
             # The technique this student has already missed here, again.
             pull = TECHNIQUE_PULL if p['technique'] in missed_techniques.get(tid, ()) else 0
             queues.setdefault(tid, []).append((key - pull, p['id'], p, c))
@@ -181,6 +193,7 @@ def bank(hist, review_by_id, target, include_mocks, username, today=None, draw=0
             if reach >= len(order):
                 break
             reach += 1
+    # Easiest first, so the set gets harder as it goes.
     picked.sort(key=lambda row: (row[0]['rating'], row[0]['id']))
     used_topics = {tid for _, tid, _ in picked}
     return {

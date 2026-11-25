@@ -1,18 +1,31 @@
 """A topic's practice set: eight problems, all in that one topic, picked for a
 way of training it (backend/amc/planning.py `KINDS`).
 
-* learn    — the topic's easiest problems, level by level, untried before
-             tried and worked solutions first within a level: theory, then
-             introductory problems, untimed.
+* learn    — problems comfortably within reach for this student in this
+             topic, worked solutions first: theory, then introductory
+             problems, untimed.
 * accuracy — problems within the student's reach (about 60% or better for
              them), ones they missed before first: untimed, check every answer.
 * timed    — problems they can usually do, untried first, at contest pace
              (3 minutes each; 12 on the AIME).
-* mixed    — the topic's whole range of difficulty and sources, shuffled, and
-             shown without the topic's name, to practise recognising it.
+* mixed    — the widest spread of difficulty the student can use, shown
+             without the topic's name, to practise recognising it.
 * spaced   — problems they have answered before, the longest ago and the ones
              due for review first.
 * practice — the topic's difficulty mix (planning.difficulty_mix), level by level.
+
+## Pitched to the student, and harder as it goes
+
+Every set is picked from how this student does *in this topic*: the topic's
+ability estimate (planning.analyze, from their answers in it, shrunk toward
+their overall level so a few answers cannot swing it), or a little under their
+overall level for a topic not tried yet. So a set moves up as the topic does,
+and a strong student starting a new topic does not start at level 1.
+
+Within a set the problems step up: `RAMPS` gives each mode the chance of a
+right answer its first problem should have and the one its last should, and
+the problems between are picked on the way down, so a set opens on something
+they can do and ends on a stretch. Every set is then shown easiest first.
 
 A set is the same all day (seeded by account, topic, mode and date), so
 reloading the page does not reshuffle it.
@@ -66,6 +79,30 @@ def _balance(picked, candidates):
     return picked
 
 
+#: (first, last): the chance of a right answer for this student that a set's
+#: first and last problem aim at, the rest stepped evenly between. Learning
+#: starts easy and stays in reach; a timed set ends nearer a coin flip.
+RAMPS = {'learn': (0.92, 0.65), 'accuracy': (0.9, 0.6), 'timed': (0.85, 0.55),
+         # The widest spread, for recognising the topic at every difficulty, but
+         # still from where the student is, not the topic's hardest.
+         'mixed': (0.92, 0.35)}
+
+
+def _ramp(rows, chance, first, last, n, cost):
+    """`n` of `rows` getting harder: for each of `n` targets stepped from
+    `first` down to `last`, the free row whose chance is nearest, plus
+    `cost` (untried and the topic's own problems first)."""
+    targets = [first - (first - last) * k / max(1, n - 1) for k in range(n)]
+    left, out = list(rows), []
+    for target in targets:
+        if not left:
+            break
+        best = min(left, key=lambda p: (abs(chance(p) - target) + cost(p), p['id']))
+        out.append(best)
+        left.remove(best)
+    return out
+
+
 def _in_topic(p, topic_id):
     return p['topic'] == topic_id or topic_id in p['also']
 
@@ -90,16 +127,24 @@ def build(topic_id, mode, level, theta, topic_theta, mix, hist, review_by_id, us
         # (a probability problem that also uses circles) only fills a set.
         return sorted(rows, key=lambda p: (p['topic'] != topic_id, key(p), jitter[p['id']]))
 
+    # What a pick costs besides its distance from the step it fills: a problem
+    # met before, one only tagged with the topic, no worked solution to learn
+    # from; and a little noise so equal problems are not always the same ones.
+    def cost(p, solution=False):
+        return (0.25 if seen(p) else 0) + (0.12 if p['topic'] != topic_id else 0) \
+            + (0.06 if solution and not p.get('solution') else 0) + jitter[p['id']] * 0.02
+
     if mode == 'learn':
-        order = take(mine, lambda p: (planning.level_of(p['rating']), seen(p), not p.get('solution'), p['rating']))
+        order = _ramp(mine, chance, *RAMPS['learn'], SIZE, lambda p: cost(p, solution=True))
     elif mode == 'accuracy':
-        within = [p for p in mine if chance(p) >= 0.6] or take(mine, lambda p: -chance(p))[:SIZE * 2]
-        # Missed and not yet put right, then untried, then the rest.
-        order = take(within, lambda p: (0 if seen(p) and not solved(p) else 1 if not seen(p) else 2,
-                                        abs(chance(p) - 0.7)))
+        # Missed and not yet put right first: those are the point. Then new
+        # problems within reach, getting harder.
+        missed = take([p for p in mine if seen(p) and not solved(p) and chance(p) >= 0.45],
+                      lambda p: -chance(p))[:SIZE // 2]
+        order = missed + _ramp([p for p in mine if p not in missed], chance, *RAMPS['accuracy'],
+                               SIZE - len(missed), cost)
     elif mode == 'timed':
-        fit = [p for p in mine if 0.5 <= chance(p) <= 0.9] or mine
-        order = take(fit, lambda p: (seen(p), abs(chance(p) - 0.7)))
+        order = _ramp(mine, chance, *RAMPS['timed'], SIZE, cost)
     elif mode == 'spaced':
         def due_rank(p):
             rev = review_by_id.get(p['id'])
@@ -109,21 +154,13 @@ def build(topic_id, mode, level, theta, topic_theta, mix, hist, review_by_id, us
         if len(order) < SIZE:                    # too few met before: the nearest new ones
             order += take([p for p in mine if not seen(p)], lambda p: abs(chance(p) - 0.7))
     elif mode == 'mixed':
-        # Across every level and source the topic has, untried first.
-        by_level = {}
-        for p in take(mine, lambda p: seen(p)):
-            by_level.setdefault(planning.level_of(p['rating']), []).append(p)
-        order = []
-        while any(by_level.values()):
-            for lvl in sorted(by_level):
-                if by_level[lvl]:
-                    order.append(by_level[lvl].pop(0))
+        order = _ramp(mine, chance, *RAMPS['mixed'], SIZE, cost)
     else:
         counts = {c['level']: c['count'] for c in planning.split_count(mix, SIZE)} if mix else {}
         order = []
         for lvl, n in sorted(counts.items()):
             order += take([p for p in mine if planning.level_of(p['rating']) == lvl and p not in order],
-                          lambda p: seen(p))[:n]
+                          lambda p: (seen(p), round(abs(chance(p) - 0.7), 1)))[:n]
         order += take([p for p in mine if p not in order], lambda p: (seen(p), abs(chance(p) - 0.65)))
 
     # Fill to eight: the mode's picks from the topic's own problems, then its
@@ -143,13 +180,9 @@ def build(topic_id, mode, level, theta, topic_theta, mix, hist, review_by_id, us
             break
     if mode != 'spaced':
         picked = _balance(picked, candidates)
-    if mode == 'mixed':
-        rng.shuffle(picked)
-    elif mode != 'spaced':
-        # Easiest level first, real and mock problems mixed within each level
-        # rather than every mock first (problems.mix_sources).
-        picked = pb.mix_sources(sorted(picked, key=lambda p: p['rating']),
-                                key=lambda p: planning.level_of(p['rating']))
+    # Every set easiest first, so it gets harder as it goes; real and mock
+    # problems of the same rating mixed, not every mock first.
+    picked = pb.mix_sources(sorted(picked, key=lambda p: (p['rating'], p['id'])), key=lambda p: p['rating'])
     seconds = SECONDS.get(level, 180) if mode == 'timed' else None
     text = INSTRUCTIONS[mode]
     if seconds:
