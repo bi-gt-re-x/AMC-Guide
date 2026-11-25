@@ -659,19 +659,34 @@ html[data-theme="dark"] .am-choice.is-picked .am-choice-letter { background: var
 .am-tab small { margin-left: 4px; color: var(--am-faint); font-weight: 500; }
 
 /* ---- Contests ----------------------------------------------------------------- */
+/* A mock card: name, length, best score as a bar, Start. The name's link is
+   stretched over the card, and Start sits above it. */
 .am-mock {
+    position: relative;
     display: grid;
-    gap: var(--space-3);
-    padding: var(--space-5);
+    gap: var(--space-2);
+    padding: var(--space-5) var(--space-5) var(--space-4);
     border: 1px solid var(--am-line);
     border-radius: var(--am-radius);
     background: var(--am-card);
     box-shadow: var(--am-shadow);
+    transition: border-color .15s ease, transform .15s ease;
 }
-.am-mock h3 { margin: 0; font-family: var(--am-serif); font-weight: 400; font-size: 22px; }
-.am-mock p { margin: 0; color: var(--am-body); font-size: var(--text-sm); line-height: 1.5; }
-.am-mock-meta { display: flex; flex-wrap: wrap; gap: var(--space-3); color: var(--am-muted); font-size: var(--text-xs); }
+.am-mock:hover { border-color: var(--am-faint); transform: translateY(-1px); }
+.am-mock:focus-within { border-color: var(--am-muted); }
+.am-mock h3 { margin: 0; font-family: var(--am-serif); font-weight: 400; font-size: 24px; line-height: 1.15; }
+.am-mock-link { color: var(--am-ink); text-decoration: none; }
+.am-mock-link::after { content: ''; position: absolute; inset: 0; border-radius: inherit; }
+.am-mock-link:focus-visible { outline: none; }
+.am-mock-tag { color: var(--am-sage); font-weight: 600; }
+.am-mock p.am-mock-meta { margin: 0; color: var(--am-muted); font-size: var(--text-xs); }
+.am-mock-bar { height: 3px; margin: var(--space-3) 0 var(--space-1); border-radius: 2px; background: var(--am-line-soft); overflow: hidden; }
+.am-mock-bar i { display: block; height: 100%; border-radius: inherit; background: var(--am-sage); }
 .am-mock-foot { display: flex; justify-content: space-between; align-items: center; gap: var(--space-2); }
+.am-mock-best { color: var(--am-muted); font-size: var(--text-xs); font-variant-numeric: tabular-nums; }
+.am-mock-best b { color: var(--am-ink); font-family: var(--am-serif); font-weight: 400; font-size: 18px; }
+.am-mock-start { position: relative; z-index: 1; }
+.am-mock.is-step { background: transparent; box-shadow: none; }
 
 .am-year { display: grid; grid-template-columns: 80px minmax(0, 1fr); gap: var(--space-4); padding: var(--space-3) 0; border-top: 1px solid var(--am-line-soft); align-items: start; }
 .am-year:first-child { border-top: 0; }
@@ -1269,12 +1284,9 @@ a.am-topic-card:focus-visible { outline: 2px solid var(--tone, var(--am-sage)); 
 /* Mock Contests */
 .am-mock-banner { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); margin-bottom: var(--space-6); text-decoration: none; color: var(--am-ink); }
 .am-mock-banner:hover { background: var(--am-hover); }
-.am-mock-section { margin-bottom: var(--space-6); }
-.am-mock-section-head { display: flex; flex-wrap: wrap; align-items: baseline; justify-content: space-between; gap: var(--space-2); margin-bottom: var(--space-3); }
-.am-mock-section-head h2 { margin: 0; }
-.am-mock-section-head .am-muted { font-size: var(--text-sm); }
-.am-mock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: var(--space-3); }
-.am-mock-step { border-style: dashed; }
+.am-mock-section { margin-bottom: var(--space-8, 40px); }
+.am-mock-section > h2 { margin: 0 0 var(--space-3); }
+.am-mock-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(230px, 1fr)); gap: var(--space-3); }
 
 /* The exam: a cover page, then the paper and a bubble answer sheet. */
 /* The cover page before a timed contest: one quiet column, the paper's name,
@@ -1590,7 +1602,6 @@ html[data-theme="dark"] .am-predict-tag { color: #0d1117; }
 .am-pace dt { font-size: 12px; color: var(--am-muted); }
 .am-pace dd { margin: 4px 0 0; font-family: var(--am-serif); font-size: 26px; color: var(--am-ink); font-variant-numeric: tabular-nums; }
 .am-choose-note { margin: 0 0 var(--space-2); font-size: 11px; color: var(--am-muted); line-height: 1.4; }
-.am-mock-vs { margin: var(--space-2) 0 0; font-size: 12px; color: var(--am-muted); }
 
 /* Review (pages/amc/Review.tsx): the weak-topics set above the error log. */
 .am-weak { margin-bottom: var(--am-gap); }
