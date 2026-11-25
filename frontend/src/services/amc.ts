@@ -650,17 +650,6 @@ export interface MockDifficulty {
   vs_real: number;
 }
 
-/** How a mock compares with a real paper, in words. */
-export function versusReal(d: MockDifficulty | null | undefined, level: Level): string {
-  if (!d) return '';
-  if (Math.abs(d.vs_real) < 0.3) return `About as hard as a real ${level}`;
-  const step = Math.abs(d.vs_real).toFixed(1);
-  const points = step === '1.0' ? 'point' : 'points';
-  return d.vs_real < 0
-    ? `Plays about ${step} ${points} easier than a real ${level}`
-    : `Plays about ${step} ${points} harder than a real ${level}`;
-}
-
 export interface PastContest extends Format {
   id: string;
   name: string;

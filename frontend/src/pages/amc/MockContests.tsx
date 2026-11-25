@@ -4,51 +4,38 @@
  * Each contest has five AMC Guide Mock sets, written in real problem order at real
  * difficulty (problem n sits where problem n sits on a real paper; the AMC 12
  * sets share eight problems with their AMC 10, as the real A and B papers do),
- * plus the shorter-ramp Step Mock as a warm-up. A card shows your best score
- * and starts the clock.
+ * plus the shorter-ramp Step Mock as a warm-up. A card is the set's name, its
+ * length, your best score as a bar, and Start; the rest of the card opens it.
  */
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
-import { PageHeader, ratingText } from '@/components/Amc/bits';
+import { PageHeader } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
-import { amc, versusReal, shortDate, type Level, type MockContest } from '@/services/amc';
+import { amc, shortDate, type Level, type MockContest } from '@/services/amc';
 import '@/styles/amc.css';
 
 const LEVELS: Level[] = ['AMC 10', 'AMC 12', 'AIME'];
 
-const RANGE: Record<Level, string> = {
-  'AMC 10': 'A real AMC 10 runs from 2 to 8 out of 12, easiest first',
-  'AMC 12': 'A real AMC 12 runs from 2 to 9 out of 12, easiest first',
-  AIME: 'A real AIME runs from 5 to 12 out of 12, easiest first',
-};
-
 function MockCard({ m }: { m: MockContest }) {
-  const title = m.family === 'summit' ? `Set ${m.set}` : 'Step Mock';
+  const step = m.family === 'step';
+  const taken = Boolean(m.attempts);
+  const share = taken && m.max ? Math.max(0, Math.min(1, (m.best ?? 0) / m.max)) : 0;
   return (
-    <article className={`am-mock${m.family === 'step' ? ' am-mock-step' : ''}`}>
-      <span className="am-kicker" style={{ margin: 0 }}>
-        {m.family === 'summit' ? m.level : `${m.level} · warm-up`}
-      </span>
-      <h3>{title}</h3>
+    <article className={`am-mock${step ? ' is-step' : ''}`}>
+      <h3>
+        {/* Stretched over the card, so the whole card opens the set. */}
+        <Link className="am-mock-link" to={`/contests/${m.id}`}>{step ? 'Step Mock' : `Set ${m.set}`}</Link>
+      </h3>
       <p className="am-mock-meta">
-        <span>{m.count} problems</span>
-        <span>{m.minutes} min</span>
-        <span>{m.level === 'AIME' ? 'Answers 000–999' : '6 / 1.5 / 0 scoring'}</span>
+        {step && <span className="am-mock-tag">Warm-up · </span>}{m.count} problems · {m.minutes} min
       </p>
-      {m.difficulty && (
-        <p className="am-mock-vs" title={`Average problem ${ratingText(m.difficulty.average)}; a real ${m.level} averages ${ratingText(m.difficulty.real)}`}>
-          {versusReal(m.difficulty, m.level)}
-        </p>
-      )}
+      <div className="am-mock-bar" aria-hidden="true"><i style={{ width: `${share * 100}%` }} /></div>
       <div className="am-mock-foot">
-        <span className="am-muted" style={{ fontSize: 13 }}>
-          {m.attempts ? `Best ${m.best} / ${m.max} · ${m.attempts} sitting${m.attempts === 1 ? '' : 's'}` : 'Not taken yet'}
+        <span className="am-mock-best">
+          {taken ? <><b>{m.best}</b> / {m.max}</> : 'Not taken'}
         </span>
-        <span style={{ display: 'flex', gap: 6 }}>
-          <Link className="am-btn am-btn-ghost am-btn-sm" to={`/contests/${m.id}`}>Details</Link>
-          <Link className="am-btn am-btn-primary am-btn-sm" to={`/contests/${m.id}/take`}>Start</Link>
-        </span>
+        <Link className="am-btn am-btn-primary am-btn-sm am-mock-start" to={`/contests/${m.id}/take`}>Start</Link>
       </div>
     </article>
   );
@@ -68,13 +55,10 @@ export default function MockContests() {
   return (
     <div className="amc-page">
       <PageHeader title="Mock Contests">
-        <p>
-          Five full sets for each contest, in real problem order at real difficulty, timed and scored like the real
-          thing. Your answers go to Review.
-        </p>
+        <p>Five timed sets for each contest, scored like the real thing.</p>
       </PageHeader>
 
-      <div className="am-seg" role="group" aria-label="Contest" style={{ marginBottom: 20 }}>
+      <div className="am-seg" role="group" aria-label="Contest" style={{ marginBottom: 24 }}>
         {(['All', ...LEVELS] as const).map((f) => (
           <button key={f} type="button" className={level === f ? 'is-on' : ''} onClick={() => setLevel(f)}>{f}</button>
         ))}
@@ -86,10 +70,7 @@ export default function MockContests() {
         const step = mocks.filter((m) => m.family === 'step');
         return (
           <section key={l} className="am-mock-section" aria-labelledby={`mocks-${l}`}>
-            <div className="am-mock-section-head">
-              <h2 className="am-h2" id={`mocks-${l}`}>{l}</h2>
-              <span className="am-muted">{RANGE[l]}</span>
-            </div>
+            <h2 className="am-h2" id={`mocks-${l}`}>{l}</h2>
             <div className="am-mock-grid">
               {[...sets, ...step].map((m) => <MockCard key={m.id} m={m} />)}
             </div>
@@ -113,7 +94,7 @@ export default function MockContests() {
             </tbody>
           </table>
         ) : (
-          <p className="am-muted" style={{ margin: 0, fontSize: 13 }}>No mocks taken yet. Set 1 of your contest is a good start.</p>
+          <p className="am-muted" style={{ margin: 0, fontSize: 13 }}>None yet.</p>
         )}
       </section>
     </div>

@@ -20,11 +20,11 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { useNotice, ErrorState, Loading } from '@/components';
-import { CategoryDot, DiagramNote, Difficulty, PageHeader, ratingText, Solution, StatusPill, PaperResultsCard, StandingNote } from '@/components/Amc/bits';
+import { CategoryDot, DiagramNote, Difficulty, PageHeader, Solution, StatusPill, PaperResultsCard, StandingNote } from '@/components/Amc/bits';
 import { MathText } from '@/components/Amc/MathText';
 import { Importer } from '@/components/Amc/Importer';
 import { useApi, useDocumentTitle } from '@/hooks';
-import { amc, announceAmcChanged, shortDate, versusReal, type ContestProgress, type KeyRow, type MockBrief } from '@/services/amc';
+import { amc, announceAmcChanged, shortDate, type ContestProgress, type KeyRow, type MockBrief } from '@/services/amc';
 import '@/styles/amc.css';
 
 function History({ rows, onDelete }: { rows: MockBrief[]; onDelete: (id: string) => void }) {
@@ -374,11 +374,6 @@ export default function Contest() {
             ? `${c.count} problems in ${c.minutes} minutes${c.level === 'AIME' ? ', one point each' : ', 6 for a right answer, 1.5 for a blank, 0 for a wrong one'}.${locked ? ' The problems stay locked until you sit it.' : written ? ` AMC Guide's own worked solution${written === 1 ? ' is' : 's are'} folded under ${written === c.count ? 'every problem' : `${written} of the problems`}, and the answer key has a card of its own. Both stay closed until you open them.` : ''}`
             : c.blurb}
         </p>
-        {!official && c.difficulty && (
-          <p className="am-mock-vs" title={`Average problem ${ratingText(c.difficulty.average)}; a real ${c.level} averages ${ratingText(c.difficulty.real)}`}>
-            {versusReal(c.difficulty, c.level)}. Its ratings are each problem's own, so your analytics are not inflated by it.
-          </p>
-        )}
       </PageHeader>
       {official && <Standing problems={problems} linked={!locked} />}
       <div className="am-grid am-grid-main">
