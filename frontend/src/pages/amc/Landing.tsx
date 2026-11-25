@@ -8,7 +8,7 @@
  * trail that fills as you scroll), small live demos of the features (the
  * scale, the predicted score, review, the answer sheet, the chooser, the
  * study plan, weak topics, the AI coach), the mock contests, the library of
- * official papers, a tour of every page, and a closing call to the summit.
+ * official papers, a tour of every page, and a closing call to start.
  *
  * Motion comes from one IntersectionObserver (things fade and rise in as they
  * reach the screen) and one scroll listener (the parallax, the progress bar,
@@ -26,6 +26,7 @@ import { AnswerInput } from '@/components/Amc/bits';
 import { useAuth, useDocumentTitle } from '@/hooks';
 import '@/styles/amc.css';
 import '@/styles/landing.css';
+import { ridgePath, type Point } from '@/utils/ridgeline';
 
 const SAMPLE = {
   statement: String.raw`How many ordered pairs of positive integers $(x, y)$ satisfy $\dfrac{1}{x} + \dfrac{1}{y} = \dfrac{1}{6}$?`,
@@ -42,38 +43,40 @@ const TOPICS = [
   'Casework', 'Inequalities', 'Triangle Centers', 'GCD & LCM', 'Sequences & Series', 'Games & Strategy',
 ];
 
+// Placed in the open sky around the copy and the card. Any that would still
+// land on text, the card or the nav at the visitor's screen size is hidden
+// (useClearSky), so they decorate and never sit behind a word.
 const FLOATERS = [
-  { tex: String.raw`$\binom{n}{k}$`, x: 6, y: 18, d: 0 },
-  { tex: String.raw`$a^2+b^2=c^2$`, x: 78, y: 12, d: 1.2 },
-  { tex: String.raw`$x \equiv 3 \pmod 7$`, x: 62, y: 70, d: 2.1 },
+  { tex: String.raw`$\binom{n}{k}$`, x: 4, y: 30, d: 0 },
+  { tex: String.raw`$a^2+b^2=c^2$`, x: 46, y: 9.5, d: 1.2 },
   { tex: String.raw`$\sum_{k=1}^{n} k$`, x: 14, y: 72, d: 0.6 },
-  { tex: String.raw`$e^{i\pi}+1=0$`, x: 88, y: 46, d: 1.7 },
-  { tex: String.raw`$\log_2 1024$`, x: 40, y: 8, d: 2.6 },
+  { tex: String.raw`$e^{i\pi}+1=0$`, x: 91, y: 28, d: 1.7 },
+  { tex: String.raw`$\log_2 1024$`, x: 30, y: 9.5, d: 2.6 },
 ];
 
 const STEPS = [
   {
     n: '01', title: 'Practice',
-    body: 'Hundreds of problems, each rated from 1 to 12 (the AoPS rating times 2: an AMC 10 #1 is a 2, the hardest AIME problem a 12) and tagged by topic and technique. Pick by problem number, year, topic or method.',
+    body: '3,676 problems, each rated 1 to 12 and tagged by topic and technique. An AMC 10 #1 is about a 2 and the hardest AIME problem is a 12. Filter by number, year, topic or method.',
   },
   {
     n: '02', title: 'Review',
-    body: 'Every miss comes back after 3, 10 and 21 days, so a mistake you made once is one you stop making.',
+    body: 'Problems you miss come back after 3, 10 and 21 days.',
   },
   {
     n: '03', title: 'Sit a mock',
-    body: 'Full contests in real problem order, on the real clock, with a cover page and a bubble sheet. Scored like the MAA scores them.',
+    body: 'Full contests on the real clock, with a cover page and a bubble sheet, scored the way the MAA scores them.',
   },
   {
-    n: '04', title: 'Read the numbers',
-    body: 'Your level on the 1–12 scale, a predicted score with a range, your chance of the AIME cutoff, and exactly which topics are worth the most points.',
+    n: '04', title: 'Check your numbers',
+    body: 'Your level on the 1–12 scale, a projected score from your mocks, your chance of making the AIME cutoff, and the topics where you lose the most points.',
   },
 ];
 
 const MOCKS = [
-  { name: 'AMC 10', problems: 25, time: '75 min', sets: 5, note: 'Algebra, counting, number theory and geometry, ramping from 2 to 8 on the scale.', tone: 'sage' },
+  { name: 'AMC 10', problems: 25, time: '75 min', sets: 5, note: 'Algebra, counting, number theory and geometry, from about 2 to 8 on the scale.', tone: 'sage' },
   { name: 'AMC 12', problems: 25, time: '75 min', sets: 5, note: 'Shares eight problems with its AMC 10, then adds logs, trig and complex numbers.', tone: 'clay' },
-  { name: 'AIME', problems: 15, time: '3 hours', sets: 5, note: 'Integer answers 000–999. Fifteen problems from 5 up to 12.', tone: 'slate' },
+  { name: 'AIME', problems: 15, time: '3 hours', sets: 5, note: 'Answers from 000 to 999. Problems rated 5 to 12.', tone: 'slate' },
 ];
 
 const COACH = [
@@ -107,10 +110,10 @@ const LIBRARY: { year: string; slots: string }[] = [
 const LIBRARY_ROWS = ['AMC 10A', 'AMC 10B', 'AMC 12A', 'AMC 12B', 'AIME I', 'AIME II'];
 
 const PLAN = [
-  { phase: 'Foundations', weeks: 4, note: 'Fill the gaps your weakest topics show' },
+  { phase: 'Foundations', weeks: 4, note: 'Your weakest topics first' },
   { phase: 'Core', weeks: 4, note: 'Problems #10–20, by topic and technique' },
   { phase: 'Contest mode', weeks: 3, note: 'A timed mock every week, then review' },
-  { phase: 'Taper', weeks: 1, note: 'Light sets, rest, the night before' },
+  { phase: 'Taper', weeks: 1, note: 'Light sets and rest before the contest' },
 ];
 
 const WEAK = [
@@ -121,14 +124,14 @@ const WEAK = [
 ];
 
 const TOUR: { to: string; icon: LucideIcon; name: string; body: string }[] = [
-  { to: '/dashboard', icon: LayoutDashboard, name: 'Dashboard', body: 'Today’s plan, the next problem, your projected score against your goal.' },
-  { to: '/problems', icon: ListFilter, name: 'Problems', body: '350 rated problems with the key insight and the trap. Answer to unlock the solution.' },
-  { to: '/topics', icon: Compass, name: 'Topics', body: '63 topics in 5 categories and 92 techniques, each with its key ideas and its problems.' },
-  { to: '/review', icon: BookOpenCheck, name: 'Review', body: 'Twelve problems from your four weakest topics, then every miss on its schedule.' },
-  { to: '/mock-contests', icon: Timer, name: 'Mock Contests', body: 'An exam screen with a cover page and bubble sheet. Resumes on any device.' },
-  { to: '/contests', icon: History, name: 'Past Contests', body: 'Every AMC 10, AMC 12 and AIME since 2000, read whole, practiced or sat timed.' },
-  { to: '/study-plan', icon: CalendarRange, name: 'Study Plan', body: 'Contest, date, goal and hours become a week-by-week plan to contest day.' },
-  { to: '/analytics', icon: ChartNoAxesCombined, name: 'Insights', body: 'Your level, predicted scores for all three contests, and the points each topic is worth.' },
+  { to: '/dashboard', icon: LayoutDashboard, name: 'Dashboard', body: 'Today’s plan, your next problem, and your projected score next to your goal.' },
+  { to: '/problems', icon: ListFilter, name: 'Problems', body: '3,676 rated problems. Answer one to see its solution.' },
+  { to: '/topics', icon: Compass, name: 'Topics', body: '63 topics in 5 categories and 92 techniques, each with its key ideas and problems.' },
+  { to: '/review', icon: BookOpenCheck, name: 'Review', body: '12 problems from your four weakest topics, then your misses as they come due.' },
+  { to: '/mock-contests', icon: Timer, name: 'Mock Contests', body: 'A timed exam with a cover page and bubble sheet. Pick it up again on any device.' },
+  { to: '/contests', icon: History, name: 'Past Contests', body: 'Every AMC 10, AMC 12 and AIME since 2000. Read them, practice from them or sit them timed.' },
+  { to: '/study-plan', icon: CalendarRange, name: 'Study Plan', body: 'A week-by-week plan to contest day that changes as your scores do.' },
+  { to: '/analytics', icon: ChartNoAxesCombined, name: 'Analytics', body: 'Your level, projected scores, and the topics costing you points in mocks.' },
   { to: '/search', icon: Search, name: 'Search', body: 'Problems, topics, contests and pages, from anywhere with ⌘K.' },
 ];
 
@@ -182,7 +185,7 @@ function CountUp({ to, suffix = '' }: { to: number; suffix?: string }) {
     frame = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(frame);
   }, [seen, to]);
-  return <span ref={ref}>{value}{suffix}</span>;
+  return <span ref={ref}>{value.toLocaleString('en-US')}{suffix}</span>;
 }
 
 /** Types its lines out once on screen. */
@@ -247,10 +250,65 @@ function useScrollVars(root: RefObject<HTMLDivElement | null>, climb: RefObject<
   return scrolled;
 }
 
+/** Hides each hero floater that overlaps the copy, the card or the nav. */
+function useClearSky(root: RefObject<HTMLDivElement | null>) {
+  useEffect(() => {
+    const check = () => {
+      const el = root.current;
+      if (!el) return;
+      const hero = el.querySelector('.lp-hero')?.getBoundingClientRect();
+      const blocks = [...el.querySelectorAll('.lp-hero-copy, .lp-hero-card, .lp-nav')].map((b) => ({
+        r: b.getBoundingClientRect(), pad: b.classList.contains('lp-nav') ? 6 : 20,
+      }));
+      el.querySelectorAll<HTMLElement>('.lp-floater').forEach((f) => {
+        const r = f.getBoundingClientRect();
+        const hit = blocks.some(({ r: b, pad }) => r.left < b.right + pad && r.right > b.left - pad
+          && r.top < b.bottom + pad && r.bottom > b.top - pad);
+        const off = !!hero && (r.left < hero.left + 8 || r.right > hero.right - 8);
+        f.classList.toggle('is-hidden', hit || off);
+      });
+    };
+    check();
+    // Again once KaTeX's fonts have loaded and the hero has finished rising in.
+    const late = window.setTimeout(check, 1600);
+    window.addEventListener('resize', check);
+    return () => { window.clearTimeout(late); window.removeEventListener('resize', check); };
+  }, [root]);
+}
+
 // ---------------------------------------------------------------------------
 // Pieces
 // ---------------------------------------------------------------------------
+/**
+ * The hero's range, far to near. Summits and saddles are listed as points and
+ * drawn by utils/ridgeline.ts, so the tips are rounded rather than a sawtooth.
+ * The trail, the flag and the tallest summit share the middle layer, so they
+ * move together when the layers parallax.
+ */
+const ROUND = { summit: 14, saddle: 46 };
+const RIDGE_FLOOR = 420;
+const FAR: Point[] = [[0, 300], [120, 222], [210, 262], [330, 160], [450, 238], [560, 198], [660, 232], [780, 176],
+  [900, 226], [1060, 150], [1180, 214], [1300, 170], [1440, 196]];
+const MID: Point[] = [[0, 340], [150, 276], [270, 312], [400, 232], [540, 300], [700, 100], [860, 292], [1000, 236],
+  [1120, 288], [1260, 244], [1440, 286]];
+const NEAR: Point[] = [[0, 384], [180, 334], [320, 370], [470, 326], [620, 374], [780, 334], [940, 378], [1100, 328],
+  [1260, 368], [1440, 338]];
+/** Where the rounded summit at (700, 100) actually tops out. */
+const TOP: Point = [700, 105];
+
+/** Snow on a summit: a ragged band, clipped to the mountain so it follows the rounded tip.
+ *  It hangs lower on the right, the lee side. */
+function snow([x, y]: Point, drop: number, half: number) {
+  const pts: Point[] = [[x - half, y - 20], [x + half, y - 20], [x + half, y + drop * 0.7], [x + half * 0.6, y + drop],
+    [x + half * 0.3, y + drop * 0.62], [x, y + drop * 0.9], [x - half * 0.3, y + drop * 0.5], [x - half * 0.6, y + drop * 0.72],
+    [x - half, y + drop * 0.45]];
+  return `M${pts.map(([a, b]) => `${a.toFixed(1)} ${b.toFixed(1)}`).join(' L')} Z`;
+}
+
 function Ridge() {
+  const far = ridgePath(FAR, RIDGE_FLOOR, ROUND);
+  const mid = ridgePath(MID, RIDGE_FLOOR, ROUND);
+  const near = ridgePath(NEAR, RIDGE_FLOOR, ROUND);
   return (
     <svg className="lp-ridge" viewBox="0 0 1440 420" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
       <defs>
@@ -263,24 +321,41 @@ function Ridge() {
         <linearGradient id="lp-near" x1="0" y1="0" x2="0" y2="1">
           <stop offset="0" stopColor="#6F8A73" /><stop offset="1" stopColor="#8EA290" />
         </linearGradient>
+        <clipPath id="lp-far-clip"><path d={far} /></clipPath>
+        <clipPath id="lp-mid-clip"><path d={mid} /></clipPath>
       </defs>
       <g className="lp-layer lp-layer-far">
-        <path d="M0 300 L120 220 L210 260 L330 150 L450 240 L560 190 L700 90 L820 200 L930 160 L1060 230 L1180 140 L1300 210 L1440 170 L1440 420 L0 420 Z" fill="url(#lp-far)" />
+        <path d={far} fill="url(#lp-far)" />
+        <g clipPath="url(#lp-far-clip)" className="lp-snow lp-snow-far">
+          <path d={snow([1060, 150], 26, 44)} />
+          <path d={snow([330, 160], 22, 38)} />
+          <path d={snow([780, 176], 16, 30)} />
+        </g>
       </g>
       <g className="lp-layer lp-layer-mid">
-        <path d="M0 340 L150 270 L260 310 L400 220 L520 300 L640 250 L760 300 L900 230 L1020 290 L1160 240 L1300 300 L1440 260 L1440 420 L0 420 Z" fill="url(#lp-mid)" />
-        <path className="lp-trail" d="M120 360 C 260 330, 330 300, 420 280 S 600 250, 640 210 S 690 130, 700 92" fill="none" />
-        <g className="lp-flag" transform="translate(700 92)">
-          <line x1="0" y1="0" x2="0" y2="-34" stroke="#2A2C2A" strokeWidth="2" />
-          <path d="M0 -34 L22 -27 L0 -20 Z" fill="#C0784A" />
+        <path d={mid} fill="url(#lp-mid)" />
+        <g clipPath="url(#lp-mid-clip)" className="lp-snow">
+          <path d={snow([700, 100], 48, 64)} />
+        </g>
+        <path className="lp-trail" d={`M150 368 C 280 340, 360 318, 440 302 S 560 282, 600 240 S 676 146, ${TOP[0]} ${TOP[1]}`} fill="none" />
+        <g transform={`translate(${TOP[0]} ${TOP[1]})`}>
+          <g className="lp-flag">
+            <line x1="0" y1="0" x2="0" y2="-34" stroke="#2A2C2A" strokeWidth="2" strokeLinecap="round" />
+            <path d="M0 -34 L22 -27 L0 -20 Z" fill="#C0784A" />
+          </g>
         </g>
       </g>
       <g className="lp-layer lp-layer-near">
-        <path d="M0 380 L180 330 L320 370 L470 320 L620 372 L780 330 L940 376 L1100 326 L1260 368 L1440 334 L1440 420 L0 420 Z" fill="url(#lp-near)" />
+        <path d={near} fill="url(#lp-near)" />
       </g>
     </svg>
   );
 }
+
+/** The small range along the bottom of each mock card, and the dark one closing the page. */
+const MOCK_PEAK = ridgePath([[0, 60], [40, 34], [70, 46], [110, 10], [150, 40], [200, 22]], 60, { summit: 5, saddle: 12 });
+const FINAL_RIDGE = ridgePath([[0, 140], [160, 90], [300, 130], [460, 60], [600, 120], [720, 30], [860, 110], [1000, 70],
+  [1160, 130], [1300, 80], [1440, 120]], 200, { summit: 12, saddle: 40 });
 
 function Headline({ text }: { text: string }) {
   return (
@@ -470,7 +545,7 @@ function WeakDemo() {
           <b>{w.pct}%</b>
         </div>
       ))}
-      <span className="lp-muted lp-weak-foot">12 problems, pitched where you get about 2 in 3</span>
+      <span className="lp-muted lp-weak-foot">12 problems at a level where you get about 2 in 3 right</span>
     </div>
   );
 }
@@ -519,6 +594,7 @@ export default function Landing() {
   const root = useRef<HTMLDivElement>(null);
   const climb = useRef<HTMLElement>(null);
   const scrolled = useScrollVars(root, climb);
+  useClearSky(root);
 
   // Old account links (verification e-mails, the server's redirects) arrive
   // with ?auth= and belong on the sign-in page.
@@ -571,8 +647,8 @@ export default function Landing() {
               <p className="lp-kicker lp-rise" style={{ '--d': '0ms' } as CSSProperties}>AMC 10 · AMC 12 · AIME</p>
               <Headline text="Train for the AMC. Qualify for the AIME." />
               <p className="lp-lead lp-rise" style={{ '--d': '700ms' } as CSSProperties}>
-                Rated problems with full solutions, real-order mock contests, a review log for every miss, and a model
-                of your level that tells you where your next points are.
+                Real AMC and AIME problems with full solutions, timed mock contests, and a clear view of which topics
+                are costing you points.
               </p>
               <div className="lp-cta lp-rise" style={{ '--d': '850ms' } as CSSProperties}>
                 <Link className="lp-btn lp-btn-dark" to={start}>{startLabel}<span aria-hidden="true">→</span></Link>
@@ -595,11 +671,11 @@ export default function Landing() {
         {/* Numbers --------------------------------------------------------- */}
         <section className="lp-numbers lp-wrap">
           {[
-            { n: 350, s: '', label: 'problems with full solutions' },
-            { n: 18, s: '', label: 'mock contests in real order' },
+            { n: 3676, s: '', label: 'rated problems' },
+            { n: 18, s: '', label: 'mock contests' },
             { n: 63, s: '', label: 'topics' },
             { n: 92, s: '', label: 'named techniques' },
-            { n: 162, s: '', label: 'official papers, 2000 to now' },
+            { n: 162, s: '', label: 'official papers since 2000' },
           ].map((x, i) => (
             <Reveal key={x.label} delay={i * 90} className="lp-number">
               <strong><CountUp to={x.n} suffix={x.s} /></strong>
@@ -613,8 +689,8 @@ export default function Landing() {
           <div className="lp-climb-side">
             <Reveal>
               <p className="lp-kicker">How it works</p>
-              <h2 className="lp-h2">Four steps,<br />repeated until<br />the cutoff is easy.</h2>
-              <p className="lp-muted lp-climb-note">Each step feeds the next: your misses become reviews, your mocks become numbers, and the numbers pick what you practice.</p>
+              <h2 className="lp-h2">Practice, review,<br />sit a mock,<br />repeat.</h2>
+              <p className="lp-muted lp-climb-note">What you miss goes into review, and your mock results decide what you practice next.</p>
             </Reveal>
           </div>
           <div className="lp-steps-wrap">
@@ -636,18 +712,18 @@ export default function Landing() {
         {/* Features -------------------------------------------------------- */}
         <section id="features" className="lp-features lp-wrap">
           <Reveal className="lp-section-head">
-            <p className="lp-kicker">Inside</p>
-            <h2 className="lp-h2">Built like the real contest.<br />Measured like a coach would.</h2>
+            <p className="lp-kicker">Features</p>
+            <h2 className="lp-h2">What’s in the app.</h2>
           </Reveal>
           <div className="lp-bento">
             <Reveal className="lp-tile lp-tile-wide" delay={0}>
               <h3>Every problem on one scale</h3>
-              <p>Ratings from 1 to 12, where 12 is the hardest AIME problem: the AoPS scale, which tops out at 6, times 2.</p>
+              <p>Rated 1 to 12. It’s the AoPS scale doubled, so 12 is the hardest AIME problem.</p>
               <ScaleDemo />
             </Reveal>
             <Reveal className="lp-tile" delay={100}>
-              <h3>A predicted score</h3>
-              <p>From your first tries, weighted by how hard each problem was.</p>
+              <h3>A projected score</h3>
+              <p>Based on your timed mocks and logged contest scores. Practice counts for 5%.</p>
               <ScoreDemo />
             </Reveal>
             <Reveal className="lp-tile" delay={0}>
@@ -657,32 +733,32 @@ export default function Landing() {
             </Reveal>
             <Reveal className="lp-tile" delay={100}>
               <h3>A real answer sheet</h3>
-              <p>Cover page, clock and bubbles, scored 6 / 1.5 / 0. The clock pauses when you leave the tab.</p>
+              <p>Cover page, clock and bubble sheet. 6 points for a right answer, 1.5 for a blank. The clock pauses when you leave the tab.</p>
               <BubbleDemo />
             </Reveal>
             <Reveal className="lp-tile" delay={200}>
-              <h3>Find exactly the problem</h3>
+              <h3>Find the problem you want</h3>
               <p>Filter by topic, technique, number, year, real or mock.</p>
               <ChooserDemo />
             </Reveal>
             <Reveal className="lp-tile lp-tile-wide" delay={0}>
-              <h3>A plan back from contest day</h3>
-              <p>Contest, date, goal and hours become weeks: Foundations, Core, Contest mode, Taper. Tell it your last score
-                and weak topics and the AI coach writes the plan around you.</p>
+              <h3>A plan to contest day</h3>
+              <p>Pick your contest, date, goal and weekly hours, and you get a plan in four phases: Foundations, Core,
+                Contest mode and Taper. It shifts toward the topics you lose points on in mocks.</p>
               <PlanDemo />
             </Reveal>
             <Reveal className="lp-tile" delay={100}>
-              <h3>Your weakest topics, first</h3>
-              <p>Review opens on the four topics where your first tries miss most.</p>
+              <h3>Weak topics first</h3>
+              <p>Review starts with the four topics you miss most often.</p>
               <WeakDemo />
             </Reveal>
             <Reveal className="lp-tile lp-tile-full lp-tile-dark" delay={0}>
               <div>
                 <span className="lp-pill lp-pill-dark">Hints · explanations · new problems</span>
-                <h3>An AI coach that reads your numbers</h3>
-                <p>Three hints that never give the answer, an explanation of the mistake behind a wrong answer, and new
-                  problems written for your weakest topic. Each new problem is solved a second time from scratch and kept
-                  only if the two answers agree.</p>
+                <h3>An AI coach</h3>
+                <p>Up to three hints that don’t give away the answer, an explanation when you get one wrong, and new
+                  problems for your weakest topic. Each new problem is solved twice from scratch and kept only if both
+                  answers match.</p>
               </div>
               <Typed lines={COACH} />
             </Reveal>
@@ -693,7 +769,7 @@ export default function Landing() {
         <section id="mocks" className="lp-mocks lp-wrap">
           <Reveal className="lp-section-head">
             <p className="lp-kicker">Mock contests</p>
-            <h2 className="lp-h2">Fifteen original papers.<br />Real order, real difficulty.</h2>
+            <h2 className="lp-h2">Fifteen original<br />mock papers.</h2>
           </Reveal>
           <div className="lp-mock-grid">
             {MOCKS.map((m, i) => (
@@ -706,7 +782,7 @@ export default function Landing() {
                 </div>
                 <p>{m.note}</p>
                 <svg className="lp-mock-peak" viewBox="0 0 200 60" aria-hidden="true" preserveAspectRatio="none">
-                  <path d="M0 60 L40 34 L70 46 L110 10 L150 40 L200 22 L200 60 Z" />
+                  <path d={MOCK_PEAK} />
                 </svg>
               </Reveal>
             ))}
@@ -720,9 +796,9 @@ export default function Landing() {
             <h2 className="lp-h2">Every official paper<br />since 2000.</h2>
             <ul className="lp-ticks">
               <li><b>162 papers</b>: every AMC 10, AMC 12 and AIME from 2000 to 2026.</li>
-              <li>Read one whole, like the AoPS page, or sit it timed and graded.</li>
+              <li>Read a paper straight through, or sit it timed and get it graded.</li>
               <li><b>1,146 worked solutions</b> written by AMC Guide, across 46 papers.</li>
-              <li>Locked until your first sitting, so you can still take it cold.</li>
+              <li>Solutions stay hidden until you’ve sat the paper, so you can still take it cold.</li>
             </ul>
           </Reveal>
           <Reveal delay={120} className="lp-library-card">
@@ -733,8 +809,8 @@ export default function Landing() {
         {/* Tour ------------------------------------------------------------ */}
         <section id="tour" className="lp-tour lp-wrap">
           <Reveal className="lp-section-head">
-            <p className="lp-kicker">One account</p>
-            <h2 className="lp-h2">Everything you need<br />to the last problem.</h2>
+            <p className="lp-kicker">Pages</p>
+            <h2 className="lp-h2">A look around.</h2>
           </Reveal>
           <div className="lp-tour-grid">
             {TOUR.map(({ to, icon: Icon, name, body }, i) => (
@@ -752,10 +828,10 @@ export default function Landing() {
         {/* Statement ------------------------------------------------------- */}
         <section className="lp-quote lp-wrap">
           <Reveal as="p" className="lp-quote-text">
-            Know where every point goes.
+            See where you lose points.
           </Reveal>
           <Reveal as="p" delay={150} className="lp-quote-sub">
-            Then go get the ones you’re missing.
+            Then practice those topics.
           </Reveal>
         </section>
 
@@ -767,12 +843,12 @@ export default function Landing() {
             ))}
           </div>
           <Reveal className="lp-final-inner">
-            <h2 className="lp-h2">The summit is closer<br />than it looks.</h2>
-            <p>Free to start. Your first problem is above; your first mock is a click away.</p>
+            <h2 className="lp-h2">Start with one problem.</h2>
+            <p>It’s free. Try the problem at the top of this page, or make an account and sit a mock.</p>
             <Link className="lp-btn lp-btn-light lp-btn-lg" to={start}>{startLabel}<span aria-hidden="true">→</span></Link>
           </Reveal>
           <svg className="lp-final-ridge" viewBox="0 0 1440 200" preserveAspectRatio="none" aria-hidden="true">
-            <path d="M0 200 L0 140 L160 90 L300 130 L460 60 L600 120 L720 30 L860 110 L1000 70 L1160 130 L1300 80 L1440 120 L1440 200 Z" />
+            <path d={FINAL_RIDGE} />
           </svg>
         </section>
       </main>

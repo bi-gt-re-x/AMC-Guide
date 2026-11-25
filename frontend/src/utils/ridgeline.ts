@@ -28,9 +28,12 @@ export type Point = readonly [number, number];
  * `floor` is the y the shape closes down to — the bottom of the box it is
  * being drawn in. It is a parameter rather than a constant because the two
  * callers draw at two sizes: a hero's range is 180 units tall and a chart in a
- * card is not.
+ * card is not. `round` sets the two radii, for a drawing big enough that the
+ * default 3.5-unit summit still shows as a point.
  */
-export function ridgePath(points: readonly Point[], floor: number): string {
+export function ridgePath(
+  points: readonly Point[], floor: number, round: { summit: number; saddle: number } = { summit: 3.5, saddle: 13 },
+): string {
   const at = (n: number) => points[n]!;
   const [firstX, firstY] = at(0);
   const [lastX] = at(points.length - 1);
@@ -48,7 +51,7 @@ export function ridgePath(points: readonly Point[], floor: number): string {
   for (let n = 1; n < points.length - 1; n += 1) {
     const here = at(n);
     const summit = here[1] < at(n - 1)[1] && here[1] < at(n + 1)[1];
-    const want = summit ? 3.5 : 13;
+    const want = summit ? round.summit : round.saddle;
     const [ix, iy] = toward(here, at(n - 1), want);
     const [ox, oy] = toward(here, at(n + 1), want);
     d += ` L${ix.toFixed(1)} ${iy.toFixed(1)} Q${here[0]} ${here[1]} ${ox.toFixed(1)} ${oy.toFixed(1)}`;

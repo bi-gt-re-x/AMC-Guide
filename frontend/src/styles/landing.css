@@ -88,14 +88,19 @@ body:has(.lp) { margin: 0; }
 .lp-floater { position: absolute; font-family: var(--lp-serif); font-size: 20px; color: rgba(34, 36, 31, .22); white-space: nowrap;
     animation: lp-float 11s ease-in-out infinite; animation-delay: calc(var(--d) * -1); }
 .lp-floater .katex { font-size: 1em; }
-.lp-ridge { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: 36vh; min-height: 220px; z-index: -1; }
+.lp-floater.is-hidden { visibility: hidden; }
+/* At least 29.2vw tall (420/1440, the drawing's own ratio), so `slice` crops the sides
+   rather than the summit and its flag. */
+.lp-ridge { position: absolute; left: 0; right: 0; bottom: 0; width: 100%; height: clamp(220px, 29.2vw, 62vh); z-index: -1; }
+.lp-snow path { fill: #F8F6F0; opacity: .92; }
+.lp-snow-far path { opacity: .7; }
 .lp-layer { will-change: transform; }
 .lp-layer-far { transform: translateY(calc(var(--lp-y) * .18px)); }
 .lp-layer-mid { transform: translateY(calc(var(--lp-y) * .1px)); }
 .lp-layer-near { transform: translateY(calc(var(--lp-y) * .03px)); }
 .lp-trail { stroke: #FAF8F4; stroke-width: 2.5; stroke-dasharray: 6 8; stroke-linecap: round; opacity: .9;
     stroke-dashoffset: 900; animation: lp-draw 2.6s .9s var(--lp-ease) forwards; }
-.lp-flag { opacity: 0; animation: lp-pop .6s 3.2s var(--lp-ease) forwards; }
+.lp-flag { opacity: 0; transform-box: fill-box; transform-origin: 0 100%; animation: lp-pop .6s 3.2s var(--lp-ease) forwards; }
 .lp-flag path { transform-box: fill-box; transform-origin: 0 50%; animation: lp-wave 2.4s 3.8s ease-in-out infinite; }
 
 .lp-hero-inner { width: 100%; max-width: 1160px; margin: 0 auto; padding: 0 24px; display: grid;
@@ -374,7 +379,7 @@ html .lp .lp-sample.amc-page {
 @keyframes lp-word { to { opacity: 1; transform: none; filter: none; } }
 @keyframes lp-rise { to { opacity: 1; transform: none; } }
 @keyframes lp-draw { to { stroke-dashoffset: 0; } }
-@keyframes lp-pop { from { opacity: 0; transform: translate(700px, 102px) scale(.4); } to { opacity: 1; transform: translate(700px, 92px) scale(1); } }
+@keyframes lp-pop { from { opacity: 0; transform: translateY(10px) scale(.4); } to { opacity: 1; transform: none; } }
 @keyframes lp-wave { 0%, 100% { transform: skewY(0); } 50% { transform: skewY(-8deg) scaleX(.9); } }
 @keyframes lp-float { 0%, 100% { transform: translate(0, 0) rotate(-2deg); } 50% { transform: translate(10px, -18px) rotate(2deg); } }
 @keyframes lp-breathe { 0%, 100% { transform: scale(1); opacity: .9; } 50% { transform: scale(1.12); opacity: 1; } }
@@ -408,6 +413,7 @@ html .lp .lp-sample.amc-page {
     .lp-lead { font-size: 16px; }
     .lp-sample { padding: 18px; }
     .lp-floater { display: none; }
+    .lp-scroll-cue { display: none; }
     .lp-number:last-child { grid-column: 1 / -1; }
     .lp-numbers { grid-template-columns: repeat(2, minmax(0, 1fr)); padding-top: 64px; padding-bottom: 64px; }
     .lp-steps { padding-left: 48px; gap: 24px; }
@@ -433,6 +439,5 @@ html .lp .lp-sample.amc-page {
     .lp *, .lp *::before, .lp *::after { animation: none !important; transition: none !important; }
     .lp-word, .lp-rise, .lp-reveal, .lp-flag { opacity: 1; transform: none; filter: none; }
     .lp-trail { stroke-dashoffset: 0; }
-    .lp-flag { transform: translate(700px, 92px); }
     .lp-sky, .lp-layer { transform: none; }
 }
