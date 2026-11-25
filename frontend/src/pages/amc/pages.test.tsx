@@ -122,7 +122,7 @@ describe('AMC pages render the API as it is', () => {
     expect(amc.weakBank).toHaveBeenCalledWith(false, 0);
   });
 
-  it('Review: a long backlog is started ten at a time', async () => {
+  it('Review: a long backlog is started twelve at a time', async () => {
     const due = Array.from({ length: 25 }, (_, i) => ({ ...review.due[0]!, id: `p-${i}` }));
     vi.spyOn(amc, 'review').mockResolvedValue({ ...review, due, success: true } as any);
     render(
@@ -137,9 +137,9 @@ describe('AMC pages render the API as it is', () => {
         </NoticesProvider>
       </AuthContext.Provider>,
     );
-    fireEvent.click(await screen.findByRole('button', { name: 'Start a review set (10)' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Start a review set (12)' }));
     expect(await screen.findByText('opened problem')).toBeInTheDocument();
-    expect(JSON.parse(sessionStorage.getItem('amc-review-set') ?? '[]')).toEqual(due.slice(0, 10).map((d) => d.id));
+    expect(JSON.parse(sessionStorage.getItem('amc-review-set') ?? '[]')).toEqual(due.slice(0, 12).map((d) => d.id));
   });
 
   it('Analytics', async () => {

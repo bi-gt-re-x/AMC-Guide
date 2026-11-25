@@ -10,6 +10,7 @@ import { CategoryDot, Empty, Meter, PageHeader } from '@/components/Amc/bits';
 import { RecentPerformanceCard } from '@/components/Amc/Performance';
 import { useApi, useDocumentTitle } from '@/hooks';
 import { useNametag } from '@/hooks/useNametag';
+import { useSecretScripts } from '@/hooks/useSecretScripts';
 import {
   amc,
   announceAmcChanged,
@@ -22,6 +23,7 @@ import {
   type TodayItem,
 } from '@/services/amc';
 import { activePracticeSet, isActiveSetLink } from './practiceSetStore';
+import { REVIEW_SET } from './reviewSet';
 import '@/styles/amc.css';
 
 const LEVELS: Level[] = ['AMC 10', 'AMC 12', 'AIME'];
@@ -125,6 +127,9 @@ export default function Dashboard() {
   useDocumentTitle('Dashboard');
   const tag = useNametag();
   const { data, error, loading, reload, mutate } = useApi(() => amc.dashboard(), []);
+  // The hidden chain's first door: the title, clicked ten times in a row
+  // (frontend/secret/door-egg.js). Loaded once the page and its title are on screen.
+  useSecretScripts(data ? ['egg.css', 'door-egg.js'] : []);
 
   if (loading && !data) return <Loading label="Loading your dashboard" />;
   if (error || !data) return <ErrorState message={error ?? 'Could not load the dashboard.'} onRetry={reload} />;
@@ -141,14 +146,14 @@ export default function Dashboard() {
   };
 
   return (
-    <div className="amc-page">
+    <div className="amc-page" data-egg="door">
       <PageHeader
         kicker={`${greeting()}, ${tag.name || 'there'}`}
         title={plan ? `${plan.days_left} days to the ${plan.target}` : 'Train for the AMC. Qualify for the AIME.'}
         actions={
           <>
             {stats.due > 0 && (
-              <Link className="am-btn" to="/review?start=1" title={`${stats.due} due in all`}>Start a review set</Link>
+              <Link className="am-btn" to="/review?start=1">Start a review set</Link>
             )}
             {data.next_problem && (
               <Link className="am-btn am-btn-primary" to={`/problems/${data.next_problem.id}`}>
@@ -185,9 +190,9 @@ export default function Dashboard() {
           <dd className="am-stat-hint">{stats.streak === 1 ? 'day' : 'days'} in a row</dd>
         </div>
         <div className="am-stat">
-          <dt>Due for review</dt>
-          <dd className="am-stat-value">{stats.due}</dd>
-          <dd className="am-stat-hint">{stats.in_review} in Review</dd>
+          <dt>Today's review set</dt>
+          <dd className="am-stat-value">{Math.min(REVIEW_SET, stats.due)}</dd>
+          <dd className="am-stat-hint">{stats.due > REVIEW_SET ? 'One set a day is enough' : `${stats.in_review} in Review`}</dd>
         </div>
         <div className="am-stat">
           <dt>Mock contests</dt>

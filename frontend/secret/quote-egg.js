@@ -1,9 +1,10 @@
 /* quote-egg.js — the short way into the riddle.
  *
- * The testimonial card on the landing page is a door. Click it and it twitches;
+ * The statement on the landing page ("See where you lose points.", `.lp-quote`)
+ * is a door. Click it and it twitches;
  * keep clicking and it shakes harder each time — a wee shiver on the first,
  * the whole card thrown about by the ninth — and on the tenth the page itself
- * quakes, the light goes out, and you drop into the riddle at /calendar#void:
+ * quakes, the light goes out, and you drop into the riddle at /dashboard#void:
  * the same one waiting at the end of the pentagon's chain.
  *
  * Ten clicks, at whatever pace: the count is not a streak. It was one at first
@@ -64,11 +65,11 @@
 
     // The tenth: the whole page throws itself about, everything fades to black,
     // and the riddle is on the other side of it. It opens right here rather than
-    // at /calendar#void, where the pentagon's arrow leads — that page needs an
+    // at /dashboard#void, where the pentagon's arrow leads — that page needs an
     // account, and a visitor reading a testimonial usually hasn't got one. Same
     // void, same riddle, same drop into /engine when it's answered.
     function openTheVoid() {
-        var main = document.querySelector('.home-main') || document.body;
+        var main = document.querySelector('.lp main') || document.body;
         if (!reduced) main.classList.add('page-quake');
 
         var fade = document.createElement('div');
@@ -81,7 +82,7 @@
             // The void swallows the page (void.css), and the question is left.
             document.documentElement.classList.add('egg-void');
             if (window.VoidRiddle) window.VoidRiddle.open();
-            else window.location.href = '/calendar#void';   // void.js missing
+            else window.location.href = '/dashboard#void';   // void.js missing
         }, quakeMs + 900);
     }
 

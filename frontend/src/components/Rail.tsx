@@ -16,10 +16,11 @@
  * The destinations are the AMC prep site's: Dashboard, Review, Study Plan,
  * Analytics, Problems, Topics, Mock Contests and Past Contests. Search lives in
  * the top bar (its full results page, /search, is still there for the bar's
- * "all results" link), and Posts is reached by its address. Review carries a count of what
- * is due today, and the foot shows how much of the problem bank is solved —
- * both read the dashboard's numbers through hooks/useAmcSummary, one request
- * for the whole chrome.
+ * "all results" link), and Posts is reached by its address. Review carries no
+ * count: a number of misses waiting is pressure to clear them all, and reviews
+ * are meant to come a set of 12 at a time. The foot shows how much of the
+ * problem bank is solved, from the dashboard's numbers through
+ * hooks/useAmcSummary, one request for the whole chrome.
  */
 import { useCallback, useEffect, useRef, useState, type ReactNode } from 'react';
 import { Link, NavLink, useLocation } from 'react-router-dom';
@@ -56,8 +57,6 @@ interface Tab {
   under?: string[];
   /** One of the four in the phone's bottom bar. */
   phone?: boolean;
-  /** Shows the count of reviews due today. */
-  badge?: 'due';
 }
 
 const PHONE = '(max-width: 640px)';
@@ -104,7 +103,6 @@ export const TABS: Tab[] = [
     label: 'Review',
     section: 'prep',
     phone: true,
-    badge: 'due',
     icon: (
       <svg {...stroke}>
         <path d="M3 12a9 9 0 1 0 3-6.7" />
@@ -308,17 +306,15 @@ export function Rail() {
     };
   }, [collapsed, sections]);
 
-  const due = summary?.stats.due ?? 0;
   const renderTab = (tab: Tab) => (
     <NavLink
       key={tab.to}
       to={tab.to}
       className={() => `rail-link${onPage(tab, pathname) ? ' active' : ''}`}
-      title={tab.badge === 'due' && due ? `${tab.label} — ${due} due` : tab.label}
+      title={tab.label}
     >
       {tab.icon}
       <span>{tab.label}</span>
-      {tab.badge === 'due' && due > 0 && <b className="rail-due">{due > 99 ? '99+' : due}</b>}
     </NavLink>
   );
 

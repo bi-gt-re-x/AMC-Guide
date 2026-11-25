@@ -8,7 +8,7 @@
 const KEY = 'amc-review-set';
 
 /** Matches backend/amc/engine.py REVIEW_SET. */
-export const REVIEW_SET = 10;
+export const REVIEW_SET = 12;
 
 export function readReviewSet(): string[] {
   try {

@@ -294,15 +294,16 @@ def test_the_plan_says_what_level_it_is_built_from(client):
 
 
 def test_reviews_come_one_set_at_a_time():
-    """Two hundred due is one set of ten today, not two hundred."""
+    """Two hundred due is one set of twelve today, not two hundred, and nothing counts the rest."""
     week = {'current': True, 'focus': [], 'problems': 0, 'mock': False, 'mock_done': False, 'phase': 'Core'}
     today = date(2026, 11, 25)
     items = engine.today_items({'target': 'AMC 10'}, [week], 228, today, {}, set())
     review = next(i for i in items if i['key'] == 'review')
-    assert review['goal'] == engine.REVIEW_SET == 10
-    assert '218 more' in review['detail'] and review['to'] == '/review?start=1'
-    # Ten answered as reviews today: the set is done, whatever is still due.
-    done = engine.today_items({'target': 'AMC 10'}, [week], 218, today, {}, set(), reviewed_today=10)
+    assert review['goal'] == engine.REVIEW_SET == 12
+    assert 'One set a day is enough' in review['detail'] and '216' not in review['detail']
+    assert review['to'] == '/review?start=1'
+    # Twelve answered as reviews today: the set is done, whatever is still due.
+    done = engine.today_items({'target': 'AMC 10'}, [week], 216, today, {}, set(), reviewed_today=12)
     assert next(i for i in done if i['key'] == 'review')['done']
     # A short queue is a short set.
     few = engine.today_items({'target': 'AMC 10'}, [week], 3, today, {}, set())

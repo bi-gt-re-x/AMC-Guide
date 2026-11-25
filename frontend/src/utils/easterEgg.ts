@@ -2,7 +2,8 @@
  * The hidden chain's storage, and nothing else.
  *
  * Two keys, and neither of them is this file's to name. The rest of the chain
- * is plain script served out of frontend/secret/ — pentagon-egg.js on the
+ * is plain script served out of frontend/secret/ — door-egg.js on the
+ * dashboard (ten clicks on its title), pentagon-egg.js and quote-egg.js on the
  * landing page, void.js for the riddle, engine.js on the hidden page — and
  * every one of them builds these exact strings by hand, because a `<script
  * src>` cannot import a module. So the format below is a contract with three

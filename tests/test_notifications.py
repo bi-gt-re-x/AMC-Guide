@@ -9,7 +9,7 @@ break if any of it stopped holding:
   2. A deleted notification stays deleted. The situation behind it is usually
      still true, so a hard delete would let the next poll write it straight back.
   3. A day-scoped count is reworded in place rather than re-raised, so
-     answering a review does not produce a second "problems to review".
+     answering a review does not produce a second "today's review set".
   4. A channel that is off writes nothing and shows nothing.
   5. The first sweep an account ever gets says nothing about its backlog.
   6. One account's notifications are not another's.
@@ -79,7 +79,7 @@ def test_the_record_becomes_notifications(due):
     review = next(r for r in rows if r['fingerprint'] == 'review-due:%s' % DAY)
     assert review['channel'] == 'review' and review['tone'] == 'info'
     # The count is in the words, never in the fingerprint: see backend/tracking/notify.py.
-    assert review['title'] == '3 problems to review'
+    assert review['title'] == "Today's review set: 3 problems"
     assert review['link'] == '/review?start=1'
     streak = next(r for r in rows if r['fingerprint'] == 'streak-risk:%s' % DAY)
     assert streak['title'] == 'Your 1-day streak needs a problem today'
@@ -100,7 +100,11 @@ def test_a_moving_count_is_reworded_rather_than_re_raised(due):
     _due('tester', 2, start=3)
     after = [r for r in _list(due) if r['fingerprint'] == 'review-due:%s' % DAY]
     assert len(after) == 1 and after[0]['id'] == before['id']
-    assert after[0]['title'] == '5 problems to review'
+    assert after[0]['title'] == "Today's review set: 5 problems"
+    # However many are due, it names one set of twelve, never the backlog.
+    _due('tester', 20, start=5)
+    capped = next(r for r in _list(due) if r['fingerprint'] == 'review-due:%s' % DAY)
+    assert capped['title'] == "Today's review set: 12 problems"
 
 
 def test_a_new_day_retires_the_old_one_and_raises_its_own(due):

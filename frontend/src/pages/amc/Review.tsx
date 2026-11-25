@@ -11,7 +11,7 @@
  * to 10, then 21, then out as mastered, and a wrong one starts it over. What is
  * due comes weakest topic first (the server orders it). It is worked in sets
  * of REVIEW_SET (pages/amc/reviewSet.ts): "Start a review set" takes the next
- * ten in that order, so a long backlog is never one sitting. `?start=1` (the
+ * twelve in that order, so a long backlog is never one sitting. `?start=1` (the
  * Today list's link) starts a set straight away; `?done=1` is a finished set.
  */
 import { useEffect, useState } from 'react';
@@ -216,7 +216,12 @@ export default function Review() {
       <h2 className="am-h2 am-section-head" id="wrong-head">Wrong problems</h2>
 
       <dl className="am-stats" aria-labelledby="wrong-head">
-        <div className="am-stat"><dt>Due today</dt><dd className="am-stat-value">{data.due.length}</dd></div>
+        {/* Today's set, not the backlog: reviews come a set at a time. */}
+        <div className="am-stat">
+          <dt>Today's set</dt>
+          <dd className="am-stat-value">{Math.min(REVIEW_SET, data.due.length)}</dd>
+          {data.due.length > REVIEW_SET && <dd className="am-stat-hint">The rest wait for later sets</dd>}
+        </div>
         <div className="am-stat"><dt>Coming up</dt><dd className="am-stat-value">{data.upcoming.length}</dd></div>
         <div className="am-stat"><dt>Mastered</dt><dd className="am-stat-value">{data.mastered.length}</dd></div>
         <div className="am-stat">

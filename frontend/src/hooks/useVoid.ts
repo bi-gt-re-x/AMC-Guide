@@ -2,8 +2,8 @@
  * The void, at the end of the hidden chain.
  *
  * The pentagon's arrow on the landing page leaves a lone button that sends the
- * reader to `/calendar#void`. There is no calendar on the other side of it:
- * the page is emptied to a flat dark field with one riddle hanging in it, and
+ * reader to `/dashboard#void`. The dashboard is not what they find: the page
+ * is emptied to a flat dark field with one riddle hanging in it, and
  * answering the riddle drops you into `/engine`. All of that — the emptying,
  * the riddle, the cracks, the shatter — is frontend/secret/void.js and
  * frontend/secret/void.css, and this hook is only the switch.

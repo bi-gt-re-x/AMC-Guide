@@ -1,6 +1,6 @@
 /* void.js — the riddle at the end of the chain.
  *
- * When the pentagon's arrow drops you into /calendar#void, the page is emptied
+ * When the pentagon's arrow drops you into /dashboard#void, the page is emptied
  * (void.css hides all of it) and a single riddle hangs in the dark:
  *
  *   "I have no legs, but I can run. I have no lungs, but I need air. I feed on
@@ -10,7 +10,7 @@
  * shards that rain down, and you drop through into /engine.
  *
  * Two ways in, one riddle. Arriving with html.egg-void already set — the
- * calendar, via the pentagon — opens it on load; anything else opens it by
+ * dashboard, via the pentagon — opens it on load; anything else opens it by
  * hand through VoidRiddle.open(), which is how the landing page's testimonial
  * (quote-egg.js) reaches the same dark room without leaving the page.
  */

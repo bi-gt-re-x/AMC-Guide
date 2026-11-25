@@ -97,10 +97,12 @@ def _review(reviews, attempts, today):
     due = sum(1 for r in reviews if r['status'] == 'active' and r['due'] <= day)
     if not due:
         return []
-    body = ('One set of {} today, weakest topics first.'.format(engine.REVIEW_SET) if due > engine.REVIEW_SET
-            else 'Each one back for a fresh try.')
+    # Today's set, never the backlog: a count of every miss waiting is pressure
+    # to clear them all, and reviews come a set at a time.
+    size = min(due, engine.REVIEW_SET)
     return [{'fingerprint': 'review-due:' + day, 'channel': 'review', 'tone': 'info', 'for_day': day,
-             'title': '{} to review'.format(_plural(due, 'problem')), 'body': body, 'link': '/review?start=1'}]
+             'title': "Today's review set: {}".format(_plural(size, 'problem')),
+             'body': 'Weakest topics first. One set a day is enough.', 'link': '/review?start=1'}]
 
 
 def _mocks(username, plan, built, today):

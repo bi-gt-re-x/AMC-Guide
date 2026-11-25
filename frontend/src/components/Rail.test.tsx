@@ -68,18 +68,12 @@ describe('the rail', () => {
     expect(practice.queryByRole('link', { name: /^Search/ })).toBeNull();
   });
 
-  it('shows how many reviews are due, and the solved count in the foot', async () => {
+  it('shows the solved count in the foot, and no count of reviews due', async () => {
     renderWithProviders(<Rail />);
-    expect(await within(nav()).findByText('4')).toHaveClass('rail-due');
-    expect(screen.getByText('12 of 60 solved')).toBeInTheDocument();
-    expect(screen.getByText('AMC 10 ≈ 96')).toBeInTheDocument();
-  });
-
-  it('shows no badge when nothing is due', async () => {
-    vi.spyOn(amc, 'dashboard').mockResolvedValue({ success: true, ...summary({ due: 0 }) });
-    renderWithProviders(<Rail />);
-    await screen.findByText('12 of 60 solved');
+    expect(await screen.findByText('12 of 60 solved')).toBeInTheDocument();
+    expect(within(nav()).queryByText('4')).toBeNull();
     expect(nav().querySelector('.rail-due')).toBeNull();
+    expect(screen.getByText('AMC 10 ≈ 96')).toBeInTheDocument();
   });
 
   it('lights the section for a detail page under it', () => {

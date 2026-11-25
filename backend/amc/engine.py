@@ -614,7 +614,7 @@ def _practice_kind(focus, daily):
 
 #: Reviews come in sets: one set of this many a day, weakest topics first.
 #: A backlog of hundreds is worked down a set at a time, never all at once.
-REVIEW_SET = 10
+REVIEW_SET = 12
 
 #: What each kind of practice set is called on the Today list.
 SET_TITLE = {'learn': 'Learning set', 'accuracy': 'Accuracy set', 'timed': 'Timed set', 'mixed': 'Mixed set',
@@ -666,7 +666,7 @@ def today_items(settings, weeks, due_count, today, checks, practiced_today, revi
         goal = min(REVIEW_SET, due_count + reviewed_today)
         left = due_count + reviewed_today - goal
         items.append({'key': 'review', 'label': 'Review set: {} problem{} you missed'.format(goal, '' if goal == 1 else 's'),
-                      'detail': ('Weakest topics first. {} more wait for the next sets; one set a day is enough.'.format(left)
+                      'detail': ('Weakest topics first. One set a day is enough; the rest wait for later sets.'
                                  if left else 'Each one back for a fresh try.'),
                       'minutes': goal * pace, 'to': '/review?start=1', 'auto': False,
                       'progress': min(reviewed_today, goal), 'goal': goal})
@@ -720,7 +720,7 @@ def _day_items(settings, week, day, due_count, today, checks, practiced_today, r
             return None
         left = due_count + reviewed_today - goal
         return {'key': key('review'), 'label': 'Review set: {} problem{} you missed'.format(goal, '' if goal == 1 else 's'),
-                'detail': ('Weakest topics first. {} more wait for the next sets; one set a day is enough.'.format(left)
+                'detail': ('Weakest topics first. One set a day is enough; the rest wait for later sets.'
                            if left else 'Each one back for a fresh try.'),
                 'minutes': planned or goal * pace, 'to': '/review?start=1', 'auto': False,
                 'progress': min(reviewed_today, goal), 'goal': goal}

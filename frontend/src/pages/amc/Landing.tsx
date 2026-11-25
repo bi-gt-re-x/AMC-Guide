@@ -24,6 +24,7 @@ import {
 import { MathText } from '@/components/Amc/MathText';
 import { AnswerInput } from '@/components/Amc/bits';
 import { useAuth, useDocumentTitle } from '@/hooks';
+import { useSecretScripts } from '@/hooks/useSecretScripts';
 import '@/styles/amc.css';
 import '@/styles/landing.css';
 import { ridgePath, type Point } from '@/utils/ridgeline';
@@ -595,6 +596,10 @@ export default function Landing() {
   const climb = useRef<HTMLElement>(null);
   const scrolled = useScrollVars(root, climb);
   useClearSky(root);
+  // The hidden chain's landing-page stages, as the plain scripts they are:
+  // the pentagon among the closing stars (woken by the dashboard's door), the
+  // statement as the short way in, and the riddle both lead to.
+  useSecretScripts(['egg.css', 'pentagon-egg.js', 'quote-egg.js', 'void.css', 'void.js']);
 
   // Old account links (verification e-mails, the server's redirects) arrive
   // with ?auth= and belong on the sign-in page.
@@ -842,6 +847,11 @@ export default function Landing() {
               <i key={i} style={{ left: `${(i * 37) % 100}%`, top: `${(i * 53) % 70}%`, '--d': `${(i % 7) * 0.5}s` } as CSSProperties} />
             ))}
           </div>
+          {/* One star is a pentagon. Inert unless today's door has been opened:
+              see frontend/secret/pentagon-egg.js. */}
+          <svg className="lp-pentagon" viewBox="0 0 24 24" aria-hidden="true">
+            <path d="M12 2.5 21.5 9.4 17.9 20.5H6.1L2.5 9.4Z" />
+          </svg>
           <Reveal className="lp-final-inner">
             <h2 className="lp-h2">Start with one problem.</h2>
             <p>It’s free. Try the problem at the top of this page, or make an account and sit a mock.</p>

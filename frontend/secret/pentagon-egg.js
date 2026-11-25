@@ -1,8 +1,9 @@
 /* pentagon-egg.js — the second clue in the chain.
  *
- * The mysterious quote (unlocked on the dashboard) says "The pentagon is the
- * key, find it" — this pentagon in the landing page's Growth Rating card. It
- * only wakes up once that quote has been revealed today. Every click pops it;
+ * The quote behind the dashboard's door (door-egg.js) says "The pentagon is
+ * the key. Find it." — this pentagon, a faint one among the stars at the foot
+ * of the landing page (`.lp-pentagon`, pages/amc/Landing.tsx). It only wakes
+ * up once that quote has been revealed today. Every click pops it;
  * on the third the pop rolls into a full turn, after which the whole page
  * shakes, all the cards collapse in on themselves and vanish, and a lone
  * clickable arrow is left.
@@ -24,7 +25,7 @@
         catch (e) { return false; }
     }
     function init() {
-        var pent = document.querySelector('.lp-preview-rating .lp-radar');
+        var pent = document.querySelector('.lp-pentagon');
         if (!pent) return;
         if (!quoteUnlocked()) return;          // stays inert until the quote is found
 
@@ -59,7 +60,7 @@
     }
 
     function collapsePage() {
-        var main = document.querySelector('.home-main') || document.body;
+        var main = document.querySelector('.lp main') || document.body;
         var lp = document.querySelector('.lp');
         if (!lp) return;
 
@@ -98,11 +99,12 @@
         document.body.appendChild(btn);
         requestAnimationFrame(function () { btn.classList.add('show'); });
 
-        // Clickable: it leads into the mutated, super-dark, empty calendar.
+        // Clickable: it leads into the void, over an emptied dashboard
+        // (hooks/useVoid.ts reads `#void` on any page and opens void.js).
         btn.addEventListener('click', function () {
             btn.classList.add('leaving');
             setTimeout(function () {
-                window.location.href = '/calendar#void';
+                window.location.href = '/dashboard#void';
             }, 380);
         });
     }
