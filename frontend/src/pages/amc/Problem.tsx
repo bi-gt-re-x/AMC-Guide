@@ -42,6 +42,24 @@ export function ReviewStage({ stage }: { stage: number }) {
   );
 }
 
+/** The query parameters that pick a mode rather than a list to walk. */
+const WALK_IGNORES = new Set(['review', 'weak', 'set']);
+
+/** Previous and Next inside a practice set or the weak-topics set, never out of it. */
+function SetSteps({ prev, next, flag, onGo }: {
+  prev?: string; next?: string; flag: string; onGo: (to: string) => void;
+}) {
+  if (!prev && !next) return null;
+  return (
+    <div className="am-nav-row">
+      {prev ? (
+        <button type="button" className="am-btn" onClick={() => onGo(`/problems/${prev}?${flag}`)}>← Previous</button>
+      ) : <span />}
+      {next && <button type="button" className="am-btn" onClick={() => onGo(`/problems/${next}?${flag}`)}>Skip →</button>}
+    </div>
+  );
+}
+
 export default function Problem() {
   const { problemId = '' } = useParams();
   const [params] = useSearchParams();
@@ -56,10 +74,22 @@ export default function Problem() {
   const setAt = setIds.indexOf(problemId);
   const setNext = setAt >= 0 ? setIds[setAt + 1] : undefined;
   const setHome = practiceSet ? `/practice/${practiceSet.topic}?mode=${practiceSet.mode}` : '/topics';
-  // Opened from a topic: Previous and Next walk that topic, not the whole paper.
-  const fromTopic = params.get('topic') ?? '';
+  // Previous and Next walk the list the problem was opened from, and only
+  // that list: a topic (`?topic=`), the Problems page's filters (`?list=1&…`),
+  // or, opened from neither, the problem's own paper. The walk's parameters
+  // ride along on every step so the next problem walks the same list.
+  const walk: Record<string, string> = {};
+  params.forEach((value, key) => {
+    if (!WALK_IGNORES.has(key)) walk[key] = value;
+  });
+  const walkQuery = new URLSearchParams(walk).toString();
+  const walkHref = (id: string) => `/problems/${id}${walkQuery ? `?${walkQuery}` : ''}`;
+  // Inside a practice set or the weak-topics set, Previous and Next step
+  // through that set's problems instead.
+  const setPrev = setAt > 0 ? setIds[setAt - 1] : undefined;
+  const weakPrev = weakAt > 0 ? weakSet[weakAt - 1] : undefined;
   const navigate = useNavigate();
-  const { data, error, loading, reload } = useApi(() => amc.problem(problemId, fromTopic), [problemId, fromTopic]);
+  const { data, error, loading, reload } = useApi(() => amc.problem(problemId, walk), [problemId, walkQuery]);
   const { notify } = useNotice();
   useDocumentTitle(data ? data.problem.sources[0] ? `${data.problem.sources[0].name} #${data.problem.sources[0].number}` : 'Problem' : 'Problem');
 
@@ -316,14 +346,26 @@ export default function Problem() {
               </div>
             )}
 
-            <div className="am-nav-row">
-              {data.prev ? (
-                <button type="button" className="am-btn" onClick={() => navigate(problemHref(data.prev!, data.topic))}>← Previous</button>
-              ) : <span />}
-              {data.next && (
-                <button type="button" className="am-btn" onClick={() => navigate(problemHref(data.next!, data.topic))}>Next →</button>
-              )}
-            </div>
+            {inSet || weak ? (
+              <SetSteps
+                prev={inSet ? setPrev : weakPrev}
+                next={inSet ? setNext : weakNext}
+                flag={inSet ? 'set=1' : 'weak=1'}
+                onGo={navigate}
+              />
+            ) : !reviewing && (
+              <div className="am-nav-row">
+                {data.prev ? (
+                  <button type="button" className="am-btn" onClick={() => navigate(walkHref(data.prev!))}>← Previous</button>
+                ) : <span />}
+                {data.position && (
+                  <span className="am-muted" style={{ fontSize: 13 }}>{data.position.at} of {data.position.of} in this list</span>
+                )}
+                {data.next && (
+                  <button type="button" className="am-btn" onClick={() => navigate(walkHref(data.next!))}>Next →</button>
+                )}
+              </div>
+            )}
           </article>
         </div>
 

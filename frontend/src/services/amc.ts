@@ -563,6 +563,8 @@ export interface ProblemDetail {
   topic?: string | null;
   prev: string | null;
   next: string | null;
+  /** Where it sits in the filtered list it was opened from, if it was. */
+  position?: { at: number; of: number } | null;
 }
 
 export interface AttemptReply {
@@ -971,9 +973,13 @@ export const amc = {
   createProblem: (body: { like?: string; level?: string; topic?: string; technique?: string; rating?: number }) =>
     post<{ id: string }>('/api/amc/ai/create', body),
   problems: (filters: ProblemFilters) => get<ProblemList>('/api/amc/problems', { ...filters }),
-  /** One problem. With `topic`, its Previous and Next step through that topic's problems. */
-  problem: (id: string, topic = '') =>
-    get<ProblemDetail>(`/api/amc/problems/${encodeURIComponent(id)}`, topic ? { topic } : {}),
+  /**
+   * One problem. `walk` says which list its Previous and Next step through:
+   * `{ topic }` from a topic, `{ list: '1', ...filters }` from the Problems
+   * page (the filtered list, in its order), nothing for the problem's own paper.
+   */
+  problem: (id: string, walk: Record<string, string> = {}) =>
+    get<ProblemDetail>(`/api/amc/problems/${encodeURIComponent(id)}`, walk),
   attempt: (id: string, answer: string, seconds: number, source: 'practice' | 'review' = 'practice') =>
     post<AttemptReply>(`/api/amc/problems/${encodeURIComponent(id)}/attempt`, { answer, seconds, source }),
   reveal: (id: string) => post<{ problem: Problem }>(`/api/amc/problems/${encodeURIComponent(id)}/reveal`),

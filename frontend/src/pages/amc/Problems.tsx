@@ -8,7 +8,7 @@
 import { useEffect, useState, type ReactNode } from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
-import { Empty, PageHeader, ProblemRow, problemHref } from '@/components/Amc/bits';
+import { Empty, PageHeader, ProblemRow } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
 import { amc, RATING_TOP, type ProblemFilters, type Status } from '@/services/amc';
 import '@/styles/amc.css';
@@ -63,6 +63,9 @@ export default function Problems() {
     if (value) filters[key] = value;
   }
   const signature = KEYS.map((k) => filters[k] ?? '').join('|');
+  // A problem opened from here walks this list, filters and order included,
+  // and nothing outside it (backend/api/amc.py get_problem).
+  const walkQuery = new URLSearchParams({ list: '1', ...(filters as Record<string, string>) }).toString();
   const { data, error, loading, reload } = useApi(() => amc.problems(filters), [signature]);
 
   // The chooser starts open beside the list, folded on a phone.
@@ -280,7 +283,7 @@ export default function Problems() {
               )}
               {data.problems.length ? (
                 <div className="am-rows">
-                  {data.problems.map((p) => <ProblemRow key={p.id} problem={p} to={problemHref(p.id, filters.topic)} />)}
+                  {data.problems.map((p) => <ProblemRow key={p.id} problem={p} to={`/problems/${p.id}?${walkQuery}`} />)}
                 </div>
               ) : (
                 <Empty title="No problems match">Loosen a filter, or clear them all.</Empty>

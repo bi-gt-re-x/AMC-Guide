@@ -8,7 +8,7 @@ backend/amc/store.py. Every endpoint answers for the signed-in account only.
 from datetime import date, timedelta
 from typing import Dict, List, Optional, Union
 
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, Query, Request
 from pydantic import BaseModel
 
 from backend.amc import catalog, coach, engine, insights, planning, practice, results, store, weak
@@ -91,6 +91,17 @@ _PAST_ORDER = {c['id']: i for i, c in enumerate(catalog.PAST)}
 def _pill_order(p):
     """Easiest first, then in contest order (S10·2 before S10·10)."""
     return (p['rating'] if p.get('rating') is not None else p['difficulty'], _source_rank(p['id']))
+
+
+def _pills_sorted(rows):
+    """Easiest first, with real and mock problems mixed at each rating."""
+    return pb.mix_sources(sorted(rows, key=_pill_order), key=lambda r: _pill_order(r)[0])
+
+
+def _easiest_first(rows):
+    """Problems or summaries by rating, real and mock mixed at each rating."""
+    return pb.mix_sources(sorted(rows, key=lambda q: (q['rating'], _source_rank(q['id']))),
+                          key=lambda q: q['rating'])
 
 
 def _review_view(row, hist, review_by_id, today):
@@ -217,12 +228,18 @@ def _kind(pid):
     return 'step'
 
 
-@router.get('/api/amc/problems')
-def list_problems(level: str = '', category: str = '', topic: str = '', difficulty: str = '',
-                  status: str = '', technique: str = '', q: str = '', sort: str = 'source',
-                  source: str = '', rating: str = '', number: str = '', year: str = '', mock: str = '',
-                  username: str = Depends(current_username)):
-    _, _, hist, review_by_id = _context(username)
+#: The Problems page's filters, by query parameter. The problem page takes
+#: the same ones, so Previous and Next walk the list the problem was opened from.
+LIST_FILTERS = ('level', 'category', 'topic', 'difficulty', 'status', 'technique', 'q', 'sort',
+                'source', 'rating', 'number', 'year', 'mock')
+
+
+def _filtered(username, hist, review_by_id, level='', category='', topic='', difficulty='', status='',
+              technique='', q='', sort='source', source='', rating='', number='', year='', mock='',
+              keep=None):
+    """The Problems page's list for these filters, in its order. `keep` is a
+    problem id kept whatever its status: one just answered still has its place
+    in a list filtered to unsolved problems, so Next goes on from it."""
     wanted_diff = {int(d) for d in difficulty.split(',') if d.strip().isdigit()}
     # Ratings by whole step: "3" is everything rated 3 or 3.5.
     wanted_rating = {int(r) for r in rating.split(',') if r.strip().isdigit()}
@@ -255,20 +272,34 @@ def list_problems(level: str = '', category: str = '', topic: str = '', difficul
         if technique and p['technique'] != technique:
             continue
         summary = _summary(username, p['id'], hist, review_by_id)
-        if status and summary['status'] != status:
+        if status and summary['status'] != status and p['id'] != keep:
             continue
         if toks and not engine._score(toks, ' '.join([p['id'], engine.plain(p['statement']),
                                                       summary['topic_name'], summary['technique_name']])):
             continue
         rows.append(summary)
+    # Real contest problems and mock ones interleaved at each step of the
+    # order, not every mock first (problems.mix_sources).
     if sort == 'difficulty':
-        rows.sort(key=lambda r: (r['rating'], _source_rank(r['id'])))
+        key = lambda r: r['rating']
     elif sort == 'hardest':
-        rows.sort(key=lambda r: (-r['rating'], _source_rank(r['id'])))
+        key = lambda r: -r['rating']
     elif sort == 'topic':
-        rows.sort(key=lambda r: (r['topic_name'], r['rating'], _source_rank(r['id'])))
+        key = lambda r: (r['topic_name'], r['rating'])
     else:
-        rows.sort(key=lambda r: _source_rank(r['id']))
+        key = lambda r: 0
+    rows.sort(key=lambda r: (key(r), _source_rank(r['id'])))
+    return pb.mix_sources(rows, key)
+
+
+@router.get('/api/amc/problems')
+def list_problems(level: str = '', category: str = '', topic: str = '', difficulty: str = '',
+                  status: str = '', technique: str = '', q: str = '', sort: str = 'source',
+                  source: str = '', rating: str = '', number: str = '', year: str = '', mock: str = '',
+                  username: str = Depends(current_username)):
+    _, _, hist, review_by_id = _context(username)
+    rows = _filtered(username, hist, review_by_id, level, category, topic, difficulty, status, technique, q, sort,
+                     source, rating, number, year, mock)
     counts = {s: 0 for s in ('new', 'solved', 'missed', 'review')}
     rating_counts = {str(n): 0 for n in range(1, TOP + 1)}
     for p in pb.all_problems():
@@ -299,7 +330,8 @@ def list_problems(level: str = '', category: str = '', topic: str = '', difficul
 
 
 @router.get('/api/amc/problems/{problem_id}')
-def get_problem(problem_id: str, topic: str = '', username: str = Depends(current_username)):
+def get_problem(problem_id: str, request: Request, topic: str = '', in_list: str = Query('', alias='list'),
+                username: str = Depends(current_username)):
     p = pb.get(problem_id)
     if not p:
         return fail('No such problem.')
@@ -315,16 +347,26 @@ def get_problem(problem_id: str, topic: str = '', username: str = Depends(curren
     # who came for one topic through every problem of that year's contest.
     # Otherwise an official problem steps through its own contest, a bank
     # problem through the bank.
-    in_topic = topic in catalog.TOPIC_BY_ID and (p['topic'] == topic or topic in p['also'])
-    if in_topic:
-        family = sorted((q for q in pb.all_problems() if q['topic'] == topic or topic in q['also']),
-                        key=lambda q: (q['rating'], _source_rank(q['id'])))
-    elif p.get('official'):
-        family = [q for q in pb.all_problems() if q.get('contest') == p['contest']]
+    #
+    # From the Problems page (`?list=1` and its filters), that is the filtered
+    # list itself, in the page's order, and nothing else: a problem outside it
+    # has no Previous or Next rather than one from somewhere else.
+    if in_list == '1':
+        filters = {k: request.query_params.get(k, '') for k in LIST_FILTERS}
+        filters['sort'] = filters['sort'] or 'source'
+        order = [r['id'] for r in _filtered(username, hist, review_by_id, keep=problem_id, **filters)]
+        in_topic = False
     else:
-        family = sorted((q for q in pb.all_problems() if not q.get('official')), key=lambda q: _source_rank(q['id']))
-    order = [q['id'] for q in family]
-    i = order.index(problem_id)
+        in_topic = topic in catalog.TOPIC_BY_ID and (p['topic'] == topic or topic in p['also'])
+        if in_topic:
+            family = _easiest_first(q for q in pb.all_problems() if q['topic'] == topic or topic in q['also'])
+        elif p.get('official'):
+            family = [q for q in pb.all_problems() if q.get('contest') == p['contest']]
+        else:
+            family = sorted((q for q in pb.all_problems() if not q.get('official')),
+                            key=lambda q: _source_rank(q['id']))
+        order = [q['id'] for q in family]
+    i = order.index(problem_id) if problem_id in order else -1
     return ok(problem=engine.public(p, reveal=revealed),
               status=engine.status_of(problem_id, hist, review_by_id),
               attempts=[{'answer': a['answer'], 'correct': bool(a['correct']), 'at': a['at'],
@@ -333,7 +375,8 @@ def get_problem(problem_id: str, topic: str = '', username: str = Depends(curren
               related=related,
               topic=topic if in_topic else None,
               prev=order[i - 1] if i > 0 else None,
-              next=order[i + 1] if i + 1 < len(order) else None)
+              next=order[i + 1] if 0 <= i < len(order) - 1 else None,
+              position={'at': i + 1, 'of': len(order)} if in_list == '1' and i >= 0 else None)
 
 
 class AttemptBody(BaseModel):
@@ -476,7 +519,7 @@ def topics(username: str = Depends(current_username)):
     cats = []
     for cat in engine.category_stats(tstats):
         cats.append({**cat, 'topics': [{**t, **tstats[t['id']],
-                                        'pills': sorted(pills[t['id']], key=_pill_order)}
+                                        'pills': _pills_sorted(pills[t['id']])}
                                        for t in catalog.TOPICS if t['category'] == cat['id']]})
     return ok(categories=cats)
 
@@ -497,7 +540,7 @@ def strategies(username: str = Depends(current_username)):
         techniques = []
         for tid, idea in fam['techniques']:
             probs = by_technique.get(tid, [])
-            pill_rows = sorted((_pill(p['id'], hist, review_by_id) for p in probs), key=_pill_order)
+            pill_rows = _pills_sorted(_pill(p['id'], hist, review_by_id) for p in probs)
             topics = sorted({p['topic'] for p in probs})
             techniques.append({
                 'id': tid, 'name': catalog.technique_name(tid), 'idea': idea,
@@ -565,7 +608,7 @@ def topic(topic_id: str, username: str = Depends(current_username)):
     tstats = engine.topic_stats(hist, review_by_id)
     problems = [_summary(username, p['id'], hist, review_by_id) for p in pb.all_problems()
                 if p['topic'] == topic_id or topic_id in p['also']]
-    problems.sort(key=lambda r: (r['rating'], _source_rank(r['id'])))
+    problems = _easiest_first(problems)
     siblings = [{'id': s['id'], 'name': s['name']} for s in catalog.TOPICS
                 if s['category'] == t['category'] and s['id'] != topic_id]
     techniques = {}
@@ -582,7 +625,7 @@ def topic(topic_id: str, username: str = Depends(current_username)):
         (pair for f in catalog.STRATEGY_FAMILIES for pair in f['techniques']))}
     by_strategy = [{'id': k, 'name': 'Official problems' if k == 'official' else catalog.technique_name(k),
                     'idea': catalog.TECHNIQUE_IDEA.get(k, 'Imported contest problems, not yet tagged by strategy.'),
-                    'pills': sorted(v, key=_pill_order)}
+                    'pills': _pills_sorted(v)}
                    for k, v in sorted(groups.items(), key=lambda kv: family_order.get(kv[0], 999))]
     return ok(by_strategy=by_strategy, next=_topic_next(problems),
               topic={**t, **tstats[topic_id],

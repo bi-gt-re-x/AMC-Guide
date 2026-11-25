@@ -38,6 +38,34 @@ TITLES = {'learn': 'Learn the ideas', 'accuracy': 'Accuracy drill', 'timed': 'Ti
           'spaced': 'Spaced review', 'practice': 'Practice set'}
 
 
+#: The fewest of each kind, real contest problems and mock ones, a set holds
+#: when the topic has both: practice is on the papers it is for, and the mocks
+#: (with their worked solutions) alongside them, never one kind alone.
+MIN_EACH = 2
+
+
+def _balance(picked, candidates):
+    """`picked` with at least MIN_EACH real and MIN_EACH mock problems where
+    `candidates` (best first) has them, swapping out the least wanted picks
+    of the kind there are more of."""
+    picked = list(picked)
+    for want in (True, False):
+        have = sum(1 for p in picked if pb.is_official(p['id']) == want)
+        if have >= MIN_EACH:
+            continue
+        ids = {p['id'] for p in picked}
+        extra = [p for p in candidates if pb.is_official(p['id']) == want and p['id'] not in ids]
+        extra = extra[:MIN_EACH - have]
+        spare = [p for p in picked if pb.is_official(p['id']) != want]
+        drop = spare[len(spare) - len(extra):] if len(picked) + len(extra) > SIZE else []
+        if len(spare) - len(drop) < MIN_EACH and spare:
+            drop = drop[:max(0, len(spare) - MIN_EACH)]
+            extra = extra[:len(drop) + max(0, SIZE - len(picked))]
+        dropped = {p['id'] for p in drop}
+        picked = [p for p in picked if p['id'] not in dropped] + extra
+    return picked
+
+
 def _in_topic(p, topic_id):
     return p['topic'] == topic_id or topic_id in p['also']
 
@@ -106,16 +134,22 @@ def build(topic_id, mode, level, theta, topic_theta, mix, hist, review_by_id, us
     rest = take([p for p in mine if p not in order], near)
     ranked = ([p for p in order if own(p)] + [p for p in rest if own(p)]
               + [p for p in order if not own(p)] + [p for p in rest if not own(p)])
+    candidates = ranked + take(other, near)
     picked = []
-    for p in ranked + take(other, near):
+    for p in candidates:
         if p['id'] not in {q['id'] for q in picked}:
             picked.append(p)
         if len(picked) == SIZE:
             break
+    if mode != 'spaced':
+        picked = _balance(picked, candidates)
     if mode == 'mixed':
         rng.shuffle(picked)
     elif mode != 'spaced':
-        picked.sort(key=lambda p: p['rating'])
+        # Easiest level first, real and mock problems mixed within each level
+        # rather than every mock first (problems.mix_sources).
+        picked = pb.mix_sources(sorted(picked, key=lambda p: p['rating']),
+                                key=lambda p: planning.level_of(p['rating']))
     seconds = SECONDS.get(level, 180) if mode == 'timed' else None
     text = INSTRUCTIONS[mode]
     if seconds:

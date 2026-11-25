@@ -137,13 +137,28 @@ describe('AMC pages render the API as it is', () => {
   it('One problem', async () => {
     show('/problems/step-10-01', '/problems/:problemId', <Problem />);
     await settled(/What is the value of/);
-    expect(amc.problem).toHaveBeenCalledWith('step-10-01', '');
+    expect(amc.problem).toHaveBeenCalledWith('step-10-01', {});
   });
 
   it('One problem, opened from a topic, asks for that topic\'s Previous and Next', async () => {
     show('/problems/step-10-01?topic=circles', '/problems/:problemId', <Problem />);
     await settled(/What is the value of/);
-    expect(amc.problem).toHaveBeenCalledWith('step-10-01', 'circles');
+    expect(amc.problem).toHaveBeenCalledWith('step-10-01', { topic: 'circles' });
+  });
+
+  it('One problem, opened from a filtered list, asks for that list\'s Previous and Next', async () => {
+    show('/problems/step-10-01?list=1&level=AMC+10&topic=circles&rating=3', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    expect(amc.problem).toHaveBeenCalledWith('step-10-01', { list: '1', level: 'AMC 10', topic: 'circles', rating: '3' });
+  });
+
+  it('The problems list links each problem with its filters', async () => {
+    show('/problems?topic=circles&level=AMC+10', '/problems', <Problems />);
+    await settled(new RegExp(problems.problems[0]!.topic_name));
+    const link = document.querySelector(`a[href^="/problems/${problems.problems[0]!.id}?"]`);
+    expect(link?.getAttribute('href')).toContain('list=1');
+    expect(link?.getAttribute('href')).toContain('topic=circles');
+    expect(link?.getAttribute('href')).toContain('level=AMC+10');
   });
 
   it('Topics', async () => {
@@ -241,6 +256,9 @@ describe('A topic practice set', () => {
     expect(screen.getByText('← Timed set')).toBeInTheDocument();
     expect(screen.getByText(/1 of 2/)).toBeInTheDocument();
     expect(screen.getByLabelText(/against the set's pace/)).toHaveTextContent('/ 3:00');
+    // Stepping on stays inside the set, never on to the rest of the paper.
+    expect(screen.getByRole('button', { name: 'Skip →' })).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Next →' })).not.toBeInTheDocument();
   });
 
   it('hides the topic on a mixed set until it is answered', async () => {

@@ -16,3 +16,28 @@ def get(pid):
 
 def by_id():
     return {p['id']: p for p in all_problems()}
+
+
+def is_official(pid):
+    """Whether `pid` is a real contest problem, not a mock, bank or AI one."""
+    return bool(official.split_id(pid))
+
+
+def mix_sources(rows, key=lambda r: 0):
+    """`rows` (anything with an 'id') in `key` order, real contest problems and
+    mock ones interleaved in proportion within each run of equal `key`, each
+    kind keeping the order it came in.
+
+    Every list used to break ties by contest order, which puts the Step Mocks
+    before every official paper: a filtered list, a topic's problems at one
+    rating, a practice set's easiest level all opened with a run of mock
+    problems and only then reached a real one. `rows` must already be in the
+    order wanted within each kind."""
+    streams = {}
+    for r in rows:
+        streams.setdefault((key(r), is_official(r['id'])), []).append(r['id'])
+    pos = {}
+    for ids in streams.values():
+        for i, pid in enumerate(ids):
+            pos[pid] = (i + 0.5) / len(ids)
+    return sorted(rows, key=lambda r: (key(r), pos[r['id']], not is_official(r['id'])))

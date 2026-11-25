@@ -346,3 +346,51 @@ def test_weak_topics_bank_without_mocks_is_official_only(client, today):
     body = client.get('/api/amc/review/weak').json()
     assert body['success'] and not body['mocks'] and body['pool']['mock'] == 0
     assert all(p['official'] for p in body['problems'])
+
+
+def test_a_problem_opened_from_a_filtered_list_walks_only_that_list(client, today):
+    params = {'level': 'AMC 10', 'topic': 'circles', 'sort': 'difficulty'}
+    listed = [p['id'] for p in client.get('/api/amc/problems', params=params).json()['problems']]
+    assert len(listed) >= 3
+    walked, pid = [], listed[0]
+    while pid:
+        walked.append(pid)
+        body = client.get('/api/amc/problems/' + pid, params={'list': '1', **params}).json()
+        assert body['position'] == {'at': len(walked), 'of': len(listed)}
+        pid = body['next']
+    assert walked == listed                         # every one, in order, and nothing else
+    # Filtered to new problems, one just answered keeps its place, so Next goes on.
+    new = {'list': '1', 'status': 'new', **params}
+    client.post('/api/amc/problems/{}/attempt'.format(listed[0]), json={'answer': 'A', 'seconds': 30})
+    assert client.get('/api/amc/problems/' + listed[0], params=new).json()['next'] == listed[1]
+    # A problem outside the list steps nowhere rather than off into its paper.
+    outside = next(p['id'] for p in BY_ID.values() if p['level'] == 'AIME')
+    body = client.get('/api/amc/problems/' + outside, params={'list': '1', **params}).json()
+    assert body['prev'] is None and body['next'] is None and body['position'] is None
+
+
+def test_real_and_mock_problems_are_mixed_not_mocks_first():
+    from backend.amc import problems as pb
+    real = [{'id': '2026-amc-10a-{}'.format(n), 'rating': 3} for n in range(1, 7)]
+    mock = [{'id': 'step-10-0{}'.format(n), 'rating': 3} for n in range(1, 4)]
+    mixed = pb.mix_sources(mock + real)
+    kinds = ''.join('R' if pb.is_official(r['id']) else 'M' for r in mixed)
+    assert kinds in ('RMRRMRRMR', 'MRRMRRMRR', 'RRMRRMRRM')       # spread through, in proportion
+    assert [r['id'] for r in mixed if not pb.is_official(r['id'])] == [r['id'] for r in mock]
+    assert [r['id'] for r in mixed if pb.is_official(r['id'])] == [r['id'] for r in real]
+    # Within each step of the order, never across it.
+    easy = [{'id': 'step-10-09', 'rating': 1}]
+    assert pb.mix_sources(easy + real, key=lambda r: r['rating'])[0]['id'] == 'step-10-09'
+
+
+def test_a_practice_set_holds_both_kinds_when_the_topic_has_both(monkeypatch):
+    from backend.amc import practice
+    from backend.amc import problems as pb
+    bank = [p for p in BY_ID.values() if p['topic'] == 'circles' and p['level'] == 'AMC 10']
+    fake = [{**bank[0], 'id': '2026-amc-10a-{}'.format(n), 'official': True, 'contest': '2026-amc-10a',
+             'rating': 2 + n / 10} for n in range(1, 21)]
+    monkeypatch.setattr(pb, 'all_problems', lambda: bank + fake)
+    for mode in ('learn', 'practice', 'timed', 'accuracy', 'mixed'):
+        ids = practice.build('circles', mode, 'AMC 10', 4.0, None, None, {}, {}, 'u', date(2026, 11, 24))['problems']
+        real = sum(pb.is_official(i) for i in ids)
+        assert len(ids) == practice.SIZE and real >= practice.MIN_EACH and len(ids) - real >= practice.MIN_EACH, (mode, ids)
