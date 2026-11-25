@@ -161,9 +161,18 @@ describe('AMC pages render the API as it is', () => {
     expect(link?.getAttribute('href')).toContain('level=AMC+10');
   });
 
-  it('Topics', async () => {
+  it('Topics: a card per topic, no problem pills, and a dropdown to jump', async () => {
     show('/topics', '/topics', <Topics />);
-    await settled(topics.categories[0]!.topics[0]!.name);
+    const first = topics.categories[0]!.topics[0]!;
+    await settled(first.name);
+    expect(document.querySelector('.am-pills')).toBeNull();
+    const card = document.querySelector(`a.am-topic-card[href="/topics/${first.id}"]`);
+    expect(card).not.toBeNull();
+    expect(card).toHaveTextContent(String(first.problems));
+    const menu = document.querySelector('details.am-jump-menu') as HTMLDetailsElement;
+    expect(menu.open).toBe(false);
+    fireEvent.click(screen.getByText('Jump to a topic'));
+    expect(menu.open).toBe(true);
   });
 
   it('One topic, with its playbook', async () => {
