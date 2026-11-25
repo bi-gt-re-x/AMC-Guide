@@ -295,11 +295,19 @@ def _monday(day):
 
 
 def plan_weeks(settings, tstats, mocks_taken, today, priorities=None, stage=None):
-    """The week-by-week plan from today to the exam.
+    """The week-by-week plan from the week it was made to the exam.
 
     Phases: Foundations (first ~40%), Core (~35%), Contest mode (the rest),
     and a taper in the exam's own week, with a mock every third week of Core
     and every week of Contest mode.
+
+    The weeks run from the plan's own start (`created_at`), not from today:
+    laid out from today, every visit made a new plan whose first 40% was
+    Foundations, so a student never left Foundations until the last few weeks.
+    Weeks already gone keep their place (and their progress, which the caller
+    adds) with no focus of their own; the focus from this week on is worked
+    out again from the latest results each time, as are the phase lengths
+    (from how far the student now is from the goal, `stage`).
 
     With `priorities` (backend/amc/planning.py `analyze`), each week takes the
     two topics worth the most expected points still to be had, a topic's value
@@ -307,11 +315,19 @@ def plan_weeks(settings, tstats, mocks_taken, today, priorities=None, stage=None
     carries how to train it (`mode`, from its kind of weakness). Without, the
     older rule: how often a topic appears times how much is not yet in hand.
     """
+    from backend.amc import planning as _planning
     exam = date.fromisoformat(settings['exam_date'])
     level = settings['target']
     start = _monday(today)
+    try:
+        made = _monday(date.fromisoformat(str(settings.get('created_at') or '')[:10]))
+        start = min(start, made)
+    except ValueError:
+        pass
     last = _monday(exam)
     count = max(1, (last - start).days // 7 + 1)
+    # The week this is: the plan's focus is laid out from here on.
+    now = max(0, min(count - 1, (_monday(today) - start).days // 7))
 
     relevant = [t for t in catalog.TOPICS if level in t['levels']]
 
@@ -325,17 +341,20 @@ def plan_weeks(settings, tstats, mocks_taken, today, priorities=None, stage=None
     # the arithmetic cannot (backend/amc/coach.py). Topics it left out follow
     # in the usual order.
     coached = (settings.get('coach') or {}).get('focus_order') or []
+    # ...unless the answers since say the student has it: a topic the coach
+    # put first that is now right first time 80% of the time stops leading.
+    coached = [tid for tid in coached
+               if not (tstats.get(tid, {}).get('attempted', 0) >= _planning.CLEARED_MIN
+                       and tstats[tid]['first_right'] / tstats[tid]['attempted'] >= 0.8)]
     if coached:
         first = [t for tid in coached for t in relevant if t['id'] == tid]
         ranked = first + [t for t in ranked if t not in first]
     schedule = None
     if priorities:
-        from backend.amc import planning
-        schedule = planning.schedule(priorities, count, coached=coached)
+        schedule = _planning.schedule(priorities, count - now, coached=coached)
     # How far the student is from the goal sets the plan's shape: far below it,
     # more weeks on skills; at it already, more under exam conditions
     # (backend/amc/planning.py SHAPES, from `starting_point`).
-    from backend.amc import planning as _planning
     shape = _planning.SHAPES.get(stage or 'unknown', _planning.SHAPES['unknown'])
     foundations = max(1, round(count * shape['foundations'])) if count >= 4 else 0
     core = max(1, round(count * shape['core'])) if count >= 3 else 0
@@ -360,10 +379,10 @@ def plan_weeks(settings, tstats, mocks_taken, today, priorities=None, stage=None
             phase = 'Core'
         else:
             phase = 'Contest mode'
-        if phase == 'Taper':
+        if phase == 'Taper' or i < now:
             focus = []
         elif schedule is not None:
-            focus = schedule[i]
+            focus = schedule[i - now]
         else:
             focus = [ranked[(cursor + k) % len(ranked)] for k in range(2)] if ranked else []
             cursor += 2
@@ -378,6 +397,7 @@ def plan_weeks(settings, tstats, mocks_taken, today, priorities=None, stage=None
         week_end = week_start + timedelta(days=6)
         mock_done = any(week_start.isoformat() <= d <= week_end.isoformat() for d in taken)
         notes = {
+            'Done': 'Gone by.',
             'Foundations': 'Learn each focus topic, then do its easier problems untimed.',
             'Core': 'Focus topics plus review. Aim for under 3 minutes on #1-15.',
             'Contest mode': 'One timed mock, then work on what you missed.',
@@ -385,7 +405,7 @@ def plan_weeks(settings, tstats, mocks_taken, today, priorities=None, stage=None
         }
         weeks.append({
             'number': i + 1, 'start': week_start.isoformat(), 'end': week_end.isoformat(),
-            'phase': phase, 'note': notes[phase],
+            'phase': phase, 'note': notes['Done' if i < now else phase],
             'focus': [{'id': t['id'], 'name': t['name'], 'category': t['category'],
                        'mode': mode, 'mode_label': _planning.MODE_LABEL[mode],
                        'gain': t.get('gain'), 'mix': t.get('mix')} for t, mode in zip(focus, modes)],

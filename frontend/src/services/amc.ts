@@ -807,6 +807,22 @@ export interface PlanPayload {
     per_week: number | null; stage: 'far' | 'near' | 'there' | 'unknown'; summary: string;
   };
   defaults: { dates: Record<Level, string>; goals: Record<Level, number> };
+  /** Where the student is working now, which the plan is built from. */
+  level?: PlanLevel;
+}
+
+export interface PlanLevel {
+  level: number;
+  name: string;
+  means: string;
+  /** Distinct problems answered: how much the level rests on. */
+  measured: number;
+  goal_level: number;
+  goal_name: string;
+  mix: DifficultyMix;
+  recent: { answered: number; right: number; accuracy: number | null };
+  before: { answered: number; right: number; accuracy: number | null };
+  pace: { per_week: number; planned: number } | null;
 }
 
 // ---------------------------------------------------------------------------

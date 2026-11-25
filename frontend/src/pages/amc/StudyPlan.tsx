@@ -21,6 +21,7 @@ import {
   type PlanDetails,
   type PlanPayload,
   type PlanSettings,
+  type PlanLevel,
   type PlanWeek,
   type SubjectStrength,
 } from '@/services/amc';
@@ -511,6 +512,61 @@ function WeekList({ weeks }: { weeks: PlanWeek[] }) {
   );
 }
 
+/**
+ * The level the plan is built from, and how the last two weeks went. Every
+ * number here is worked out from the answers each time the page opens, and
+ * the plan with it: which topics lead, how each is trained, the difficulty
+ * mix and how soon Contest mode starts.
+ */
+function LevelCard({ level }: { level?: PlanLevel }) {
+  if (!level) return null;
+  const { recent, before, pace } = level;
+  const change = recent.accuracy != null && before.accuracy != null
+    ? Math.round((recent.accuracy - before.accuracy) * 100) : null;
+  return (
+    <section className="am-card">
+      <div className="am-card-head"><h2>Your level now</h2></div>
+      {level.measured < 5 ? (
+        <p className="am-muted am-level-note">
+          Answer a few problems and the plan sets itself to your level. Until then it starts a little below the
+          goal's.
+        </p>
+      ) : (
+        <>
+          <div className="am-level-now">
+            <strong>Level {level.level}</strong><span>{level.name}</span>
+          </div>
+          <p className="am-muted am-level-note">
+            {level.means}. Your goal needs level {level.goal_level} ({level.goal_name.toLowerCase()}).
+          </p>
+        </>
+      )}
+      <MixBar mix={level.mix} />
+      <dl className="am-level-stats">
+        <div>
+          <dt>Last 14 days</dt>
+          <dd>
+            {recent.answered ? `${recent.answered} answered · ${Math.round((recent.accuracy ?? 0) * 100)}% right` : 'Nothing answered'}
+            {change != null && change !== 0 && (
+              <span className={change > 0 ? 'is-up' : 'is-down'}> {change > 0 ? '▲' : '▼'} {Math.abs(change)} pts</span>
+            )}
+          </dd>
+        </div>
+        {pace && (
+          <div>
+            <dt>Pace</dt>
+            <dd>{pace.per_week} a week of {pace.planned} planned</dd>
+          </div>
+        )}
+      </dl>
+      <p className="am-muted am-card-note">
+        The plan re-plans from your answers every time you open it: the focus topics, how each is trained, the
+        difficulty mix and when Contest mode starts.
+      </p>
+    </section>
+  );
+}
+
 /** Which topics have been touched at all, and the weakest of those that have. */
 function CoverageCard({ coverage, target }: { coverage: NonNullable<PlanPayload['coverage']>; target: Level }) {
   const tried = coverage.filter((t) => (t.attempted ?? 0) > 0);
@@ -722,6 +778,7 @@ export default function StudyPlan() {
         </section>
 
         <aside className="am-stack">
+          <LevelCard level={payload.level} />
           <section className="am-card">
             <div className="am-card-head"><h2>Today</h2></div>
             <TodayList items={payload.today ?? []} onToggle={(item) => void toggle(item.key, !item.done)} />

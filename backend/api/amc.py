@@ -1011,7 +1011,32 @@ def _build_plan(plan, today, attempts, reviews, hist, tstats, every_score):
     practiced = {a['problem_id'] for a in attempts
                  if a['at'][:10] == today.isoformat() and a['source'] == 'practice'}
     items = engine.today_items(plan, weeks, due, today, plan['checks'], practiced)
-    return {'study': study, 'projected': projected_now, 'start': start, 'weeks': weeks, 'today': items}
+    return {'study': study, 'projected': projected_now, 'start': start, 'weeks': weeks, 'today': items,
+            'level': _level_now(study, attempts, weeks, today)}
+
+
+def _level_now(study, attempts, weeks, today):
+    """Where the student is working now, which the plan is built from: their
+    level on the five-step difficulty scale (from every answer), what their goal
+    needs, the last two weeks' answers against the two before, and their pace
+    against the plan's weekly target."""
+    def window(days_from, days_to):
+        lo = (today - timedelta(days=days_to)).isoformat()
+        hi = (today - timedelta(days=days_from)).isoformat()
+        rows = [a for a in attempts if lo < a['at'][:10] <= hi]
+        right = sum(1 for a in rows if a['correct'] and a.get('source') != 'reveal')
+        return {'answered': len(rows), 'right': right,
+                'accuracy': round(right / len(rows), 3) if rows else None}
+    level = planning.level_of(study['theta'])
+    info = planning.LEVELS[level - 1]
+    goal = planning.LEVELS[max(1, min(5, study['ceiling'])) - 1]
+    recent, before = window(0, 14), window(14, 28)
+    done = [w for w in weeks if w['past'] and w['problems']][-2:]
+    pace = {'per_week': round(sum(w.get('answered', 0) for w in done) / len(done), 1),
+            'planned': done[-1]['problems']} if done else None
+    return {'level': level, 'name': info['name'], 'means': info['means'], 'measured': len({a['problem_id'] for a in attempts}),
+            'goal_level': goal['level'], 'goal_name': goal['name'], 'mix': study['mix'],
+            'recent': recent, 'before': before, 'pace': pace}
 
 
 def _plan_payload(username):
@@ -1028,7 +1053,7 @@ def _plan_payload(username):
     return ok(plan={**plan, 'days_left': (date.fromisoformat(plan['exam_date']) - today).days},
               ai={'available': coach.available(), 'label': coach.provider_label()},
               weeks=weeks, today=built['today'],
-              projected=built['projected'], start=built['start'],
+              projected=built['projected'], start=built['start'], level=built['level'],
               coverage=[{'id': t['id'], 'name': t['name'], 'category': t['category'],
                          'mastery': tstats[t['id']]['mastery'], 'weight': t['weight'],
                          'attempted': tstats[t['id']]['attempted']}

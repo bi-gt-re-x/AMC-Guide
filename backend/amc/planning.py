@@ -426,6 +426,17 @@ def _why(t, gain, answered, right, feasibility, days, builds, kind):
     return '; '.join(bits)
 
 
+#: Answers in a topic before its accuracy can say it has been learned.
+CLEARED_MIN = 5
+
+
+def cleared(row):
+    """Whether a priority row's answers say the topic is in hand: right first
+    time 80% of the time over at least CLEARED_MIN answers."""
+    f = row.get('factors') or {}
+    return (f.get('answered') or 0) >= CLEARED_MIN and (f.get('mastery') or 0) >= 0.8
+
+
 def schedule(priorities, weeks, per_week=2, decay=0.55, coached=()):
     """[[topic rows] per week]: each week the highest remaining priorities, a
     topic's remaining value cut by `decay` once scheduled, so the most valuable
@@ -436,7 +447,10 @@ def schedule(priorities, weeks, per_week=2, decay=0.55, coached=()):
     (backend/amc/coach.py). Then the arithmetic takes over."""
     by_id = {r['id']: r for r in priorities}
     remaining = {r['id']: max(r['priority'], 0.01) for r in priorities}
-    order = [tid for tid in dict.fromkeys(coached) if tid in by_id]
+    # The coach's order leads only for topics the answers have not since
+    # shown the student has: it was written once, and a topic mastered since
+    # should give its week to one that is not (`cleared`).
+    order = [tid for tid in dict.fromkeys(coached) if tid in by_id and not cleared(by_id[tid])]
     out, last = [], set()
     for _ in range(weeks):
         if order:

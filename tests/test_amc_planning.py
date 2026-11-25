@@ -248,3 +248,41 @@ def test_the_weeks_move_on_from_learning_and_count_what_was_done(client):
     # The dashboard's Today list is the plan's.
     dash = client.get('/api/amc/dashboard').json()
     assert [i['label'] for i in dash['plan']['today']] == [i['label'] for i in body['today']]
+
+
+def _settings(**extra):
+    return {'target': 'AMC 10', 'exam_date': '2027-11-05', 'goal_score': 100, 'hours': 6, 'details': {},
+            'coach': None, **extra}
+
+
+def test_the_weeks_run_from_when_the_plan_was_made_so_the_phases_move_on():
+    tstats = engine.topic_stats({}, {})
+    made = _settings(created_at='2026-11-20T10:00:00')
+    first = engine.plan_weeks(made, tstats, [], date(2026, 11, 24))
+    later = engine.plan_weeks(made, tstats, [], date(2027, 6, 1))
+    assert len(first) == len(later)                                # one plan, not a new one each visit
+    assert next(w for w in first if w['current'])['phase'] == 'Foundations'
+    now = next(w for w in later if w['current'])
+    assert now['number'] > 20 and now['phase'] != 'Foundations'   # seven months on, out of Foundations
+    gone = [w for w in later if w['past']]
+    assert gone and all(not w['focus'] for w in gone)
+    assert all(w['focus'] for w in later if not w['past'] and w['phase'] != 'Taper')
+    # Laid out from today instead (no created_at), the same day was still Foundations.
+    fresh = engine.plan_weeks(_settings(), tstats, [], date(2027, 6, 1))
+    assert next(w for w in fresh if w['current'])['phase'] == 'Foundations'
+
+
+def test_the_coach_order_gives_way_to_a_topic_since_mastered():
+    rows = [{'id': t, 'name': t, 'priority': p, 'factors': f} for t, p, f in (
+        ('a', 3.0, {}), ('b', 2.5, {}), ('c', 1.0, {'answered': 8, 'mastery': 0.9}), ('d', 0.9, {}))]
+    weeks = planning.schedule(rows, 2, coached=['c', 'd'])
+    assert 'c' not in [r['id'] for r in weeks[0]] and 'd' in [r['id'] for r in weeks[0]]
+
+
+def test_the_plan_says_what_level_it_is_built_from(client):
+    client.put('/api/amc/plan', json={'target': 'AMC 10', 'exam_date': '2027-11-05', 'goal_score': 100, 'hours': 6})
+    for p in [p for p in PROBLEMS if p['level'] == 'AMC 10'][:6]:
+        client.post('/api/amc/problems/{}/attempt'.format(p['id']), json={'answer': str(p['answer']), 'seconds': 60})
+    level = client.get('/api/amc/plan').json()['level']
+    assert 1 <= level['level'] <= 5 and level['name'] and 1 <= level['goal_level'] <= 5
+    assert level['recent']['answered'] == 6 and level['recent']['accuracy'] == 1.0 and level['mix']

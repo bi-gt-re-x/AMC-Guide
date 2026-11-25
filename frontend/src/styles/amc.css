@@ -819,6 +819,17 @@ html[data-theme="dark"] .am-phases-you { border-color: var(--am-sage); }
 .am-coverage-sum { display: flex; align-items: baseline; gap: 4px; margin-bottom: 8px; font-size: 13px; }
 .am-coverage-sum strong { font-family: var(--am-serif); font-size: 26px; font-weight: 400; }
 .am-kind-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+/* Your level now: the level the plan is built from, and the last two weeks. */
+.am-level-now { display: flex; align-items: baseline; gap: 10px; margin-bottom: 4px; }
+.am-level-now strong { font-family: var(--am-serif); font-size: 26px; font-weight: 400; }
+.am-level-now span { color: var(--am-muted); font-size: 14px; }
+.am-level-note { margin: 0 0 10px; font-size: 13px; line-height: 1.5; }
+.am-level-stats { display: grid; gap: 6px; margin: 12px 0 0; font-size: 13px; }
+.am-level-stats div { display: flex; justify-content: space-between; gap: 10px; }
+.am-level-stats dt { color: var(--am-muted); }
+.am-level-stats dd { margin: 0; text-align: right; }
+.am-level-stats .is-up { color: var(--am-good, var(--am-sage)); }
+.am-level-stats .is-down { color: var(--am-rose); }
 .am-form { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: var(--space-4); align-items: end; }
 .am-seg { display: inline-flex; border: 1px solid var(--am-line); border-radius: 10px; overflow: hidden; background: var(--am-card); }
 .am-seg button { white-space: nowrap; border: 0; background: none; padding: 0 14px; min-height: 36px; font: inherit; font-size: var(--text-sm); font-weight: 600; color: var(--am-muted); cursor: pointer; }
