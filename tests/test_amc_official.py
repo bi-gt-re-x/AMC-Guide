@@ -145,6 +145,29 @@ What are the dimensions?
                               '$4\\ \\text{by}\\ 4$', '$4\\ \\text{by}\\ 8$']
 
 
+def test_a_dollar_entity_is_a_dollar_sign():
+    # 2010 AMC 10A #8 types its prices as `&#36;<math>0.50</math>`.
+    src = r"""==Problem 1==
+Tony is paid &#36;<math>0.50</math> per hour and earned &#36;<math>630</math>. How old was he?
+
+<math>\mathrm{(A)}\ 9 \qquad \mathrm{(B)}\ 11 \qquad \mathrm{(C)}\ 12 \qquad \mathrm{(D)}\ 13 \qquad \mathrm{(E)}\ 14</math>
+"""
+    (one,) = official.parse_contest(src, 'AMC 10')
+    assert one['statement'] == 'Tony is paid \\$$0.50$ per hour and earned \\$$630$. How old was he?'
+    assert one['choices'] == ['$9$', '$11$', '$12$', '$13$', '$14$']
+
+
+def test_letters_and_signs_are_math_but_words_are_words():
+    # 2011 AMC 10B #4 (`B - A`) and #15 (`I only`).
+    src = r"""==Problem 1==
+How many dollars?
+
+<math> \textbf{(A)}\ \frac{A + B}{2} \qquad\textbf{(B)}\ \dfrac{A - B}{2}\qquad\textbf{(C)}\ \text{I only}\qquad\textbf{(D)}\ B - A \qquad\textbf{(E)}\ A + B </math>
+"""
+    (one,) = official.parse_contest(src, 'AMC 10')
+    assert one['choices'] == ['$\\frac{A + B}{2}$', '$\\dfrac{A - B}{2}$', 'I only', '$B - A$', '$A + B$']
+
+
 def test_aime_has_no_choices():
     found = official.parse_contest('==Problem 1==\nFind <math>x</math>.\n==Problem 2==\nFind y.', 'AIME')
     assert found[0]['choices'] is None and found[0]['statement'] == 'Find $x$.'

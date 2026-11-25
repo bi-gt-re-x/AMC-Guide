@@ -112,6 +112,9 @@ def _clean_wiki(text):
     # Before `{{...}}` templates go: a choice letter wrapped in doubled braces, `\textbf{{(B)}}` (2013 AMC 10B #5).
     text = re.sub(r'\\(textbf|mathrm|text|textrm|mathbf)\s*\{\{\s*(\(\s*[A-E]\s*\))\s*\}\}', r'\\\1{\2}', text)
     text = re.sub(r'<!--.*?-->', '', text, flags=re.S)
+    # A dollar sign typed as an HTML entity (`&#36;<math>0.50</math>`, 2010 AMC 10A #8)
+    # is an escaped one, which the page draws as `$` in text and in math alike.
+    text = re.sub(r'&#0*36;|&dollar;', r'\\$', text)
     text = re.sub(r'\[\[(?:Image|File):[^\]]*\]\]', '', text, flags=re.I)
     # A full stop typed after the link goes with it (2015 AMC 10A #25).
     text = re.sub(r'\[\[[^\]|]*\|\s*Solution[^\]]*\]\][ \t]*\.?', '', text, flags=re.I)
@@ -185,7 +188,8 @@ def _own_math(part, opens_in_math):
 
 def _choice_text(raw):
     """One choice as display text: math if it looks like math, words if not."""
-    if re.fullmatch(r'[A-Za-z][A-Za-z ,.\'-]*', raw) and ' ' in raw:
+    # Words need a word in them: `I only` is words, `B - A` (2011 AMC 10B #4) is math.
+    if re.fullmatch(r'[A-Za-z][A-Za-z ,.\'-]*', raw) and ' ' in raw and re.search(r'[A-Za-z]{2}', raw):
         return raw
     # Only a choice that is one \text{...} and nothing else is plain words;
     # `\text{The node } \dfrac{20}{27} \text{ does not ...}` is still math.
