@@ -198,8 +198,8 @@ def brief(plan, details, tstats, projected, mocks, review_counts, answers, today
 
     lines.append('')
     lines.append('Their results on this site:')
-    lines.append('- Projected {} score from their answers: {}.'.format(
-        target, projected if projected is not None else 'not enough answers yet'))
+    lines.append('- Projected {} score (95% their recent timed sittings and logged scores, 5% practice): {}.'.format(
+        target, projected if projected is not None else 'none yet: no timed sitting at this level'))
     lines.append('- Review log: {} due, {} in the log, {} mastered.'.format(
         review_counts['due'], review_counts['active'], review_counts['mastered']))
     if mocks:

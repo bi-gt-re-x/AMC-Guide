@@ -65,7 +65,9 @@ def test_analytics_page(client):
                                       'goal_score': 85, 'hours': 5})
     body = client.get('/api/amc/analytics').json()
     perf = body['performance']
-    assert perf['attempted'] == 5 and perf['projected']['AMC 12'] is not None
+    # Practice alone is not a projected score: none until a sitting at that level.
+    assert perf['attempted'] == 5 and perf['projected']['AMC 12'] is None
+    assert body['takeaways'][0]['value'] == '—'
     assert sum(r['attempted'] for r in perf['ratings']) == 5
     assert set(body['contests']) == {'AMC 10', 'AMC 12', 'AIME'}
     prep = body['prepare']

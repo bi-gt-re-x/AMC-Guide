@@ -38,9 +38,12 @@ function Weaknesses({ data }: { data: AnalyticsData }) {
   // The API sends tried topics weakest first; a topic with no misses is not a weakness.
   const weak = p.topics.filter((t) => t.accuracy != null && t.accuracy < 1).slice(0, 8);
   const r = p.recovery;
+  const lost = data.mock_mistakes;
   return (
     <section className="am-card am-an-weak">
       <div className="am-card-head"><h2>Weaknesses</h2><Link to="/review">Review</Link></div>
+      <MockLosses lost={lost} />
+      <h3 className="am-an-weak-sub">In practice</h3>
       {weak.length ? (
         <ol className="am-an-weak-list">
           {weak.map((t, i) => {
@@ -71,6 +74,55 @@ function Weaknesses({ data }: { data: AnalyticsData }) {
         <div><dt>Still open</dt><dd>{r.open}</dd></div>
       </dl>
     </section>
+  );
+}
+
+/**
+ * Points lost in recent timed sittings, by topic: a wrong answer costs 6 on
+ * the AMC and a blank 4.5, against a right one. These come first, and the
+ * study plan targets them first (backend/amc/planning.py MOCK_RECOVERY).
+ */
+function MockLosses({ lost }: { lost?: AnalyticsData['mock_mistakes'] }) {
+  if (!lost?.sittings) {
+    return (
+      <p className="am-muted am-an-weak-note">
+        Sit a <Link className="am-link" to="/mock-contests">timed mock</Link> to see which topics cost you points under
+        exam conditions. Your study plan targets them first.
+      </p>
+    );
+  }
+  const top = lost.topics.slice(0, 6);
+  const most = top[0]?.lost ?? 1;
+  return (
+    <>
+      <h3 className="am-an-weak-sub">
+        Lost in mocks <span className="am-muted">−{lost.lost} pts over your last {lost.sittings} sitting{lost.sittings === 1 ? '' : 's'}</span>
+      </h3>
+      {top.length ? (
+        <ol className="am-an-weak-list am-an-mock-list">
+          {top.map((t, i) => (
+            <li key={t.id}>
+              <span className="am-an-weak-rank">{i + 1}</span>
+              <div className="am-an-weak-main">
+                <div className="am-an-weak-head">
+                  <Link className="am-link am-an-weak-name" to={`/topics/${t.id}`}>
+                    <CategoryDot category={t.category} /> {t.name}
+                  </Link>
+                  <span className="am-an-lost">−{t.lost} pts</span>
+                </div>
+                <Meter value={t.lost / most} tone="bad" />
+                <span className="am-muted am-an-lost-detail">
+                  {t.wrong} wrong{t.blank ? `, ${t.blank} blank` : ''} of {t.asked} asked
+                </span>
+              </div>
+              <Link className="am-link am-an-weak-go" to={`/practice/${t.id}?mode=timed`}>Timed set</Link>
+            </li>
+          ))}
+        </ol>
+      ) : (
+        <p className="am-muted am-an-weak-note">No points lost in your recent sittings.</p>
+      )}
+    </>
   );
 }
 

@@ -329,11 +329,26 @@ def classify(level, theta, problems, topic_theta=None):
     return out
 
 
-def analyze(attempts, hist, level, today=None, goal=None, details=None):
+#: The share of the points a topic lost in recent timed sittings (per sitting)
+#: that a few weeks on it is taken to win back. Added to its practice gain, so
+#: a topic that costs points under exam conditions is studied even when
+#: practice says it is fine.
+MOCK_RECOVERY = 0.25
+
+
+def analyze(attempts, hist, level, today=None, goal=None, details=None, mocks=None):
     """Priorities, weaknesses and difficulty mixes for a `level` student aiming at `goal`.
 
-    Returns {'theta', 'ceiling', 'mix', 'topics': [priority rows, highest first], 'kinds': [per kind]}."""
+    `mocks` (the account's amc_mocks rows) adds what the timed sittings say:
+    the points each topic lost in them (backend/amc/mockscore.py `mistakes`)
+    go into its gain and its reason.
+
+    Returns {'theta', 'ceiling', 'mix', 'topics': [priority rows, highest first], 'kinds': [per kind],
+    'mock': the mistakes}."""
     today = today or date.today()
+    from backend.amc import mockscore
+    lost = mockscore.mistakes(mocks or [], level, today)
+    lost_by = {t['id']: t for t in lost['topics']}
     if goal is None:
         from backend.amc import engine
         goal = engine.DEFAULT_GOALS[level]
@@ -362,6 +377,9 @@ def analyze(attempts, hist, level, today=None, goal=None, details=None):
         answered = len(pts)
         right = sum(1 for _, ok, _w in pts if ok)
         gain = study_gain(level, theta, th, t['weight'] / total_weight)
+        in_mocks = lost_by.get(t['id'])
+        if in_mocks:
+            gain = round(gain + MOCK_RECOVERY * in_mocks['per_sitting'], 2)
         ratings = on_level.get(t['id'], [])
         reach = sum(smart.chance(theta + 1.0, r) for r in ratings) / len(ratings) if ratings else 0.6
         feasibility = round(0.5 + 0.5 * reach, 2)
@@ -388,9 +406,12 @@ def analyze(attempts, hist, level, today=None, goal=None, details=None):
                         'level': round(th, 2) if th is not None else None,
                         'feasibility': feasibility, 'recency': recency, 'days_since': days,
                         'importance': importance, 'builds': builds.get(t['id'], 0),
-                        'self_rated': ((details or {}).get('subjects') or {}).get(t['category'])},
+                        'self_rated': ((details or {}).get('subjects') or {}).get(t['category']),
+                        'mock_lost': in_mocks['lost'] if in_mocks else 0,
+                        'mock_missed': in_mocks['missed'] if in_mocks else 0},
             'kinds': kinds, 'kind': main, 'mode': mode, 'mode_label': MODE_LABEL[mode],
-            'why': _why(t, gain, answered, right, feasibility, days, builds.get(t['id'], 0), main),
+            'why': _why(t, gain, answered, right, feasibility, days, builds.get(t['id'], 0), main,
+                        in_mocks, lost['sittings']),
             # What difficulty to practise it at: from the topic's ability, or a
             # little below the overall level for a topic not tried yet.
             'mix': difficulty_mix(th if th is not None else theta - 0.3, ceiling),
@@ -405,11 +426,14 @@ def analyze(attempts, hist, level, today=None, goal=None, details=None):
              'score': round(r['kinds'][key]['score'], 2)} for r in hit],
             'count': sum(r['kinds'][key]['count'] for r in hit)})
     return {'theta': round(theta, 2), 'ceiling': ceiling, 'goal': goal,
-            'mix': difficulty_mix(theta, ceiling), 'topics': out, 'kinds': kinds}
+            'mix': difficulty_mix(theta, ceiling), 'topics': out, 'kinds': kinds, 'mock': lost}
 
 
-def _why(t, gain, answered, right, feasibility, days, builds, kind):
+def _why(t, gain, answered, right, feasibility, days, builds, kind, in_mocks=None, sittings=0):
     bits = []
+    if in_mocks:
+        bits.append('lost {:g} pts in your last {} mock{} ({} missed)'.format(
+            in_mocks['lost'], sittings, '' if sittings == 1 else 's', in_mocks['missed']))
     if t['weight'] >= 3:
         bits.append('on nearly every paper')
     elif t['weight'] == 1:
@@ -513,6 +537,11 @@ def brief(study, top=6):
             '{}/{} right'.format(f['right'], f['answered']) if f['answered'] else 'not tried yet',
             '{} weakness, train by {}'.format(KINDS[r['kind']]['name'].lower(), r['mode_label'])
             if r['kind'] else 'train by ' + r['mode_label']) + '; practise at ' + mix_text(r['mix']))
+    lost = study.get('mock') or {}
+    if lost.get('topics'):
+        lines.append('Points lost in their last {} timed mock sitting(s), by topic (target these first): {}.'.format(
+            lost['sittings'], '; '.join('{} ({}): -{:g} pts, {} wrong, {} blank'.format(
+                t['id'], t['name'], t['lost'], t['wrong'], t['blank']) for t in lost['topics'][:6])))
     called = [k for k in study['kinds'] if k['topics']]
     if called:
         lines.append('Kinds of weakness found (with the topics and the evidence): ' + ' '.join(
@@ -528,46 +557,29 @@ def brief(study, top=6):
 # ---------------------------------------------------------------------------
 # Where the student starts, and the plan's shape from the gap to the goal
 # ---------------------------------------------------------------------------
-#: How far back a sitting still says where the student is.
-RECENT_DAYS = 120
 SUBJECT_LEAN = {'weak': 1.2, 'ok': 1.0, 'strong': 0.8}
 
 
 def starting_point(level, goal, projected, mocks, details, today):
     """Where the student is now against the goal, from their data.
 
-    The estimate blends the score model's projection (from every answer) with
-    their recent official sittings, each adjusted for that paper's difficulty
-    (backend/amc/results.py), the sittings counting more the more there are;
-    with neither, the last real score they gave. Returns {'current', 'from',
-    'goal', 'gap', 'weeks', 'per_week', 'stage', 'summary'}."""
-    from backend.amc import results
-    from datetime import timedelta
-    since = (today - timedelta(days=RECENT_DAYS)).isoformat()
-    recent = []
-    for m in sorted(mocks, key=lambda m: m['at'], reverse=True):
-        c = catalog.PAST_BY_ID.get(m['contest_id'])
-        if not c or c['level'] != level or m['at'][:10] < since or m['kind'] not in ('mock', 'logged'):
-            continue
-        st = results.of_row(m)
-        recent.append(st['adjusted'] if st else m['score'])
-        if len(recent) == 5:
-            break
-    parts, sources = [], []
+    The projected score (backend/amc/mockscore.py): 95% their recent timed
+    sittings and logged scores at this level, each adjusted for that paper's
+    difficulty, and 5% the practice model's number (`projected`). With no
+    sitting, the last real score they gave; with neither, unknown: practice
+    alone is not a score. Returns {'current', 'from', 'goal', 'gap', 'weeks',
+    'per_week', 'stage', 'summary'}."""
+    from backend.amc import mockscore
+    recent = mockscore.sittings(mocks, level, today)
+    current, sources = None, []
     if recent:
-        weight = min(0.75, 0.25 * len(recent))
-        parts.append((sum(recent) / len(recent), weight))
+        current = mockscore.blend(projected, recent)
         sources.append('{} recent sitting{} (adjusted for difficulty)'.format(len(recent), '' if len(recent) == 1 else 's'))
-    if projected is not None:
-        parts.append((projected, 1 - sum(w for _, w in parts) if parts else 1.0))
-        sources.append('your answers')
-    if not parts and (details or {}).get('last_score') not in (None, ''):
-        parts.append((float(details['last_score']), 1.0))
+        if projected is not None:
+            sources.append('{:.0%} your answers'.format(mockscore.MODEL_SHARE))
+    elif (details or {}).get('last_score') not in (None, ''):
+        current = float(details['last_score'])
         sources.append('the last score you gave')
-    current = None
-    if parts:
-        total = sum(w for _, w in parts) or 1
-        current = round(sum(v * w for v, w in parts) / total * 2) / 2
     return _shape_from(level, goal, current, sources, today, details)
 
 
@@ -577,7 +589,7 @@ def _shape_from(level, goal, current, sources, today, details):
     weeks = max(1, ((date.fromisoformat(exam) - today).days // 7) + 1) if exam else None
     if current is None:
         return {'current': None, 'from': '', 'goal': goal, 'gap': None, 'weeks': weeks, 'per_week': None,
-                'stage': 'unknown', 'summary': 'Answer a few problems or sit a paper to see where you start.'}
+                'stage': 'unknown', 'summary': 'Sit a timed mock or log a contest score to see where you start.'}
     gap = round(goal - current, 1)
     far, near = (3, 0) if aime else (20, 0)
     if gap >= far:

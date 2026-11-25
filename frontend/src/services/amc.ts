@@ -470,9 +470,19 @@ export interface PerformanceWeek {
   score_share: number | null;
 }
 
+/** Points lost in recent timed sittings, by topic (backend/amc/mockscore.py). */
+export interface MockMistakes {
+  sittings: number;
+  lost: number;
+  topics: { id: string; name: string; category: CategoryId; wrong: number; blank: number; missed: number;
+            asked: number; lost: number; per_sitting: number; problems: string[] }[];
+}
+
 export interface Analytics {
   /** Topics by expected score gain, and the kinds of weakness (backend/amc/planning.py). */
   priorities: StudyPriority[];
+  /** Where timed sittings lose points: the top of the Weaknesses card. */
+  mock_mistakes?: MockMistakes;
   kinds: WeaknessKind[];
   difficulty?: DifficultyPlan;
   /** The page in four lines, shown first. */

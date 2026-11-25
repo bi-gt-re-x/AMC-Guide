@@ -1706,6 +1706,12 @@ html[data-theme="dark"] .am-predict-tag { color: #0d1117; }
 .am-an-weak-name { color: var(--am-ink); font-weight: 500; display: inline-flex; align-items: center; gap: 8px; min-width: 0; }
 .am-an-weak-misses { margin-top: var(--space-6); padding-top: var(--space-4); border-top: 1px solid var(--am-line); }
 .am-an-weak-go { font-size: var(--text-xs); white-space: nowrap; }
+.am-an-weak-sub { margin: 0 0 var(--space-3); font-size: 13px; font-weight: 700; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
+.am-an-weak-sub .am-muted { font-weight: 500; font-size: 12px; }
+.am-an-mock-list { margin-bottom: var(--space-5); padding-bottom: var(--space-5); border-bottom: 1px solid var(--am-line); }
+.am-an-weak-note { margin: 0 0 var(--space-5); font-size: 13px; line-height: 1.5; }
+.am-an-lost { color: var(--am-rose); font-weight: 600; font-size: var(--text-xs); white-space: nowrap; }
+.am-an-lost-detail { font-size: 12px; }
 /* By difficulty beside Weaknesses: the list gets enough room for a topic name
    on one line, and the two cards end level. */
 .am-an-split { grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr); align-items: stretch; }

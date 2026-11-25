@@ -65,10 +65,15 @@ def test_the_starting_point_comes_from_scores_and_answers():
     # Both sittings were exactly that year's floor: 100 on a typical paper; the model says 90.
     assert 90 < both['current'] < 100 and 'recent sittings' in both['from'] and 'your answers' in both['from']
     assert both['gap'] == round(120 - both['current'], 1) and both['stage'] == 'far' and both['weeks'] > 40
-    near = planning.starting_point('AMC 10', 105, 100, [], details, TODAY)
+    # The sittings are 95% of it: the model's 90 moves 100 by half a point, not ten.
+    assert both['current'] == 99.5
+    one = sittings[:1]
+    near = planning.starting_point('AMC 10', 105, 100, one, details, TODAY)
     assert near['stage'] == 'near' and near['current'] == 100
-    there = planning.starting_point('AMC 10', 95, 100, [], details, TODAY)
+    there = planning.starting_point('AMC 10', 95, 100, one, details, TODAY)
     assert there['stage'] == 'there'
+    # Practice alone, however good, is not a starting score.
+    assert planning.starting_point('AMC 10', 100, 120, [], details, TODAY)['stage'] == 'unknown'
     told = planning.starting_point('AMC 10', 100, None, [], {**details, 'last_score': 84}, TODAY)
     assert told['current'] == 84 and 'you gave' in told['from']
     assert planning.starting_point('AMC 10', 100, None, [], details, TODAY)['stage'] == 'unknown'

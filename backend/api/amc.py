@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Union
 from fastapi import APIRouter, Depends, Query, Request
 from pydantic import BaseModel
 
-from backend.amc import catalog, coach, engine, insights, planning, practice, results, store, weak
+from backend.amc import catalog, coach, engine, insights, mockscore, planning, practice, results, store, weak
 from backend.amc import official
 from backend.amc import problems as pb
 from backend.amc.scale import TOP
@@ -164,10 +164,9 @@ def dashboard(username: str = Depends(current_username)):
             next_problem = _summary(username, pool[0]['id'], hist, review_by_id)
             break
 
-    # No number until there is something to base it on: with no answers the
-    # projection is only the prior, and a score on the dashboard reads as a fact.
-    enough = len(hist) >= engine.PROJECTION_MIN
-    projection = {lvl: engine.projected(hist, lvl) if enough else None
+    # The projected score is what the sittings say (backend/amc/mockscore.py):
+    # none until there is a timed mock or a logged score at that level.
+    projection = {lvl: mockscore.projected_score(hist, lvl, mocks, today)
                   for lvl in ('AMC 10', 'AMC 12', 'AIME')}
     return ok(
         stats={
@@ -987,11 +986,13 @@ def _build_plan(plan, today, attempts, reviews, hist, tstats, every_score):
     to lay the weeks out by an older rule of its own, so its Today list could
     name a different focus topic from the plan's for the same day."""
     mocks = [m for m in every_score if m['kind'] == 'mock']
-    study = planning.analyze(attempts, hist, plan['target'], today, plan['goal_score'], plan['details'])
-    projected_now = engine.projected(hist, plan['target']) if len(hist) >= engine.PROJECTION_MIN else None
+    # Mock mistakes weigh in the priorities, so the weeks target them.
+    study = planning.analyze(attempts, hist, plan['target'], today, plan['goal_score'], plan['details'],
+                             mocks=every_score)
+    model = engine.projected(hist, plan['target']) if len(hist) >= engine.PROJECTION_MIN else None
     # Where the student starts against the goal, from their scores and answers;
     # it sets the plan's shape (more skills when far, more papers when close).
-    start = planning.starting_point(plan['target'], plan['goal_score'], projected_now, every_score,
+    start = planning.starting_point(plan['target'], plan['goal_score'], model, every_score,
                                     {**plan['details'], '_exam': plan['exam_date']}, today)
     weeks = engine.plan_weeks(plan, tstats, mocks, today, study['topics'], start['stage'])
     # How much of each week's practice has been done: distinct problems
@@ -1011,6 +1012,7 @@ def _build_plan(plan, today, attempts, reviews, hist, tstats, every_score):
     practiced = {a['problem_id'] for a in attempts
                  if a['at'][:10] == today.isoformat() and a['source'] == 'practice'}
     items = engine.today_items(plan, weeks, due, today, plan['checks'], practiced)
+    projected_now = mockscore.projected_score(hist, plan['target'], every_score, today)
     return {'study': study, 'projected': projected_now, 'start': start, 'weeks': weeks, 'today': items,
             'level': _level_now(study, attempts, weeks, today)}
 
@@ -1165,15 +1167,18 @@ def coach_plan(body: CoachBody, username: str = Depends(current_username)):
     today = _today()
     attempts, reviews, hist, review_by_id = _context(username)
     tstats = engine.topic_stats(hist, review_by_id)
-    projected = engine.projected(hist, plan['target']) if len(hist) >= engine.PROJECTION_MIN else None
-    mocks = [_mock_brief(m) for m in store.mocks(username)]
+    every_score = store.mocks(username)
+    model = engine.projected(hist, plan['target']) if len(hist) >= engine.PROJECTION_MIN else None
+    projected = mockscore.projected_score(hist, plan['target'], every_score, today)
+    mocks = [_mock_brief(m) for m in every_score]
     counts = {'due': sum(1 for r in reviews if r['status'] == 'active' and r['due'] <= today.isoformat()),
               'active': sum(1 for r in reviews if r['status'] == 'active'),
               'mastered': sum(1 for r in reviews if r['status'] == 'mastered')}
     answers = {str(q)[:300]: str(a)[:600] for q, a in (body.answers or {}).items()}
     try:
-        study = planning.analyze(attempts, hist, plan['target'], today, plan['goal_score'], plan['details'])
-        study['start'] = planning.starting_point(plan['target'], plan['goal_score'], projected, store.mocks(username),
+        study = planning.analyze(attempts, hist, plan['target'], today, plan['goal_score'], plan['details'],
+                                 mocks=every_score)
+        study['start'] = planning.starting_point(plan['target'], plan['goal_score'], model, every_score,
                                                  {**plan['details'], '_exam': plan['exam_date']}, today)
         written = coach.write_plan(plan, plan['details'], tstats, projected, mocks, counts, answers, today, study)
     except planner.PlannerUnavailable as exc:

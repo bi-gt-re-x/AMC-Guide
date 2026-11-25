@@ -408,7 +408,7 @@ def takeaways(level, goal, projected, study):
     out = []
     if projected is None:
         out.append({'id': 'projected', 'label': 'Projected', 'value': '—', 'tone': '',
-                    'note': 'answer a few more problems'})
+                    'note': 'sit a timed mock first', 'to': '/mock-contests'})
     else:
         gap = round(goal - projected, 1)
         out.append({'id': 'projected', 'label': 'Projected', 'value': '{:g}'.format(projected),
@@ -426,7 +426,15 @@ def takeaways(level, goal, projected, study):
         out.append({'id': 'next', 'label': 'Study next', 'value': top['name'], 'tone': '',
                     'note': '+{:g} pts · {}'.format(top['gain'], SHORT_MODE[top['mode']]), 'to': '/topics/' + top['id']})
     found = [k for k in study['kinds'] if k['topics']]
-    if found:
+    worst = (study.get('mock') or {}).get('topics') or []
+    if worst:
+        # Points lost under exam conditions outrank what practice suggests.
+        w = worst[0]
+        out.append({'id': 'weakness', 'label': 'Costing you in mocks', 'value': w['name'], 'tone': 'bad',
+                    'note': '−{:g} pts in {} mock{}'.format(w['lost'], study['mock']['sittings'],
+                                                           '' if study['mock']['sittings'] == 1 else 's'),
+                    'to': '/topics/' + w['id']})
+    elif found:
         k = max(found, key=lambda k: (sum(t['score'] for t in k['topics']), len(k['topics'])))
         out.append({'id': 'weakness', 'label': 'Main weakness', 'value': k['name'], 'tone': 'bad',
                     'note': '{} topic{} · {}'.format(len(k['topics']), '' if len(k['topics']) == 1 else 's',
@@ -442,8 +450,10 @@ def analytics(attempts, hist, review_by_id, reviews, mocks, plan, today):
     target = plan['target'] if plan else 'AMC 10'
     goal = plan['goal_score'] if plan else engine.DEFAULT_GOALS[target]
     rating_rows = by_rating(attempts, hist)
-    enough = len(hist) >= engine.PROJECTION_MIN
-    projected = {lvl: engine.projected(hist, lvl) if enough else None for lvl in ('AMC 10', 'AMC 12', 'AIME')}
+    # What the sittings say, 95%, and practice 5% (backend/amc/mockscore.py);
+    # none at a level with no timed mock or logged score.
+    from backend.amc import mockscore
+    projected = {lvl: mockscore.projected_score(hist, lvl, mocks, today) for lvl in ('AMC 10', 'AMC 12', 'AIME')}
     graded = _graded(attempts)
     timed = [int(a.get('seconds') or 0) for a in graded if int(a.get('seconds') or 0) > 0]
     avg_seconds = round(sum(timed) / len(timed)) if timed else None
@@ -458,11 +468,13 @@ def analytics(attempts, hist, review_by_id, reviews, mocks, plan, today):
     if plan and plan.get('exam_date'):
         days_left = (date.fromisoformat(plan['exam_date']) - today).days
     mock_rows = [m for m in mocks if m['kind'] in ('mock', 'logged')]
-    study = planning.analyze(attempts, hist, target, today, goal, (plan or {}).get('details'))
+    study = planning.analyze(attempts, hist, target, today, goal, (plan or {}).get('details'), mocks=mocks)
     return {
         # What to study for the most points, and the kinds of weakness behind
         # each topic, with the training each wants (backend/amc/planning.py).
         'priorities': study['topics'][:8],
+        # Points lost in recent timed sittings, by topic: the Weaknesses card.
+        'mock_mistakes': study['mock'],
         'kinds': study['kinds'],
         'difficulty': {'ceiling': study['ceiling'], 'mix': study['mix'], 'levels': planning.LEVELS},
         'takeaways': takeaways(target, goal, projected[target], study),

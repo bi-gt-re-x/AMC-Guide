@@ -122,6 +122,20 @@ describe('AMC pages render the API as it is', () => {
     await settled(/AMC 10/);
   });
 
+  it('Analytics: points lost in mocks lead the Weaknesses card', async () => {
+    vi.spyOn(amc, 'analytics').mockResolvedValue({
+      ...analytics,
+      mock_mistakes: { sittings: 2, lost: 30, topics: [
+        { id: 'circles', name: 'Circles', category: 'geometry', wrong: 3, blank: 2, missed: 5, asked: 6, lost: 27,
+          per_sitting: 13.5, problems: [] }] },
+    } as any);
+    show('/analytics', '/analytics', <Analytics />);
+    expect(await screen.findByText(/Lost in mocks/)).toBeInTheDocument();
+    expect(screen.getByText('−27 pts')).toBeInTheDocument();
+    expect(screen.getByText('3 wrong, 2 blank of 6 asked')).toBeInTheDocument();
+    expect(document.querySelector('a[href="/practice/circles?mode=timed"]')).not.toBeNull();
+  });
+
   it('Study plan', async () => {
     show('/study-plan', '/study-plan', <StudyPlan />);
     await settled(/AMC 10/);

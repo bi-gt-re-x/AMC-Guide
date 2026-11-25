@@ -97,8 +97,8 @@ function Projection({ data }: { data: DashboardData }) {
       </div>
       <p className="am-muted" style={{ margin: 0, fontSize: 13, lineHeight: 1.5 }}>
         {score == null
-          ? `Answer ${data.projection_min} problems to see this.`
-          : 'From your level (recent answers count most) and a real paper’s difficulty, skipping where a guess would cost points.'}
+          ? <>Sit a <Link className="am-link" to="/mock-contests">timed mock</Link> or log a {level} score to see this. Practice alone is not a score.</>
+          : 'From your recent timed mocks and logged scores (95%, newest counting most, adjusted for each paper’s difficulty), and your practice (5%).'}
       </p>
     </section>
   );
