@@ -152,7 +152,9 @@ def _split_choices(block, keep_math=False):
         end = picked[i + 1].start() if i + 1 < 5 else len(block)
         part = block[m.end():end]
         part = re.sub(r'\\(?:qquad|quad|hspace\{[^}]*\}|hfill|\\|newline|;|,|:)|~|&', ' ', part)
-        part = re.sub(r'\\ ', ' ', part)
+        # A `\ ` before or after the choice is padding; one inside it is a space
+        # math would otherwise drop (`2\ \text{by}\ 4`, 2012 AMC 10A #2).
+        part = re.sub(r'^(?:\s|\\ )+|(?:\s|\\ )+$', ' ', part)
         if keep_math:
             part = _own_math(part, opens_in_math=not _outside_math(block, m.start()))
         else:
@@ -203,9 +205,10 @@ def _find_choices(body):
         if not _CHOICE_MARK.search(inner):
             continue
         # Join this block with the ones right after it, for choices split
-        # across lines (A-C on one, D-E on the next).
+        # across lines (A-C on one, D-E on the next) or into a run of math
+        # tags mid-choice (`ac-ad</math> <math>+bc-bd`, 2011 AMC 10A #9).
         joined, end = inner, m.end()
-        for nxt in blocks[i + 1:i + 3]:
+        for nxt in blocks[i + 1:i + 9]:
             between = body[end:nxt.start()]
             if between.strip():
                 break

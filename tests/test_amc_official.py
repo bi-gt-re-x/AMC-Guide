@@ -121,6 +121,30 @@ What is the least value?
     assert one['choices'] == ['$-20$', '$-15$', '$-10$', '$0$', '$2$']
 
 
+def test_choices_split_across_many_math_tags_are_joined():
+    # 2011 AMC 10A #9 breaks its one choices line into six <math> tags, mid-choice.
+    src = r"""==Problem 1==
+Which of the following represents the area of this region?
+
+<math> \textbf{(A)}\ ac+ad+bc+bd\qquad\textbf{(B)}\ ac-ad</math> <math>+bc-bd\qquad\textbf{(C)}\ ac+ad</math> <math>-bc-bd   \quad\quad\qquad\textbf{(D)}\ -ac-ad</math> <math>+bc+bd\qquad\textbf{(E)}\ ac-ad</math> <math> -bc+bd </math>
+"""
+    (one,) = official.parse_contest(src, 'AMC 10')
+    assert one['statement'] == 'Which of the following represents the area of this region?'
+    assert one['choices'] == ['$ac+ad+bc+bd$', '$ac-ad +bc-bd$', '$ac+ad -bc-bd$', '$-ac-ad +bc+bd$', '$ac-ad -bc+bd$']
+
+
+def test_a_space_inside_a_choice_is_kept():
+    # 2012 AMC 10A #2: `2\ \text{by}\ 4` read as `2 \text{by} 4`, which math draws as "2by4".
+    src = r"""==Problem 1==
+What are the dimensions?
+
+<math> \textbf{(A)}\ 2\ \text{by}\ 4\qquad\textbf{(B)}\ \ 2\ \text{by}\ 6\qquad\textbf{(C)}\ \ 2\ \text{by}\ 8\qquad\textbf{(D)}\ 4\ \text{by}\ 4\qquad\textbf{(E)}\ 4\ \text{by}\ 8 </math>
+"""
+    (one,) = official.parse_contest(src, 'AMC 10')
+    assert one['choices'] == ['$2\\ \\text{by}\\ 4$', '$2\\ \\text{by}\\ 6$', '$2\\ \\text{by}\\ 8$',
+                              '$4\\ \\text{by}\\ 4$', '$4\\ \\text{by}\\ 8$']
+
+
 def test_aime_has_no_choices():
     found = official.parse_contest('==Problem 1==\nFind <math>x</math>.\n==Problem 2==\nFind y.', 'AIME')
     assert found[0]['choices'] is None and found[0]['statement'] == 'Find $x$.'
