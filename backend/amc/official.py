@@ -59,9 +59,65 @@ def _outside_math(text, at):
     return len(re.findall(r'(?<!\\)\$\$|(?<!\\)\$', text[:at])) % 2 == 0
 
 
+def katex_compat(text):
+    """LaTeX the wiki uses that KaTeX cannot draw, as LaTeX it can. Safe to run
+    twice, and on text already in `$...$` (scripts/repair_amc_math.py does)."""
+    # KaTeX has `array` but no `tabular`, nor tabular's position argument
+    # (`\begin{tabular}[t]{|c|c|}`, 2008 AMC 10B #2).
+    text = re.sub(r'\\(begin|end)\{tabular\}', r'\\\1{array}', text)
+    text = re.sub(r'\\begin\{array\}\s*\[[tbc]\]', r'\\begin{array}', text)
+    # Nor `\multicolumn`: an empty one is a spacer row and goes (2008 AMC 10B #2);
+    # one with text keeps the text in its first cell.
+    text = re.sub(r'\\multicolumn\{\d+\}\{[^{}]*\}\{\s*\}\s*\\\\', '', text)
+    text = re.sub(r'\\multicolumn\{\d+\}\{[^{}]*\}\{([^{}]*)\}', r'\1', text)
+    # `\overgroup` but no `\overarc` (2019 AMC 10B #20).
+    text = re.sub(r'\\overarc(?![A-Za-z])', r'\\overgroup', text)
+    # No `\textdollar` (2014 AMC 10A #3, #11) or `\mathdollar` (2007 AMC 10A #5): `\$`.
+    text = re.sub(r'\\(?:text|math)dollar(?![A-Za-z])\s*', r'\\$', text)
+    # No `\mbox` (2004 AIME I #15) or `\hdots` (2003 AMC 12A #23).
+    text = re.sub(r'\\mbox(?![A-Za-z])', r'\\text', text)
+    text = re.sub(r'\\hdots(?![A-Za-z])', r'\\cdots', text)
+    # A no-break space after a backslash is not a command (2005 AMC 10A #13); anywhere, a space.
+    return text.replace('\u00a0', ' ')
+
+
+_BEFORE_TAG = re.compile(r'\s*<(?:i|c)?math>')
+
+
+def _escape_bare_dollars(text):
+    """`$` straight before a math tag, read left to right: in text it is a dollar
+    sign (`\\$`); closing `$...$` math (a pasted post's `$x$<math>y</math>`) it stays."""
+    out, in_math, i = [], False, 0
+    while i < len(text):
+        if text.startswith('\\$', i):
+            out.append('\\$')
+            i += 2
+            continue
+        ch = text[i]
+        if ch == '$' and not in_math and not text.startswith('$$', i) and _BEFORE_TAG.match(text, i + 1):
+            out.append('\\$')
+        elif ch == '$' and in_math and not text.startswith('$$', i) and text.startswith('<', i + 1) \
+                and _BEFORE_TAG.match(text, i + 1):
+            # Closing `$x$` straight into a tag would meet its `$` as `$$`.
+            in_math = False
+            out.append('$ ')
+        else:
+            if ch == '$':
+                in_math = not in_math
+            out.append(ch)
+        i += 1
+    return ''.join(out)
+
+
 def _math_to_dollars(text):
     """<math>, <imath>, <cmath> and \\[ \\] into $...$ / $$...$$, and the LaTeX
     environments KaTeX cannot draw into ones it can."""
+    # Math tags written back to back (`<math>\triangle</math><math>EBD</math>`,
+    # 2011 AMC 10B #9) would meet as `$$`, which opens display math instead.
+    text = re.sub(r'(</(?:i|c)?math>)(?=<(?:i|c)?math>)', r'\1 ', text)
+    # A bare `$` in the wiki's text is a dollar sign, not math: `cost $<math>3</math>`
+    # (2006 AMC 10A #1) would otherwise run into the math as `$$3$`.
+    text = _escape_bare_dollars(text)
     text = re.sub(r'<cmath>(.*?)</cmath>', lambda m: '$$' + m.group(1).strip() + '$$', text, flags=re.S)
     # The wiki writes inline math as <math> or, on newer pages, <imath>.
     text = re.sub(r'<i?math>(.*?)</i?math>', lambda m: '$' + m.group(1).strip() + '$', text, flags=re.S)
@@ -74,12 +130,7 @@ def _math_to_dollars(text):
     # `\( ... \)` is inline math too (2023 AMC 10B #18 writes its choices so).
     text = re.sub(r'\\\((.*?)\\\)', lambda m: m.group(0) if not _outside_math(text, m.start())
                   else '$' + m.group(1).strip() + '$', text, flags=re.S)
-    # KaTeX has `array` but no `tabular`; `aligned` but no `align*` or `eqnarray`;
-    # `\overgroup` but no `\overarc` (2019 AMC 10B #20).
-    text = re.sub(r'\\(begin|end)\{tabular\}', r'\\\1{array}', text)
-    text = re.sub(r'\\overarc(?![A-Za-z])', r'\\overgroup', text)
-    # Nor `\textdollar`, which the wiki uses for prices (2014 AMC 10A #3, #11).
-    text = re.sub(r'\\textdollar(?![A-Za-z])\s*', r'\\$', text)
+    text = katex_compat(text)
     out, last = [], 0
     for m in re.finditer(r'\\begin\{(align|eqnarray)\*?\}(.*?)\\end\{\1\*?\}', text, flags=re.S):
         block = '\\begin{aligned}' + m.group(2).strip() + '\\end{aligned}'
@@ -129,7 +180,12 @@ def _clean_wiki(text):
     # A tag name ends at a space, `/` or `>`: `p<\dfrac{1}{8}` ... `p>` in a
     # choices line is two inequalities, not a <p> tag (2016 AMC 10A #12).
     text = re.sub(r'</?(?:center|div|span|p|br|small|big|sup|sub)(?:\s[^>]*)?/?>', ' ', text, flags=re.I)
-    text = re.sub(r'\{\{[^}]*\}\}', '', text)
+    # Wiki templates (`{{AMC10 Problems|...}}`) go, but not inside math, where
+    # `{{{2008}}}` is braces around a choice (2008 AMC 10B #13, #17): just `{2008}`.
+    parts = re.split(r'(<(?:i|c)?math>.*?</(?:i|c)?math>|(?<!\\)\$\$.*?(?<!\\)\$\$|(?<!\\)\$.*?(?<!\\)\$)',
+                     text, flags=re.S)
+    text = ''.join(re.sub(r'\{\{\{([^{}]*)\}\}\}', r'{\1}', part) if i % 2 else re.sub(r'\{\{[^}]*\}\}', '', part)
+                   for i, part in enumerate(parts))
     # Wiki list items (`* item`, `*item`) as bullet lines.
     text = re.sub(r'^\s*\*+\s*', '• ', text, flags=re.M)
     return text

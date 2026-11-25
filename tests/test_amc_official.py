@@ -168,6 +168,65 @@ How many dollars?
     assert one['choices'] == ['$\\frac{A + B}{2}$', '$\\dfrac{A - B}{2}$', 'I only', '$B - A$', '$A + B$']
 
 
+def test_triple_braces_in_math_are_not_a_template():
+    # 2008 AMC 10B #13 writes each choice as `{{{2008}}}`; the template strip left `}`.
+    src = r"""{{AMC10 Problems|year=2008|ab=B}}
+==Problem 1==
+What is the 2008th term of the sequence?
+
+<math>\mathrm{(A)}\ {{{2008}}} \qquad \mathrm{(B)}\ {{{4015}}} \qquad \mathrm{(C)}\ {{{4016}}} \qquad \mathrm{(D)}\ {{{4,030,056}}} \qquad \mathrm{(E)}\ {{{4,032,064}}}</math>
+"""
+    (one,) = official.parse_contest(src, 'AMC 10')
+    assert one['statement'] == 'What is the 2008th term of the sequence?'
+    assert one['choices'] == ['${2008}$', '${4015}$', '${4016}$', '${4,030,056}$', '${4,032,064}$']
+
+
+def test_a_table_is_one_katex_can_draw():
+    # 2008 AMC 10B #2: `\begin{tabular}[t]` and an empty `\multicolumn` row, neither of which KaTeX has.
+    src = r"""==Problem 1==
+A block of dates is shown.
+
+<math>\begin{tabular}[t]{|c|c|}
+\multicolumn{2}{c}{}\\\hline
+1&2\\\hline
+\end{tabular}</math>
+
+<math>\textbf{(A)}\ 2 \qquad \textbf{(B)}\ 4 \qquad \textbf{(C)}\ 6 \qquad \textbf{(D)}\ 8 \qquad \textbf{(E)}\ 10</math>
+"""
+    (one,) = official.parse_contest(src, 'AMC 10')
+    assert '\\begin{array}{|c|c|}' in one['statement']
+    assert '[t]' not in one['statement'] and 'multicolumn' not in one['statement'] and 'tabular' not in one['statement']
+    assert one['choices'] == ['$2$', '$4$', '$6$', '$8$', '$10$']
+
+
+CHOICES_LINE = r'<math>\textbf{(A)}\ 1 \qquad \textbf{(B)}\ 2 \qquad \textbf{(C)}\ 3 \qquad \textbf{(D)}\ 4 \qquad \textbf{(E)}\ 5</math>'
+
+
+def test_math_tags_back_to_back_stay_two_inline_maths():
+    # 2011 AMC 10B #9: `<math>\triangle</math><math>EBD</math>` met as `$$`, which opens display math.
+    src = '==Problem 1==\nThe area of <math>\\triangle</math><math>EBD</math> is a third.\n\n' + CHOICES_LINE
+    (one,) = official.parse_contest(src, 'AMC 10')
+    assert one['statement'] == 'The area of $\\triangle$ $EBD$ is a third.'
+
+
+def test_a_bare_dollar_before_math_is_a_dollar_sign():
+    # 2006 AMC 10A #1: `cost $<math>3</math> each` read as `$$3$`. A `$` that closes math stays.
+    src = '==Problem 1==\nSandwiches cost $<math>3</math> each and $x$<math>y</math> is fine.\n\n' + CHOICES_LINE
+    (one,) = official.parse_contest(src, 'AMC 10')
+    assert one['statement'] == 'Sandwiches cost \\$$3$ each and $x$ $y$ is fine.'
+
+
+@pytest.mark.parametrize('wiki, drawn', [
+    (r'\mathdollar 4.15', r'\$4.15'),                      # 2007 AMC 10A #5
+    (r'1 &\mbox{if }x = 1', r'1 &\text{if }x = 1'),         # 2004 AIME I #15
+    (r'3! \cdot \hdots \cdot 9!', r'3! \cdot \cdots \cdot 9!'),  # 2003 AMC 12A #23
+    ('2^{200}\\ ?', '2^{200}\\ ?'),                    # 2005 AMC 10A #13
+])
+def test_latex_katex_lacks_is_rewritten(wiki, drawn):
+    assert official.katex_compat(wiki) == drawn
+    assert official.katex_compat(drawn) == drawn
+
+
 def test_aime_has_no_choices():
     found = official.parse_contest('==Problem 1==\nFind <math>x</math>.\n==Problem 2==\nFind y.', 'AIME')
     assert found[0]['choices'] is None and found[0]['statement'] == 'Find $x$.'
