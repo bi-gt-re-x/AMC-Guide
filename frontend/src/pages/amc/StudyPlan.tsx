@@ -24,6 +24,7 @@ import {
   type PlanLevel,
   type PlanWeek,
   type SubjectStrength,
+  type TodayItem,
 } from '@/services/amc';
 import { MixBar, ModeTag, PrioritiesCard, WeaknessKinds } from '@/components/Amc/Study';
 import { TodayList } from './Dashboard';
@@ -255,6 +256,13 @@ function PlanForm({
  * The AI coach's plan, and the way to ask for it, refine it with answers to
  * its follow-up questions, or have it rewritten.
  */
+/** Whether week `n` falls in a phase's "1-16" (or "17–34", or "49"). */
+function inWeeks(range: string, n: number) {
+  const [lo, hi] = range.split(/[-–]/).map((x) => parseInt(x, 10));
+  if (lo == null || Number.isNaN(lo)) return false;
+  return n >= lo && n <= (hi == null || Number.isNaN(hi) ? lo : hi);
+}
+
 function CoachCard({
   payload,
   busy,
@@ -270,6 +278,7 @@ function CoachCard({
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const names = new Map((payload.coverage ?? []).map((t) => [t.id, t] as const));
   const answered = Object.values(answers).some((a) => a.trim());
+  const thisWeek = payload.weeks?.find((w) => w.current)?.number ?? null;
 
   if (!payload.ai.available && !written) {
     return (
@@ -308,54 +317,61 @@ function CoachCard({
         </span>
       </div>
       <p className="am-coach-summary">{written.summary}</p>
-      {written.starting_point && <p className="am-muted am-coach-start">{written.starting_point}</p>}
 
-      <div className="am-coach-phases">
-        {written.phases.map((p, i) => (
-          <div key={i} className="am-coach-phase">
-            <div className="am-coach-phase-head"><strong>{p.name}</strong><span className="am-muted">Weeks {p.weeks}</span></div>
-            <p>{p.goal}</p>
-            {p.focus_topics.length > 0 && (
-              <div className="am-week-focus">
-                {p.focus_topics.map((id) => (
-                  <Link key={id} className="am-tag" to={`/topics/${id}`}>
-                    {names.get(id) && <CategoryDot category={names.get(id)!.category} />}{names.get(id)?.name ?? id}
-                  </Link>
-                ))}
+      {(written.this_week?.length ?? 0) > 0 && (
+        <>
+          <h3 className="am-form-sub">This week</h3>
+          <ol className="am-coach-now">{written.this_week!.map((t, i) => <li key={i}>{t}</li>)}</ol>
+        </>
+      )}
+
+      <h3 className="am-form-sub">Phases</h3>
+      <ol className="am-coach-phases">
+        {written.phases.map((p, i) => {
+          const isNow = thisWeek != null && inWeeks(p.weeks, thisWeek);
+          return (
+            <li key={i} className={`am-coach-phase${isNow ? ' is-now' : ''}`}>
+              <div className="am-coach-phase-head">
+                <strong>{p.name}</strong>
+                <span className="am-muted">Weeks {p.weeks}{isNow ? ' · now' : ''}</span>
               </div>
-            )}
-            <p className="am-muted" style={{ fontSize: 13 }}>{p.routine}</p>
-          </div>
-        ))}
-      </div>
+              <p>{p.goal}</p>
+              {isNow && p.focus_topics.length > 0 && (
+                <div className="am-week-focus">
+                  {p.focus_topics.map((id) => (
+                    <Link key={id} className="am-tag" to={`/topics/${id}`}>
+                      {names.get(id) && <CategoryDot category={names.get(id)!.category} />}{names.get(id)?.name ?? id}
+                    </Link>
+                  ))}
+                </div>
+              )}
+              {isNow && p.routine && <p className="am-muted" style={{ fontSize: 13 }}>{p.routine}</p>}
+            </li>
+          );
+        })}
+      </ol>
 
-      {written.weekly_schedule.length > 0 && (
-        <>
-          <h3 className="am-form-sub">A typical week</h3>
-          <ul className="am-coach-week">
-            {written.weekly_schedule.map((d, i) => (
-              <li key={i}><strong>{d.day}</strong><span>{d.task}</span><em>{d.minutes} min</em></li>
-            ))}
-          </ul>
-        </>
-      )}
-
-      {written.milestones.length > 0 && (
-        <>
-          <h3 className="am-form-sub">Milestones</h3>
-          <ul className="am-list">
-            {written.milestones.map((m, i) => (
-              <li key={i}><span>{m.target}</span><span className="am-muted">Week {m.week}</span></li>
-            ))}
-          </ul>
-        </>
-      )}
-
-      {written.tips.length > 0 && (
-        <>
-          <h3 className="am-form-sub">Habits</h3>
-          <ul className="am-coach-tips">{written.tips.map((t, i) => <li key={i}>{t}</li>)}</ul>
-        </>
+      {(written.weekly_schedule.length > 0 || written.milestones.length > 0 || written.tips.length > 0) && (
+        <details className="am-coach-more">
+          <summary>A typical week, milestones and habits</summary>
+          {written.weekly_schedule.length > 0 && (
+            <ul className="am-coach-week">
+              {written.weekly_schedule.map((d, i) => (
+                <li key={i}><strong>{d.day}</strong><span>{d.task}</span><em>{d.minutes} min</em></li>
+              ))}
+            </ul>
+          )}
+          {written.milestones.length > 0 && (
+            <ul className="am-list">
+              {written.milestones.map((m, i) => (
+                <li key={i}><span>{m.target}</span><span className="am-muted">Week {m.week}</span></li>
+              ))}
+            </ul>
+          )}
+          {written.tips.length > 0 && (
+            <ul className="am-coach-tips">{written.tips.slice(0, 3).map((t, i) => <li key={i}>{t}</li>)}</ul>
+          )}
+        </details>
       )}
 
       {written.questions.length > 0 && (
@@ -406,32 +422,78 @@ function phaseRuns(weeks: PlanWeek[]) {
   return runs;
 }
 
-/** The plan's phases as one bar to the exam, sized by weeks, with where you are on it. */
-function PhaseStrip({ weeks }: { weeks: PlanWeek[] }) {
-  const runs = phaseRuns(weeks);
-  if (runs.length < 2) return null;
+/**
+ * The top of the plan: where you are and what this week is for, in words.
+ * Weeks left and the phase, the score now against the goal, each focus topic
+ * with how it is trained and why it was picked, and when the next phase starts.
+ */
+function NowCard({ payload, weeks, practice }: {
+  payload: PlanPayload; weeks: PlanWeek[]; practice?: TodayItem;
+}) {
+  const plan = payload.plan!;
+  const current = weeks.find((w) => w.current);
+  const next = current ? weeks.find((w) => w.number > current.number && w.phase !== current.phase) : weeks[0];
+  const now = payload.start?.current ?? payload.projected ?? null;
+  const left = weeks.filter((w) => !w.past).length;
+  const gap = now != null ? Math.round((plan.goal_score - now) * 2) / 2 : null;
   return (
-    <section className="am-card am-phases" aria-label="The plan's phases">
-      <div className="am-phases-bar">
-        {runs.map((r) => {
-          const first = r.weeks[0]!.number;
-          const last = r.weeks[r.weeks.length - 1]!.number;
-          const at = r.weeks.findIndex((w) => w.current);
-          return (
-            <div key={first} className={`am-phases-seg${at >= 0 ? ' is-here' : ''}`} style={{ flexGrow: r.weeks.length }}>
-              <span className={`am-phases-fill ${phaseClass(r.phase)}`}>
-                {at >= 0 && (
-                  <span className="am-phases-you" style={{ left: `${((at + 0.5) / r.weeks.length) * 100}%` }}
-                        title={`You are in week ${first + at} of ${weeks.length}`} />
-                )}
-              </span>
-              <strong className={`am-phase ${phaseClass(r.phase)}`}>{r.phase}</strong>
-              <span className="am-muted">{first === last ? `Week ${first}` : `Weeks ${first}–${last}`}</span>
-              <p className="am-phases-about">{PHASE_ABOUT[r.phase]}</p>
-            </div>
-          );
-        })}
-      </div>
+    <section className="am-card am-now">
+      <dl className="am-now-facts">
+        <div>
+          <dt>Time left</dt>
+          <dd><strong>{left}</strong> week{left === 1 ? '' : 's'}</dd>
+          <dd className="am-muted">{plan.days_left} days to the {plan.target}</dd>
+        </div>
+        <div>
+          <dt>Score</dt>
+          {now != null ? (
+            <>
+              <dd><strong>{now}</strong> now, goal {plan.goal_score}</dd>
+              <dd className="am-muted">{gap! > 0 ? `${gap} points to go` : 'At your goal. Keep it there.'}</dd>
+            </>
+          ) : (
+            <>
+              <dd>Goal {plan.goal_score}</dd>
+              <dd className="am-muted"><Link className="am-link" to="/mock-contests">Sit a timed mock</Link> to see where you start.</dd>
+            </>
+          )}
+        </div>
+        <div>
+          <dt>This week</dt>
+          {current ? (
+            <>
+              <dd><strong>{current.answered ?? 0}</strong> of {current.problems} problems</dd>
+              <dd className="am-muted">
+                Week {current.number}, {current.phase}{current.mock ? (current.mock_done ? ' · mock done' : ' · plus a timed mock') : ''}
+              </dd>
+            </>
+          ) : <dd className="am-muted">The plan starts {weeks[0] ? shortDate(weeks[0].start) : 'soon'}.</dd>}
+        </div>
+      </dl>
+
+      {current && (
+        <div className="am-now-focus">
+          <h3 className="am-form-sub">What this week is for</h3>
+          {current.focus.length ? (
+            <ul>
+              {current.focus.map((f) => (
+                <li key={f.id}>
+                  <Link className="am-now-topic" to={`/topics/${f.id}`}><CategoryDot category={f.category} />{f.name}</Link>
+                  {f.mode_label && <span className="am-now-mode">{f.mode_label}</span>}
+                  {f.reason && <span className="am-muted">{f.reason}</span>}
+                </li>
+              ))}
+            </ul>
+          ) : <p className="am-muted">{current.note}</p>}
+          <p className="am-now-phase">
+            <strong>{current.phase}:</strong> {PHASE_ABOUT[current.phase]}
+            {next && <span className="am-muted"> {next.phase} starts {shortDate(next.start)}.</span>}
+          </p>
+        </div>
+      )}
+      {practice && !practice.done && (
+        <Link className="am-btn am-btn-primary am-week-start" to={practice.to}>Start today's set</Link>
+      )}
     </section>
   );
 }
@@ -665,7 +727,6 @@ export default function StudyPlan() {
 
   const weeks = payload.weeks ?? [];
   const current = weeks.find((w) => w.current);
-  const projected = payload.projected ?? null;
   const practice = (payload.today ?? []).find((i) => i.key === 'practice');
 
   async function toggle(key: string, done: boolean) {
@@ -707,64 +768,11 @@ export default function StudyPlan() {
         }
       >
         <p>
-          {weeks.length} week{weeks.length === 1 ? '' : 's'} to the {plan.target}, {plan.hours} hour{plan.hours === 1 ? '' : 's'} a week.
+          Goal {plan.goal_score} on the {plan.target}, with {plan.hours} hour{plan.hours === 1 ? '' : 's'} a week.
         </p>
       </PageHeader>
 
-      <div className="am-grid am-grid-3" style={{ marginBottom: 16 }}>
-        <section className="am-card">
-          <span className="am-kicker">Countdown</span>
-          <div className="am-countdown"><strong>{plan.days_left}</strong><span className="am-muted">days</span></div>
-          <p className="am-muted" style={{ margin: '8px 0 0', fontSize: 13 }}>
-            {current ? `Week ${current.number} of ${weeks.length} · ${current.phase}` : 'Before the plan starts'}
-          </p>
-        </section>
-        <section className="am-card">
-          <span className="am-kicker">Starting point</span>
-          <div className="am-countdown">
-            <strong>{payload.start?.current ?? projected ?? '—'}</strong>
-            <span className="am-muted">/ goal {plan.goal_score}</span>
-          </div>
-          <div style={{ marginTop: 10 }}>
-            <Meter value={((payload.start?.current ?? projected) ?? 0) / plan.goal_score}
-                   tone={payload.start?.stage === 'there' ? 'good' : 'sage'} />
-          </div>
-          <p className="am-muted" style={{ margin: '8px 0 0', fontSize: 13 }} title={payload.start?.from ? `From ${payload.start.from}` : undefined}>
-            {payload.start?.summary ?? ''}
-          </p>
-        </section>
-        <section className="am-card">
-          <span className="am-kicker">This week</span>
-          {current?.focus.length ? (
-            <div className="am-focus-row">
-              {current.focus.map((f) => (
-                <div key={f.id} className="am-focus-row">
-                  <Link className="am-tag" to={`/topics/${f.id}`} style={{ justifySelf: 'start' }}>
-                    <CategoryDot category={f.category} />{f.name}<ModeTag mode={f.mode} label={f.mode_label} />
-                  </Link>
-                  <MixBar mix={f.mix} />
-                </div>
-              ))}
-            </div>
-          ) : (
-            <p style={{ margin: '6px 0 0' }}>Taper: review only.</p>
-          )}
-          {current && current.problems > 0 ? (
-            <div className="am-week-goal">
-              <span className="am-muted">
-                {current.answered ?? 0} of {current.problems} problems this week{current.mock ? (current.mock_done ? ' · mock done' : ' + a timed mock') : ''}
-              </span>
-              <Meter value={(current.answered ?? 0) / current.problems}
-                     tone={(current.answered ?? 0) >= current.problems ? 'good' : 'sage'} />
-            </div>
-          ) : null}
-          {practice && !practice.done && (
-            <Link className="am-btn am-btn-primary am-week-start" to={practice.to}>Start today's set</Link>
-          )}
-        </section>
-      </div>
-
-      <div style={{ marginBottom: 16 }}><PhaseStrip weeks={weeks} /></div>
+      <div style={{ marginBottom: 16 }}><NowCard payload={payload} weeks={weeks} practice={practice} /></div>
 
       <div style={{ marginBottom: 16 }}>
         <CoachCard payload={payload} busy={coaching} error={coachError} onRun={(a) => void runCoach(a)} />

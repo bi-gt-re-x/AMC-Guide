@@ -10,6 +10,7 @@ from backend.tracking import planner
 REPLY = {
     'summary': 'Lock in #1-15, then build geometry and counting for #16-20.',
     'starting_point': 'You have not answered anything yet.',
+    'this_week': ['Two timed sets of 8 on Circles', 'One review set of 10 a day', '', 'x' * 400],
     'phases': [
         {'name': 'Foundations', 'weeks': '1-8', 'goal': 'Clean on #1-10.',
          'focus_topics': ['circles', 'not-a-topic', 'probability'], 'routine': 'Three sets a week.'},
@@ -67,10 +68,15 @@ def test_the_coach_writes_a_plan_from_everything_it_was_told(client, model):
     assert written['weekly_schedule'][1]['minutes'] == 600
     assert [m['week'] for m in written['milestones']] == [2, 8]
     assert written['questions'] == ['Do you have AoPS Intro to Geometry?']
+    # This week's tasks: blanks dropped, each kept short.
+    assert written['this_week'][:2] == ['Two timed sets of 8 on Circles', 'One review set of 10 a day']
+    assert len(written['this_week']) == 3 and len(written['this_week'][2]) == 200
     assert body['plan']['coach_by'].startswith('Groq')
     # The brief carried the intake answers and the topic list.
     assert 'Only free on weekends' in model['brief'] and 'most recent real score' in model['brief']
     assert '- circles: Circles' in model['brief']
+    # It knows the week the page is on and that reviews come in sets.
+    assert 'The plan is in week 1 of' in model['brief'] and 'sets of 10 a day' in model['brief']
     assert model['schema'] is coach.SCHEMA
     # Its topic order leads the week-by-week plan.
     assert [f['id'] for f in body['weeks'][0]['focus']] == ['circles', 'probability']

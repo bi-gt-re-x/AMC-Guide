@@ -1011,7 +1011,9 @@ def _build_plan(plan, today, attempts, reviews, hist, tstats, every_score):
     due = sum(1 for r in reviews if r['status'] == 'active' and r['due'] <= today.isoformat())
     practiced = {a['problem_id'] for a in attempts
                  if a['at'][:10] == today.isoformat() and a['source'] == 'practice'}
-    items = engine.today_items(plan, weeks, due, today, plan['checks'], practiced)
+    reviewed = len({a['problem_id'] for a in attempts
+                    if a['at'][:10] == today.isoformat() and a['source'] == 'review'})
+    items = engine.today_items(plan, weeks, due, today, plan['checks'], practiced, reviewed)
     projected_now = mockscore.projected_score(hist, plan['target'], every_score, today)
     return {'study': study, 'projected': projected_now, 'start': start, 'weeks': weeks, 'today': items,
             'level': _level_now(study, attempts, weeks, today)}
@@ -1168,7 +1170,6 @@ def coach_plan(body: CoachBody, username: str = Depends(current_username)):
     attempts, reviews, hist, review_by_id = _context(username)
     tstats = engine.topic_stats(hist, review_by_id)
     every_score = store.mocks(username)
-    model = engine.projected(hist, plan['target']) if len(hist) >= engine.PROJECTION_MIN else None
     projected = mockscore.projected_score(hist, plan['target'], every_score, today)
     mocks = [_mock_brief(m) for m in every_score]
     counts = {'due': sum(1 for r in reviews if r['status'] == 'active' and r['due'] <= today.isoformat()),
@@ -1176,10 +1177,14 @@ def coach_plan(body: CoachBody, username: str = Depends(current_username)):
               'mastered': sum(1 for r in reviews if r['status'] == 'mastered')}
     answers = {str(q)[:300]: str(a)[:600] for q, a in (body.answers or {}).items()}
     try:
-        study = planning.analyze(attempts, hist, plan['target'], today, plan['goal_score'], plan['details'],
-                                 mocks=every_score)
-        study['start'] = planning.starting_point(plan['target'], plan['goal_score'], model, every_score,
-                                                 {**plan['details'], '_exam': plan['exam_date']}, today)
+        built = _build_plan(plan, today, attempts, reviews, hist, tstats, every_score)
+        study = dict(built['study'], start=built['start'])
+        # The week the plan is in, numbered as the page numbers it, so the
+        # coach's phases and milestones line up with the weeks shown.
+        current = next((w for w in built['weeks'] if w['current']), None)
+        if current:
+            study['week'] = {'number': current['number'], 'of': len(built['weeks']), 'phase': current['phase'],
+                             'focus': ['{} ({})'.format(f['name'], f['mode_label'].lower()) for f in current['focus']]}
         written = coach.write_plan(plan, plan['details'], tstats, projected, mocks, counts, answers, today, study)
     except planner.PlannerUnavailable as exc:
         return fail(str(exc))

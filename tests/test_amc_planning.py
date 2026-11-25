@@ -197,7 +197,7 @@ def test_todays_practice_and_analytics_carry_the_mix(client):
     focus = body['weeks'][0]['focus'][0]
     assert focus['mix'] and abs(sum(m['share'] for m in focus['mix']) - 1) < 1e-9
     practice = next(i for i in body['today'] if i['key'] == 'practice')
-    assert 'at level' in practice['label']
+    assert 'level' in practice['detail'] and focus['name'] in practice['label']
     # It opens the topic's own handpicked set of eight, in the topic's mode.
     assert practice['to'] == '/practice/{}?mode={}'.format(focus['id'], focus['mode'])
     analytics = client.get('/api/amc/analytics').json()
@@ -286,3 +286,33 @@ def test_the_plan_says_what_level_it_is_built_from(client):
     level = client.get('/api/amc/plan').json()['level']
     assert 1 <= level['level'] <= 5 and level['name'] and 1 <= level['goal_level'] <= 5
     assert level['recent']['answered'] == 6 and level['recent']['accuracy'] == 1.0 and level['mix']
+
+
+def test_reviews_come_one_set_at_a_time():
+    """Two hundred due is one set of ten today, not two hundred."""
+    week = {'current': True, 'focus': [], 'problems': 0, 'mock': False, 'mock_done': False, 'phase': 'Core'}
+    today = date(2026, 11, 25)
+    items = engine.today_items({'target': 'AMC 10'}, [week], 228, today, {}, set())
+    review = next(i for i in items if i['key'] == 'review')
+    assert review['goal'] == engine.REVIEW_SET == 10
+    assert '218 more' in review['detail'] and review['to'] == '/review?start=1'
+    # Ten answered as reviews today: the set is done, whatever is still due.
+    done = engine.today_items({'target': 'AMC 10'}, [week], 218, today, {}, set(), reviewed_today=10)
+    assert next(i for i in done if i['key'] == 'review')['done']
+    # A short queue is a short set.
+    few = engine.today_items({'target': 'AMC 10'}, [week], 3, today, {}, set())
+    assert next(i for i in few if i['key'] == 'review')['goal'] == 3
+
+
+def test_todays_set_says_how_big_how_fast_and_why():
+    focus = {'id': 'probability', 'name': 'Probability', 'category': 'counting', 'mode': 'timed',
+             'mix': [{'level': 2, 'share': 0.25}, {'level': 3, 'share': 0.5}, {'level': 4, 'share': 0.25}],
+             'reason': 'You lost 9 points here in recent mocks.'}
+    week = {'current': True, 'focus': [focus], 'problems': 40, 'mock': True, 'mock_done': False, 'phase': 'Core'}
+    items = engine.today_items({'target': 'AMC 10'}, [week], 0, date(2026, 11, 25), {}, set())
+    practice = next(i for i in items if i['key'] == 'practice')
+    assert practice['label'] == 'Timed set: Probability'
+    assert practice['detail'] == '8 problems, 3 minutes each, levels 2–4. You lost 9 points here in recent mocks.'
+    assert practice['minutes'] == 24
+    assert next(i for i in items if i['key'] == 'mock')['minutes'] == 75
+    assert engine._reason({'factors': {'mock_lost': 9}}) == 'You lost 9 points here in recent mocks.'

@@ -46,16 +46,34 @@ Rules:
 - Ask follow-up questions only if the answer would change the plan; ask none
   if you have what you need.
 - Be concrete: name problem ranges, timings and habits, not platitudes.
+- Start from where they lose points: the topics that cost them points in
+  timed mocks come first, with the numbers.
+- Do not repeat their numbers back as a report. Use a number only where it
+  says what to do ("you lost 9 points on probability in two mocks, so...").
+- Work comes in sets on this site: practice sets of 8 problems in one topic,
+  and review sets of 10 missed problems a day. Never tell them to clear the
+  whole review log or to review every missed problem; one review set a day is
+  the routine, whatever the backlog.
+- Each phase says what changes from the one before, with weekly numbers
+  (sets, mocks), not a description of studying in general.
+- Habits must answer a mistake their data shows, not general advice.
 - Write plainly, like a good teacher talking to a student. Short sentences,
   everyday words. No em dashes, no hype, no filler like "unlock", "master",
-  "journey", "level up" or "dive into".
+  "journey", "level up", "bridge the gap", "solid base" or "dive into".
 """
 
 SCHEMA = {
     'type': 'object',
     'properties': {
-        'summary': {'type': 'string', 'description': 'Two or three sentences: the strategy for this student.'},
-        'starting_point': {'type': 'string', 'description': 'An honest read of where they are now, from the data.'},
+        'summary': {'type': 'string', 'description': ('One or two short sentences: the main thing costing this '
+                                                      'student points and what the plan does about it.')},
+        'starting_point': {'type': 'string', 'description': 'One sentence: where they are now, from the data.'},
+        'this_week': {
+            'type': 'array',
+            'description': ('Three to five tasks for this week, in order. Each names a topic and a set: e.g. '
+                            '"Two timed sets of 8 on Probability (3 min each)" or "One review set of 10 a day".'),
+            'items': {'type': 'string'},
+        },
         'phases': {
             'type': 'array',
             'description': 'Two to five phases from now to the exam, in order.',
@@ -104,13 +122,14 @@ SCHEMA = {
             'description': ('Topic ids in the order to study them: weak, high-weight topics first; '
                             'topics they are already strong at last or not at all.'),
         },
-        'tips': {'type': 'array', 'items': {'type': 'string'}, 'description': 'Three to five contest-day and study habits.'},
+        'tips': {'type': 'array', 'items': {'type': 'string'},
+                 'description': 'Up to three habits, each fixing a mistake their results show.'},
         'questions': {
             'type': 'array', 'items': {'type': 'string'},
             'description': 'Up to three follow-up questions whose answers would change this plan. Empty if none.',
         },
     },
-    'required': ['summary', 'starting_point', 'phases', 'weekly_schedule', 'milestones',
+    'required': ['summary', 'starting_point', 'this_week', 'phases', 'weekly_schedule', 'milestones',
                  'focus_order', 'tips', 'questions'],
     'additionalProperties': False,
 }
@@ -228,6 +247,15 @@ def brief(plan, details, tstats, projected, mocks, review_counts, answers, today
         lines.append('Where they start: about {} now (from {}), goal {}, so {:+g} to go over {} weeks. {}'.format(
             start['current'], start['from'], start['goal'], start['gap'], start['weeks'], start['summary']))
         lines.append('Build the plan from that gap: its size sets how much is skills work and how much timed papers.')
+    week = (study or {}).get('week')
+    if week:
+        lines.append('')
+        lines.append('The plan is in week {} of {} ({}). Number phases and milestones with these same week '
+                     'numbers, so the current phase includes week {}.'.format(week['number'], week['of'], week['phase'],
+                                                                             week['number']))
+        if week['focus']:
+            lines.append("This week's focus in the app: {}. Build this_week around it.".format(', '.join(week['focus'])))
+    lines.append('- Reviews are done in sets of 10 a day, weakest topics first.')
     if study:
         from backend.amc import planning
         lines.append('')
@@ -300,11 +328,12 @@ def clean(found, target):
     return _plain({
         'summary': summary,
         'starting_point': str(found.get('starting_point') or '').strip()[:800],
+        'this_week': _strings(found.get('this_week'), 5, 200),
         'phases': phases,
         'weekly_schedule': schedule,
         'milestones': sorted(milestones, key=lambda m: m['week']),
         'focus_order': _topics(found.get('focus_order'), target),
-        'tips': _strings(found.get('tips'), 6),
+        'tips': _strings(found.get('tips'), 3),
         'questions': _strings(found.get('questions'), 3, 300),
     })
 

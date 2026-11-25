@@ -116,6 +116,26 @@ describe('AMC pages render the API as it is', () => {
     expect(amc.weakBank).toHaveBeenCalledWith(false, 0);
   });
 
+  it('Review: a long backlog is started ten at a time', async () => {
+    const due = Array.from({ length: 25 }, (_, i) => ({ ...review.due[0]!, id: `p-${i}` }));
+    vi.spyOn(amc, 'review').mockResolvedValue({ ...review, due, success: true } as any);
+    render(
+      <AuthContext.Provider value={SIGNED_IN}>
+        <NoticesProvider>
+          <MemoryRouter initialEntries={['/review']}>
+            <Routes>
+              <Route path="/review" element={<Review />} />
+              <Route path="/problems/:problemId" element={<p>opened problem</p>} />
+            </Routes>
+          </MemoryRouter>
+        </NoticesProvider>
+      </AuthContext.Provider>,
+    );
+    fireEvent.click(await screen.findByRole('button', { name: 'Start a review set (10)' }));
+    expect(await screen.findByText('opened problem')).toBeInTheDocument();
+    expect(JSON.parse(sessionStorage.getItem('amc-review-set') ?? '[]')).toEqual(due.slice(0, 10).map((d) => d.id));
+  });
+
   it('Analytics', async () => {
     show('/analytics', '/analytics', <Analytics />);
     await waitFor(() => expect(amc.analytics).toHaveBeenCalled());
@@ -236,6 +256,15 @@ describe('Reviewing a miss', () => {
     expect(screen.getByText('right')).toBeInTheDocument();
     expect(screen.queryByText(/B ✗/)).not.toBeInTheDocument();
     expect(screen.queryByText(/D ✓/)).not.toBeInTheDocument();
+  });
+
+  it('says where it is in the review set', async () => {
+    sessionStorage.setItem('amc-review-set', JSON.stringify(['step-10-00', 'step-10-01', 'step-10-02']));
+    vi.spyOn(amc, 'problem').mockResolvedValue({ ...missed, success: true } as any);
+    show('/problems/step-10-01?review=1', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    expect(screen.getByText(/Review set, 2 of 3/)).toBeInTheDocument();
+    sessionStorage.removeItem('amc-review-set');
   });
 
   it('keeps the full history when browsing a problem already answered', async () => {

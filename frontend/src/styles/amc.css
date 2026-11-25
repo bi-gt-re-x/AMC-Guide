@@ -591,7 +591,7 @@ html[data-theme="dark"] .am-choice.is-picked .am-choice-letter { background: var
 .am-today { display: grid; gap: 0; margin: 0; padding: 0; list-style: none; }
 .am-today li {
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: var(--space-3);
     padding: var(--space-3) 0;
     border-top: 1px solid var(--am-line-soft);
@@ -614,7 +614,12 @@ html[data-theme="dark"] .am-choice.is-picked .am-choice-letter { background: var
 }
 .am-check.is-on { background: var(--am-sage); border-color: var(--am-sage); }
 .am-check svg { width: 14px; height: 14px; }
-.am-today-label { flex: 1; min-width: 0; font-size: var(--text-sm); text-decoration: none; color: var(--am-ink); }
+.am-today-text { flex: 1; min-width: 0; display: grid; gap: 2px; padding-top: 1px; }
+.am-today-label { font-size: var(--text-sm); font-weight: 500; text-decoration: none; color: var(--am-ink); }
+.am-today-detail { font-size: var(--text-xs); line-height: 1.5; color: var(--am-muted); }
+.am-today li.is-done .am-today-detail { color: var(--am-faint); }
+.am-today-side { flex: none; display: grid; justify-items: end; gap: 2px; padding-top: 2px; }
+.am-today-time { color: var(--am-faint); font-size: var(--text-xs); white-space: nowrap; }
 .am-today-label:hover { text-decoration: underline; }
 .am-today-progress { color: var(--am-muted); font-size: var(--text-xs); font-variant-numeric: tabular-nums; }
 
@@ -786,7 +791,6 @@ html[data-theme="dark"] .am-week.is-current { border-color: var(--am-sage); }
 /* Progress on a week: answered / planned, with a short meter. */
 .am-week-progress { display: inline-flex; align-items: center; gap: 8px; font-variant-numeric: tabular-nums; }
 .am-week-progress .am-meter { width: 64px; }
-.am-week-goal { display: grid; gap: 6px; margin-top: 10px; font-size: 13px; }
 .am-week-start { margin-top: 12px; justify-self: start; display: inline-flex; }
 /* The weeks under a heading per phase, the weeks done folded into one line. */
 .am-weeks-run { display: grid; gap: var(--space-2); }
@@ -799,22 +803,25 @@ html[data-theme="dark"] .am-week.is-current { border-color: var(--am-sage); }
 }
 .am-weeks-fold:hover { background: var(--am-card); }
 .am-weeks-more { margin-top: var(--space-3); }
-/* The phases as one bar to the exam, sized by weeks, with a marker for now. */
-.am-phases-bar { display: flex; gap: 6px; }
-/* Sized by weeks, but never too narrow to read: a one-week taper still says what it is. */
-.am-phases-seg { min-width: 96px; flex-basis: 0; display: grid; align-content: start; gap: 2px; font-size: 12px; }
-.am-phases-fill { position: relative; display: block; height: 8px; border-radius: 4px; margin-bottom: 6px; }
-.am-phases-fill::before { content: ""; position: absolute; inset: 0; border-radius: inherit; background: currentColor; opacity: .3; }
-.am-phases-seg.is-here .am-phases-fill::before { opacity: .85; }
-.am-phases-about { margin: 2px 0 0; color: var(--am-muted); font-size: 12px; line-height: 1.45; }
-.am-phases-you {
-    position: absolute; top: -3px; width: 14px; height: 14px; margin-left: -7px; border-radius: 50%;
-    background: var(--am-card); border: 3px solid var(--am-ink); z-index: 1;
-}
-html[data-theme="dark"] .am-phases-you { border-color: var(--am-sage); }
+/* The plan's top card: three plain facts, then what this week is for. */
+.am-now { display: grid; gap: var(--space-4); }
+.am-now-facts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--space-4); margin: 0; }
+.am-now-facts > div { display: grid; gap: 2px; align-content: start; }
+.am-now-facts dt { font-size: 11px; font-weight: 600; letter-spacing: .08em; text-transform: uppercase; color: var(--am-muted); }
+.am-now-facts dd { margin: 0; font-size: 14px; color: var(--am-body); }
+.am-now-facts dd strong { font-family: var(--am-serif); font-size: 30px; font-weight: 400; line-height: 1.1; color: var(--am-ink); margin-right: 4px; }
+.am-now-facts dd.am-muted { font-size: 13px; }
+.am-now-focus { border-top: 1px solid var(--am-line-soft); padding-top: var(--space-4); display: grid; gap: var(--space-2); }
+.am-now-focus .am-form-sub { margin: 0; }
+.am-now-focus ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.am-now-focus li { display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 10px; font-size: 14px; }
+.am-now-topic { display: inline-flex; align-items: center; gap: 6px; font-weight: 500; color: var(--am-ink); text-decoration: none; }
+.am-now-topic:hover { text-decoration: underline; }
+.am-now-mode { font-size: 12px; padding: 1px 8px; border-radius: 999px; background: var(--am-inset); color: var(--am-body); }
+.am-now-focus li .am-muted { font-size: 13px; }
+.am-now-phase { margin: 4px 0 0; font-size: 13px; line-height: 1.5; color: var(--am-body); }
 @media (max-width: 640px) {
-    .am-phases-bar { flex-direction: column; gap: 12px; }
-    .am-phases-seg { flex-grow: 0 !important; }
+    .am-now-facts { grid-template-columns: minmax(0, 1fr); gap: var(--space-3); }
 }
 .am-coverage-sum { display: flex; align-items: baseline; gap: 4px; margin-bottom: 8px; font-size: 13px; }
 .am-coverage-sum strong { font-family: var(--am-serif); font-size: 26px; font-weight: 400; }
@@ -837,8 +844,8 @@ html[data-theme="dark"] .am-phases-you { border-color: var(--am-sage); }
 .am-seg button.is-on { background: var(--am-ink); color: var(--am-card); }
 html[data-theme="dark"] .am-seg button.is-on { background: var(--am-sage); color: #0d1117; }
 .am-error { color: var(--am-bad); font-size: var(--text-sm); margin: var(--space-2) 0 0; }
-.am-countdown { display: flex; align-items: baseline; gap: var(--space-2); }
-.am-countdown > strong { font-family: var(--am-serif); font-size: 44px; font-weight: 400; line-height: 1; }
+.am-review-done { margin: var(--space-3) 0 0; padding: var(--space-2) var(--space-3); border-radius: 10px;
+    background: var(--am-inset); color: var(--am-ink); font-size: var(--text-sm); }
 
 /* ---- Search page --------------------------------------------------------------- */
 .am-search-box { display: flex; gap: var(--space-2); margin-bottom: var(--space-5); }
@@ -920,9 +927,15 @@ mark.am-hl { background: var(--am-warn-soft); color: inherit; border-radius: 3px
 .am-form-sub { margin: var(--space-5) 0 var(--space-2); font-family: var(--am-serif); font-weight: 400; font-size: 19px; }
 .am-coach { display: grid; gap: var(--space-2); }
 .am-coach-summary { margin: 0; font-family: var(--am-serif); font-size: 19px; line-height: 1.55; color: var(--am-ink); }
-.am-coach-start { margin: 0; font-size: 14px; line-height: 1.6; }
-.am-coach-phases { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr)); gap: var(--space-3); margin-top: var(--space-3); }
-.am-coach-phase { padding: var(--space-4); border: 1px solid var(--am-line); border-radius: 12px; background: var(--am-inset); display: grid; gap: 6px; align-content: start; }
+.am-coach-now { margin: 0; padding-left: 20px; display: grid; gap: 6px; font-size: 14px; line-height: 1.5; color: var(--am-ink); }
+.am-coach-phases { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--space-2); }
+.am-coach-phase { padding: var(--space-3) var(--space-4); border: 1px solid var(--am-line-soft); border-radius: 12px; display: grid; gap: 4px; align-content: start; }
+.am-coach-phase.is-now { border-color: var(--am-line); background: var(--am-inset); }
+.am-coach-phase:not(.is-now) p { color: var(--am-muted); }
+.am-coach-more { margin-top: var(--space-2); display: grid; gap: var(--space-3); }
+.am-coach-more > summary { cursor: pointer; font-size: 13px; font-weight: 500; color: var(--am-ink); }
+.am-coach-more[open] > summary { margin-bottom: var(--space-3); }
+.am-coach-more > ul + ul { margin-top: var(--space-3); }
 .am-coach-phase p { margin: 0; line-height: 1.5; font-size: 14px; }
 .am-coach-phase-head { display: flex; justify-content: space-between; gap: var(--space-2); font-size: 14px; flex-wrap: wrap; }
 .am-coach-week { margin: 0; padding: 0; list-style: none; display: grid; gap: 6px; }
@@ -1765,7 +1778,6 @@ a.am-take:hover { border-color: var(--am-sage); }
 .am-kind-lines { list-style: none; margin: 0; padding: 0; display: grid; gap: 10px; font-size: 13px; }
 .am-kind-lines li { display: grid; grid-template-columns: auto 1fr; gap: 2px 10px; align-items: baseline; }
 .am-kind-lines li .am-muted { grid-column: 2; font-size: 12px; }
-.am-focus-row { display: grid; gap: 4px; margin-top: 6px; }
 .am-timer.is-over { color: var(--am-bad); font-weight: 600; }
 
 /* A topic's practice set (pages/amc/PracticeSet.tsx). */

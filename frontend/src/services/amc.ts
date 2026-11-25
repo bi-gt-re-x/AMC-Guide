@@ -262,6 +262,10 @@ export interface PaperResults {
 export interface TodayItem {
   key: string;
   label: string;
+  /** One line under the label: how big, how fast, and why. */
+  detail?: string;
+  /** About how long it takes. */
+  minutes?: number;
   to: string;
   done: boolean;
   progress?: number;
@@ -343,7 +347,7 @@ export interface PlanWeek {
   phase: 'Foundations' | 'Core' | 'Contest mode' | 'Taper';
   note: string;
   focus: { id: string; name: string; category: CategoryId; mode?: StudyMode; mode_label?: string; gain?: number;
-           mix?: DifficultyMix }[];
+           mix?: DifficultyMix; reason?: string }[];
   problems: number;
   mock: boolean;
   mock_done: boolean;
@@ -784,6 +788,8 @@ export interface PlanSettings {
 export interface CoachPlan {
   summary: string;
   starting_point: string;
+  /** Three to five tasks for the current week (older plans have none). */
+  this_week?: string[];
   phases: { name: string; weeks: string; goal: string; focus_topics: string[]; routine: string }[];
   weekly_schedule: { day: string; task: string; minutes: number }[];
   milestones: { week: number; target: string }[];

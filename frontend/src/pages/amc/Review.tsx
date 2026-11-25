@@ -9,17 +9,20 @@
  * **Wrong problems**: the error log. Every miss — practice, mock, or "show
  * solution" — comes back here after 3 days; a right answer on the day moves it
  * to 10, then 21, then out as mastered, and a wrong one starts it over. What is
- * due comes weakest topic first (the server orders it), and "Start review"
- * walks it in that order, each opened as a review.
+ * due comes weakest topic first (the server orders it). It is worked in sets
+ * of REVIEW_SET (pages/amc/reviewSet.ts): "Start a review set" takes the next
+ * ten in that order, so a long backlog is never one sitting. `?start=1` (the
+ * Today list's link) starts a set straight away; `?done=1` is a finished set.
  */
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
 import { Empty, PageHeader, ProblemRow } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
 import { amc, shortDate, type ReviewItem, type WeakBank } from '@/services/amc';
 import { ReviewStage } from './Problem';
 import { writeWeakSet } from './weakSet';
+import { REVIEW_SET, writeReviewSet } from './reviewSet';
 import '@/styles/amc.css';
 
 /** Whether the weak-topics set takes mock problems too: this reader's choice. */
@@ -164,8 +167,23 @@ function Rows({ items, empty }: { items: ReviewItem[]; empty: { title: string; b
 export default function Review() {
   useDocumentTitle('Review');
   const navigate = useNavigate();
+  const [params] = useSearchParams();
   const { data, error, loading, reload } = useApi(() => amc.review(), []);
   const [tab, setTab] = useState<Tab>('due');
+  const autostart = params.get('start') === '1';
+  const finished = params.get('done') === '1';
+
+  function startSet(due: ReviewItem[]) {
+    const ids = due.slice(0, REVIEW_SET).map((item) => item.id);
+    if (!ids.length) return;
+    writeReviewSet(ids);
+    navigate(`/problems/${ids[0]}?review=1`, { replace: autostart });
+  }
+  useEffect(() => {
+    if (autostart && data?.due.length) startSet(data.due);
+    // Once, when the queue arrives.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [autostart, data]);
   if (loading && !data) return <Loading label="Loading your review log" />;
   if (error || !data) return <ErrorState message={error ?? 'Could not load the review log.'} onRetry={reload} />;
 
@@ -177,16 +195,20 @@ export default function Review() {
       <PageHeader
         title="Review"
         actions={data.due.length ? (
-          <button type="button" className="am-btn am-btn-primary"
-                  onClick={() => navigate(`/problems/${data.due[0]?.id ?? ''}?review=1`)}>
-            Start review ({data.due.length})
+          <button type="button" className="am-btn am-btn-primary" onClick={() => startSet(data.due)}>
+            Start a review set ({Math.min(REVIEW_SET, data.due.length)})
           </button>
         ) : undefined}
       >
         <p>
-          Twelve problems from the topics you miss most, then every problem you got wrong, brought back after{' '}
-          {data.intervals.join(', ')} days until you get it right three times. What's due comes weakest topic first.
+          Every problem you get wrong comes back after {data.intervals.join(', ')} days, until you get it right three
+          times. Work through them {REVIEW_SET} at a time, weakest topics first. One set a day is enough.
         </p>
+        {finished && (
+          <p className="am-review-done" role="status">
+            Set done.{data.due.length ? ` ${data.due.length} still due; the next set can wait until tomorrow.` : ' Nothing else is due.'}
+          </p>
+        )}
       </PageHeader>
 
       <WeakTopics />

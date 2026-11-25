@@ -55,10 +55,14 @@ export function TodayList({ items, onToggle }: { items: TodayItem[]; onToggle: (
       {items.map((item) => (
         <li key={item.key} className={item.done ? 'is-done' : ''}>
           <Check on={item.done} onToggle={() => onToggle(item)} label={`Mark "${item.label}" ${item.done ? 'not done' : 'done'}`} />
-          <Link className="am-today-label" to={item.to}>{item.label}</Link>
-          {item.goal != null && (
-            <span className="am-today-progress">{item.progress}/{item.goal}</span>
-          )}
+          <div className="am-today-text">
+            <Link className="am-today-label" to={item.to}>{item.label}</Link>
+            {item.detail && <span className="am-today-detail">{item.detail}</span>}
+          </div>
+          <span className="am-today-side">
+            {item.goal != null && item.goal > 0 && <span className="am-today-progress">{item.progress}/{item.goal}</span>}
+            {item.minutes != null && !item.done && <span className="am-today-time">{item.minutes} min</span>}
+          </span>
         </li>
       ))}
     </ul>
@@ -131,7 +135,7 @@ export default function Dashboard() {
         actions={
           <>
             {stats.due > 0 && (
-              <Link className="am-btn" to="/review">Review {stats.due} due</Link>
+              <Link className="am-btn" to="/review?start=1" title={`${stats.due} due in all`}>Start a review set</Link>
             )}
             {data.next_problem && (
               <Link className="am-btn am-btn-primary" to={`/problems/${data.next_problem.id}`}>

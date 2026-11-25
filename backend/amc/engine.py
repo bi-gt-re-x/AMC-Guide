@@ -408,7 +408,8 @@ def plan_weeks(settings, tstats, mocks_taken, today, priorities=None, stage=None
             'phase': phase, 'note': notes['Done' if i < now else phase],
             'focus': [{'id': t['id'], 'name': t['name'], 'category': t['category'],
                        'mode': mode, 'mode_label': _planning.MODE_LABEL[mode],
-                       'gain': t.get('gain'), 'mix': t.get('mix')} for t, mode in zip(focus, modes)],
+                       'gain': t.get('gain'), 'mix': t.get('mix'), 'reason': _reason(t)}
+                      for t, mode in zip(focus, modes)],
             'problems': 0 if phase == 'Taper' else per_week,
             'mock': mock, 'mock_done': mock and mock_done,
             'current': week_start <= today <= week_end,
@@ -452,39 +453,89 @@ def _practice_kind(focus, daily):
     return 'Solve {} problems in {}'.format(daily, name), '/problems?topic=' + tid
 
 
-def today_items(settings, weeks, due_count, today, checks, practiced_today):
-    """`practiced_today` is the set of problem ids practiced today."""
-    """The checklist for today, from the current week of the plan."""
+#: Reviews come in sets: one set of this many a day, weakest topics first.
+#: A backlog of hundreds is worked down a set at a time, never all at once.
+REVIEW_SET = 10
+
+#: What each kind of practice set is called on the Today list.
+SET_TITLE = {'learn': 'Learning set', 'accuracy': 'Accuracy set', 'timed': 'Timed set', 'mixed': 'Mixed set',
+             'spaced': 'Revisit set', 'practice': 'Practice set'}
+
+
+def _reason(t):
+    """Why a focus topic is on the plan, in a few words, from its priority row."""
+    f = t.get('factors') or {}
+    if f.get('mock_lost'):
+        return 'You lost {:g} points here in recent mocks.'.format(f['mock_lost'])
+    if f.get('answered'):
+        return '{} of {} right on the first try so far.'.format(f.get('right', 0), f['answered'])
+    if t.get('id'):
+        return 'Not tried yet, and it comes up on most papers.' if (t.get('weight') or 0) >= 3 else 'Not tried yet.'
+    return ''
+
+
+def _set_detail(focus, daily):
+    """The practice set's size, pace and difficulty, in one line."""
+    mode = focus.get('mode', 'practice')
+    bits = ['{} problems'.format(daily)]
+    bits.append({'timed': '3 minutes each', 'learn': 'easiest first, no clock', 'accuracy': 'no clock, check each answer',
+                 'mixed': 'topic hidden', 'spaced': 'ones you have seen before'}.get(mode, 'no clock'))
+    levels = sorted({c['level'] for c in (focus.get('mix') or []) if c.get('share')})
+    if levels:
+        bits.append('level {}'.format(levels[0]) if len(levels) == 1 else 'levels {}–{}'.format(levels[0], levels[-1]))
+    return ', '.join(bits).capitalize() + '.'
+
+
+def today_items(settings, weeks, due_count, today, checks, practiced_today, reviewed_today=0):
+    """The checklist for today, from the current week of the plan.
+
+    Each item is {'key', 'label', 'detail', 'minutes', 'to', 'done'} and, when
+    it can be counted, 'progress' and 'goal'. `practiced_today` is the set of
+    problem ids practised today; `reviewed_today` how many reviews were
+    answered today. Reviews are one set of REVIEW_SET, not the whole backlog."""
     week = next((w for w in weeks if w['current']), weeks[0] if weeks else None)
     level = settings['target']
     # One handpicked set of eight a day (backend/amc/practice.py SIZE).
     daily = 8 if week and week['problems'] else 0
     ticked = set(checks.get(today.isoformat(), []))
+    pace = 12 if level == 'AIME' else 3
     items = []
-    if due_count:
-        items.append({'key': 'review', 'label': 'Clear {} due review{}'.format(due_count, '' if due_count == 1 else 's'),
-                      'to': '/review', 'auto': False})
+    if due_count or reviewed_today:
+        goal = min(REVIEW_SET, due_count + reviewed_today)
+        left = due_count + reviewed_today - goal
+        items.append({'key': 'review', 'label': 'Review set: {} problem{} you missed'.format(goal, '' if goal == 1 else 's'),
+                      'detail': ('Weakest topics first. {} more wait for the next sets; one set a day is enough.'.format(left)
+                                 if left else 'Each one back for a fresh try.'),
+                      'minutes': goal * pace, 'to': '/review?start=1', 'auto': False,
+                      'progress': min(reviewed_today, goal), 'goal': goal})
     if week and week['focus']:
         focus = week['focus'][0]
-        # Theory first for a topic to learn or practise; not for one whose
-        # weakness is speed, recognition or retention, which want other work.
-        if focus.get('mode', 'practice') in ('learn', 'practice', 'accuracy'):
-            items.append({'key': 'read', 'label': 'Read the ideas for {}'.format(focus['name']),
-                          'to': '/topics/' + focus['id'], 'auto': False})
+        mode = focus.get('mode', 'practice')
+        # Theory first only for a topic still being learned.
+        if mode == 'learn':
+            items.append({'key': 'read', 'label': 'Read the key ideas: {}'.format(focus['name']),
+                          'detail': 'The topic page has the ideas and worked examples. About 10 minutes.',
+                          'minutes': 10, 'to': '/topics/' + focus['id'], 'auto': False})
         done = sum(1 for pid in practiced_today
                    if bank_of.get(pid) and focus['id'] in [bank_of.get(pid)['topic']] + bank_of.get(pid)['also'])
-        label, to = _practice_label(focus, daily)
-        items.append({'key': 'practice', 'label': label, 'to': to, 'auto': False, 'mode': focus.get('mode', 'practice'),
-                      'progress': min(done, daily), 'goal': daily})
+        _, to = _practice_label(focus, daily)
+        reason = focus.get('reason') or ''
+        items.append({'key': 'practice', 'label': '{}: {}'.format(SET_TITLE.get(mode, 'Practice set'), focus['name']),
+                      'detail': _set_detail(focus, daily) + (' ' + reason if reason else ''),
+                      'minutes': daily * (pace if mode == 'timed' else pace + 2), 'to': to, 'auto': False,
+                      'mode': mode, 'progress': min(done, daily), 'goal': daily})
     if week and week['mock'] and not week['mock_done']:
-        mock_id = {'AMC 10': 'step-mock-10', 'AMC 12': 'step-mock-12', 'AIME': 'step-mock-aime'}[level]
-        items.append({'key': 'mock', 'label': "Sit this week's timed mock", 'to': '/contests/' + mock_id,
-                      'auto': False})
+        minutes = 180 if level == 'AIME' else 75
+        items.append({'key': 'mock', 'label': 'Timed mock: this week’s {}'.format(level),
+                      'detail': 'In one sitting, on the clock. Your projected score comes from mocks.',
+                      'minutes': minutes, 'to': '/mock-contests', 'auto': False})
     if week and week['phase'] == 'Taper':
-        items.append({'key': 'formulas', 'label': 'Skim the ideas for every topic', 'to': '/topics', 'auto': False})
+        items.append({'key': 'formulas', 'label': 'Skim the key ideas for each topic',
+                      'detail': 'A quick read, nothing new. Rest counts this week.', 'minutes': 20,
+                      'to': '/topics', 'auto': False})
     for item in items:
         item['done'] = item['key'] in ticked or (
-            'goal' in item and item['progress'] >= item['goal'])
+            'goal' in item and item['goal'] > 0 and item['progress'] >= item['goal'])
     return items
 
 

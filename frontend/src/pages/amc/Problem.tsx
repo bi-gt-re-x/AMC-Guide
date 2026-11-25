@@ -30,6 +30,7 @@ import { useApi, useDocumentTitle } from '@/hooks';
 import { amc, announceAmcChanged, shortDate, type AttemptReply, type Problem as ProblemData } from '@/services/amc';
 import { readPracticeSet } from './practiceSetStore';
 import { readWeakSet } from './weakSet';
+import { readReviewSet } from './reviewSet';
 import '@/styles/amc.css';
 
 const STAGES = 3;
@@ -68,6 +69,9 @@ export default function Problem() {
   const weakSet = weak ? readWeakSet() : [];
   const weakAt = weakSet.indexOf(problemId);
   const weakNext = weakAt >= 0 ? weakSet[weakAt + 1] : undefined;
+  const reviewSet = reviewing ? readReviewSet() : [];
+  const reviewAt = reviewSet.indexOf(problemId);
+  const reviewNext = reviewAt >= 0 ? reviewSet[reviewAt + 1] : undefined;
   const inSet = !reviewing && !weak && params.get('set') === '1';
   const practiceSet = inSet ? readPracticeSet() : null;
   const setIds = practiceSet?.ids ?? [];
@@ -166,8 +170,13 @@ export default function Problem() {
     }
   }
 
-  /** The next problem due for review, or the review page when none is left. */
+  /** The next problem in this review set, or the review page once the set is done.
+   *  Outside a set (storage blocked, an old link), the next problem due. */
   async function nextDue() {
+    if (reviewAt >= 0) {
+      navigate(reviewNext ? `/problems/${reviewNext}?review=1` : '/review?done=1');
+      return;
+    }
     const queue = await amc.review();
     const next = queue.success ? queue.due.find((item) => item.id !== problemId) : undefined;
     navigate(next ? `/problems/${next.id}?review=1` : '/review');
@@ -217,6 +226,7 @@ export default function Problem() {
           </>
         )}
         {inSet && setAt >= 0 && <span>· {setAt + 1} of {setIds.length}</span>}
+        {reviewing && reviewAt >= 0 && <span>· Review set, {reviewAt + 1} of {reviewSet.length}</span>}
       </nav>
 
       <div className="am-grid am-grid-main">
@@ -339,9 +349,11 @@ export default function Problem() {
 
             {reviewing && answered && (
               <div className="am-nav-row">
-                <span />
+                <span className="am-muted" style={{ fontSize: 13 }}>
+                  {reviewAt >= 0 ? `Review set · ${reviewAt + 1} of ${reviewSet.length}` : ''}
+                </span>
                 <button type="button" className="am-btn am-btn-primary" onClick={() => void nextDue()}>
-                  Next due review →
+                  {reviewAt < 0 ? 'Next due review →' : reviewNext ? 'Next in the set →' : 'Finish the set'}
                 </button>
               </div>
             )}
