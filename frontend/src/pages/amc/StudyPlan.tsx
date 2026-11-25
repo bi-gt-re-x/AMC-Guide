@@ -22,6 +22,7 @@ import {
   type PlanPayload,
   type PlanSettings,
   type PlanLevel,
+  type PlanBlock,
   type PlanDay,
   type PlanWeek,
   type SubjectStrength,
@@ -29,6 +30,7 @@ import {
 } from '@/services/amc';
 import { MixBar, ModeTag, PrioritiesCard, WeaknessKinds } from '@/components/Amc/Study';
 import { isRestDay, TodayList } from './Dashboard';
+import { activePracticeSet, isActiveSetLink, type PracticeSetState } from './practiceSetStore';
 import '@/styles/amc.css';
 
 const LEVELS: Level[] = ['AMC 10', 'AMC 12', 'AIME'];
@@ -502,30 +504,45 @@ function NowCard({ payload, weeks, practice }: {
 /** Minutes as "5 h 30 min", "45 min". */
 const hours = (m: number) => (m >= 60 ? `${Math.floor(m / 60)} h${m % 60 ? ` ${m % 60} min` : ''}` : `${m} min`);
 
-/** One day of a week: its minutes and what fills them, or a rest day. */
-function DayRow({ d }: { d: PlanDay }) {
+/** A block's kind in one word, for its pill. */
+const PILL_KIND: Record<string, string> = {
+  review: 'Review', read: 'Key ideas', mock: 'Mock', challenge: 'Challenge',
+  learn: 'Learn', accuracy: 'Accuracy', timed: 'Timed', mixed: 'Mixed', spaced: 'Revisit', practice: 'Practice',
+};
+
+/** One thing on a day, as a pill: its kind, its topic, how many and how long. The detail is its tooltip. */
+function BlockPill({ b, active }: { b: PlanBlock; active: boolean }) {
+  const kind = b.kind === 'practice' ? b.mode ?? 'practice' : b.kind;
+  const meta = [b.count && b.kind !== 'review' ? `${b.count}` : null, `${b.minutes}m`].filter(Boolean).join(' · ');
+  return (
+    <li>
+      <Link className={`am-set-pill is-${kind}${active ? ' is-active' : ''}${b.done ? ' is-done' : ''}`} to={b.to}
+            title={b.detail} aria-label={`${b.label}, ${b.minutes} minutes${active ? ', in progress' : ''}`}>
+        <span className="am-set-pill-kind">{PILL_KIND[kind] ?? 'Set'}</span>
+        {b.name && <span className="am-set-pill-name">{b.name}</span>}
+        <span className="am-set-pill-meta">{meta}</span>
+        {active && <span className="am-set-pill-now">In progress</span>}
+      </Link>
+    </li>
+  );
+}
+
+/** One day of a week: its pills and its minutes, or a rest day. */
+function DayRow({ d, active }: { d: PlanDay; active: PracticeSetState | null }) {
   return (
     <li className={`am-day${d.today ? ' is-today' : ''}${d.past ? ' is-past' : ''}${d.rest ? ' is-rest' : ''}`}>
       <div className="am-day-when">
         <strong>{d.weekday}</strong>
-        <span className="am-muted">{shortDate(d.date)}</span>
-        {d.today && <span className="am-day-now">Today</span>}
+        <span>{d.today ? 'Today' : shortDate(d.date)}</span>
       </div>
       {d.rest ? (
-        <span className="am-muted am-day-rest">Rest</span>
+        <span className="am-day-rest">Rest</span>
       ) : (
-        <ul className="am-day-blocks">
-          {d.blocks.map((b, i) => (
-            <li key={i} className={b.done ? 'is-done' : ''}>
-              <Link className="am-day-label" to={b.to}>{b.label}</Link>
-              {b.kind === 'challenge' && <ModeTag mode="challenge" label="challenge" />}
-              <span className="am-muted am-day-detail">{b.detail}</span>
-              <em>{b.minutes} min</em>
-            </li>
-          ))}
+        <ul className="am-day-pills">
+          {d.blocks.map((b, i) => <BlockPill key={i} b={b} active={d.today && isActiveSetLink(b.to, active)} />)}
         </ul>
       )}
-      {!d.rest && <span className="am-day-total">{d.minutes} min</span>}
+      <span className="am-day-total">{d.rest ? '' : hours(d.minutes)}</span>
     </li>
   );
 }
@@ -536,6 +553,8 @@ function WeekRow({ w }: { w: PlanWeek }) {
   // This week's days show; the weeks ahead open on request.
   const [open, setOpen] = useState(w.current);
   const studyDays = days.filter((d) => !d.rest);
+  // The set left part way, highlighted where today's plan has it.
+  const active = w.current ? activePracticeSet() : null;
   return (
     <div className={`am-week${w.current ? ' is-current' : ''}${w.past ? ' is-past' : ''}`}>
       <div className="am-week-when">
@@ -566,7 +585,7 @@ function WeekRow({ w }: { w: PlanWeek }) {
           <button type="button" className="am-week-days-toggle" aria-expanded={open} onClick={() => setOpen((v) => !v)}>
             {open ? 'Hide days' : `Day by day · ${studyDays.length} study day${studyDays.length === 1 ? '' : 's'}, ${hours(studyDays.reduce((n, d) => n + d.minutes, 0))}`}
           </button>
-          {open && <ol className="am-days">{days.map((d) => <DayRow key={d.date} d={d} />)}</ol>}
+          {open && <ol className="am-days">{days.map((d) => <DayRow key={d.date} d={d} active={active} />)}</ol>}
         </div>
       )}
     </div>

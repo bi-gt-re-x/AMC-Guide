@@ -3,6 +3,11 @@
  * the set starts; the problem page's `?set=1` reads it for the next problem,
  * the set's clock and whether to hide the topic). Per tab (sessionStorage), and only
  * a convenience: with storage blocked the walk ends back on the set's page.
+ *
+ * It also remembers where the walk is (`current`, `answered`) and whether it
+ * is over (`finished`, or its clock run out), so a set left part way is the
+ * set in progress: highlighted on the study plan and Today, and offered to be
+ * continued from its own page.
  */
 export interface PracticeSetState {
   ids: string[];
@@ -17,6 +22,12 @@ export interface PracticeSetState {
   size: number | null;
   /** When a timed set's clock runs out (ms since the epoch): set on Start, the whole set's time. */
   deadline: number | null;
+  /** The problem the walk is on. */
+  current?: string | null;
+  /** The problems answered (or revealed) so far. */
+  answered?: string[];
+  /** Finished from its last problem, or ended by its clock. */
+  finished?: boolean;
 }
 
 const KEY = 'amc-practice-set';
@@ -37,6 +48,9 @@ export function readPracticeSet(): PracticeSetState | null {
       hideTopic: Boolean(s.hideTopic),
       size: typeof s.size === 'number' ? s.size : null,
       deadline: typeof s.deadline === 'number' ? s.deadline : null,
+      current: typeof s.current === 'string' ? s.current : null,
+      answered: Array.isArray(s.answered) ? s.answered.filter((id): id is string => typeof id === 'string') : [],
+      finished: Boolean(s.finished),
     };
   } catch {
     return null;
@@ -54,4 +68,26 @@ export function writePracticeSet(state: PracticeSetState): void {
   } catch {
     /* storage blocked: the walk falls back to the set's page */
   }
+}
+
+/** Change the stored set, if there is one. */
+export function updatePracticeSet(patch: Partial<PracticeSetState>): void {
+  const now = readPracticeSet();
+  if (now) writePracticeSet({ ...now, ...patch });
+}
+
+/** The set left part way: started, not finished, clock (if any) not run out. */
+export function activePracticeSet(now: number = Date.now()): PracticeSetState | null {
+  const s = readPracticeSet();
+  if (!s || s.finished || !s.ids.length) return null;
+  if (s.deadline != null && s.deadline <= now) return null;
+  return s;
+}
+
+/** Whether a study plan link (`/practice/<topic>?mode=<mode>…`) is the set in progress. */
+export function isActiveSetLink(to: string, active: PracticeSetState | null): boolean {
+  if (!active) return false;
+  const [path, query = ''] = to.split('?');
+  if (path !== `/practice/${active.topic}`) return false;
+  return (new URLSearchParams(query).get('mode') || 'practice') === active.mode;
 }

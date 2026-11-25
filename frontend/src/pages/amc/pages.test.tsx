@@ -35,7 +35,7 @@ import MockResult from './MockResult';
 import Problem from './Problem';
 import PracticeSet from './PracticeSet';
 import Problems from './Problems';
-import { writePracticeSet } from './practiceSetStore';
+import { activePracticeSet, isActiveSetLink, writePracticeSet } from './practiceSetStore';
 import Review from './Review';
 import Search from './Search';
 import StudyPlan from './StudyPlan';
@@ -356,6 +356,57 @@ describe('A topic practice set', () => {
       </AuthContext.Provider>,
     );
     expect(await screen.findByTestId('where')).toHaveTextContent('/practice/circles?mode=timed&n=5&done=1&timeup=1');
+  });
+
+  it('offers to continue a set left part way, at the problem it was left on', async () => {
+    vi.spyOn(amc, 'topicSet').mockResolvedValue(payload('timed') as any);
+    const ids = Array.from({ length: 8 }, (_, i) => `step-10-0${i + 1}`);
+    writePracticeSet({ ids, topic: 'circles', mode: 'timed', title: 'Timed set', seconds: 180, hideTopic: false,
+                       size: null, deadline: Date.now() + 600_000, current: 'step-10-03', answered: ['step-10-01', 'step-10-02'] });
+    show('/practice/circles?mode=timed', '/practice/:topicId', <PracticeSet />);
+    await settled('Timed set');
+    expect(screen.getByRole('button', { name: 'Continue set' })).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Start over' })).toBeInTheDocument();
+    expect(screen.getByText(/2 of 8 answered/)).toBeInTheDocument();
+    expect(document.querySelector('.am-set-row.is-current')).toHaveTextContent('Step drill #3');
+  });
+
+  it('asks before leaving a set part way', async () => {
+    writePracticeSet({ ids: ['step-10-01', 'step-10-02'], topic: 'circles', mode: 'timed', title: 'Timed set',
+                       seconds: 180, hideTopic: false, size: null, deadline: Date.now() + 600_000 });
+    show('/problems/step-10-01?set=1', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    fireEvent.click(screen.getByText('← Timed set'));
+    expect(await screen.findByText('Leave this set?')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Keep going' })).toBeInTheDocument();
+    expect(screen.getByText(/0 of 2 answered/)).toBeInTheDocument();
+  });
+
+  it('keeps a hint on the problem it was asked for', async () => {
+    vi.spyOn(amc, 'aiStatus').mockResolvedValue({ success: true, available: true, provider: 'x', model: 'x', used: 0, limit: 9 } as any);
+    vi.spyOn(amc, 'hint').mockResolvedValue({ success: true, hint: 'Draw the radius first.' } as any);
+    writePracticeSet({ ids: ['step-10-01', 'step-10-02'], topic: 'circles', mode: 'practice', title: 'Practice set',
+                       seconds: null, hideTopic: false, size: null, deadline: null });
+    show('/problems/step-10-01?set=1', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    fireEvent.click(await screen.findByRole('button', { name: 'Hint' }));
+    expect(await screen.findByText('Draw the radius first.')).toBeInTheDocument();
+    // On to the next problem in the set: the same page, a different problem, no hint.
+    fireEvent.click(screen.getByRole('button', { name: 'Skip →' }));
+    await waitFor(() => expect(screen.queryByText('Draw the radius first.')).not.toBeInTheDocument());
+    expect(await screen.findByRole('button', { name: 'Hint' })).toBeInTheDocument();
+  });
+
+  it('counts a set as in progress until it is finished or its clock runs out', () => {
+    const base = { ids: ['a'], topic: 'circles', mode: 'timed', title: 'Timed set', seconds: 180, hideTopic: false, size: null };
+    writePracticeSet({ ...base, deadline: Date.now() + 1000 });
+    expect(activePracticeSet()?.topic).toBe('circles');
+    expect(isActiveSetLink('/practice/circles?mode=timed&n=5', activePracticeSet())).toBe(true);
+    expect(isActiveSetLink('/practice/circles?mode=accuracy&n=5', activePracticeSet())).toBe(false);
+    writePracticeSet({ ...base, deadline: Date.now() - 1 });
+    expect(activePracticeSet()).toBeNull();
+    writePracticeSet({ ...base, deadline: null, finished: true });
+    expect(activePracticeSet()).toBeNull();
   });
 
   it('hides the topic on a mixed set until it is answered', async () => {

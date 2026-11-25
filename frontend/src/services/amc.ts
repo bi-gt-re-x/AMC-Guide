@@ -372,6 +372,8 @@ export interface PlanBlock {
   count?: number;
   mode?: StudyMode;
   topic?: string;
+  /** The topic's name, for a set or its key ideas. */
+  name?: string;
   done?: boolean;
 }
 

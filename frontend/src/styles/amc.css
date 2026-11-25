@@ -1826,26 +1826,59 @@ a.am-take:hover { border-color: var(--am-sage); }
 
 /* ---- Study plan: each week, day by day ------------------------------------- */
 .am-week-days { grid-column: 1 / -1; }
-.am-week-days-toggle { border: 0; background: none; padding: 0; color: var(--am-muted); font: inherit; font-size: var(--text-xs); cursor: pointer; }
+.am-week-days-toggle { border: 0; background: none; padding: 0; color: var(--am-muted); font: inherit;
+                       font-size: var(--text-xs); cursor: pointer; }
 .am-week-days-toggle:hover { color: var(--am-ink); }
-.am-days { list-style: none; margin: var(--space-3) 0 0; padding: 0; display: grid; gap: 0; border-top: 1px solid var(--am-line-soft); }
-.am-day { display: grid; grid-template-columns: 96px minmax(0, 1fr) auto; gap: var(--space-3); align-items: start;
-          padding: var(--space-2) 0; border-bottom: 1px solid var(--am-line-soft); font-size: var(--text-sm); }
-.am-day.is-today { background: var(--am-sage-soft); margin: 0 calc(-1 * var(--space-2)); padding-left: var(--space-2); padding-right: var(--space-2); border-radius: 8px; }
-.am-day.is-past { opacity: .55; }
-.am-day-when { display: flex; flex-wrap: wrap; gap: 0 6px; align-items: baseline; }
-.am-day-when .am-muted { font-size: var(--text-xs); }
-.am-day-now { font-size: 11px; font-weight: 600; color: var(--am-sage); }
-.am-day-rest { font-size: var(--text-xs); }
-.am-day-blocks { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; }
-.am-day-blocks li { display: flex; flex-wrap: wrap; gap: 2px 8px; align-items: baseline; }
-.am-day-blocks li.is-done .am-day-label { text-decoration: line-through; color: var(--am-muted); }
-.am-day-label { color: var(--am-ink); text-decoration: none; font-weight: 500; }
-.am-day-label:hover { text-decoration: underline; }
-.am-day-detail { font-size: var(--text-xs); }
-.am-day-blocks em { font-style: normal; font-size: var(--text-xs); color: var(--am-faint); font-variant-numeric: tabular-nums; }
-.am-day-total { font-size: var(--text-xs); color: var(--am-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.am-days { list-style: none; margin: var(--space-3) 0 0; padding: 0; display: grid; gap: 2px; }
+.am-day { display: grid; grid-template-columns: 92px minmax(0, 1fr) 64px; gap: var(--space-3); align-items: center;
+          min-height: 44px; padding: 6px 10px; border-radius: 10px; }
+.am-day + .am-day { box-shadow: inset 0 1px 0 var(--am-line-soft); }
+.am-day.is-today { background: var(--am-sage-soft); box-shadow: none; }
+.am-day.is-today + .am-day { box-shadow: none; }
+.am-day.is-past { opacity: .5; }
+.am-day-when { display: flex; align-items: baseline; gap: 6px; font-size: var(--text-sm); }
+.am-day-when strong { font-weight: 600; color: var(--am-ink); min-width: 30px; }
+.am-day-when span { color: var(--am-muted); font-size: var(--text-xs); }
+.am-day.is-today .am-day-when span { color: var(--am-sage); font-weight: 600; }
+.am-day-rest { color: var(--am-faint); font-size: var(--text-xs); }
+.am-day-total { justify-self: end; color: var(--am-muted); font-size: var(--text-xs); font-variant-numeric: tabular-nums; }
+.am-day-pills { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* A set on a day, as a pill: kind, topic, count and minutes. */
+.am-set-pill { --pill: var(--am-slate); display: inline-flex; align-items: center; gap: 7px; height: 28px; padding: 0 11px 0 9px;
+               border: 1px solid color-mix(in srgb, var(--pill) 30%, var(--am-line)); border-radius: 999px;
+               background: color-mix(in srgb, var(--pill) 9%, var(--am-card)); color: var(--am-ink);
+               font-size: 12.5px; line-height: 1; text-decoration: none; white-space: nowrap;
+               transition: border-color .15s ease, background .15s ease; }
+.am-set-pill:hover { border-color: color-mix(in srgb, var(--pill) 60%, var(--am-line)); background: color-mix(in srgb, var(--pill) 15%, var(--am-card)); }
+.am-set-pill-kind { font-weight: 600; color: color-mix(in srgb, var(--pill) 75%, var(--am-ink)); }
+.am-set-pill-name { color: var(--am-ink); max-width: 220px; overflow: hidden; text-overflow: ellipsis; }
+.am-set-pill-meta { color: var(--am-muted); font-variant-numeric: tabular-nums; }
+.am-set-pill.is-review, .am-set-pill.is-spaced { --pill: var(--am-slate); }
+.am-set-pill.is-learn, .am-set-pill.is-read { --pill: var(--am-blue); }
+.am-set-pill.is-accuracy { --pill: var(--am-amber); }
+.am-set-pill.is-timed { --pill: var(--am-rose); }
+.am-set-pill.is-mixed { --pill: var(--am-green); }
+.am-set-pill.is-practice { --pill: var(--am-sage); }
+.am-set-pill.is-challenge, .am-set-pill.is-mock { --pill: var(--am-ink); }
+.am-set-pill.is-done { opacity: .55; }
+.am-set-pill.is-done .am-set-pill-name { text-decoration: line-through; }
+/* The set left part way. */
+.am-set-pill.is-active { border-color: var(--am-sage); background: var(--am-card); box-shadow: 0 0 0 2px color-mix(in srgb, var(--am-sage) 35%, transparent); }
+.am-set-pill-now { display: inline-flex; align-items: center; gap: 4px; color: var(--am-sage); font-weight: 600; font-size: 11px; }
+.am-set-pill-now::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: var(--am-sage); }
 @media (max-width: 640px) {
   .am-day { grid-template-columns: minmax(0, 1fr) auto; }
-  .am-day-blocks { grid-column: 1 / -1; }
+  .am-day-pills { grid-column: 1 / -1; order: 3; }
 }
+
+/* The practice set left part way: its banner, and the problem it was left on. */
+.am-set-going { display: flex; align-items: center; gap: 10px; margin-bottom: var(--space-3); padding: 12px 16px;
+                border-color: var(--am-sage); font-size: var(--text-sm); }
+.am-set-going .am-btn { margin-left: auto; }
+.am-set-going-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--am-sage); flex: none; }
+.am-set-row.is-current { border-color: var(--am-sage); box-shadow: 0 0 0 2px color-mix(in srgb, var(--am-sage) 30%, transparent); }
+.am-set-row.is-answered .am-set-num { color: var(--am-sage); }
+/* Today's item that is the set in progress. */
+.am-today li.is-active .am-today-label::after { content: 'In progress'; margin-left: 8px; color: var(--am-sage);
+                                                 font-size: 11px; font-weight: 600; }

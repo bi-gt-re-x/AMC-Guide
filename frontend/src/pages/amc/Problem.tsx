@@ -28,7 +28,7 @@ import {
 } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
 import { amc, announceAmcChanged, shortDate, type AttemptReply, type Problem as ProblemData } from '@/services/amc';
-import { practiceSetHome, readPracticeSet } from './practiceSetStore';
+import { activePracticeSet, practiceSetHome, readPracticeSet, updatePracticeSet } from './practiceSetStore';
 import { readWeakSet } from './weakSet';
 import { readReviewSet } from './reviewSet';
 import '@/styles/amc.css';
@@ -94,7 +94,7 @@ export default function Problem() {
   const weakPrev = weakAt > 0 ? weakSet[weakAt - 1] : undefined;
   const navigate = useNavigate();
   const { data, error, loading, reload } = useApi(() => amc.problem(problemId, walk), [problemId, walkQuery]);
-  const { notify } = useNotice();
+  const { notify, confirm } = useNotice();
   useDocumentTitle(data ? data.problem.sources[0] ? `${data.problem.sources[0].name} #${data.problem.sources[0].number}` : 'Problem' : 'Problem');
 
   const [answer, setAnswer] = useState('');
@@ -136,8 +136,15 @@ export default function Problem() {
   const setLeft = useCountdown(inSet ? practiceSet?.deadline ?? null : null);
   const timeUp = setLeft === 0;
   useEffect(() => {
-    if (timeUp) navigate(`${setHome}&done=1&timeup=1`, { replace: true });
+    if (!timeUp) return;
+    updatePracticeSet({ finished: true });
+    navigate(`${setHome}&done=1&timeup=1`, { replace: true });
   }, [timeUp, navigate, setHome]);
+  // The set remembers which problem it is on, so it can be picked up again.
+  useEffect(() => {
+    if (inSet && setAt >= 0) updatePracticeSet({ current: problemId });
+  }, [inSet, setAt, problemId]);
+  useLeaveSetGuard(inSet && setAt >= 0, confirm, navigate);
 
   if (loading && !data) return <Loading label="Loading problem" />;
   if (error || !data) return <ErrorState message={error ?? 'Could not load this problem.'} onRetry={reload} />;
@@ -153,6 +160,7 @@ export default function Problem() {
       const reply = await amc.attempt(problemId, answer, seconds, reviewing ? 'review' : 'practice');
       if (reply.success) {
         setResult(reply);
+        markAnswered();
         announceAmcChanged();
         reload();
       } else {
@@ -163,12 +171,20 @@ export default function Problem() {
     }
   }
 
+  /** This problem, counted as done in the set being walked. */
+  function markAnswered() {
+    if (!inSet || setAt < 0) return;
+    const answeredSoFar = readPracticeSet()?.answered ?? [];
+    if (!answeredSoFar.includes(problemId)) updatePracticeSet({ answered: [...answeredSoFar, problemId] });
+  }
+
   async function reveal() {
     setBusy(true);
     try {
       const reply = await amc.reveal(problemId);
       if (reply.success) {
         setRevealed(reply.problem);
+        markAnswered();
         announceAmcChanged();
         reload();
       }
@@ -326,7 +342,8 @@ export default function Problem() {
               </div>
             )}
 
-            <AIHelp problemId={problemId} answered={Boolean(result || revealed || seenBefore)}
+            {/* Keyed to the problem: its hints and explanation belong to this one only. */}
+            <AIHelp key={problemId} problemId={problemId} answered={Boolean(result || revealed || seenBefore)}
                     wrong={Boolean((result && !result.correct) || (seenBefore && last && !last.correct))} />
 
             {(result || revealed || seenBefore) && (
@@ -346,7 +363,10 @@ export default function Problem() {
                   {practiceSet?.title ?? 'Practice set'}{setAt >= 0 ? ` · ${setAt + 1} of ${setIds.length}` : ''}
                 </span>
                 <button type="button" className="am-btn am-btn-primary"
-                        onClick={() => navigate(setNext ? `/problems/${setNext}?set=1` : `${setHome}&done=1`)}>
+                        onClick={() => {
+                          if (!setNext) updatePracticeSet({ finished: true });
+                          navigate(setNext ? `/problems/${setNext}?set=1` : `${setHome}&done=1`);
+                        }}>
                   {setNext ? 'Next problem →' : 'Finish the set'}
                 </button>
               </div>
@@ -506,4 +526,53 @@ function useCountdown(deadline: number | null): number | null {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [deadline]);
   return value;
+}
+
+/**
+ * Leaving a set part way asks first. Any link out of it (its own page, the
+ * sidebar, search) is caught before it is followed: staying is the default,
+ * and leaving keeps the set where it was, to be continued from its page.
+ * Moving on to the set's next problem (`?set=1`) is not leaving. Closing the
+ * tab on a timed set gets the browser's own warning, since its clock keeps
+ * running.
+ */
+function useLeaveSetGuard(
+  on: boolean,
+  confirm: (options: { title: string; body?: string; confirmLabel?: string; cancelLabel?: string }) => Promise<boolean>,
+  navigate: (to: string) => void,
+) {
+  useEffect(() => {
+    if (!on) return undefined;
+    const onClick = (event: MouseEvent) => {
+      if (event.defaultPrevented || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+      const link = (event.target as Element | null)?.closest?.('a[href]') as HTMLAnchorElement | null;
+      if (!link || link.target === '_blank') return;
+      const url = new URL(link.href, window.location.href);
+      if (url.origin !== window.location.origin) return;
+      if (url.pathname.startsWith('/problems/') && url.searchParams.get('set') === '1') return;
+      const set = activePracticeSet();
+      if (!set) return;
+      event.preventDefault();
+      event.stopPropagation();
+      const done = set.answered?.length ?? 0;
+      const left = set.deadline != null ? Math.max(0, Math.ceil((set.deadline - Date.now()) / 1000)) : null;
+      void confirm({
+        title: 'Leave this set?',
+        body: `${done} of ${set.ids.length} answered.${left != null ? ` ${clock(left)} left, and the clock keeps running.` : ''} You can continue it from the set's page.`,
+        confirmLabel: 'Leave set',
+        cancelLabel: 'Keep going',
+      }).then((leave) => {
+        if (leave) navigate(url.pathname + url.search + url.hash);
+      });
+    };
+    const onUnload = (event: BeforeUnloadEvent) => {
+      if (activePracticeSet()?.deadline != null) event.preventDefault();
+    };
+    document.addEventListener('click', onClick, true);
+    window.addEventListener('beforeunload', onUnload);
+    return () => {
+      document.removeEventListener('click', onClick, true);
+      window.removeEventListener('beforeunload', onUnload);
+    };
+  }, [on, confirm, navigate]);
 }

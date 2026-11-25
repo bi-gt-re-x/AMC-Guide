@@ -21,6 +21,7 @@ import {
   type PlanWeek,
   type TodayItem,
 } from '@/services/amc';
+import { activePracticeSet, isActiveSetLink } from './practiceSetStore';
 import '@/styles/amc.css';
 
 const LEVELS: Level[] = ['AMC 10', 'AMC 12', 'AIME'];
@@ -60,10 +61,12 @@ export function TodayList({ items, onToggle, rest = false }: {
       ? <Empty title="Rest day">Nothing on the plan today.</Empty>
       : <Empty title="Done for today">Solve any problem to keep your streak.</Empty>;
   }
+  // The practice set left part way, marked where today's list has it.
+  const active = activePracticeSet();
   return (
     <ul className="am-today">
       {items.map((item) => (
-        <li key={item.key} className={item.done ? 'is-done' : ''}>
+        <li key={item.key} className={`${item.done ? 'is-done' : ''}${!item.done && isActiveSetLink(item.to, active) ? ' is-active' : ''}`}>
           <Check on={item.done} onToggle={() => onToggle(item)} label={`Mark "${item.label}" ${item.done ? 'not done' : 'done'}`} />
           <div className="am-today-text">
             <Link className="am-today-label" to={item.to}>{item.label}</Link>

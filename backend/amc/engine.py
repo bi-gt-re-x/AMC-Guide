@@ -478,7 +478,7 @@ def _set_block(topic, mode, n, per, kind='practice'):
     if topic.get('reason'):
         detail += ' ' + topic['reason']
     return {'kind': kind, 'label': label, 'detail': detail, 'minutes': int(round(n * per)), 'count': n,
-            'mode': mode, 'topic': tid, 'to': '/practice/{}?mode={}&n={}'.format(tid, mode, n)}
+            'mode': mode, 'topic': tid, 'name': name, 'to': '/practice/{}?mode={}&n={}'.format(tid, mode, n)}
 
 
 def _study_day(week, minutes, k, level, challenge, mock_here, read):
@@ -529,7 +529,7 @@ def _study_day(week, minutes, k, level, challenge, mock_here, read):
         if read:
             blocks.append({'kind': 'read', 'label': 'Read the key ideas: ' + topic['name'],
                            'detail': 'The topic page: its ideas and worked examples.', 'minutes': 10,
-                           'to': '/topics/' + topic['id']})
+                           'topic': topic['id'], 'name': topic['name'], 'to': '/topics/' + topic['id']})
             left -= 10
         per = pace if mode == 'timed' else pace + UNTIMED_EXTRA
         block = _set_block(topic, mode, _fit(left, per, SET_RANGE[1]), per)
