@@ -30,6 +30,8 @@ function summary(overrides: Partial<Dashboard['stats']> = {}): Dashboard {
       days: [],
       mocks: [],
       notes: [],
+      summary: { tone: 'flat', text: 'Nothing answered in the last two weeks.' },
+      latest: null,
     },
     plan: null,
     last_mock: null,

@@ -32,8 +32,7 @@ the row's words are brought up to date in place instead
 
 They also end with their day. Each carries `for_day`, and the sweep retires the
 live ones whose day has passed (`db.retire_notifications`). And one that stops
-being true during its day (the plan finished, a problem answered to keep the
-streak) is withdrawn by the next sweep rather than left saying it.
+being true during its day (the plan finished, the reviews answered) is withdrawn by the next sweep rather than left saying it.
 
 ## The first sweep says nothing about the past
 
@@ -60,6 +59,8 @@ CHANNELS = ('plan', 'review', 'mocks', 'streak')
 #: Situations that describe a moving count and so are reworded in place
 #: rather than re-raised. Matched on the part of the fingerprint before the
 #: first colon.
+# 'streak-risk' is no longer raised (backend/amc/alerts.py `_streak`); it stays
+# here so a row left from before is withdrawn on the next sweep.
 REFRESHABLE = ('plan-today', 'review-due', 'streak-risk')
 
 #: Where a fingerprint has no more chance of recurring, so its tombstone is

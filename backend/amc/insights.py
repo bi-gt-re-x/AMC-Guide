@@ -66,9 +66,75 @@ def _mock_point(row):
             'award': standing['award'] if standing else ''}
 
 
+def _direction(now, before, ratio=None, points=None):
+    """'up', 'down' or 'flat': a count against `ratio` (1.25 is a quarter more),
+    a share against `points` percentage points."""
+    if ratio is not None:
+        if now >= before * ratio:
+            return 'up'
+        return 'down' if now * ratio <= before else 'flat'
+    delta = round((now - before) * 100)
+    return 'up' if delta >= points else 'down' if delta <= -points else 'flat'
+
+
+#: Answers each window needs before their shares right are compared: below it,
+#: one answer either way swings the share by ten points or more.
+SHARE_MIN = 10
+
+
+def _summary(now, before):
+    """One sentence: the last 7 days against the 7 before, in words, with the
+    earlier numbers to go by. {'tone', 'text'}. The share right is compared
+    only when both windows have SHARE_MIN answers."""
+    if not now['answered']:
+        if before['answered']:
+            return {'tone': 'down', 'text': 'Nothing answered in the last 7 days ({} the 7 days before).'.format(
+                before['answered'])}
+        return {'tone': 'flat', 'text': 'Nothing answered in the last two weeks.'}
+    if not before['answered']:
+        return {'tone': 'flat', 'text': 'Nothing in the 7 days before to compare with.'}
+    count = _direction(now['answered'], before['answered'], ratio=1.25)
+    lead = {'up': 'More problems than', 'down': 'Fewer problems than', 'flat': 'About as many problems as'}[count]
+    if min(now['answered'], before['answered']) < SHARE_MIN:
+        return {'tone': count, 'text': '{} the 7 days before ({} answered then).'.format(lead, before['answered'])}
+    share = _direction(now['accuracy'], before['accuracy'], points=5)
+    tail = {'up': 'a higher share right', 'down': 'a lower share right', 'flat': 'about the same share right'}[share]
+    joined = 'but' if {count, share} == {'up', 'down'} else 'and'
+    return {'tone': share if share != 'flat' else count,
+            'text': '{} the 7 days before, {} {} ({} answered, {:.0%} right then).'.format(
+                lead, joined, tail, before['answered'], before['accuracy'])}
+
+
+def _latest(scored):
+    """The newest score, and how it compares with the one before it of the
+    same kind and contest, by the difficulty-adjusted score (results.py): a
+    hard year is not read as a slump, nor an easy one as progress."""
+    if not scored:
+        return None
+    latest = scored[0]
+    out = dict(latest, change=None, change_text='')
+    earlier = next((m for m in scored[1:] if m['kind'] == latest['kind'] and m['level'] == latest['level']), None)
+    if earlier is None or not latest['level']:
+        return out
+    diff = round((latest['adjusted'] - earlier['adjusted']) * 2) / 2
+    out['change'] = diff
+    adjusted = latest['adjusted'] != latest['score'] or earlier['adjusted'] != earlier['score']
+    allowing = ', allowing for how hard each paper was' if adjusted else ''
+    if not diff:
+        out['change_text'] = 'The same as your {} before it{}.'.format(earlier['name'], allowing)
+    else:
+        out['change_text'] = '{:g} {} your {} before it{}.'.format(
+            abs(diff), 'above' if diff > 0 else 'below', earlier['name'], allowing)
+    return out
+
+
 def recent_performance(attempts, mocks, today):
-    """This week against last week, the last fortnight day by day, and the
-    latest contest scores — what replaced the list of recent answers."""
+    """The last 7 days against the 7 before, the fortnight day by day, and the
+    latest contest score. The dashboard card shows two numbers, one sentence,
+    the chart and the latest score; the rest is for anyone reading the API.
+
+    The two windows are rolling 7 days ending today, not calendar weeks, so
+    they are named that way. A revealed answer is not counted as answered."""
     this_week = _window(attempts, today - timedelta(days=6), today)
     last_week = _window(attempts, today - timedelta(days=13), today - timedelta(days=7))
     days = []
@@ -78,6 +144,7 @@ def recent_performance(attempts, mocks, today):
         days.append({'date': day.isoformat(), 'answered': len(graded),
                      'correct': sum(1 for a in graded if a['correct'])})
     scored = [_mock_point(m) for m in mocks[:5]]
+    latest = _latest(scored)
 
     notes = []
     a, b = this_week['accuracy'], last_week['accuracy']
@@ -96,17 +163,15 @@ def recent_performance(attempts, mocks, today):
         elif this_week['answered'] * 1.25 <= last_week['answered']:
             notes.append({'tone': 'down', 'text': 'Fewer problems than last week ({} vs {}).'.format(
                 this_week['answered'], last_week['answered'])})
-    # Only like for like: two Step Mocks, or two logged official papers.
-    same = [m for m in scored if scored and m['kind'] == scored[0]['kind']]
-    if len(same) >= 2 and same[0]['level'] == same[1]['level'] and same[0]['level']:
-        diff = same[0]['score'] - same[1]['score']
-        if diff:
-            notes.append({'tone': 'up' if diff > 0 else 'down',
-                          'text': 'Last {} score {:+g} from the one before.'.format(same[0]['level'], diff)})
+    # Like for like, by the adjusted score: see `_latest`.
+    if latest and latest['change']:
+        notes.append({'tone': 'up' if latest['change'] > 0 else 'down', 'text': 'Last {} score: {}'.format(
+            latest['level'], latest['change_text'])})
     if this_week['revealed'] >= 3 and this_week['revealed'] > this_week['answered'] / 3:
         notes.append({'tone': 'down', 'text': '{} answers revealed this week. Try an answer first.'.format(
             this_week['revealed'])})
-    return {'this_week': this_week, 'last_week': last_week, 'days': days, 'mocks': scored, 'notes': notes}
+    return {'this_week': this_week, 'last_week': last_week, 'days': days, 'mocks': scored, 'notes': notes,
+            'summary': _summary(this_week, last_week), 'latest': latest}
 
 
 # ---------------------------------------------------------------------------

@@ -458,11 +458,17 @@ export interface Note {
 
 /** The dashboard's recent performance: this week against last. */
 export interface RecentPerformance {
+  /** The last 7 days, ending today (rolling, not a calendar week). */
   this_week: PerformanceWindow;
+  /** The 7 days before those. */
   last_week: PerformanceWindow;
   days: { date: string; answered: number; correct: number }[];
   mocks: ScorePoint[];
   notes: Note[];
+  /** The last 7 days against the 7 before, in one sentence. */
+  summary: { tone: 'up' | 'down' | 'flat'; text: string };
+  /** The newest score, and its change from the one before by the difficulty-adjusted score. */
+  latest: (ScorePoint & { change: number | null; change_text: string }) | null;
 }
 
 export interface RatingRow {

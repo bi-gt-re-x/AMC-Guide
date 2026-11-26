@@ -1,66 +1,24 @@
 /**
- * The dashboard's "Recent performance" card: this week against last, the last
- * two weeks day by day, the latest contest scores, and what changed. It
- * replaced a list of the last eight answers, which said what you did but not
- * how it was going.
+ * The dashboard's "Recent performance" card, kept to what can be taken in at
+ * a glance: two numbers for the last 7 days (answered, and the share right),
+ * one sentence against the 7 days before, the fortnight day by day, and the
+ * latest contest score with its change from the one before.
+ *
+ * It used to be a table of four numbers a week with arrows, a list of notes
+ * saying the same things again, and three scores, one of them compared raw
+ * against a paper of another year. Everything here is from
+ * backend/amc/insights.py `recent_performance`; the score change is by the
+ * difficulty-adjusted score (backend/amc/results.py), so a harder paper is not
+ * read as a slump. The full picture is on Analytics.
  */
 import { Link } from 'react-router-dom';
-import { pct, shortDate, type PerformanceWindow, type RecentPerformance } from '@/services/amc';
+import { pct, shortDate, type RecentPerformance } from '@/services/amc';
 import { Columns, Legend } from './Charts';
-import { clock } from './bits';
-
-function Delta({ now, before, kind }: { now: number | null; before: number | null; kind: 'pct' | 'count' | 'secs' }) {
-  if (now == null || before == null) return null;
-  const raw = kind === 'pct' ? Math.round((now - before) * 100) : Math.round(now - before);
-  if (!raw) return <span className="am-delta">same</span>;
-  // Faster is better for time; more is better for the rest.
-  const good = kind === 'secs' ? raw < 0 : raw > 0;
-  const text = kind === 'pct' ? `${Math.abs(raw)} pts` : kind === 'secs' ? clock(Math.abs(raw)) : String(Math.abs(raw));
-  return (
-    <span className={`am-delta ${good ? 'is-up' : 'is-down'}`}>
-      {raw > 0 ? '▲' : '▼'} {text}
-    </span>
-  );
-}
-
-function Row({ label, now, before, kind, show }: {
-  label: string;
-  now: number | null;
-  before: number | null;
-  kind: 'pct' | 'count' | 'secs';
-  show: (v: number | null) => string;
-}) {
-  return (
-    <div className="am-compare-row">
-      <dt>{label}</dt>
-      <dd><strong>{show(now)}</strong> <Delta now={now} before={before} kind={kind} /></dd>
-      <dd className="am-muted">{show(before)}</dd>
-    </div>
-  );
-}
-
-const count = (v: number | null) => (v == null ? '—' : String(v));
-const secs = (v: number | null) => (v == null ? '—' : clock(v));
-
-export function Compare({ now, before }: { now: PerformanceWindow; before: PerformanceWindow }) {
-  return (
-    <dl className="am-compare">
-      <div className="am-compare-row am-compare-head" aria-hidden="true">
-        <dt />
-        <dd>This week</dd>
-        <dd>Last week</dd>
-      </div>
-      <Row label="Answered" now={now.answered} before={before.answered} kind="count" show={count} />
-      <Row label="Accuracy" now={now.accuracy} before={before.accuracy} kind="pct" show={pct} />
-      <Row label="Time per problem" now={now.avg_seconds} before={before.avg_seconds} kind="secs" show={secs} />
-      <Row label="Days active" now={now.days} before={before.days} kind="count" show={count} />
-    </dl>
-  );
-}
 
 export function RecentPerformanceCard({ data }: { data: RecentPerformance }) {
-  const { this_week: now, last_week: before } = data;
+  const { this_week: now, summary, latest } = data;
   const any = data.days.some((d) => d.answered) || data.mocks.length > 0;
+  const last = data.days.length - 1;
   return (
     <section className="am-card">
       <div className="am-card-head">
@@ -71,50 +29,52 @@ export function RecentPerformanceCard({ data }: { data: RecentPerformance }) {
         <p className="am-muted" style={{ margin: 0 }}>Nothing in the last two weeks.</p>
       ) : (
         <div className="am-perf">
-          <Compare now={now} before={before} />
+          <div>
+            <p className="am-perf-kicker">Last 7 days</p>
+            <dl className="am-perf-figures">
+              <div><dt>answered</dt><dd>{now.answered}</dd></div>
+              <div><dt>right</dt><dd>{pct(now.accuracy)}</dd></div>
+            </dl>
+            <p className={`am-perf-summary is-${summary.tone}`}>{summary.text}</p>
+          </div>
+
           <div>
             <Columns
-              caption="Problems answered each day for the last 14 days"
-              idle={<>Last 14 days · {now.answered + before.answered} answered</>}
+              caption="Problems answered each day for the last 14 days, and how many were right"
+              idle={<>Point at a day to see it</>}
               labelEvery={7}
-              points={data.days.map((d) => ({
+              points={data.days.map((d, i) => ({
                 key: d.date,
-                label: shortDate(d.date),
+                label: i === last ? 'Today' : shortDate(d.date),
                 value: d.answered,
                 part: d.correct,
-                tip: `${shortDate(d.date)} · ${d.answered} answered, ${d.correct} right`,
+                tip: d.answered
+                  ? `${shortDate(d.date)} · ${d.correct} right, ${d.answered - d.correct} missed`
+                  : `${shortDate(d.date)} · nothing answered`,
               }))}
             />
-            <Legend items={[{ label: 'Right', tone: 'strong' }, { label: 'Answered', tone: 'soft' }]} />
+            <Legend items={[{ label: 'Right', tone: 'strong' }, { label: 'Missed', tone: 'soft' }]} />
           </div>
-          {data.notes.length > 0 && (
-            <ul className="am-notes">
-              {data.notes.map((n) => (
-                <li key={n.text} className={`is-${n.tone}`}>
-                  <span aria-hidden="true">{n.tone === 'up' ? '▲' : n.tone === 'down' ? '▼' : '■'}</span>
-                  {n.text}
-                </li>
-              ))}
-            </ul>
-          )}
-          {data.mocks.length > 0 && (
-            <div className="am-rows">
-              {data.mocks.slice(0, 3).map((m) => (
-                <Link key={m.id} className="am-row"
-                      to={m.kind === 'mock' ? `/mocks/${m.id}` : `/contests/${m.contest_id}`}>
-                  <div className="am-row-main">
-                    <div className="am-row-head">
-                      <strong>{m.name}</strong>
-                      <span className="am-muted">{m.kind === 'mock' ? 'Timed mock' : 'Logged score'}</span>
-                    </div>
-                  </div>
-                  <div className="am-row-side">
-                    <span className="am-muted" style={{ fontSize: 12 }}>{shortDate(m.at)}</span>
-                    <strong>{m.score}{m.max ? ` / ${m.max}` : ''}</strong>
-                  </div>
-                </Link>
-              ))}
-            </div>
+
+          {latest && (
+            <Link className="am-row am-perf-latest"
+                  to={latest.kind === 'mock' ? `/mocks/${latest.id}` : `/contests/${latest.contest_id}`}>
+              <div className="am-row-main">
+                <div className="am-row-head">
+                  <span className="am-muted">Latest {latest.kind === 'mock' ? 'mock' : 'score'}</span>
+                  <strong>{latest.name}</strong>
+                  <span className="am-muted">{shortDate(latest.at)}</span>
+                </div>
+                {latest.change_text && (
+                  <p className={`am-perf-change${latest.change ? latest.change > 0 ? ' is-up' : ' is-down' : ''}`}>
+                    {latest.change_text}
+                  </p>
+                )}
+              </div>
+              <div className="am-row-side">
+                <strong>{latest.score}{latest.max ? ` / ${latest.max}` : ''}</strong>
+              </div>
+            </Link>
           )}
         </div>
       )}

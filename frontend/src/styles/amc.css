@@ -1201,29 +1201,16 @@ a.am-topic-card:focus-visible { outline: 2px solid var(--tone, var(--am-sage)); 
 
 /* ---- Recent performance (components/Amc/Performance.tsx) ------------------ */
 .am-perf { display: grid; gap: var(--space-4); }
-.am-compare { margin: 0; display: grid; gap: 0; }
-.am-compare-row {
-    display: grid;
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr) minmax(0, 6rem);
-    gap: var(--space-3);
-    align-items: baseline;
-    padding: var(--space-2) 0;
-    border-top: 1px solid var(--am-line-soft);
-    font-size: var(--text-sm);
-}
-.am-compare-row dt { color: var(--am-body); }
-.am-compare-row dd { margin: 0; }
-.am-compare-row dd:last-child { text-align: right; }
-.am-compare-row strong { font-variant-numeric: tabular-nums; }
-.am-compare-head { border-top: 0; padding-top: 0; color: var(--am-faint); font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
-.am-delta { font-size: 12px; font-weight: 600; color: var(--am-muted); margin-left: 4px; white-space: nowrap; }
-.am-delta.is-up { color: var(--am-good); }
-.am-delta.is-down { color: var(--am-bad); }
-.am-notes { margin: 0; padding: 0; list-style: none; display: grid; gap: var(--space-2); }
-.am-notes li { display: flex; gap: var(--space-2); align-items: baseline; font-size: var(--text-sm); color: var(--am-body); line-height: 1.5; }
-.am-notes li > span { font-size: 10px; flex: none; color: var(--am-muted); }
-.am-notes li.is-up > span { color: var(--am-good); }
-.am-notes li.is-down > span { color: var(--am-bad); }
+.am-perf-kicker { margin: 0; color: var(--am-faint); font-size: 11px; font-weight: 600; letter-spacing: .06em; text-transform: uppercase; }
+.am-perf-figures { display: flex; gap: var(--space-5); margin: 6px 0 0; }
+.am-perf-figures > div { display: flex; flex-direction: row-reverse; justify-content: flex-end; align-items: baseline; gap: 6px; }
+.am-perf-figures dt { color: var(--am-muted); font-size: var(--text-sm); }
+.am-perf-figures dd { margin: 0; font-family: var(--am-serif); font-size: 30px; color: var(--am-ink); font-variant-numeric: tabular-nums; line-height: 1.1; }
+.am-perf-summary { margin: 6px 0 0; color: var(--am-body); font-size: var(--text-sm); line-height: 1.5; }
+.am-perf-latest .am-row-head { gap: var(--space-2); }
+.am-perf-change { margin: 2px 0 0; color: var(--am-muted); font-size: 12px; }
+.am-perf-change.is-up { color: var(--am-good); }
+.am-perf-change.is-down { color: var(--am-bad); }
 
 /* ---- Analytics (pages/amc/Analytics.tsx) ----------------------------------- */
 .am-card-sub { margin: 0 0 var(--space-3); color: var(--am-muted); font-size: var(--text-sm); line-height: 1.55; }

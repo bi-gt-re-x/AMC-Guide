@@ -4,6 +4,7 @@ attack follows from the goal."""
 from datetime import date, timedelta
 
 from backend.amc import catalog, insights
+from backend.amc.bank import BY_ID
 
 TODAY = date(2026, 11, 13)
 
@@ -96,3 +97,39 @@ def test_weeks_split_by_category_with_difficulty_and_test_score():
     ratings = [insights.pb.get(p)['rating'] for p in (a, b)]
     assert now['avg_rating'] == round(sum(ratings) / 2, 1)
     assert now['score_share'] == 0.5   # 75 of 150
+
+
+def test_the_card_says_the_fortnight_in_one_sentence():
+    attempts = [
+        _row('step-10-01', True, 10), _row('step-10-03', False, 9), _row('step-10-04', False, 8),
+        _row('step-10-05', True, 3), _row('step-10-06', True, 2), _row('step-10-08', True, 1),
+        _row('step-10-09', True, 0), _row('step-10-10', False, 0),
+    ]
+    # Too few answers to compare shares right: only how many.
+    summary = insights.recent_performance(attempts, [], TODAY)['summary']
+    assert summary == {'tone': 'up', 'text': 'More problems than the 7 days before (3 answered then).'}
+    pids = sorted(BY_ID)[:28]
+    enough = [_row(pid, i % 3 == 0, 9) for i, pid in enumerate(pids[:12])] + \
+             [_row(pid, i % 4 != 0, 2) for i, pid in enumerate(pids[12:28])]
+    summary = insights.recent_performance(enough, [], TODAY)['summary']
+    assert summary['tone'] == 'up'
+    assert summary['text'] == ('More problems than the 7 days before, and a higher share right '
+                               '(12 answered, 33% right then).')
+    assert insights.recent_performance(attempts[:3], [], TODAY)['summary']['text'] == \
+        'Nothing answered in the last 7 days (3 the 7 days before).'
+    assert insights.recent_performance(attempts[3:], [], TODAY)['summary']['text'] == \
+        'Nothing in the 7 days before to compare with.'
+
+
+def test_the_latest_score_is_compared_allowing_for_the_paper():
+    # 88.5 on the 2026 10B against 99 on the easier 2025 10A: 6.5 down, not 10.5.
+    mocks = [{'id': 'b', 'contest_id': '2026-amc-10b', 'kind': 'mock', 'score': 88.5, 'at': '2026-11-12T19:00:00'},
+             {'id': 'a', 'contest_id': '2025-amc-10a', 'kind': 'mock', 'score': 99, 'at': '2026-11-05T19:00:00'}]
+    perf = insights.recent_performance([], mocks, TODAY)
+    latest = perf['latest']
+    assert latest['id'] == 'b' and latest['change'] == -6.5
+    assert latest['change_text'] == '6.5 below your 2025 AMC 10A before it, allowing for how hard each paper was.'
+    assert any('6.5 below' in n['text'] for n in perf['notes'])
+    assert not any('10.5' in n['text'] for n in perf['notes'])
+    # A score with nothing like it before has no change to report.
+    assert insights.recent_performance([], mocks[:1], TODAY)['latest']['change'] is None

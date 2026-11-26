@@ -61,7 +61,7 @@
   "kind": "mock",
   "level": "AMC 10",
   "max": 150,
-  "name": "AMC Guide Mock AMC 10 \u00b7 Set 2",
+  "name": "AMC Guide Mock AMC 10 · Set 2",
   "note": "",
   "score": 85.5,
   "seconds": 4498,
@@ -78,8 +78,8 @@
   "official": false,
   "preview": "In how many distinct ways can the letters of MISSISSIPPI be arranged?",
   "rating": 3.0,
-  "short": "M10-4\u00b718",
-  "source": "AMC Guide Mock AMC 10 \u00b7 Set 4 #18",
+  "short": "M10-4·18",
+  "source": "AMC Guide Mock AMC 10 · Set 4 #18",
   "status": "new",
   "technique": "overcounting",
   "technique_name": "Overcounting",
@@ -168,10 +168,22 @@
    "hardest": {
     "id": "mock10-1-25",
     "rating": 7.0,
-    "short": "M10-1\u00b725"
+    "short": "M10-1·25"
    },
    "minutes": 73,
    "revealed": 0
+  },
+  "latest": {
+   "at": "2026-11-17T17:15:00",
+   "change": 21,
+   "change_text": "21 above your Step Mock AMC 10 before it.",
+   "contest_id": "mock-10-2",
+   "id": "9c07cfa5acdd43178b60a155e55941f7",
+   "kind": "mock",
+   "level": "AMC 10",
+   "max": 150,
+   "name": "AMC Guide Mock AMC 10 · Set 2",
+   "score": 85.5
   },
   "mocks": [
    {
@@ -181,7 +193,7 @@
     "kind": "mock",
     "level": "AMC 10",
     "max": 150,
-    "name": "AMC Guide Mock AMC 10 \u00b7 Set 2",
+    "name": "AMC Guide Mock AMC 10 · Set 2",
     "score": 85.5
    },
    {
@@ -191,7 +203,7 @@
     "kind": "mock",
     "level": "AMC 10",
     "max": 150,
-    "name": "AMC Guide Mock AMC 10 \u00b7 Set 1",
+    "name": "AMC Guide Mock AMC 10 · Set 1",
     "score": 64.5
    },
    {
@@ -215,10 +227,14 @@
     "tone": "up"
    },
    {
-    "text": "Last AMC 10 score +21 from the one before.",
+    "text": "Last AMC 10 score: 21 above your Step Mock AMC 10 before it.",
     "tone": "up"
    }
   ],
+  "summary": {
+   "text": "More problems than the 7 days before, but a lower share right (27 answered, 70% right then).",
+   "tone": "down"
+  },
   "this_week": {
    "accuracy": 0.623,
    "answered": 53,
@@ -228,7 +244,7 @@
    "hardest": {
     "id": "mock10-1-24",
     "rating": 6.0,
-    "short": "M10-1\u00b724"
+    "short": "M10-1·24"
    },
    "minutes": 94,
    "revealed": 0

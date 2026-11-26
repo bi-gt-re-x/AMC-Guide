@@ -1,4 +1,4 @@
-"""What the bell can say on this site: the study plan, reviews, mocks and the streak.
+"""What the bell can say on this site: the study plan, reviews, mocks and streak milestones.
 
 Each function returns candidates for backend/tracking/notify.py, which decides
 what is new, keeps what was deleted deleted, and retires the day-scoped ones
@@ -137,14 +137,17 @@ def _mocks(username, plan, built, today):
 
 
 def _streak(attempts, today):
+    """Only a streak's milestones (3, 7, 14, 30 days...), each once.
+
+    There is no daily "your streak needs a problem today": a reminder every
+    day is pressure to answer something for the count rather than to study,
+    and it turned the bell into a nag. A reminder already up from an older
+    build is withdrawn by the next sweep (backend/tracking/notify.py), since
+    nothing raises it any more."""
     day = today.isoformat()
     streak = engine.streak(attempts, today)
     answered_today = any(a['at'][:10] == day for a in attempts)
     out = []
-    if streak and not answered_today:
-        out.append({'fingerprint': 'streak-risk:' + day, 'channel': 'streak', 'tone': 'warn', 'for_day': day,
-                    'title': 'Your {}-day streak needs a problem today'.format(streak),
-                    'body': 'Answer any one problem to keep it going.', 'link': '/problems'})
     if streak in STREAK_MILESTONES:
         began = (today - timedelta(days=streak - (1 if answered_today else 0))).isoformat()
         out.append({'fingerprint': 'streak-milestone:{}:{}'.format(streak, began), 'channel': 'streak',

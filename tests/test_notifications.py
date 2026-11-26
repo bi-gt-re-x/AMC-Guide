@@ -74,15 +74,13 @@ def due(client):
 def test_the_record_becomes_notifications(due):
     rows = _list(due)
     prints = _prints(rows)
-    assert {'review-due:%s' % DAY, 'streak-risk:%s' % DAY} <= prints
+    assert 'review-due:%s' % DAY in prints
 
     review = next(r for r in rows if r['fingerprint'] == 'review-due:%s' % DAY)
     assert review['channel'] == 'review' and review['tone'] == 'info'
     # The count is in the words, never in the fingerprint: see backend/tracking/notify.py.
     assert review['title'] == "Today's review set: 3 problems"
     assert review['link'] == '/review?start=1'
-    streak = next(r for r in rows if r['fingerprint'] == 'streak-risk:%s' % DAY)
-    assert streak['title'] == 'Your 1-day streak needs a problem today'
 
 
 def test_sweeping_again_writes_nothing(due):
@@ -121,10 +119,27 @@ def test_a_new_day_retires_the_old_one_and_raises_its_own(due):
     assert 'review-due:%s' % DAY not in _prints(_list(due))
 
 
-def test_a_streak_kept_today_is_withdrawn_from_the_bell(due):
-    assert 'streak-risk:%s' % DAY in _prints(_list(due))
-    _answered('tester', DAY)
+def test_a_streak_is_never_a_daily_reminder(due):
+    # A streak with nothing on it yet today raises nothing, day after day.
+    for day in (DAY, TOMORROW):
+        assert not [r for r in _list(due, day=day) if r['channel'] == 'streak']
+
+
+def test_a_streak_reminder_left_from_before_is_withdrawn(due):
+    _list(due)
+    db.add_notifications('tester', [{'fingerprint': 'streak-risk:%s' % DAY, 'channel': 'streak', 'tone': 'warn',
+                                     'for_day': DAY, 'title': 'Your 1-day streak needs a problem today',
+                                     'body': '', 'link': '/problems'}])
     assert 'streak-risk:%s' % DAY not in _prints(_list(due))
+
+
+def test_a_streak_milestone_is_still_said_once(due):
+    _list(due)
+    _answered('tester', (date.fromisoformat(DAY) - timedelta(days=2)).isoformat())
+    _answered('tester', DAY)
+    rows = [r for r in _list(due) if r['channel'] == 'streak']
+    assert [r['title'] for r in rows] == ['3 days in a row']
+    assert not [r for r in _list(due) if r['channel'] == 'streak' and r['id'] != rows[0]['id']]
 
 
 # --------------------------------------------------------------------------
@@ -138,7 +153,6 @@ def test_deleting_one_keeps_it_gone(due):
     for _ in range(3):
         rows = _list(due)
     assert 'review-due:%s' % DAY not in _prints(rows)
-    assert 'streak-risk:%s' % DAY in _prints(rows)
 
 
 def test_delete_all_empties_it_and_it_stays_empty(due):
@@ -185,6 +199,8 @@ def test_reading_is_not_deleting(due):
 
 
 def test_shown_is_stamped_per_row(due):
+    # A contest a week out: the plan's rows beside the review one.
+    store.save_plan('tester', 'AMC 10', '2026-09-08', 100, 6, {}, {})
     rows = _list(due)
     assert len(rows) >= 2
     first = rows[0]['id']
