@@ -8,6 +8,11 @@
  * fresh try, with a button on to the next of the twelve. `?set=1` is one of a
  * topic's eight handpicked practice problems (pages/amc/PracticeSet.tsx): a
  * fresh try too, with the set's clock, and the topic hidden on a mixed set.
+ *
+ * Each of the three is a set stored on the account (POST /api/amc/sets) once
+ * it is started: every answer in it carries the set's id, and finishing it
+ * (its last problem, or a practice set's clock) closes the set and opens its
+ * report, which says what was right and what was missed in that set.
  */
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
@@ -29,8 +34,8 @@ import {
 import { useApi, useDocumentTitle } from '@/hooks';
 import { amc, announceAmcChanged, shortDate, type AttemptReply, type Problem as ProblemData } from '@/services/amc';
 import { activePracticeSet, practiceSetHome, readPracticeSet, updatePracticeSet } from './practiceSetStore';
-import { readWeakSet } from './weakSet';
-import { readReviewSet } from './reviewSet';
+import { readWeakRun, readWeakSet, setWeakRun } from './weakSet';
+import { readReviewRun, readReviewSet, setReviewRun } from './reviewSet';
 import '@/styles/amc.css';
 
 const STAGES = 3;
@@ -137,14 +142,61 @@ export default function Problem() {
   const timeUp = setLeft === 0;
   useEffect(() => {
     if (!timeUp) return;
-    updatePracticeSet({ finished: true });
-    navigate(`${setHome}&done=1&timeup=1`, { replace: true });
-  }, [timeUp, navigate, setHome]);
+    void finishPracticeSet(true).then((run) => {
+      navigate(`${setHome}&done=1&timeup=1${run ? `&run=${run}` : ''}`, { replace: true });
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- once, when the clock runs out
+  }, [timeUp]);
   // The set remembers which problem it is on, so it can be picked up again.
   useEffect(() => {
     if (inSet && setAt >= 0) updatePracticeSet({ current: problemId });
   }, [inSet, setAt, problemId]);
   useLeaveSetGuard(inSet && setAt >= 0, confirm, navigate);
+
+  /**
+   * The stored set this problem is answered in: the practice set, review set
+   * or weak-topics set being walked, recorded on the account the first time
+   * it is needed (a set started before sets were stored, or whose start could
+   * not be saved). '' outside a set, or when it cannot be recorded: the answer
+   * still counts, just not in a set.
+   */
+  async function setRun(): Promise<string> {
+    if (inSet && setAt >= 0 && practiceSet) {
+      const known = readPracticeSet()?.runId;
+      if (known) return known;
+      const id = await amc.recordSet({
+        kind: 'practice', topic: practiceSet.topic, mode: practiceSet.mode, title: practiceSet.title,
+        problems: setIds,
+        seconds: practiceSet.deadline != null && practiceSet.seconds ? practiceSet.seconds * setIds.length : null,
+      });
+      if (id) updatePracticeSet({ runId: id });
+      return id ?? '';
+    }
+    if (reviewing && reviewAt >= 0) {
+      const known = readReviewRun();
+      if (known) return known;
+      const id = await amc.recordSet({ kind: 'review', problems: reviewSet });
+      if (id) setReviewRun(id);
+      return id ?? '';
+    }
+    if (weak && weakAt >= 0) {
+      const known = readWeakRun();
+      if (known) return known;
+      const id = await amc.recordSet({ kind: 'weak', problems: weakSet });
+      if (id) setWeakRun(id);
+      return id ?? '';
+    }
+    return '';
+  }
+
+  /** Close the practice set on the account (its last problem, or its clock) and say which it was. */
+  async function finishPracticeSet(timeIsUp: boolean): Promise<string> {
+    const run = await setRun();
+    if (run) await amc.closeSet(run, timeIsUp);
+    updatePracticeSet({ finished: true });
+    announceAmcChanged();
+    return run;
+  }
 
   if (loading && !data) return <Loading label="Loading problem" />;
   if (error || !data) return <ErrorState message={error ?? 'Could not load this problem.'} onRetry={reload} />;
@@ -157,7 +209,8 @@ export default function Problem() {
     setBusy(true);
     setMessage('');
     try {
-      const reply = await amc.attempt(problemId, answer, seconds, reviewing ? 'review' : 'practice');
+      const run = await setRun();
+      const reply = await amc.attempt(problemId, answer, seconds, reviewing ? 'review' : 'practice', run);
       if (reply.success) {
         setResult(reply);
         markAnswered();
@@ -181,7 +234,8 @@ export default function Problem() {
   async function reveal() {
     setBusy(true);
     try {
-      const reply = await amc.reveal(problemId);
+      const run = await setRun();
+      const reply = await amc.reveal(problemId, run);
       if (reply.success) {
         setRevealed(reply.problem);
         markAnswered();
@@ -193,11 +247,19 @@ export default function Problem() {
     }
   }
 
-  /** The next problem in this review set, or the review page once the set is done.
+  /** The next problem in this review set, or the set's report once it is done.
    *  Outside a set (storage blocked, an old link), the next problem due. */
   async function nextDue() {
     if (reviewAt >= 0) {
-      navigate(reviewNext ? `/problems/${reviewNext}?review=1` : '/review?done=1');
+      if (reviewNext) {
+        navigate(`/problems/${reviewNext}?review=1`);
+        return;
+      }
+      const run = readReviewRun();
+      if (run) await amc.closeSet(run);
+      setReviewRun(null);
+      announceAmcChanged();
+      navigate(`/review?done=1${run ? `&run=${run}` : ''}`);
       return;
     }
     const queue = await amc.review();
@@ -362,10 +424,17 @@ export default function Problem() {
                 <span className="am-muted" style={{ fontSize: 13 }}>
                   {practiceSet?.title ?? 'Practice set'}{setAt >= 0 ? ` · ${setAt + 1} of ${setIds.length}` : ''}
                 </span>
-                <button type="button" className="am-btn am-btn-primary"
+                <button type="button" className="am-btn am-btn-primary" disabled={busy}
                         onClick={() => {
-                          if (!setNext) updatePracticeSet({ finished: true });
-                          navigate(setNext ? `/problems/${setNext}?set=1` : `${setHome}&done=1`);
+                          if (setNext) {
+                            navigate(`/problems/${setNext}?set=1`);
+                            return;
+                          }
+                          setBusy(true);
+                          void finishPracticeSet(false).then((run) => {
+                            setBusy(false);
+                            navigate(`${setHome}&done=1${run ? `&run=${run}` : ''}`);
+                          });
                         }}>
                   {setNext ? 'Next problem →' : 'Finish the set'}
                 </button>
@@ -377,9 +446,22 @@ export default function Problem() {
                 <span className="am-muted" style={{ fontSize: 13 }}>
                   {weakAt >= 0 ? `Weak topics · ${weakAt + 1} of ${weakSet.length}` : 'Weak topics'}
                 </span>
-                <button type="button" className="am-btn am-btn-primary"
-                        onClick={() => navigate(weakNext ? `/problems/${weakNext}?weak=1` : '/review')}>
-                  {weakNext ? 'Next weak-topic problem →' : 'Back to Review'}
+                <button type="button" className="am-btn am-btn-primary" disabled={busy}
+                        onClick={() => {
+                          if (weakNext) {
+                            navigate(`/problems/${weakNext}?weak=1`);
+                            return;
+                          }
+                          const run = weakAt >= 0 ? readWeakRun() : null;
+                          setBusy(true);
+                          void (run ? amc.closeSet(run) : Promise.resolve(false)).then(() => {
+                            setWeakRun(null);
+                            setBusy(false);
+                            announceAmcChanged();
+                            navigate(`/review?done=1${run ? `&run=${run}` : ''}`);
+                          });
+                        }}>
+                  {weakNext ? 'Next weak-topic problem →' : 'Finish the set'}
                 </button>
               </div>
             )}

@@ -13,6 +13,14 @@ as the problems. It is fitted by maximum a posteriori from first attempts only
 (a second try after seeing a solution says nothing about contest day), with a
 normal prior so that three answers cannot claim a 9.
 
+**Kept, not just met.** A problem answered again `engine.RETEST_DAYS` or more
+after the try before it (a review at 10 or 21 days, a spaced set, an accuracy
+set's old misses) is a fresh retrieval, and the latest such answer counts too,
+at `RETEST_WEIGHT` of a first try: memory of the solution makes it weaker
+evidence, but it is how a topic that has been put right shows it, and how one
+that has slipped away again shows that. `ability_points` is the list every fit
+reads; counts of answers and first-try accuracy stay on first tries.
+
 **Recent answers count more.** Each first attempt is weighted by its age, with
 a half-life of `HALF_LIFE` days and a floor, so the level follows the student's
 current form instead of averaging in where they were two months ago, while old
@@ -63,7 +71,7 @@ from backend.amc.scale import SCALE_BY_NUMBER
 
 #: Bumped whenever the model or its scale changes, so a cached AI reading of
 #: the old numbers (backend/api/amc_ai.py) is not shown beside the new ones.
-MODEL_VERSION = 'summit-scale-3'
+MODEL_VERSION = 'summit-scale-4'
 #: Logistic slope per AMC Guide rating point (1.6 per AoPS point, halved).
 SLOPE = 0.8
 #: Prior on a new student: about an AMC 10 #8-10 (AoPS 2), give or take a lot.
@@ -129,6 +137,23 @@ def _first_points(hist, today=None, keep=None):
     return out
 
 
+#: How much a spaced retest counts beside a first try (see the module's note).
+RETEST_WEIGHT = 0.5
+
+
+def ability_points(hist, today=None, keep=None):
+    """`_first_points` and, for each problem retested after a gap, its latest
+    retest at RETEST_WEIGHT: what the ability fits read."""
+    today = today or date.today()
+    out = _first_points(hist, today, keep)
+    for pid, h in hist.items():
+        again = h.get('retest')
+        p = pb.get(pid) if again else None
+        if p and (keep is None or keep(p)):
+            out.append((p['rating'], again['correct'], RETEST_WEIGHT * _weight(again['at'], today), p))
+    return out
+
+
 def _expected(theta, level):
     """Expected score with the best answer-or-skip choice on each problem."""
     table = SCALE_BY_NUMBER[level]
@@ -141,7 +166,7 @@ def projected(hist, level, today=None):
     """The expected score on a `level` paper, or None before there is enough to go on."""
     if len(hist) < engine.PROJECTION_MIN:
         return None
-    pts = _first_points(hist, today)
+    pts = ability_points(hist, today)
     theta, _ = fit([(r, ok, w) for r, ok, w, _ in pts])
     score = _expected(theta, level)
     return round(score, 1) if level == 'AIME' else round(score * 2) / 2
@@ -428,7 +453,7 @@ def analyze(attempts, hist, review_by_id, mocks, plan, today=None):
     level = plan['target'] if plan else 'AMC 10'
     goal = plan['goal_score'] if plan else engine.DEFAULT_GOALS[level]
     points = _first_points(hist, today)
-    theta, se = fit([(r, ok, w) for r, ok, w, _ in points])
+    theta, se = fit([(r, ok, w) for r, ok, w, _ in ability_points(hist, today)])
     n = len(points)
     pace = pace_model(hist, theta)
 
@@ -446,12 +471,16 @@ def analyze(attempts, hist, review_by_id, mocks, plan, today=None):
             'speed_cost': round(max(0.0, expected - timed), 1),
         }
 
-    # Per topic and per technique, shrunk toward the overall theta.
-    by_topic, by_tech = {}, {}
-    for rating, ok, w, p in points:
+    # Per topic and per technique, shrunk toward the overall theta: fitted
+    # from first tries and retests, counted from first tries.
+    by_topic, by_tech, firsts = {}, {}, {}
+    for rating, ok, w, p in ability_points(hist, today):
         for tid in [p['topic']] + p['also']:
             by_topic.setdefault(tid, []).append((rating, ok, w))
         by_tech.setdefault(p['technique'], []).append((rating, ok, w))
+    for rating, ok, w, p in points:
+        for tid in [p['topic']] + p['also']:
+            firsts.setdefault(tid, []).append(ok)
     level_topics = [t for t in catalog.TOPICS if level in t['levels']]
     total_weight = sum(t['weight'] for t in level_topics) or 1
     topics = []
@@ -461,7 +490,7 @@ def analyze(attempts, hist, review_by_id, mocks, plan, today=None):
         relevant = level in t['levels']
         points_at_stake = _topic_points(level, theta, th, t['weight'], total_weight) if relevant else 0
         topics.append({'id': t['id'], 'name': t['name'], 'category': t['category'], 'weight': t['weight'],
-                       'answered': len(pts), 'right': sum(1 for _, ok, _w in pts if ok),
+                       'answered': len(firsts.get(t['id'], [])), 'right': sum(firsts.get(t['id'], [])),
                        'theta': th, 'se': tse, 'relevant': relevant,
                        # Points on the student's contest from bringing this topic up.
                        'points': points_at_stake,

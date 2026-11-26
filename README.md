@@ -46,6 +46,20 @@ right half to three-quarters of the time. The dashboard's projected score is
 the same model. Each AMC Guide Mock says how it plays against a real paper; the
 review in `sets/ratings.py` found them easier, most of all the AIME sets.
 
+Every set walked one problem after another (a topic's practice set, a review
+set, the weak-topics set) is recorded as dealt in `amc_set_runs`, and each answer
+in it carries the set's id (`amc_attempts.set_id`). When the set ends, its report
+(`backend/amc/setreport.py`) is read from those rows alone: what you got right,
+what you missed with your answer beside the right one, what was left unanswered
+(its answer not shown), slips, slow answers and stretches, how many the model
+expected, your level in each topic before and after, and what the study plan now
+asks for. Analytics lists recent sets and the accuracy of each kind of set. A
+problem answered again a week or more after the try before it counts toward
+your level at half the weight of a first try (`smart.ability_points`), so a
+topic put right in a spaced or accuracy set rises in the plan, and an answer in
+a mixed set (topic hidden) counts as unlabelled when the plan looks for a
+recognition weakness.
+
 The AI layer (`backend/amc/ai.py`, endpoints in `backend/api/amc_ai.py`) uses
 **Gemini** whenever `GEMINI_API_KEY` is set (model `GEMINI_MODEL`, default
 `gemini-3.8-flash`, falling back through newer Flash and Flash-Lite models when

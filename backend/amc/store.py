@@ -40,15 +40,70 @@ def _write(statements):
 
 # -- Attempts ---------------------------------------------------------------
 def attempts(user):
-    return _read('SELECT problem_id, answer, correct, seconds, source, at FROM amc_attempts '
-                 'WHERE user_id = ? ORDER BY at, rowid', (user,))
+    """Every answer, oldest first, with the kind and mode of the set it was
+    given in ('' for a problem answered on its own): a mixed set hides the
+    topic and a timed one runs on a clock, which the analysis reads."""
+    rows = _read('SELECT a.problem_id, a.answer, a.correct, a.seconds, a.source, a.at, a.set_id, '
+                 'r.kind AS set_kind, r.mode AS set_mode '
+                 'FROM amc_attempts a LEFT JOIN amc_set_runs r ON r.id = a.set_id AND r.user_id = a.user_id '
+                 'WHERE a.user_id = ? ORDER BY a.at, a.rowid', (user,))
+    for row in rows:
+        row['set_id'] = row.get('set_id') or ''
+        row['set_kind'] = row.get('set_kind') or ''
+        row['set_mode'] = row.get('set_mode') or ''
+    return rows
 
 
-def attempt_rows(user, problem_id, answer, correct, seconds, source):
-    return ('INSERT INTO amc_attempts (id, user_id, problem_id, answer, correct, seconds, source, at) '
-            'VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+def attempt_rows(user, problem_id, answer, correct, seconds, source, set_id=''):
+    return ('INSERT INTO amc_attempts (id, user_id, problem_id, answer, correct, seconds, source, at, set_id) '
+            'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
             (uuid.uuid4().hex, user, problem_id, str(answer), 1 if correct else 0,
-             int(seconds or 0), source, _now()))
+             int(seconds or 0), source, _now(), set_id or ''))
+
+
+# -- Sets walked one problem after another ------------------------------------
+_RUN_COLUMNS = 'id, kind, topic, mode, title, problems, seconds, started_at, finished_at, time_up'
+
+
+def _run(row):
+    problems = _json(row.get('problems'), [])
+    row['problems'] = [str(p) for p in problems] if isinstance(problems, list) else []
+    row['seconds'] = int(row['seconds']) if row.get('seconds') not in (None, '') else None
+    row['finished_at'] = row.get('finished_at') or ''
+    row['time_up'] = bool(int(row.get('time_up') or 0))
+    for key in ('topic', 'mode', 'title'):
+        row[key] = row.get(key) or ''
+    return row
+
+
+def start_set_run(user, kind, topic, mode, title, problems, seconds=None):
+    """Record a set as dealt, its problems in order. Returns the run's id."""
+    run_id = uuid.uuid4().hex
+    _write([('INSERT INTO amc_set_runs (id, user_id, kind, topic, mode, title, problems, seconds, started_at, '
+             'finished_at, time_up) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+             (run_id, user, kind, topic or '', mode or '', title or '', json.dumps(list(problems)),
+              int(seconds) if seconds else None, _now(), '', 0))])
+    return run_id
+
+
+def set_run(user, run_id):
+    rows = _read('SELECT {} FROM amc_set_runs WHERE user_id = ? AND id = ?'.format(_RUN_COLUMNS), (user, run_id))
+    return _run(rows[0]) if rows else None
+
+
+def set_runs(user, limit=None):
+    """The account's sets, newest first."""
+    sql = 'SELECT {} FROM amc_set_runs WHERE user_id = ? ORDER BY started_at DESC, rowid DESC'.format(_RUN_COLUMNS)
+    if limit:
+        sql += ' LIMIT {:d}'.format(int(limit))
+    return [_run(r) for r in _read(sql, (user,))]
+
+
+def finish_set_run(user, run_id, time_up=False):
+    """Mark a set over, once: the first finish (and whether its clock ended it) stands."""
+    _write([('UPDATE amc_set_runs SET finished_at = ?, time_up = ? '
+             "WHERE user_id = ? AND id = ? AND (finished_at IS NULL OR finished_at = '')",
+             (_now(), 1 if time_up else 0, user, run_id))])
 
 
 # -- Reviews ----------------------------------------------------------------

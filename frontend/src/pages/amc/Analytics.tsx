@@ -6,6 +6,9 @@
  *   Performance          week by week: how often you solve, in which
  *                        categories, how accurately, how hard the problems
  *                        were, and your best test score that week.
+ *   Your sets            every practice, review and weak-topics set as it went
+ *                        (backend/amc/setreport.py), and accuracy by kind of
+ *                        set: which training is landing. Each opens its report.
  *   By difficulty        first-try accuracy at each point of the 1-12 rating,
  *                        beside the list of topics costing you the most.
  *   Where the points are topics by the points studying them would add, and the
@@ -25,7 +28,7 @@ import { Coach } from '@/components/Amc/Insights';
 import { PrioritiesCard, Takeaways, WeaknessLines } from '@/components/Amc/Study';
 import { CategoryDot, Empty, Meter, PageHeader, ratingText } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
-import { amc, pct, type Analytics as AnalyticsData, type CategoryId } from '@/services/amc';
+import { amc, pct, shortDate, type Analytics as AnalyticsData, type CategoryId, type SetBrief } from '@/services/amc';
 import '@/styles/amc.css';
 
 function tone(accuracy: number | null): 'good' | 'warn' | 'bad' {
@@ -126,6 +129,61 @@ function MockLosses({ lost }: { lost?: AnalyticsData['mock_mistakes'] }) {
   );
 }
 
+/** Where a stored set's report is. */
+function reportHref(s: SetBrief): string {
+  return s.kind === 'practice'
+    ? `/practice/${s.topic}?mode=${s.mode}&done=1&run=${s.id}`
+    : `/review?done=1&run=${s.id}`;
+}
+
+function SetsSection() {
+  const { data, error, loading, reload } = useApi(() => amc.sets(8), []);
+  if (loading && !data) return <section className="am-card"><Loading label="Reading your sets" /></section>;
+  if (error || !data) return <ErrorState message={error ?? 'Could not load your sets.'} onRetry={reload} />;
+  return (
+    <section className="am-card">
+      <div className="am-card-head">
+        <h2>Your sets</h2>
+        <span className="am-muted" style={{ fontSize: 12 }}>right of answered, by kind of set</span>
+      </div>
+      {data.sets.length ? (
+        <div className="am-grid am-an-split">
+          <ul className="am-list" aria-label="Accuracy by kind of set">
+            {data.by_mode.map((m) => (
+              <li key={m.id} style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1fr) 120px auto', alignItems: 'center' }}>
+                <span>{m.title} <span className="am-muted">· {m.sets} set{m.sets === 1 ? '' : 's'}</span></span>
+                <Meter value={m.accuracy ?? 0} tone={tone(m.accuracy)} />
+                <span className="am-muted" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                  {m.right}/{m.answered} · {m.accuracy == null ? '—' : pct(m.accuracy)}
+                </span>
+              </li>
+            ))}
+          </ul>
+          <ul className="am-list" aria-label="Recent sets">
+            {data.sets.map((s) => (
+              <li key={s.id}>
+                <Link className="am-link" to={reportHref(s)}>
+                  {s.title}{s.topic_name ? ` · ${s.topic_name}` : ''}
+                </Link>
+                <span className="am-muted" style={{ fontVariantNumeric: 'tabular-nums' }}>
+                  {shortDate(s.started_at)} · {s.right} of {s.total} right
+                  {s.wrong + s.revealed ? `, ${s.wrong + s.revealed} missed` : ''}
+                  {s.finished ? '' : ' · in progress'}
+                </span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : (
+        <Empty title="No sets yet">
+          Start one from a <Link className="am-link" to="/topics">topic</Link>, your{' '}
+          <Link className="am-link" to="/study-plan">study plan</Link> or <Link className="am-link" to="/review">Review</Link>.
+        </Empty>
+      )}
+    </section>
+  );
+}
+
 function CoachSection() {
   const { data, error, loading, reload } = useApi(() => amc.insights(), []);
   if (loading && !data) return <section className="am-card"><Loading label="Waking the coach" /></section>;
@@ -178,6 +236,8 @@ export default function Analytics() {
               </Empty>
             )}
           </section>
+
+          <SetsSection />
 
           <div className="am-grid am-an-split">
             <section className="am-card">

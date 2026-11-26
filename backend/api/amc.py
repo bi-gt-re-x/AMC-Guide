@@ -12,7 +12,7 @@ from fastapi import APIRouter, Depends, Query, Request
 from pydantic import BaseModel
 
 from backend.amc import catalog, coach, engine, insights, mockscore, planning, practice, results, store, weak
-from backend.amc import official, plan_view
+from backend.amc import official, plan_view, setreport
 from backend.amc import problems as pb
 from backend.amc.scale import TOP
 from backend.api.guard import current_username
@@ -382,6 +382,23 @@ class AttemptBody(BaseModel):
     answer: Union[str, int, None] = ''
     seconds: Optional[int] = 0
     source: Optional[str] = 'practice'
+    #: The set it is answered in (POST /api/amc/sets), if any.
+    set_id: Optional[str] = ''
+
+
+class RevealBody(BaseModel):
+    set_id: Optional[str] = ''
+
+
+def _set_for(username, set_id, problem_id):
+    """`set_id` if it is this account's set, still open, and deals this
+    problem; else '' (the answer still counts, outside any set)."""
+    if not set_id:
+        return ''
+    run = store.set_run(username, set_id)
+    if not run or run['finished_at'] or problem_id not in run['problems']:
+        return ''
+    return set_id
 
 
 @router.post('/api/amc/problems/{problem_id}/attempt')
@@ -395,7 +412,8 @@ def attempt(problem_id: str, body: AttemptBody, username: str = Depends(current_
     source = body.source if body.source in ('practice', 'review') else 'practice'
     correct = given == str(p['answer'])
     today = _today()
-    statements = [store.attempt_rows(username, problem_id, given, correct, body.seconds, source)]
+    set_id = _set_for(username, body.set_id, problem_id)
+    statements = [store.attempt_rows(username, problem_id, given, correct, body.seconds, source, set_id)]
     existing = store.review(username, problem_id)
     new_review = engine.after_answer(existing, problem_id, correct, today)
     if new_review:
@@ -404,21 +422,105 @@ def attempt(problem_id: str, body: AttemptBody, username: str = Depends(current_
     rev = store.review(username, problem_id)
     return ok(correct=correct, given=given, problem=engine.public(p, reveal=True),
               review={'stage': int(rev['stage']), 'due': rev['due'], 'status': rev['status']} if rev else None,
-              moved=bool(new_review))
+              moved=bool(new_review), set_id=set_id)
 
 
 @router.post('/api/amc/problems/{problem_id}/reveal')
-def reveal(problem_id: str, username: str = Depends(current_username)):
+def reveal(problem_id: str, body: Optional[RevealBody] = None, username: str = Depends(current_username)):
     """Show the solution without answering. Counts as a miss, so it comes
     back for review like any other."""
     p = pb.get(problem_id)
     if not p:
         return fail('No such problem.')
     existing = store.review(username, problem_id)
-    statements = [store.attempt_rows(username, problem_id, '', False, 0, 'reveal')]
+    set_id = _set_for(username, body.set_id if body else '', problem_id)
+    statements = [store.attempt_rows(username, problem_id, '', False, 0, 'reveal', set_id)]
     statements += store.review_upsert(username, engine.after_answer(existing, problem_id, False, _today()))
     store.write(statements)
     return ok(problem=engine.public(p, reveal=True))
+
+
+# ---------------------------------------------------------------------------
+# Sets walked one problem after another, and their reports
+# ---------------------------------------------------------------------------
+#: The most problems one set may deal.
+SET_MAX = 40
+
+
+class SetBody(BaseModel):
+    kind: str = 'practice'
+    topic: Optional[str] = ''
+    mode: Optional[str] = ''
+    title: Optional[str] = ''
+    problems: List[str] = []
+    #: The whole set's clock in seconds, if it has one.
+    seconds: Optional[int] = None
+
+
+class FinishBody(BaseModel):
+    time_up: bool = False
+
+
+def _set_report(username, run):
+    attempts, _, _, review_by_id = _context(username)
+    plan = store.plan(username)
+    level = plan['target'] if plan else 'AMC 10'
+    goal = plan['goal_score'] if plan else engine.DEFAULT_GOALS[level]
+    return setreport.report(run, attempts, review_by_id, level, goal, store.mocks(username),
+                            plan['details'] if plan else None, _today())
+
+
+@router.post('/api/amc/sets')
+def start_set(body: SetBody, username: str = Depends(current_username)):
+    """Record a set as it is dealt, so its report is about these problems."""
+    if body.kind not in ('practice', 'review', 'weak'):
+        return fail('No such kind of set.')
+    ids = []
+    for pid in body.problems:
+        if pb.get(pid) and pid not in ids:
+            ids.append(pid)
+    if not ids:
+        return fail('A set needs at least one problem.')
+    if len(ids) > SET_MAX:
+        return fail('A set holds at most {} problems.'.format(SET_MAX))
+    topic = body.topic or ''
+    if body.kind == 'practice' and topic not in catalog.TOPIC_BY_ID:
+        return fail('No such topic.')
+    mode = body.mode if body.kind == 'practice' and body.mode in practice.MODES else ''
+    seconds = int(body.seconds) if body.seconds and body.seconds > 0 else None
+    run_id = store.start_set_run(username, body.kind, topic, mode, (body.title or '')[:80], ids, seconds)
+    return ok(id=run_id, problems=ids)
+
+
+@router.get('/api/amc/sets')
+def list_sets(limit: int = 20, username: str = Depends(current_username)):
+    """The account's recent sets, newest first, each with how it went, and accuracy by kind of set."""
+    attempts = store.attempts(username)
+    runs = store.set_runs(username)
+    by_set = {}
+    for a in attempts:
+        if a['set_id']:
+            by_set.setdefault(a['set_id'], []).append(a)
+    shown = [setreport.brief(r, by_set.get(r['id'], [])) for r in runs[:max(1, min(100, int(limit)))]]
+    return ok(sets=shown, by_mode=setreport.by_mode(runs, attempts))
+
+
+@router.get('/api/amc/sets/{set_id}')
+def get_set(set_id: str, username: str = Depends(current_username)):
+    run = store.set_run(username, set_id)
+    if not run:
+        return fail('No such set.')
+    return ok(report=_set_report(username, run))
+
+
+@router.post('/api/amc/sets/{set_id}/finish')
+def finish_set(set_id: str, body: FinishBody, username: str = Depends(current_username)):
+    """End a set (its last problem done, or its clock out) and return its report."""
+    run = store.set_run(username, set_id)
+    if not run:
+        return fail('No such set.')
+    store.finish_set_run(username, set_id, body.time_up)
+    return ok(report=_set_report(username, store.set_run(username, set_id)))
 
 
 # ---------------------------------------------------------------------------

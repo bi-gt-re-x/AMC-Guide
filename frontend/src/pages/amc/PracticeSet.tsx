@@ -7,14 +7,22 @@
  * size the study plan asked for today. Starting walks the set on the problem
  * page (`?set=1`); a timed or challenge set starts its clock then, the whole
  * set's time, and ends when it runs out. Finishing comes back here with how
- * it went (`?done=1`, and `&timeup=1` if the clock ended it).
+ * it went (`?done=1&run=<id>`, and `&timeup=1` if the clock ended it).
+ *
+ * Starting records the set on the account as dealt (POST /api/amc/sets), and
+ * how it went is that stored set's report (components/Amc/SetReport.tsx):
+ * these problems and the answers given in this set, not the set the picker
+ * would deal now (it deals others once these are answered) nor any problem's
+ * lifetime status. A set in progress lists the problems it was dealt, too.
  */
+import { useState } from 'react';
 import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom';
 import { ErrorState, Loading, useNotice } from '@/components';
 import { CategoryDot, clock, PageHeader, StatusPill } from '@/components/Amc/bits';
+import { SetReport } from '@/components/Amc/SetReport';
 import { MixBar } from '@/components/Amc/Study';
 import { useApi, useDocumentTitle } from '@/hooks';
-import { amc } from '@/services/amc';
+import { amc, type SetResult } from '@/services/amc';
 import { activePracticeSet, writePracticeSet } from './practiceSetStore';
 import '@/styles/amc.css';
 
@@ -31,14 +39,19 @@ export default function PracticeSet() {
   // This set, left part way (and not just finished): offered to be continued.
   const open = done ? null : activePracticeSet();
   const going = open && open.topic === topicId && open.mode === mode ? open : null;
+  // The stored set: the one just finished, or the one in progress.
+  const runId = done ? params.get('run') : going?.runId ?? null;
+  const stored = useApi(() => amc.setReport(runId ?? ''), [runId], { enabled: Boolean(runId) });
+  const report = runId && stored.data?.report.id === runId ? stored.data.report : null;
+  const [starting, setStarting] = useState(false);
   useDocumentTitle(data ? `${data.topic.name} · ${data.title}` : 'Practice set');
 
   if (loading && !data) return <Loading label="Picking eight problems" />;
   if (error || !data) return <ErrorState message={error ?? 'Could not pick a set.'} onRetry={reload} />;
 
-  const right = data.problems.filter((p) => p.status === 'solved').length;
-  const untried = data.problems.filter((p) => p.status === 'new').length;
   const answeredIds = new Set(going?.answered ?? []);
+  // How each dealt problem went in this set, once there is a stored set to say.
+  const results = new Map<string, SetResult>((report?.problems ?? []).map((r) => [r.id, r.result]));
   const left = going?.deadline != null ? Math.max(0, Math.ceil((going.deadline - Date.now()) / 1000)) : null;
 
   /** Back to the problem the set was left on (or the first not yet answered). */
@@ -59,16 +72,31 @@ export default function PracticeSet() {
     if (yes) start(0);
   }
 
-  function start(from = 0) {
-    if (!data) return;
+  async function start(from = 0) {
+    if (!data || starting) return;
+    const ids = data.problems.map((p) => p.id);
+    setStarting(true);
+    // Recorded as dealt, so its report is about these problems. If it cannot be
+    // saved now, the problem page records it at the first answer.
+    const run = await amc.recordSet({
+      kind: 'practice', topic: data.topic.id, mode: data.mode, title: data.title, problems: ids,
+      seconds: data.total_seconds,
+    });
+    setStarting(false);
     writePracticeSet({
-      ids: data.problems.map((p) => p.id), topic: data.topic.id, mode: data.mode, title: data.title,
+      ids, topic: data.topic.id, mode: data.mode, title: data.title,
       seconds: data.seconds, hideTopic: data.hide_topic, size,
       // The clock is the whole set's, from now: it does not wait between problems.
       deadline: data.total_seconds ? Date.now() + data.total_seconds * 1000 : null,
+      runId: run,
     });
     const first = data.problems[from];
     if (first) navigate(`/problems/${first.id}?set=1`);
+  }
+
+  /** Back to a problem of the stored set (finished: its solution; in progress: the walk). */
+  function openRow(id: string) {
+    navigate(going ? `/problems/${id}?set=1` : `/problems/${id}`);
   }
 
   return (
@@ -83,8 +111,8 @@ export default function PracticeSet() {
                       <button type="button" className="am-btn am-btn-primary" onClick={resume}>Continue set</button>
                     </>
                   ) : (
-                    <button type="button" className="am-btn am-btn-primary" onClick={() => start(0)}>
-                      {done ? 'Go again' : 'Start set'}
+                    <button type="button" className="am-btn am-btn-primary" disabled={starting} onClick={() => void start(0)}>
+                      {done ? 'New set' : 'Start set'}
                     </button>
                   )}>
         <p>{data.instructions}</p>
@@ -114,38 +142,74 @@ export default function PracticeSet() {
       )}
 
       {done && (
-        <section className="am-card am-set-done" role="status">
-          {timeUp && <span className="am-set-timeup">Time's up. </span>}
-          <strong>{right} of {data.problems.length}</strong> solved
-          {untried ? <span className="am-muted"> · {untried} not tried yet</span> : null}
-        </section>
+        report ? (
+          <SetReport report={report} />
+        ) : stored.loading || (runId && !stored.error) ? (
+          <Loading label="Marking the set" />
+        ) : (
+          <section className="am-card am-set-done" role="status">
+            {timeUp && <span className="am-set-timeup">Time's up. </span>}
+            {stored.error
+              ? <span>Could not load how the set went. <button type="button" className="am-btn am-btn-sm" onClick={stored.reload}>Try again</button></span>
+              : <span>This set was not recorded, so there is no report for it. Its answers still count in your history.</span>}
+          </section>
+        )
       )}
 
-      <section className="am-card">
-        <div className="am-card-head">
-          <h2>{data.problems.length} problems, all {data.hide_topic ? 'from this topic (names hidden)' : data.topic.name}</h2>
-          <MixBar mix={data.mix} labels={false} />
-        </div>
-        <ol className="am-set-list">
-          {data.problems.map((p, i) => (
-            <li key={p.id}>
-              <button type="button"
-                      className={`am-set-row${going && going.current === p.id ? ' is-current' : ''}${answeredIds.has(p.id) ? ' is-answered' : ''}`}
-                      onClick={() => (going ? navigate(`/problems/${p.id}?set=1`) : start(i))}>
-                <span className="am-set-num">{i + 1}</span>
-                <span className="am-set-main">
-                  <span className="am-set-source">{p.source}</span>
-                  {!data.hide_topic && (
-                    <span className="am-muted"><CategoryDot category={p.category} /> {p.topic_name}</span>
-                  )}
-                </span>
-                <span className={`am-mode is-l${p.level_of}`}>Level {p.level_of}</span>
-                <StatusPill status={p.status} />
-              </button>
-            </li>
-          ))}
-        </ol>
-      </section>
+      {report && going ? (
+        <section className="am-card">
+          <div className="am-card-head"><h2>The {report.total} problems in this set</h2></div>
+          <ol className="am-set-list">
+            {report.problems.map((r) => (
+              <li key={r.id}>
+                <button type="button" onClick={() => openRow(r.id)}
+                        className={`am-set-row${going.current === r.id ? ' is-current' : ''}${r.result !== 'skipped' ? ' is-answered' : ''}`}>
+                  <span className="am-set-num">{r.n}</span>
+                  <span className="am-set-main">
+                    <span className="am-set-source">{r.source}</span>
+                    {!data.hide_topic && <span className="am-muted"><CategoryDot category={r.category} /> {r.topic_name}</span>}
+                  </span>
+                  <span className={`am-mode is-l${r.level_of}`}>Level {r.level_of}</span>
+                  <SetResultPill result={results.get(r.id) ?? 'skipped'} going />
+                </button>
+              </li>
+            ))}
+          </ol>
+        </section>
+      ) : !done && (
+        <section className="am-card">
+          <div className="am-card-head">
+            <h2>{data.problems.length} problems, all {data.hide_topic ? 'from this topic (names hidden)' : data.topic.name}</h2>
+            <MixBar mix={data.mix} labels={false} />
+          </div>
+          <ol className="am-set-list">
+            {data.problems.map((p, i) => (
+              <li key={p.id}>
+                <button type="button"
+                        className={`am-set-row${going && going.current === p.id ? ' is-current' : ''}${answeredIds.has(p.id) ? ' is-answered' : ''}`}
+                        onClick={() => (going ? navigate(`/problems/${p.id}?set=1`) : void start(i))}>
+                  <span className="am-set-num">{i + 1}</span>
+                  <span className="am-set-main">
+                    <span className="am-set-source">{p.source}</span>
+                    {!data.hide_topic && (
+                      <span className="am-muted"><CategoryDot category={p.category} /> {p.topic_name}</span>
+                    )}
+                  </span>
+                  <span className={`am-mode is-l${p.level_of}`}>Level {p.level_of}</span>
+                  <StatusPill status={p.status} />
+                </button>
+              </li>
+            ))}
+          </ol>
+        </section>
+      )}
     </div>
   );
+}
+
+/** How a problem went in this set (not its lifetime status). */
+function SetResultPill({ result, going = false }: { result: SetResult; going?: boolean }) {
+  const label = { right: 'Right', wrong: 'Missed', revealed: 'Revealed', skipped: going ? 'To do' : 'Not answered' }[result];
+  const tone = result === 'right' ? 'solved' : result === 'skipped' ? 'new' : 'missed';
+  return <span className={`am-pill am-pill-${tone}`}>{label}</span>;
 }

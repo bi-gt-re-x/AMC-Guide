@@ -17,10 +17,38 @@ CREATE TABLE IF NOT EXISTS amc_attempts (
     seconds     INTEGER DEFAULT 0,
     source      TEXT NOT NULL DEFAULT 'practice',
     at          TEXT NOT NULL,
+    -- The set it was answered in (amc_set_runs.id), or '' for a problem
+    -- answered on its own. What a set's report is read from.
+    set_id      TEXT DEFAULT '',
     CHECK (source IN ('practice', 'review', 'mock', 'reveal'))
 );
 
 CREATE INDEX IF NOT EXISTS amc_attempts_user_idx ON amc_attempts (user_id, problem_id);
+CREATE INDEX IF NOT EXISTS amc_attempts_set_idx ON amc_attempts (user_id, set_id);
+
+-- One row per set of problems walked one after another: a topic's practice
+-- set (kind 'practice', with its `mode`), a review set ('review') or the weak
+-- topics set ('weak'). `problems` is the JSON list of ids in the order the set
+-- was dealt, fixed when it starts, so the report at the end is about the
+-- problems actually done even though the practice picker would pick others
+-- once those are answered. `seconds` is the whole set's clock, if it has one.
+-- The answers are amc_attempts rows carrying this `set_id`.
+CREATE TABLE IF NOT EXISTS amc_set_runs (
+    id           TEXT PRIMARY KEY,
+    user_id      TEXT NOT NULL REFERENCES users (username) ON DELETE CASCADE,
+    kind         TEXT NOT NULL DEFAULT 'practice',
+    topic        TEXT DEFAULT '',
+    mode         TEXT DEFAULT '',
+    title        TEXT DEFAULT '',
+    problems     TEXT NOT NULL DEFAULT '[]',
+    seconds      INTEGER,
+    started_at   TEXT NOT NULL,
+    finished_at  TEXT DEFAULT '',
+    time_up      INTEGER NOT NULL DEFAULT 0,
+    CHECK (kind IN ('practice', 'review', 'weak'))
+);
+
+CREATE INDEX IF NOT EXISTS amc_set_runs_user_idx ON amc_set_runs (user_id, started_at);
 
 -- The error log. A missed problem comes back after 3, 10 and 21 days; a right
 -- answer on a due review moves it up a stage, a wrong one sends it back to

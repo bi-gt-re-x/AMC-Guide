@@ -617,6 +617,106 @@ export interface AttemptReply {
   problem: Problem;
   review: { stage: number; due: string; status: string } | null;
   moved: boolean;
+  /** The set the answer was counted in ('' when it was not: no set, or one already over). */
+  set_id?: string;
+}
+
+/** A set walked one problem after another, as stored (backend/amc/setreport.py). */
+export type SetKind = 'practice' | 'review' | 'weak';
+
+/** One line of a set: what it was and how it went. */
+export interface SetBrief {
+  id: string;
+  kind: SetKind;
+  mode: string;
+  title: string;
+  topic: string;
+  topic_name: string;
+  started_at: string;
+  finished_at: string;
+  time_up: boolean;
+  total: number;
+  right: number;
+  wrong: number;
+  revealed: number;
+  skipped: number;
+  answered: number;
+  accuracy: number | null;
+  finished: boolean;
+}
+
+export type SetResult = 'right' | 'wrong' | 'revealed' | 'skipped';
+
+/** One problem of a finished set, as it went in that set. */
+export interface SetReportRow {
+  n: number;
+  id: string;
+  source: string;
+  topic: string;
+  topic_name: string;
+  category: CategoryId;
+  technique_name: string;
+  rating: number;
+  level_of: number;
+  result: SetResult;
+  /** What was given, as '(C)' or '42'; '' when revealed or skipped. */
+  given: string;
+  /** The answer; '' when skipped, so it is not given away. */
+  answer: string;
+  seconds: number;
+  /** Seconds a problem this hard should take this student at contest pace. */
+  par: number;
+  slow: boolean;
+  over_pace: boolean;
+  /** The model's chance of a right answer for this student before the set. */
+  chance: number;
+  careless: boolean;
+  stretch: boolean;
+  seen_before: boolean;
+  before: 'right' | 'missed' | null;
+  review: { due: string; stage: number; status: string } | null;
+}
+
+export interface SetReport extends SetBrief {
+  seconds: number | null;
+  per_problem: number | null;
+  used: number;
+  expected: number;
+  verdict: string;
+  notes: { kind: 'careless' | 'revealed' | 'slow' | 'stretch' | 'skipped'; text: string; ids: string[] }[];
+  problems: SetReportRow[];
+  right_ids: string[];
+  missed_ids: string[];
+  skipped_ids: string[];
+  level: { before: number; after: number; moved: number };
+  topics: { id: string; name: string; category: CategoryId; total: number; right: number;
+            before: number | null; after: number | null; moved: number | null }[];
+  next: {
+    topic: string; topic_name: string; mode: StudyMode; mode_title: string;
+    kind: string | null; kind_name: string | null; approach: string | null; evidence: string | null;
+    mastery: number | null; answered: number; mix: string; rank: number; of: number; href: string;
+  }[];
+}
+
+/** A set as it is dealt, to be recorded (POST /api/amc/sets). */
+export interface NewSet {
+  kind: SetKind;
+  problems: string[];
+  topic?: string;
+  mode?: string;
+  title?: string;
+  /** The whole set's clock, if it has one. */
+  seconds?: number | null;
+}
+
+export interface SetModeStats {
+  id: string;
+  title: string;
+  sets: number;
+  right: number;
+  answered: number;
+  dealt: number;
+  accuracy: number | null;
 }
 
 export interface ReviewQueue {
@@ -1031,9 +1131,38 @@ export const amc = {
    */
   problem: (id: string, walk: Record<string, string> = {}) =>
     get<ProblemDetail>(`/api/amc/problems/${encodeURIComponent(id)}`, walk),
-  attempt: (id: string, answer: string, seconds: number, source: 'practice' | 'review' = 'practice') =>
-    post<AttemptReply>(`/api/amc/problems/${encodeURIComponent(id)}/attempt`, { answer, seconds, source }),
-  reveal: (id: string) => post<{ problem: Problem }>(`/api/amc/problems/${encodeURIComponent(id)}/reveal`),
+  attempt: (id: string, answer: string, seconds: number, source: 'practice' | 'review' = 'practice', setId = '') =>
+    post<AttemptReply>(`/api/amc/problems/${encodeURIComponent(id)}/attempt`, { answer, seconds, source, set_id: setId }),
+  reveal: (id: string, setId = '') =>
+    post<{ problem: Problem }>(`/api/amc/problems/${encodeURIComponent(id)}/reveal`, { set_id: setId }),
+  /** Record a set as it is dealt; its answers then carry the id it returns. */
+  startSet: (set: NewSet) =>
+    post<{ id: string; problems: string[] }>('/api/amc/sets', set),
+  setReport: (id: string) => get<{ report: SetReport }>(`/api/amc/sets/${encodeURIComponent(id)}`),
+  finishSet: (id: string, timeUp = false) =>
+    post<{ report: SetReport }>(`/api/amc/sets/${encodeURIComponent(id)}/finish`, { time_up: timeUp }),
+  sets: (limit = 20) => get<{ sets: SetBrief[]; by_mode: SetModeStats[] }>('/api/amc/sets', { limit }),
+  /**
+   * Record a set, or null when it cannot be (offline, an error). Never throws:
+   * a set that cannot be recorded is still walked, and the problem page tries
+   * again at its first answer.
+   */
+  recordSet: async (set: NewSet): Promise<string | null> => {
+    try {
+      const reply = await amc.startSet(set);
+      return reply.success ? reply.id : null;
+    } catch {
+      return null;
+    }
+  },
+  /** End a set on the account; false when that could not be saved. Never throws. */
+  closeSet: async (id: string, timeUp = false): Promise<boolean> => {
+    try {
+      return (await amc.finishSet(id, timeUp)).success;
+    } catch {
+      return false;
+    }
+  },
   review: () => get<ReviewQueue>('/api/amc/review'),
   weakBank: (mocks: boolean, draw = 0) =>
     get<WeakBank>('/api/amc/review/weak', { mocks: mocks ? 1 : 0, draw }),

@@ -8,6 +8,11 @@
  * is over (`finished`, or its clock run out), so a set left part way is the
  * set in progress: highlighted on the study plan and Today, and offered to be
  * continued from its own page.
+ *
+ * `runId` is the set as the account's database holds it (`amc_set_runs`,
+ * POST /api/amc/sets): every answer in the walk carries it, and the set's page
+ * reads its report from it at the end. The report is the server's, never
+ * worked out from what this tab remembers.
  */
 export interface PracticeSetState {
   ids: string[];
@@ -28,6 +33,8 @@ export interface PracticeSetState {
   answered?: string[];
   /** Finished from its last problem, or ended by its clock. */
   finished?: boolean;
+  /** The stored set (amc_set_runs.id) its answers are counted in. */
+  runId?: string | null;
 }
 
 const KEY = 'amc-practice-set';
@@ -51,6 +58,7 @@ export function readPracticeSet(): PracticeSetState | null {
       current: typeof s.current === 'string' ? s.current : null,
       answered: Array.isArray(s.answered) ? s.answered.filter((id): id is string => typeof id === 'string') : [],
       finished: Boolean(s.finished),
+      runId: typeof s.runId === 'string' && s.runId ? s.runId : null,
     };
   } catch {
     return null;

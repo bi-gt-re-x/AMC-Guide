@@ -117,16 +117,37 @@ def public(problem, reveal=False):
 # ---------------------------------------------------------------------------
 # An account's history
 # ---------------------------------------------------------------------------
+#: Days after the try before it that an answer counts as a fresh retrieval of
+#: the problem (backend/amc/smart.py `ability_points`): a review at 10 or 21
+#: days, a spaced set, an accuracy set's old misses. Sooner than this the
+#: solution just read is still in mind.
+RETEST_DAYS = 7
+
+
+def _day_gap(later, earlier):
+    try:
+        return (date.fromisoformat(str(later)[:10]) - date.fromisoformat(str(earlier)[:10])).days
+    except ValueError:
+        return 0
+
+
 def history(attempts):
-    """Per problem: attempts, first result, latest result, ever solved."""
+    """Per problem: attempts, first result, latest result, ever solved, and
+    `retest`: the latest answer given RETEST_DAYS or more after the try before
+    it ({'at', 'correct'}, or None), the evidence of what has been kept."""
     out = {}
     for row in attempts:
         pid = row['problem_id']
-        h = out.setdefault(pid, {'attempts': 0, 'first_correct': bool(row['correct']),
-                                 'first_at': row['at'], 'first_seconds': int(row.get('seconds') or 0),
-                                 'first_source': row.get('source') or '',
-                                 'solved': False, 'last_correct': False, 'last_at': '',
-                                 'seconds': 0})
+        h = out.get(pid)
+        if h is None:
+            h = out[pid] = {'attempts': 0, 'first_correct': bool(row['correct']),
+                            'first_at': row['at'], 'first_seconds': int(row.get('seconds') or 0),
+                            'first_source': row.get('source') or '',
+                            'first_set_mode': row.get('set_mode') or '',
+                            'solved': False, 'last_correct': False, 'last_at': '',
+                            'seconds': 0, 'retest': None}
+        elif row.get('source') != 'reveal' and _day_gap(row['at'], h['last_at']) >= RETEST_DAYS:
+            h['retest'] = {'at': row['at'], 'correct': bool(row['correct'])}
         h['attempts'] += 1
         h['solved'] = h['solved'] or bool(row['correct'])
         h['last_correct'] = bool(row['correct'])

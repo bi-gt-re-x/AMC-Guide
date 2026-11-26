@@ -265,6 +265,8 @@ ADDED_COLUMNS = (
     # `problems`. See backend/amc/posts.py.
     ('amc_posts', 'kind', 'TEXT'),
     ('amc_posts', 'problems', 'TEXT'),
+    # The set an answer was given in (amc_set_runs). See data/sql/amc.sql.
+    ('amc_attempts', 'set_id', "TEXT DEFAULT ''"),
 )
 
 # Indexes on columns that ADDED_COLUMNS supplies. Their own list, applied after
@@ -280,6 +282,8 @@ ADDED_INDEXES = (
     # daily rolls, older rows — is untouched by it.
     'CREATE UNIQUE INDEX IF NOT EXISTS xp_events_task_completion_idx '
     'ON xp_events (task_id, timestamp) WHERE task_id IS NOT NULL',
+    # A set's report reads its answers by set. See data/sql/amc.sql.
+    'CREATE INDEX IF NOT EXISTS amc_attempts_set_idx ON amc_attempts (user_id, set_id)',
 )
 
 # Tables added to the app after the database was first created.
@@ -1071,6 +1075,24 @@ ADDED_TABLES = ('''
         at          TEXT NOT NULL,
         PRIMARY KEY (user_id, contest_id)
     )
+''', '''
+    -- Sets walked one problem after another. The DDL is data/sql/amc.sql's.
+    CREATE TABLE IF NOT EXISTS amc_set_runs (
+        id           TEXT PRIMARY KEY,
+        user_id      TEXT NOT NULL REFERENCES users (username) ON DELETE CASCADE,
+        kind         TEXT NOT NULL DEFAULT 'practice',
+        topic        TEXT DEFAULT '',
+        mode         TEXT DEFAULT '',
+        title        TEXT DEFAULT '',
+        problems     TEXT NOT NULL DEFAULT '[]',
+        seconds      INTEGER,
+        started_at   TEXT NOT NULL,
+        finished_at  TEXT DEFAULT '',
+        time_up      INTEGER NOT NULL DEFAULT 0,
+        CHECK (kind IN ('practice', 'review', 'weak'))
+    )
+''', '''
+    CREATE INDEX IF NOT EXISTS amc_set_runs_user_idx ON amc_set_runs (user_id, started_at)
 ''')
 
 

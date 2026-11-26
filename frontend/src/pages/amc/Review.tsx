@@ -12,12 +12,16 @@
  * due comes weakest topic first (the server orders it). It is worked in sets
  * of REVIEW_SET (pages/amc/reviewSet.ts): "Start a review set" takes the next
  * twelve in that order, so a long backlog is never one sitting. `?start=1` (the
- * Today list's link) starts a set straight away; `?done=1` is a finished set.
+ * Today list's link) starts a set straight away; `?done=1` is a finished set,
+ * and `&run=<id>` the stored set whose report it shows (what was right, what
+ * was missed: components/Amc/SetReport.tsx), for a review set or the weak
+ * topics set alike. Both are recorded on the account as they are dealt.
  */
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useSearchParams } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
 import { Empty, PageHeader, ProblemRow } from '@/components/Amc/bits';
+import { SetReport } from '@/components/Amc/SetReport';
 import { useApi, useDocumentTitle } from '@/hooks';
 import { amc, shortDate, type ReviewItem, type WeakBank } from '@/services/amc';
 import { ReviewStage } from './Problem';
@@ -172,15 +176,20 @@ export default function Review() {
   const [tab, setTab] = useState<Tab>('due');
   const autostart = params.get('start') === '1';
   const finished = params.get('done') === '1';
+  const runId = finished ? params.get('run') : null;
+  const stored = useApi(() => amc.setReport(runId ?? ''), [runId], { enabled: Boolean(runId) });
+  const report = runId && stored.data?.report.id === runId ? stored.data.report : null;
 
-  function startSet(due: ReviewItem[]) {
+  async function startSet(due: ReviewItem[]) {
     const ids = due.slice(0, REVIEW_SET).map((item) => item.id);
     if (!ids.length) return;
-    writeReviewSet(ids);
+    // Recorded as dealt; if that fails, the problem page records it at the first answer.
+    const run = await amc.recordSet({ kind: 'review', problems: ids });
+    writeReviewSet(ids, run);
     navigate(`/problems/${ids[0]}?review=1`, { replace: autostart });
   }
   useEffect(() => {
-    if (autostart && data?.due.length) startSet(data.due);
+    if (autostart && data?.due.length) void startSet(data.due);
     // Once, when the queue arrives.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [autostart, data]);
@@ -195,7 +204,7 @@ export default function Review() {
       <PageHeader
         title="Review"
         actions={data.due.length ? (
-          <button type="button" className="am-btn am-btn-primary" onClick={() => startSet(data.due)}>
+          <button type="button" className="am-btn am-btn-primary" onClick={() => void startSet(data.due)}>
             Start a review set ({Math.min(REVIEW_SET, data.due.length)})
           </button>
         ) : undefined}
@@ -210,6 +219,8 @@ export default function Review() {
           </p>
         )}
       </PageHeader>
+
+      {report ? <SetReport report={report} /> : runId && stored.loading ? <Loading label="Marking the set" /> : null}
 
       <WeakTopics />
 

@@ -14,7 +14,8 @@ from backend.database.connection import connect
 from tests.conftest import make_account
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-ACCOUNT_TABLES = {'amc_attempts', 'amc_reviews', 'amc_mocks', 'amc_plans', 'amc_sittings', 'amc_unlocks'}
+ACCOUNT_TABLES = {'amc_attempts', 'amc_reviews', 'amc_mocks', 'amc_plans', 'amc_sittings', 'amc_unlocks',
+                  'amc_set_runs'}
 
 
 def _load(name):
@@ -39,7 +40,7 @@ def _user_tables():
     try:
         found = set()
         for table in ('amc_attempts', 'amc_reviews', 'amc_mocks', 'amc_plans', 'amc_official', 'amc_ai',
-                      'amc_generated', 'amc_posts', 'amc_sittings', 'amc_unlocks'):
+                      'amc_generated', 'amc_posts', 'amc_sittings', 'amc_unlocks', 'amc_set_runs'):
             try:
                 con.execute('SELECT user_id FROM {} LIMIT 0'.format(table)).fetchall()
             except Exception:

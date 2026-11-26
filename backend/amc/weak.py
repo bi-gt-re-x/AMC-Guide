@@ -124,7 +124,7 @@ def bank(hist, review_by_id, target, include_mocks, username, today=None, draw=0
     """{'topics': [...], 'problems': [(problem, topic id, chance)], 'pool': {...}}."""
     today = today or date.today()
     topics = weak_topics(hist, review_by_id, target)
-    points = smart._first_points(hist, today)
+    points = smart.ability_points(hist, today)
     theta = smart.fit([pt[:3] for pt in points])[0]
     # Each topic's own level, from its own answers, leaning on the overall
     # level where it has few: the problems are pitched to the topic.

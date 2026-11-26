@@ -69,6 +69,10 @@ beforeEach(() => {
     mock: reply(mock),
     search: reply(search),
     aiStatus: reply({ success: true, available: false, provider: '', model: '', used: 0, limit: 0 }),
+    startSet: vi.fn().mockImplementation((set: { problems: string[] }) =>
+      Promise.resolve({ success: true, id: 'run-1', problems: set.problems })),
+    finishSet: reply({ success: true, report: null }),
+    sets: reply({ success: true, sets: [], by_mode: [] }),
   };
   const target = amc as unknown as Record<string, (...args: unknown[]) => unknown>;
   for (const [name, fn] of Object.entries(stubs)) vi.spyOn(target, name).mockImplementation(fn as any);
@@ -139,7 +143,11 @@ describe('AMC pages render the API as it is', () => {
     );
     fireEvent.click(await screen.findByRole('button', { name: 'Start a review set (12)' }));
     expect(await screen.findByText('opened problem')).toBeInTheDocument();
-    expect(JSON.parse(sessionStorage.getItem('amc-review-set') ?? '[]')).toEqual(due.slice(0, 12).map((d) => d.id));
+    const walk = JSON.parse(sessionStorage.getItem('amc-review-set') ?? '{}');
+    expect(walk.ids).toEqual(due.slice(0, 12).map((d) => d.id));
+    // Recorded on the account as dealt, so its report is about these twelve.
+    expect(walk.runId).toBe('run-1');
+    expect(amc.startSet).toHaveBeenCalledWith({ kind: 'review', problems: due.slice(0, 12).map((d) => d.id) });
   });
 
   it('Analytics', async () => {
@@ -303,7 +311,60 @@ describe('A topic practice set', () => {
     expect(screen.getAllByText(/Step drill #/)).toHaveLength(8);
     expect(screen.queryByText('Circles', { selector: '.am-set-main span' })).not.toBeInTheDocument();
     fireEvent.click(screen.getByRole('button', { name: 'Start set' }));
-    expect(JSON.parse(sessionStorage.getItem('amc-practice-set')!).ids).toHaveLength(8);
+    await waitFor(() => expect(sessionStorage.getItem('amc-practice-set')).not.toBeNull());
+    const walk = JSON.parse(sessionStorage.getItem('amc-practice-set')!);
+    expect(walk.ids).toHaveLength(8);
+    expect(walk.runId).toBe('run-1');
+    expect(amc.startSet).toHaveBeenCalledWith(expect.objectContaining({ kind: 'practice', topic: 'circles', mode: 'mixed' }));
+  });
+
+  it('starts the walk even when the set cannot be recorded', async () => {
+    vi.spyOn(amc, 'topicSet').mockResolvedValue(payload('mixed') as any);
+    vi.spyOn(amc, 'startSet').mockRejectedValue(new Error('offline'));
+    show('/practice/circles?mode=mixed', '/practice/:topicId', <PracticeSet />);
+    await settled('Mixed set');
+    fireEvent.click(screen.getByRole('button', { name: 'Start set' }));
+    await waitFor(() => expect(sessionStorage.getItem('amc-practice-set')).not.toBeNull());
+    expect(JSON.parse(sessionStorage.getItem('amc-practice-set')!).runId).toBeNull();
+  });
+
+  it('reports a finished set from the set as stored, not from lifetime status', async () => {
+    vi.spyOn(amc, 'topicSet').mockResolvedValue(payload('timed') as any);
+    const row = (n: number, result: string, given: string, answer: string) => ({
+      n, id: `step-10-0${n}`, source: `Step drill #${n}`, topic: 'circles', topic_name: 'Circles', category: 'geometry',
+      technique_name: 'Power of a point', rating: 4, level_of: 2, result, given, answer, seconds: 90, par: 180,
+      slow: false, over_pace: false, chance: 0.8, careless: result === 'wrong', stretch: false,
+      seen_before: n === 1, before: n === 1 ? 'right' : null, review: null,
+    });
+    vi.spyOn(amc, 'setReport').mockResolvedValue({
+      success: true,
+      report: {
+        id: 'run-9', kind: 'practice', mode: 'timed', title: 'Timed set', topic: 'circles', topic_name: 'Circles',
+        started_at: '2026-11-12T10:00:00', finished_at: '2026-11-12T10:20:00', time_up: false,
+        total: 3, right: 1, wrong: 1, revealed: 0, skipped: 1, answered: 2, accuracy: 0.5, finished: true,
+        seconds: 540, per_problem: 180, used: 180, expected: 2.4, verdict: 'Below what you usually do.',
+        notes: [{ kind: 'careless', text: '1 missed that you usually get right (#1).', ids: ['step-10-01'] }],
+        problems: [row(1, 'wrong', '(B)', '(D)'), row(2, 'right', '(C)', '(C)'), row(3, 'skipped', '', '')],
+        right_ids: ['step-10-02'], missed_ids: ['step-10-01'], skipped_ids: ['step-10-03'],
+        level: { before: 4.2, after: 4.0, moved: -0.2 },
+        topics: [{ id: 'circles', name: 'Circles', category: 'geometry', total: 3, right: 1, before: 4.2, after: 4.0, moved: -0.2 }],
+        next: [{ topic: 'circles', topic_name: 'Circles', mode: 'accuracy', mode_title: 'Accuracy drill', kind: 'execution',
+                 kind_name: 'Execution', approach: 'Check every answer.', evidence: '2 slips', mastery: 0.5, answered: 6,
+                 mix: '100% level 2', rank: 1, of: 40, href: '/practice/circles?mode=accuracy' }],
+      },
+    } as any);
+    show('/practice/circles?mode=timed&done=1&run=run-9', '/practice/:topicId', <PracticeSet />);
+    await settled(/1 of 3/);
+    expect(amc.setReport).toHaveBeenCalledWith('run-9');
+    const missed = screen.getByRole('region', { name: 'What you missed' });
+    expect(missed).toHaveTextContent('Step drill #1');
+    expect(missed).toHaveTextContent('(B)');
+    expect(missed).toHaveTextContent('answer (D)');
+    expect(screen.getByRole('region', { name: 'What you got right' })).toHaveTextContent('Step drill #2');
+    expect(screen.getByRole('region', { name: 'Not answered' })).toHaveTextContent('still open');
+    expect(screen.getByText(/Circles: Accuracy drill/)).toBeInTheDocument();
+    // The page's own pick of eight is not what is reported on.
+    expect(screen.queryByText('Step drill #8')).not.toBeInTheDocument();
   });
 
   it('walks a timed set on the problem page with its clock and position', async () => {
@@ -326,6 +387,7 @@ describe('A topic practice set', () => {
     expect(screen.getByText(/24:00 for the 8 problems/)).toBeInTheDocument();
     const before = Date.now();
     fireEvent.click(screen.getByRole('button', { name: 'Start set' }));
+    await waitFor(() => expect(sessionStorage.getItem('amc-practice-set')).not.toBeNull());
     const { deadline } = JSON.parse(sessionStorage.getItem('amc-practice-set')!);
     expect(deadline).toBeGreaterThanOrEqual(before + 1440 * 1000);
     expect(deadline).toBeLessThan(before + 1440 * 1000 + 5000);
@@ -355,7 +417,10 @@ describe('A topic practice set', () => {
         </NoticesProvider>
       </AuthContext.Provider>,
     );
-    expect(await screen.findByTestId('where')).toHaveTextContent('/practice/circles?mode=timed&n=5&done=1&timeup=1');
+    expect(await screen.findByTestId('where')).toHaveTextContent('/practice/circles?mode=timed&n=5&done=1&timeup=1&run=run-1');
+    // Recorded at the end (it had not been), and closed as ended by its clock.
+    expect(amc.startSet).toHaveBeenCalledWith(expect.objectContaining({ kind: 'practice', problems: ['step-10-01'] }));
+    expect(amc.finishSet).toHaveBeenCalledWith('run-1', true);
   });
 
   it('offers to continue a set left part way, at the problem it was left on', async () => {

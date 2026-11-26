@@ -254,6 +254,12 @@ def _topic_rows(attempts, hist, today):
     return rows
 
 
+def unlabelled(attempt):
+    """Whether the topic's name was hidden when this was answered: a sitting,
+    or a mixed practice set."""
+    return attempt.get('source') == 'mock' or attempt.get('set_mode') == 'mixed'
+
+
 def classify(level, theta, problems, topic_theta=None):
     """The kinds of weakness in one topic, from [(problem, attempts in order, history)].
 
@@ -301,16 +307,19 @@ def classify(level, theta, problems, topic_theta=None):
         out['speed'] = {'count': len(slow), 'score': min(1.0, len(slow) / len(timed)),
                         'evidence': '{} of {} right answers took over {:g}x contest pace'.format(
                             len(slow), len(timed), SLOW_FACTOR)}
-    # Recognition: worse unlabelled (in a sitting) than labelled (practice), for the difficulty.
+    # Recognition: worse unlabelled than labelled, for the difficulty.
+    # Unlabelled is a sitting, or a mixed set (the topic's name hidden until
+    # answered); labelled is any other practice, where the topic is on the page.
     def resid(rows):
         return sum((1 if t[0]['correct'] else 0) - smart.chance(theta, p['rating']) for p, t in rows) / len(rows)
-    sat = [(p, t) for p, t in answered if t[0].get('source') == 'mock']
-    drilled = [(p, t) for p, t in answered if t[0].get('source') == 'practice']
+    sat = [(p, t) for p, t in answered if unlabelled(t[0])]
+    drilled = [(p, t) for p, t in answered if t[0].get('source') == 'practice' and not unlabelled(t[0])]
     if len(sat) >= MIN_ANSWERED and len(drilled) >= MIN_ANSWERED:
         gap = resid(drilled) - resid(sat)
         if gap >= 0.2:
             out['recognition'] = {'count': len(sat), 'score': min(1.0, gap),
-                                  'evidence': '{:.0%} right in topic practice, {:.0%} in sittings, for the difficulty'.format(
+                                  'evidence': '{:.0%} right in topic practice, {:.0%} with the topic unnamed '
+                                              '(sittings and mixed sets), for the difficulty'.format(
                                       sum(1 for _, t in drilled if t[0]['correct']) / len(drilled),
                                       sum(1 for _, t in sat if t[0]['correct']) / len(sat))}
     # Retention: right once, wrong again later.
@@ -353,12 +362,18 @@ def analyze(attempts, hist, level, today=None, goal=None, details=None, mocks=No
         from backend.amc import engine
         goal = engine.DEFAULT_GOALS[level]
     ceiling = goal_level(level, goal)
+    # Fitted from first tries and spaced retests (smart.ability_points), so a
+    # topic put right in a spaced or accuracy set rises and one forgotten
+    # falls; counted (answered, right) from first tries only.
     points = smart._first_points(hist, today)
-    theta, _ = smart.fit([(r, ok, w) for r, ok, w, _ in points])
-    by_topic = {}
-    for rating, ok, w, p in points:
+    theta, _ = smart.fit([(r, ok, w) for r, ok, w, _ in smart.ability_points(hist, today)])
+    by_topic, firsts = {}, {}
+    for rating, ok, w, p in smart.ability_points(hist, today):
         for tid in [p['topic']] + p['also']:
             by_topic.setdefault(tid, []).append((rating, ok, w))
+    for rating, ok, w, p in points:
+        for tid in [p['topic']] + p['also']:
+            firsts.setdefault(tid, []).append(ok)
     relevant = [t for t in catalog.TOPICS if level in t['levels']]
     total_weight = sum(t['weight'] for t in relevant) or 1
     builds = dependents(level)
@@ -369,13 +384,13 @@ def analyze(attempts, hist, level, today=None, goal=None, details=None, mocks=No
             for tid in [p['topic']] + p['also']:
                 on_level.setdefault(tid, []).append(p['rating'])
 
-    leans = subject_lean(details, {tid: len(v) for tid, v in by_topic.items()})
+    leans = subject_lean(details, {tid: len(v) for tid, v in firsts.items()})
     out = []
     for t in relevant:
         pts = by_topic.get(t['id'], [])
         th = smart.fit(pts, mean=theta, sd=smart.TOPIC_SD)[0] if pts else None
-        answered = len(pts)
-        right = sum(1 for _, ok, _w in pts if ok)
+        answered = len(firsts.get(t['id'], []))
+        right = sum(firsts.get(t['id'], []))
         gain = study_gain(level, theta, th, t['weight'] / total_weight)
         in_mocks = lost_by.get(t['id'])
         if in_mocks:
