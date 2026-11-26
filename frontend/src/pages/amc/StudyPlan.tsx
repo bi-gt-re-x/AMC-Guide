@@ -29,7 +29,7 @@ import {
   type TodayItem,
 } from '@/services/amc';
 import { MixBar, ModeTag, PrioritiesCard, WeaknessKinds } from '@/components/Amc/Study';
-import { isRestDay, TodayList } from './Dashboard';
+import { ConsistencyStrip, isRestDay, TodayList } from './Dashboard';
 import { activePracticeSet, isActiveSetLink, type PracticeSetState } from './practiceSetStore';
 import '@/styles/amc.css';
 
@@ -801,6 +801,16 @@ export default function StudyPlan() {
     }
   }
 
+  async function markDay(done: boolean) {
+    const reply = await amc.markDay(done);
+    if (reply.success) {
+      setPayload(reply);
+      announceAmcChanged();
+    } else {
+      notify('Could not mark the day', { body: reply.message, tone: 'bad' });
+    }
+  }
+
   async function clear() {
     const yes = await confirm({
       title: 'Delete your study plan?',
@@ -853,7 +863,9 @@ export default function StudyPlan() {
           <LevelCard level={payload.level} />
           <section className="am-card">
             <div className="am-card-head"><h2>Today</h2></div>
-            <TodayList items={payload.today ?? []} onToggle={(item) => void toggle(item.key, !item.done)} rest={isRestDay(current)} />
+            <TodayList items={payload.today ?? []} onToggle={(item) => void toggle(item.key, !item.done)} rest={isRestDay(current)}
+                       day={payload.day} onDay={markDay} />
+            {payload.consistency && <ConsistencyStrip c={payload.consistency} />}
             {current && <p className="am-muted" style={{ fontSize: 13, lineHeight: 1.5, margin: '12px 0 0' }}>{current.note}</p>}
           </section>
           <PrioritiesCard priorities={payload.priorities} limit={5} title="This plan's priorities" />

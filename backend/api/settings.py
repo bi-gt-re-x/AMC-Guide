@@ -837,11 +837,11 @@ ACCOUNT_TABLES = (
     'behaviors', 'behavior_checks', 'behavior_interventions',
     # The AMC prep record: every answer, the review log, mock sittings and
     # logged scores, and the study plan (data/sql/amc.sql).
-    'amc_attempts', 'amc_reviews', 'amc_mocks', 'amc_plans', 'amc_set_runs',
+    'amc_attempts', 'amc_reviews', 'amc_mocks', 'amc_plans', 'amc_set_runs', 'amc_plan_days',
 )
 
 #: The AMC tables, cleared together by the `amc` reset.
-AMC_TABLES = ('amc_attempts', 'amc_reviews', 'amc_mocks', 'amc_plans', 'amc_set_runs')
+AMC_TABLES = ('amc_attempts', 'amc_reviews', 'amc_mocks', 'amc_plans', 'amc_set_runs', 'amc_plan_days')
 
 #: What `progress` puts an account's counters back to. The XP ledger and the
 #: metric snapshots are cleared alongside these, because a level of 1 over a

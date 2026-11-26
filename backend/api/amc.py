@@ -151,7 +151,7 @@ def dashboard(username: str = Depends(current_username)):
         week = next((w for w in built['weeks'] if w['current']), None)
         plan_view = {'target': plan['target'], 'exam_date': plan['exam_date'], 'goal_score': plan['goal_score'],
                      'days_left': (date.fromisoformat(plan['exam_date']) - today).days,
-                     'week': week, 'today': items}
+                     'week': week, 'today': items, 'day': built['day'], 'consistency': built['consistency']}
 
     # The next problem: the easiest unseen one in the weakest relevant topic.
     relevant = [t for t in catalog.TOPICS if target in t['levels']]
@@ -1100,7 +1100,7 @@ def _plan_payload(username):
     relevant = [t for t in catalog.TOPICS if plan['target'] in t['levels']]
     return ok(plan={**plan, 'days_left': (date.fromisoformat(plan['exam_date']) - today).days},
               ai={'available': coach.available(), 'label': coach.provider_label()},
-              weeks=weeks, today=built['today'],
+              weeks=weeks, today=built['today'], day=built['day'], consistency=built['consistency'],
               projected=built['projected'], start=built['start'], level=built['level'],
               coverage=[{'id': t['id'], 'name': t['name'], 'category': t['category'],
                          'mastery': tstats[t['id']]['mastery'], 'weight': t['weight'],
@@ -1256,10 +1256,40 @@ def check(body: CheckBody, username: str = Depends(current_username)):
     # Only the last two weeks of ticks are kept; older ones say nothing.
     cutoff = (_today() - timedelta(days=14)).isoformat()
     checks = {d: keys for d, keys in plan['checks'].items() if d >= cutoff}
-    keys = set(checks.get(day, []))
-    (keys.add if body.done else keys.discard)(body.key[:40])
-    checks[day] = sorted(keys)
+    # Ticked or unticked by hand: an untick holds even on an item whose
+    # progress is met (engine.UNTICKED).
+    checks[day] = engine.tick(checks.get(day, []), body.key[:40], body.done)
     store.save_plan(username, plan['target'], plan['exam_date'], plan['goal_score'], plan['hours'], checks)
+    # Unticking anything reopens a day already marked complete.
+    if not body.done and day in plan['days_done']:
+        store.reopen_day(username, day)
+    return _plan_payload(username)
+
+
+class DayBody(BaseModel):
+    done: bool = True
+
+
+@router.post('/api/amc/plan/day')
+def mark_day(body: DayBody, username: str = Depends(current_username)):
+    """Mark today complete (every item on its list ticked, and confirmed), or reopen it."""
+    plan = store.plan(username)
+    if not plan:
+        return fail('Make a plan first.')
+    day = _today().isoformat()
+    if not body.done:
+        store.reopen_day(username, day)
+        return _plan_payload(username)
+    attempts, reviews, hist, review_by_id = _context(username)
+    built = _build_plan(plan, _today(), attempts, reviews, hist, engine.topic_stats(hist, review_by_id),
+                        store.mocks(username))
+    items = built['today']
+    if not items:
+        return fail('Nothing is on today\'s list.')
+    left = [i['label'] for i in items if not i['done']]
+    if left:
+        return fail('Tick off everything on today\'s list first: {} still open.'.format(len(left)))
+    store.complete_day(username, day, len(items), sum(int(i.get('minutes') or 0) for i in items))
     return _plan_payload(username)
 
 

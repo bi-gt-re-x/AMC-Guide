@@ -72,6 +72,8 @@ beforeEach(() => {
     startSet: vi.fn().mockImplementation((set: { problems: string[] }) =>
       Promise.resolve({ success: true, id: 'run-1', problems: set.problems })),
     finishSet: reply({ success: true, report: null }),
+    check: reply({ success: false, message: 'stub' }),
+    markDay: reply({ success: false, message: 'stub' }),
     sets: reply({ success: true, sets: [], by_mode: [] }),
   };
   const target = amc as unknown as Record<string, (...args: unknown[]) => unknown>;
@@ -117,6 +119,37 @@ describe('AMC pages render the API as it is', () => {
     show('/dashboard', '/dashboard', <Dashboard />);
     await settled(new RegExp(dashboard.weakest[0]!.name));
     expect(amc.dashboard).toHaveBeenCalled();
+  });
+
+  it('Dashboard: tick, untick, and mark the day complete once every item is ticked', async () => {
+    const plan = dashboard.plan!;
+    const ticked = plan.today.map((i) => ({ ...i, done: true }));
+    const ready = { ...plan.day, ready: true };
+    vi.spyOn(amc, 'check').mockImplementation((key: string, done: boolean) => Promise.resolve({
+      success: true, today: done ? ticked : ticked.map((i) => (i.key === key ? { ...i, done: false } : i)),
+      day: done ? ready : { ...plan.day, ready: false }, consistency: plan.consistency,
+    } as any));
+    vi.spyOn(amc, 'markDay').mockImplementation((done: boolean) => Promise.resolve({
+      success: true, today: ticked, day: { ...ready, complete: done, completed_at: done ? '2026-11-12T20:00:00' : null },
+      consistency: plan.consistency,
+    } as any));
+    show('/dashboard', '/dashboard', <Dashboard />);
+    await settled(/2 of 3 ticked/);
+    expect(screen.getByText(/trimmed to about 50 minutes/)).toBeInTheDocument();
+    const open = plan.today.find((i) => !i.done)!;
+    fireEvent.click(screen.getByRole('button', { name: `Mark "${open.label}" done` }));
+    expect(amc.check).toHaveBeenCalledWith(open.key, true);
+    fireEvent.click(await screen.findByRole('button', { name: 'Mark the day complete' }));
+    // Asked first; nothing is stored until it is confirmed.
+    expect(await screen.findByText('Mark today complete?')).toBeInTheDocument();
+    expect(amc.markDay).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: 'Mark complete' }));
+    expect(await screen.findByText('Day complete.')).toBeInTheDocument();
+    expect(amc.markDay).toHaveBeenCalledWith(true);
+    // An item can still be unticked, which reopens the day.
+    fireEvent.click(screen.getByRole('button', { name: `Mark "${plan.today[0]!.label}" not done` }));
+    expect(amc.check).toHaveBeenLastCalledWith(plan.today[0]!.key, false);
+    expect(await screen.findByText(/2 of 3 ticked/)).toBeInTheDocument();
   });
 
   it('Review: the error log and the weak-topics set', async () => {

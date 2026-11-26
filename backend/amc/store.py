@@ -190,6 +190,8 @@ def plan(user):
     row['coach'] = _json(row.get('coach'), None)
     row['coach_at'] = row.get('coach_at') or ''
     row['coach_by'] = row.get('coach_by') or ''
+    # The days marked complete, by date: what backend/amc/consistency.py reads.
+    row['days_done'] = plan_days(user)
     return row
 
 
@@ -210,6 +212,23 @@ def save_plan(user, target, exam_date, goal_score, hours, checks, details=None):
          (user, target, exam_date, float(goal_score), int(hours), json.dumps(checks), json.dumps(details),
           coach, existing['coach_at'] if keep else '', existing['coach_by'] if keep else '', created, now)),
     ])
+
+
+def plan_days(user):
+    """{date: {'items', 'minutes', 'completed_at'}} for every day marked complete."""
+    return {r['day']: {'items': int(r['items'] or 0), 'minutes': int(r['minutes'] or 0),
+                       'completed_at': r['completed_at']}
+            for r in _read('SELECT day, items, minutes, completed_at FROM amc_plan_days WHERE user_id = ?', (user,))}
+
+
+def complete_day(user, day, items, minutes):
+    _write([('DELETE FROM amc_plan_days WHERE user_id = ? AND day = ?', (user, day)),
+            ('INSERT INTO amc_plan_days (user_id, day, items, minutes, completed_at) VALUES (?, ?, ?, ?, ?)',
+             (user, day, int(items), int(minutes), _now()))])
+
+
+def reopen_day(user, day):
+    _write([('DELETE FROM amc_plan_days WHERE user_id = ? AND day = ?', (user, day))])
 
 
 def save_coach(user, coach, by):

@@ -272,6 +272,36 @@ export interface TodayItem {
   goal?: number;
 }
 
+/** Today on the plan: marked complete, or ready to be (every item ticked). */
+export interface PlanDay {
+  date: string;
+  complete: boolean;
+  completed_at: string | null;
+  ready: boolean;
+}
+
+/** How often the plan has been kept, and how big the days ahead are (backend/amc/consistency.py). */
+export interface Consistency {
+  window: number;
+  rate: number | null;
+  /** The share of the planned minutes each day now holds. */
+  load: number;
+  status: 'new' | 'on-track' | 'lighter' | 'ahead';
+  minutes: number;
+  adjusted: number;
+  study_days: number;
+  complete: number;
+  partial: number;
+  missed: number;
+  extra: number;
+  run: number;
+  avg_minutes: number | null;
+  trend: 'up' | 'down' | 'flat' | null;
+  before_rate: number | null;
+  days: { date: string; study: boolean; status: 'complete' | 'partial' | 'missed' | 'rest' | 'extra'; minutes: number }[];
+  text: string;
+}
+
 /** How a topic is trained, from its kind of weakness (backend/amc/planning.py). */
 export type StudyMode = 'learn' | 'accuracy' | 'timed' | 'mixed' | 'spaced' | 'practice' | 'challenge';
 export type WeaknessKindId = 'conceptual' | 'execution' | 'speed' | 'recognition' | 'retention';
@@ -419,6 +449,8 @@ export interface Dashboard {
     days_left: number;
     week: PlanWeek | null;
     today: TodayItem[];
+    day: PlanDay;
+    consistency: Consistency;
   };
   last_mock: MockBrief | null;
 }
@@ -950,6 +982,8 @@ export interface PlanPayload {
   defaults: { dates: Record<Level, string>; goals: Record<Level, number> };
   /** Where the student is working now, which the plan is built from. */
   level?: PlanLevel;
+  day?: PlanDay;
+  consistency?: Consistency;
 }
 
 export interface PlanLevel {
@@ -1210,6 +1244,8 @@ export const amc = {
   savePlan: (settings: PlanSettings) => put<PlanPayload>('/api/amc/plan', settings),
   clearPlan: () => del<object>('/api/amc/plan'),
   check: (key: string, done: boolean) => post<PlanPayload>('/api/amc/plan/check', { key, done }),
+  /** Mark today complete (every item ticked) or reopen it. */
+  markDay: (done: boolean) => post<PlanPayload>('/api/amc/plan/day', { done }),
   coach: (answers: Record<string, string> = {}) =>
     post<PlanPayload>('/api/amc/plan/coach', { answers }, undefined),
   search: (q: string, limit = 20) => get<SearchResults>('/api/amc/search', { q, limit }),

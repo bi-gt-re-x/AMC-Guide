@@ -7,7 +7,7 @@ same set for the same day.
 """
 from datetime import timedelta
 
-from backend.amc import engine, mockscore, planning
+from backend.amc import consistency, engine, mockscore, planning
 
 
 def build(plan, today, attempts, reviews, hist, tstats, every_score):
@@ -25,7 +25,9 @@ def build(plan, today, attempts, reviews, hist, tstats, every_score):
     # it sets the plan's shape (more skills when far, more papers when close).
     start = planning.starting_point(plan['target'], plan['goal_score'], model, every_score,
                                     {**plan['details'], '_exam': plan['exam_date']}, today)
-    weeks = engine.plan_weeks(plan, tstats, mocks, today, study['topics'], start['stage'])
+    # How often the plan has been kept sizes the days ahead.
+    kept = consistency.read(plan, attempts, today)
+    weeks = engine.plan_weeks({**plan, 'load': kept['load']}, tstats, mocks, today, study['topics'], start['stage'])
     # How much of each week's practice has been done: distinct problems
     # answered (not solutions looked at) between its Monday and Sunday.
     answered = {}
@@ -46,8 +48,13 @@ def build(plan, today, attempts, reviews, hist, tstats, every_score):
                     if a['at'][:10] == today.isoformat() and a['source'] == 'review'})
     items = engine.today_items(plan, weeks, due, today, plan['checks'], practiced, reviewed)
     projected_now = mockscore.projected_score(hist, plan['target'], every_score, today)
+    done_today = (plan.get('days_done') or {}).get(today.isoformat())
     return {'study': study, 'projected': projected_now, 'start': start, 'weeks': weeks, 'today': items,
-            'level': level_now(study, attempts, weeks, today)}
+            'level': level_now(study, attempts, weeks, today), 'consistency': kept,
+            'day': {'date': today.isoformat(), 'complete': bool(done_today),
+                    'completed_at': done_today['completed_at'] if done_today else None,
+                    # Every item ticked: the day can be marked complete.
+                    'ready': bool(items) and all(i['done'] for i in items)}}
 
 
 def level_now(study, attempts, weeks, today):

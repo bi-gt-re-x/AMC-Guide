@@ -438,9 +438,13 @@ def plan_weeks(settings, tstats, mocks_taken, today, priorities=None, stage=None
         })
     # Each week as seven days, sized to the time the student has a day; the
     # week's problem count is what its days hold.
+    # From this week on, each day's minutes are scaled to how often the plan
+    # has been kept (backend/amc/consistency.py `load`); weeks gone keep theirs.
     weekdays, minutes = study_schedule(settings)
+    load = settings.get('load') or 1.0
     for w in weeks:
-        w['days'] = week_days(w, weekdays, minutes, level, today)
+        day_minutes = minutes if w['past'] else max(15, int(round(minutes * load / 5.0)) * 5)
+        w['days'] = week_days(w, weekdays, day_minutes, level, today)
         if w['phase'] != 'Taper':
             w['problems'] = sum(b.get('count', 0) for d in w['days'] for b in d['blocks']
                                 if b['kind'] in ('practice', 'challenge'))
@@ -716,10 +720,30 @@ def today_items(settings, weeks, due_count, today, checks, practiced_today, revi
         items.append({'key': 'formulas', 'label': 'Skim the key ideas for each topic',
                       'detail': 'A quick read, nothing new. Rest counts this week.', 'minutes': 20,
                       'to': '/topics', 'auto': False})
-    for item in items:
-        item['done'] = item['key'] in ticked or (
-            'goal' in item and item['goal'] > 0 and item['progress'] >= item['goal'])
+    _mark_done(items, ticked)
     return items
+
+
+#: How an item unticked by hand is kept in a day's checks: its key with this in
+#: front, so an item whose progress is met (a set's problems all answered) can
+#: still be unticked, and stays unticked until ticked again.
+UNTICKED = '!'
+
+
+def _mark_done(items, ticked):
+    """Each item's `done`: ticked by hand, or its progress met and not unticked by hand."""
+    for item in items:
+        met = 'goal' in item and item['goal'] > 0 and item['progress'] >= item['goal']
+        item['done'] = item['key'] in ticked or (met and UNTICKED + item['key'] not in ticked)
+
+
+def tick(keys, key, done):
+    """`keys` (a day's checks) with `key` ticked or unticked by hand."""
+    keys = set(keys)
+    keys.discard(key)
+    keys.discard(UNTICKED + key)
+    keys.add(key if done else UNTICKED + key)
+    return sorted(keys)
 
 
 def _day_items(settings, week, day, due_count, today, checks, practiced_today, reviewed_today):
@@ -779,9 +803,9 @@ def _day_items(settings, week, day, due_count, today, checks, practiced_today, r
         items.append({'key': 'mock', 'label': 'Timed mock: this week’s {}'.format(level),
                       'detail': 'Still to sit this week. One sitting, on the clock.',
                       'minutes': MOCK_MINUTES.get(level, 75), 'to': '/mock-contests', 'auto': False})
+    _mark_done(items, ticked)
     for item in items:
-        item['done'] = item['key'] in ticked or (
-            'goal' in item and item['goal'] > 0 and item['progress'] >= item['goal'])
+        # A mock sat this week is done: it cannot be unsat.
         if item['key'].startswith('mock') and week.get('mock_done'):
             item['done'] = True
     return items

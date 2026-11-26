@@ -5,7 +5,7 @@
  */
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { ErrorState, Loading } from '@/components';
+import { ErrorState, Loading, useNotice } from '@/components';
 import { CategoryDot, Empty, Meter, PageHeader } from '@/components/Amc/bits';
 import { RecentPerformanceCard } from '@/components/Amc/Performance';
 import { useApi, useDocumentTitle } from '@/hooks';
@@ -17,8 +17,10 @@ import {
   CATEGORY_TONE,
   pct,
   shortDate,
+  type Consistency,
   type Dashboard as DashboardData,
   type Level,
+  type PlanDay,
   type PlanWeek,
   type TodayItem,
 } from '@/services/amc';
@@ -55,18 +57,96 @@ export function isRestDay(week: PlanWeek | null | undefined): boolean {
   return Boolean(week?.days?.find((d) => d.today)?.rest);
 }
 
-export function TodayList({ items, onToggle, rest = false }: {
+/**
+ * Under today's list: how far through it you are, then, once every item is
+ * ticked, "Mark the day complete" (asked to confirm), and once it is, the day
+ * marked complete with a way to reopen it. Unticking any item reopens it too
+ * (POST /api/amc/plan/check). Completed days are what the plan's consistency
+ * is read from (backend/amc/consistency.py).
+ */
+function DayDone({ items, day, onDay }: { items: TodayItem[]; day: PlanDay; onDay: (done: boolean) => Promise<void> }) {
+  const { confirm } = useNotice();
+  const [busy, setBusy] = useState(false);
+  const ticked = items.filter((i) => i.done).length;
+  async function run(done: boolean) {
+    if (done) {
+      const yes = await confirm({
+        title: 'Mark today complete?',
+        body: `All ${items.length} items are ticked. If you untick one later, the day reopens.`,
+        confirmLabel: 'Mark complete',
+        cancelLabel: 'Not yet',
+      });
+      if (!yes) return;
+    }
+    setBusy(true);
+    try {
+      await onDay(done);
+    } finally {
+      setBusy(false);
+    }
+  }
+  if (day.complete) {
+    return (
+      <div className="am-day-done is-complete" role="status">
+        <span><strong>Day complete.</strong> Nice work. Tomorrow's list is on the plan.</span>
+        <button type="button" className="am-btn am-btn-ghost am-btn-sm" disabled={busy} onClick={() => void run(false)}>
+          Reopen the day
+        </button>
+      </div>
+    );
+  }
+  if (day.ready) {
+    return (
+      <div className="am-day-done is-ready">
+        <span>Everything on today's list is ticked.</span>
+        <button type="button" className="am-btn am-btn-primary am-btn-sm" disabled={busy} onClick={() => void run(true)}>
+          Mark the day complete
+        </button>
+      </div>
+    );
+  }
+  return (
+    <p className="am-day-done am-muted">
+      {ticked} of {items.length} ticked. Tick each one as you finish it, then mark the day complete.
+    </p>
+  );
+}
+
+/** The last two weeks of the plan kept, a square a day, and what that changes. */
+export function ConsistencyStrip({ c }: { c: Consistency }) {
+  const label = { complete: 'completed', partial: 'some done', missed: 'missed', rest: 'rest day', extra: 'extra day' };
+  return (
+    <div className="am-kept">
+      {c.days.length > 0 && (
+        <ol className="am-kept-days" aria-label={`The last ${c.days.length} days`}>
+          {c.days.map((d) => (
+            <li key={d.date} className={`is-${d.status}`}
+                title={`${shortDate(d.date)}: ${label[d.status]}${d.minutes ? `, ${d.minutes} min` : ''}`}>
+              <span className="am-sr">{shortDate(d.date)}: {label[d.status]}</span>
+            </li>
+          ))}
+        </ol>
+      )}
+      <p className={`am-kept-text is-${c.status}`}>{c.text}</p>
+    </div>
+  );
+}
+
+export function TodayList({ items, onToggle, rest = false, day, onDay }: {
   items: TodayItem[]; onToggle: (item: TodayItem) => void; rest?: boolean;
+  /** Today's completion, and how to mark or reopen it; without them, the list alone. */
+  day?: PlanDay; onDay?: (done: boolean) => Promise<void>;
 }) {
   if (!items.length) {
     return rest
       ? <Empty title="Rest day">Nothing on the plan today.</Empty>
-      : <Empty title="Done for today">Solve any problem to keep your streak.</Empty>;
+      : <Empty title="Done for today">Nothing else on the plan today.</Empty>;
   }
   // The practice set left part way, marked where today's list has it.
   const active = activePracticeSet();
   return (
-    <ul className="am-today">
+    <>
+    <ul className={`am-today${day?.complete ? ' is-complete' : ''}`}>
       {items.map((item) => (
         <li key={item.key} className={`${item.done ? 'is-done' : ''}${!item.done && isActiveSetLink(item.to, active) ? ' is-active' : ''}`}>
           <Check on={item.done} onToggle={() => onToggle(item)} label={`Mark "${item.label}" ${item.done ? 'not done' : 'done'}`} />
@@ -81,6 +161,8 @@ export function TodayList({ items, onToggle, rest = false }: {
         </li>
       ))}
     </ul>
+    {day && onDay && <DayDone items={items} day={day} onDay={onDay} />}
+    </>
   );
 }
 
@@ -136,14 +218,16 @@ export default function Dashboard() {
 
   const { stats, plan } = data;
 
-  const toggle = async (item: TodayItem) => {
-    const reply = await amc.check(item.key, !item.done);
-    if (reply.success && reply.today) {
-      const today = reply.today;
-      mutate((d) => (d.plan ? { ...d, plan: { ...d.plan, today } } : d));
+  /** Today's list, completion and consistency, from a plan reply. */
+  const take = (reply: Awaited<ReturnType<typeof amc.check>>) => {
+    if (reply.success && reply.today && reply.day && reply.consistency) {
+      const { today, day, consistency } = reply;
+      mutate((d) => (d.plan ? { ...d, plan: { ...d.plan, today, day, consistency } } : d));
       announceAmcChanged();
     }
   };
+  const toggle = async (item: TodayItem) => take(await amc.check(item.key, !item.done));
+  const markDay = async (done: boolean) => take(await amc.markDay(done));
 
   return (
     <div className="amc-page" data-egg="door">
@@ -209,7 +293,11 @@ export default function Dashboard() {
               <Link to="/study-plan">{plan ? 'Full plan' : 'Make a plan'}</Link>
             </div>
             {plan ? (
-              <TodayList items={plan.today} onToggle={(item) => void toggle(item)} rest={isRestDay(plan.week)} />
+              <>
+                <TodayList items={plan.today} onToggle={(item) => void toggle(item)} rest={isRestDay(plan.week)}
+                           day={plan.day} onDay={markDay} />
+                {plan.consistency && <ConsistencyStrip c={plan.consistency} />}
+              </>
             ) : (
               <Empty title="No study plan yet">
                 Pick your contest and date to get a weekly plan.

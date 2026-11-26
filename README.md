@@ -60,6 +60,18 @@ topic put right in a spaced or accuracy set rises in the plan, and an answer in
 a mixed set (topic hidden) counts as unlabelled when the plan looks for a
 recognition weakness.
 
+Today's checklist (on the dashboard and the study plan) ticks and unticks by
+hand, even an item whose problems are all done. Once every item is ticked,
+"Mark the day complete" asks to confirm and stores the day (`amc_plan_days`);
+unticking anything reopens it. `backend/amc/consistency.py` reads the last two
+weeks of study days, counted from the first day ever marked complete:
+complete, partly done (something answered) or missed. It sizes the days ahead
+to that, the full plan at 80% kept, then 85%, 70% and at least 60% of the
+planned minutes, a step up when every day is kept with well over the planned
+time, and back to full after three complete study days in a row. The sets get
+smaller, not fewer, and the dashboard shows the fortnight as a strip with one
+sentence on what it changes.
+
 The AI layer (`backend/amc/ai.py`, endpoints in `backend/api/amc_ai.py`) uses
 **Gemini** whenever `GEMINI_API_KEY` is set (model `GEMINI_MODEL`, default
 `gemini-3.8-flash`, falling back through newer Flash and Flash-Lite models when

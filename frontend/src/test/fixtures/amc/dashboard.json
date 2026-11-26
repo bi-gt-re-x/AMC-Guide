@@ -251,6 +251,116 @@
   }
  },
  "plan": {
+  "consistency": {
+   "adjusted": 50,
+   "avg_minutes": 42,
+   "before_rate": null,
+   "complete": 6,
+   "days": [
+    {
+     "date": "2026-10-29",
+     "minutes": 40,
+     "status": "complete",
+     "study": true
+    },
+    {
+     "date": "2026-10-30",
+     "minutes": 0,
+     "status": "rest",
+     "study": false
+    },
+    {
+     "date": "2026-10-31",
+     "minutes": 0,
+     "status": "missed",
+     "study": true
+    },
+    {
+     "date": "2026-11-01",
+     "minutes": 40,
+     "status": "complete",
+     "study": true
+    },
+    {
+     "date": "2026-11-02",
+     "minutes": 40,
+     "status": "complete",
+     "study": true
+    },
+    {
+     "date": "2026-11-03",
+     "minutes": 0,
+     "status": "missed",
+     "study": true
+    },
+    {
+     "date": "2026-11-04",
+     "minutes": 0,
+     "status": "rest",
+     "study": false
+    },
+    {
+     "date": "2026-11-05",
+     "minutes": 40,
+     "status": "complete",
+     "study": true
+    },
+    {
+     "date": "2026-11-06",
+     "minutes": 0,
+     "status": "rest",
+     "study": false
+    },
+    {
+     "date": "2026-11-07",
+     "minutes": 40,
+     "status": "complete",
+     "study": true
+    },
+    {
+     "date": "2026-11-08",
+     "minutes": 40,
+     "status": "complete",
+     "study": true
+    },
+    {
+     "date": "2026-11-09",
+     "minutes": 0,
+     "status": "missed",
+     "study": true
+    },
+    {
+     "date": "2026-11-10",
+     "minutes": 40,
+     "status": "complete",
+     "study": true
+    },
+    {
+     "date": "2026-11-11",
+     "minutes": 0,
+     "status": "rest",
+     "study": false
+    }
+   ],
+   "extra": 0,
+   "load": 0.85,
+   "minutes": 60,
+   "missed": 3,
+   "partial": 1,
+   "rate": 0.62,
+   "run": 1,
+   "status": "lighter",
+   "study_days": 10,
+   "text": "You completed 6 of your last 10 study days and did part of 1 more. Each study day is trimmed to about 50 minutes (from 60) so it fits. Complete 3 study days in a row to go back to the full plan.",
+   "trend": null,
+   "window": 14
+  },
+  "day": {
+   "complete": false,
+   "completed_at": null,
+   "date": "2026-11-12",
+   "ready": false
+  },
   "days_left": 347,
   "exam_date": "2027-11-04",
   "goal_score": 120.0,

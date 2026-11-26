@@ -50,6 +50,21 @@ CREATE TABLE IF NOT EXISTS amc_set_runs (
 
 CREATE INDEX IF NOT EXISTS amc_set_runs_user_idx ON amc_set_runs (user_id, started_at);
 
+-- A day of the study plan the student marked complete: every item on that
+-- day's checklist ticked, then confirmed (the dashboard's "Mark the day
+-- complete"). Unticking an item that day removes the row again. Kept for good,
+-- unlike amc_plans.checks (the last two weeks of ticks): it is the record of
+-- how often the plan is kept, which backend/amc/consistency.py reads to size
+-- the days ahead. `items` and `minutes` are the checklist as it was.
+CREATE TABLE IF NOT EXISTS amc_plan_days (
+    user_id       TEXT NOT NULL REFERENCES users (username) ON DELETE CASCADE,
+    day           TEXT NOT NULL,
+    items         INTEGER NOT NULL DEFAULT 0,
+    minutes       INTEGER NOT NULL DEFAULT 0,
+    completed_at  TEXT NOT NULL,
+    PRIMARY KEY (user_id, day)
+);
+
 -- The error log. A missed problem comes back after 3, 10 and 21 days; a right
 -- answer on a due review moves it up a stage, a wrong one sends it back to
 -- the start, and passing stage 3 marks it mastered (backend/amc/engine.py).

@@ -1093,6 +1093,16 @@ ADDED_TABLES = ('''
     )
 ''', '''
     CREATE INDEX IF NOT EXISTS amc_set_runs_user_idx ON amc_set_runs (user_id, started_at)
+''', '''
+    -- Study plan days marked complete. The DDL is data/sql/amc.sql's.
+    CREATE TABLE IF NOT EXISTS amc_plan_days (
+        user_id       TEXT NOT NULL REFERENCES users (username) ON DELETE CASCADE,
+        day           TEXT NOT NULL,
+        items         INTEGER NOT NULL DEFAULT 0,
+        minutes       INTEGER NOT NULL DEFAULT 0,
+        completed_at  TEXT NOT NULL,
+        PRIMARY KEY (user_id, day)
+    )
 ''')
 
 
