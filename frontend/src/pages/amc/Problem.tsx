@@ -284,7 +284,7 @@ export default function Problem() {
    *  (backend/amc/reach.py). Asked first, since it takes it off the schedule. */
   async function parkReview() {
     const at = data?.reach;
-    if (!at?.out_of_reach || at.returns_at == null) return;
+    if (!at || at.returns_at == null) return;
     const yes = await confirm({
       title: 'Put this problem on hold?',
       body: `It's rated ${ratingText(at.rating ?? 0)} and your level here is about ${at.level}. It stays in your `
@@ -530,9 +530,9 @@ export default function Problem() {
           <section className="am-card">
             <div className="am-card-head">
               <h2>Details</h2>
-              {/* Only offered when the problem is out of reach of the account's level for now. */}
-              {data.reach?.out_of_reach && data.review?.review_status !== 'parked' && data.review?.review_status !== 'mastered' && (
-                <button type="button" className="am-btn am-btn-ghost am-btn-sm" onClick={() => void parkReview()}
+              {/* Offered on any problem not already on hold or mastered: the student says when it is too hard. */}
+              {data.reach && data.review?.review_status !== 'parked' && data.review?.review_status !== 'mastered' && (
+                <button type="button" className="am-btn am-btn-alarm am-btn-sm" onClick={() => void parkReview()}
                         title={`Rated ${data.reach.rating} against your level of about ${data.reach.level}`}>
                   Too challenging?
                 </button>

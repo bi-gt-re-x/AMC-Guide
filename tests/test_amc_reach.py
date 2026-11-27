@@ -69,11 +69,30 @@ def test_a_problem_never_missed_can_be_put_on_hold_too(client, today):
     assert [v['id'] for v in client.get('/api/amc/review').json()['parked']] == [HARD]
 
 
-def test_a_problem_within_reach_is_refused(client, today):
+def test_a_problem_the_model_calls_within_reach_can_be_held_and_waits_for_growth(client, today, level):
+    # Rated 2 against a level of 4: the model says easy, the student says too
+    # hard. It is held, and comes back once the level grows by STEP, not on
+    # the next page load.
+    level['theta'] = 4.0
     _miss(client, EASY)
     reply = client.post('/api/amc/review/{}/park'.format(EASY)).json()
-    assert not reply['success'] and 'within reach' in reply['message']
-    assert client.get('/api/amc/review').json()['parked'] == []
+    assert reply['success'] and reply['reach']['returns_at'] == 4.5
+    assert store.review('tester', EASY)['parked_level'] == 4.0
+    assert [v['id'] for v in client.get('/api/amc/review').json()['parked']] == [EASY]
+    level['theta'] = 4.4
+    assert [v['id'] for v in client.get('/api/amc/review').json()['parked']] == [EASY]
+    level['theta'] = 4.5
+    queue = client.get('/api/amc/review').json()
+    assert queue['parked'] == [] and [v['id'] for v in queue['due']] == [EASY]
+
+
+def test_it_comes_back_at_the_later_of_near_the_rating_and_grown(client, today, level):
+    # Rated 6.5 against 5.9 (the case that hid the button): near the rating
+    # would be 5.5, already passed, so it waits for 5.9 + 0.5.
+    p = {'rating': 6.5}
+    assert reach.returns_at(p, 5.9) == 6.4
+    assert reach.returns_at(p, 4.0) == 5.5
+    assert reach.returns_at({'rating': None}, 3.0) == 3.5
 
 
 def test_it_comes_back_once_the_level_is_near(client, today, level):

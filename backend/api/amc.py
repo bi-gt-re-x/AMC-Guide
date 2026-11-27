@@ -375,10 +375,11 @@ def get_problem(problem_id: str, request: Request, topic: str = '', in_list: str
                             key=lambda q: _source_rank(q['id']))
         order = [q['id'] for q in family]
     i = order.index(problem_id) if problem_id in order else -1
-    # Whether it is out of reach for now, which offers "Too challenging?".
+    # The level here, and where "Too challenging?" would hold it until.
     theta, topic_theta = reach.levels(hist, _today())
     return ok(problem=engine.public(p, reveal=revealed),
-              reach=reach.view(p, theta, topic_theta),
+              reach=reach.view(p, theta, topic_theta,
+                               rev.get('parked_level') if rev and rev['status'] == 'parked' else None),
               status=engine.status_of(problem_id, hist, review_by_id),
               attempts=[{'answer': a['answer'], 'correct': bool(a['correct']), 'at': a['at'],
                          'source': a['source'], 'seconds': a['seconds']} for a in mine],
@@ -562,7 +563,7 @@ def review_queue(username: str = Depends(current_username)):
     if parked:
         theta, topic_theta = reach.levels(hist, today)
         for v in parked:
-            v['reach'] = reach.view(pb.get(v['id']), theta, topic_theta)
+            v['reach'] = reach.view(pb.get(v['id']), theta, topic_theta, review_by_id[v['id']].get('parked_level'))
         parked.sort(key=lambda v: ((v['reach']['returns_at'] or 0) - v['reach']['level'], v['id']))
     # How many come due on each of the next 14 days.
     forecast = []
@@ -610,24 +611,25 @@ def add_review(problem_id: str, username: str = Depends(current_username)):
 @router.post('/api/amc/review/{problem_id}/park')
 def park_review(problem_id: str, username: str = Depends(current_username)):
     """"Too challenging?": put the problem on hold in the review log until the
-    account's level is near its rating (backend/amc/reach.py). Only for a
-    problem that is out of reach now; one that is not would come straight back."""
+    account's level has come near it (backend/amc/reach.py `returns_at`): near
+    its rating, and grown past where it is now, so it never comes straight back."""
     p = pb.get(problem_id)
     if not p:
         return fail('No such problem.')
     _, _, hist, review_by_id = _context(username)
     theta, topic_theta = reach.levels(hist, _today())
-    where = reach.view(p, theta, topic_theta)
-    if not where['out_of_reach']:
-        return fail('This one is within reach of your level, so it stays on the review schedule.', reach=where)
     existing = review_by_id.get(problem_id)
     if existing and existing['status'] == 'parked':
-        return ok(reach=where, review=_review_view(existing, hist, review_by_id, _today()))
+        return ok(reach=reach.view(p, theta, topic_theta, existing.get('parked_level')),
+                  review=_review_view(existing, hist, review_by_id, _today()))
+    level = reach.level_for(p, theta, topic_theta)
+    where = reach.view(p, theta, topic_theta, level)
     today = _today().isoformat()
     row = {'problem_id': problem_id, 'stage': int((existing or {}).get('stage') or 0)
            if (existing or {}).get('status') == 'active' else 0,
            'due': today, 'status': store.PARKED, 'note': (existing or {}).get('note', ''),
-           'misses': int((existing or {}).get('misses') or 0), 'added_at': (existing or {}).get('added_at')}
+           'misses': int((existing or {}).get('misses') or 0), 'added_at': (existing or {}).get('added_at'),
+           'parked_level': round(level, 2)}
     store.write(store.review_upsert(username, row))
     saved = store.review(username, problem_id)
     return ok(reach=where, review=_review_view(saved, hist, {**review_by_id, problem_id: saved}, _today()))

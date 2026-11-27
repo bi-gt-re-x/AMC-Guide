@@ -325,10 +325,11 @@ describe('Reviewing a miss', () => {
 describe('Too challenging?', () => {
   const far = { level: 4, rating: 9, near: 1, out_of_reach: true, returns_at: 8 };
 
-  it('is not offered on a problem within reach', async () => {
+  it('is offered on a problem the model calls within reach too, in red', async () => {
     show('/problems/step-10-01', '/problems/:problemId', <Problem />);
     await settled(/What is the value of/);
-    expect(screen.queryByRole('button', { name: 'Too challenging?' })).not.toBeInTheDocument();
+    const button = await screen.findByRole('button', { name: 'Too challenging?' });
+    expect(button).toHaveClass('am-btn-alarm');
   });
 
   it('asks first, then puts an out-of-reach problem on hold', async () => {

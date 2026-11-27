@@ -274,6 +274,9 @@ ADDED_COLUMNS = (
     # row stays 'active' underneath, so the status CHECK (which Postgres keeps
     # by name and would not widen) never changes. backend/amc/reach.py.
     ('amc_reviews', 'parked_at', 'TEXT'),
+    # The account's level when it was put on hold: it comes back once the
+    # level has grown past it (backend/amc/reach.py `returns_at`).
+    ('amc_reviews', 'parked_level', 'REAL'),
 )
 
 # Indexes on columns that ADDED_COLUMNS supplies. Their own list, applied after

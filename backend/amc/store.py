@@ -113,7 +113,7 @@ def finish_set_run(user, run_id, time_up=False):
 #: counts, the queue, the weak-topics pool) leaves it out without being told.
 PARKED = 'parked'
 
-_REVIEW_COLUMNS = 'problem_id, stage, due, status, note, misses, added_at, updated_at, parked_at'
+_REVIEW_COLUMNS = 'problem_id, stage, due, status, note, misses, added_at, updated_at, parked_at, parked_level'
 
 
 def _review_row(row):
@@ -141,10 +141,11 @@ def review_upsert(user, row):
     return [
         ('DELETE FROM amc_reviews WHERE user_id = ? AND problem_id = ?', (user, row['problem_id'])),
         ('INSERT INTO amc_reviews (user_id, problem_id, stage, due, status, note, misses, added_at, updated_at, '
-         'parked_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+         'parked_at, parked_level) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
          (user, row['problem_id'], int(row['stage']), row['due'], 'active' if parked else row['status'],
           row.get('note') or '', int(row.get('misses') or 0), row.get('added_at') or now, now,
-          (row.get('parked_at') or now) if parked else None)),
+          (row.get('parked_at') or now) if parked else None,
+          row.get('parked_level') if parked else None)),
     ]
 
 

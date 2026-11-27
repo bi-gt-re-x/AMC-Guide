@@ -234,6 +234,9 @@ html:not([data-skin]):not([data-theme="dark"]):has(.amc-page) .hm-ambient {
 html[data-theme="dark"] .am-btn-primary { background: var(--am-sage); border-color: var(--am-sage); color: #0d1117; }
 .am-btn-sage { background: var(--am-sage); border-color: var(--am-sage); color: #fff; }
 .am-btn-sage:hover { filter: brightness(.95); background: var(--am-sage); }
+/* "Too challenging?" on a problem's details: bright red, so it is found. */
+.am-btn-alarm { background: #E5251F; border-color: #E5251F; color: #fff; font-weight: 600; }
+.am-btn-alarm:hover { background: #C81A14; border-color: #C81A14; }
 .am-btn-ghost { background: none; border-color: transparent; color: var(--am-muted); }
 .am-btn-ghost:hover { background: var(--am-hover); color: var(--am-ink); }
 .am-btn-sm { min-height: 30px; padding: 0 var(--space-3); font-size: var(--text-xs); }
