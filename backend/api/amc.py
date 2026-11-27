@@ -698,10 +698,13 @@ def strategies(username: str = Depends(current_username)):
             probs = by_technique.get(tid, [])
             pill_rows = _pills_sorted(_pill(p['id'], hist, review_by_id) for p in probs)
             topics = sorted({p['topic'] for p in probs})
+            answered, right, share = engine.first_try([p['id'] for p in probs], hist)
             techniques.append({
                 'id': tid, 'name': catalog.technique_name(tid), 'idea': idea,
                 'pills': pill_rows,
                 'solved': sum(1 for x in pill_rows if x['status'] == 'solved'),
+                # How often its problems are right first time, blanks left out.
+                'answered': answered, 'first_try': share,
                 'topics': [{'id': t, 'name': catalog.TOPIC_BY_ID[t]['name']} for t in topics],
             })
         families.append({'id': fam['id'], 'name': fam['name'], 'color': fam['color'], 'blurb': fam['blurb'],

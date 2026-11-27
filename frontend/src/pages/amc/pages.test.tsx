@@ -257,6 +257,23 @@ describe('AMC pages render the API as it is', () => {
     expect(menu.open).toBe(true);
   });
 
+  it('Topics: each card coloured by how often its problems are right first try', async () => {
+    const [a, b, c, d, e] = topics.categories.flatMap((cat) => cat.topics);
+    const tune = (t: typeof a, first_try: number | null, answered: number) => ({ ...t!, first_try, answered });
+    const tuned = { ...topics, categories: [{ ...topics.categories[0]!, topics: [
+      tune(a, 0.8, 10), tune(b, 0.65, 20), tune(c, 0.4, 5), tune(d, 0.39, 18), tune(e, null, 0),
+    ] }] };
+    vi.spyOn(amc, 'topics').mockResolvedValue({ ...tuned, success: true } as any);
+    show('/topics', '/topics', <Topics />);
+    await settled(a!.name);
+    const band = (t: typeof a) => document.querySelector(`a.am-topic-card[href="/topics/${t!.id}"]`)?.getAttribute('data-acc');
+    // Each band includes its lower edge.
+    expect([band(a), band(b), band(c), band(d), band(e)]).toEqual(['blue', 'green', 'orange', 'red', 'none']);
+    expect(document.querySelector(`a.am-topic-card[href="/topics/${a!.id}"]`)).toHaveTextContent('80% first try');
+    expect(document.querySelector(`a.am-topic-card[href="/topics/${e!.id}"]`)).toHaveTextContent('Not tried');
+    expect(screen.getByLabelText(/Card colours/)).toHaveTextContent('80–100%');
+  });
+
   it('One topic, with its playbook', async () => {
     show('/topics/linear-equations', '/topics/:topicId', <Topic />);
     await settled(topic.topic.playbook[0]!.move);
@@ -399,6 +416,37 @@ describe('A set keeps its answers through a refresh', () => {
     show('/problems/step-10-01?review=1', '/problems/:problemId', <Problem />);
     expect(await screen.findByText('Correct.')).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Next in the set →' })).toBeInTheDocument();
+  });
+});
+
+describe('A mixed set', () => {
+  const mixed = () => writePracticeSet({ ids: ['step-10-01', 'step-10-02'], topic: 'exponents', mode: 'mixed',
+                                         title: 'Mixed set', seconds: null, hideTopic: true, size: null,
+                                         deadline: null, runId: 'run-m' });
+
+  it('shows neither the topic nor the technique until the problem is answered', async () => {
+    mixed();
+    vi.spyOn(amc, 'problem').mockResolvedValue({ ...problem, attempts: [], success: true } as any);
+    show('/problems/step-10-01?set=1', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    const p = problem.problem;
+    expect(screen.queryByText(p.topic_name)).not.toBeInTheDocument();
+    expect(screen.queryByText(p.technique_name)).not.toBeInTheDocument();
+    expect(screen.queryByText(p.category_name)).not.toBeInTheDocument();
+    expect(screen.queryByText('Same topic')).not.toBeInTheDocument();
+    expect(screen.getByText('Hidden until you answer')).toBeInTheDocument();
+  });
+
+  it('shows them once it is answered', async () => {
+    mixed();
+    vi.spyOn(amc, 'problem').mockResolvedValue({
+      ...problem, success: true,
+      attempts: [{ answer: 'D', correct: true, at: '2026-11-12T10:00:00', seconds: 30, source: 'practice', set_id: 'run-m' }],
+    } as any);
+    show('/problems/step-10-01?set=1', '/problems/:problemId', <Problem />);
+    expect(await screen.findByText('Correct.')).toBeInTheDocument();
+    expect(screen.getByText(problem.problem.technique_name)).toBeInTheDocument();
+    expect(screen.getAllByText(problem.problem.topic_name).length).toBeGreaterThan(0);
   });
 });
 

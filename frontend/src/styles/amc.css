@@ -39,6 +39,11 @@
     --am-green: #7D9A7E;
     --am-rose: #B47C86;
     --am-slate: #8A8D93;
+    /* First-try accuracy on topic and strategy cards (services/amc.ts accuracyBand). */
+    --am-acc-blue: #3C78C3;
+    --am-acc-green: #3E9150;
+    --am-acc-orange: #D57F27;
+    --am-acc-red: #C8453B;
     --am-serif: 'Newsreader', 'Lora', Georgia, 'Times New Roman', serif;
     --am-radius: 16px;
     /* Flat: cards are set apart by the ground and a hairline, not a shadow. */
@@ -85,6 +90,10 @@ html[data-theme="dark"] .amc-page {
     --am-green: #93b096;
     --am-rose: #d39aa4;
     --am-slate: #9aa1ab;
+    --am-acc-blue: #6FA7EA;
+    --am-acc-green: #67C17F;
+    --am-acc-orange: #F0A056;
+    --am-acc-red: #EF7469;
     --am-shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 8px 24px rgba(0, 0, 0, .25);
 }
 
@@ -1026,6 +1035,21 @@ mark.am-hl { background: var(--am-warn-soft); color: inherit; border-radius: 3px
 }
 .am-topic-block::before { content: ''; position: absolute; inset: 0 auto 0 0; width: 3px; background: var(--tone, var(--am-sage)); }
 .am-topic-block .am-meter i { background: var(--tone, var(--am-sage)); }
+/* Coloured by first-try accuracy: the stripe, the meter, and a chip with the figure. */
+.amc-page [data-acc="blue"] { --tone: var(--am-acc-blue); }
+.amc-page [data-acc="green"] { --tone: var(--am-acc-green); }
+.amc-page [data-acc="orange"] { --tone: var(--am-acc-orange); }
+.amc-page [data-acc="red"] { --tone: var(--am-acc-red); }
+.amc-page [data-acc="none"] { --tone: var(--am-line); }
+.am-acc-chip {
+    display: inline-flex; align-items: center; gap: 4px; padding: 1px 7px; border-radius: 999px;
+    font-size: 11px; font-weight: 600; font-variant-numeric: tabular-nums; white-space: nowrap;
+    color: var(--tone); background: color-mix(in srgb, var(--tone) 13%, transparent);
+}
+.am-topic-block[data-acc="none"] .am-acc-chip { color: var(--am-muted); background: var(--am-inset); }
+.am-acc-key { display: flex; flex-wrap: wrap; gap: var(--space-2) var(--space-3); margin: 0 0 var(--space-4); font-size: 12px; color: var(--am-muted); }
+.am-acc-key span { display: inline-flex; align-items: center; gap: 6px; }
+.am-acc-key i { width: 10px; height: 10px; border-radius: 3px; background: var(--tone); }
 .am-topic-block-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-2); flex-wrap: wrap; font-size: 12px; }
 .am-topic-block-name { font-size: 16px; font-weight: 600; text-decoration: none; color: var(--am-ink); }
 .am-topic-block-name:hover { text-decoration: underline; }

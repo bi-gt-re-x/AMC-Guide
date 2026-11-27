@@ -618,8 +618,16 @@ export default function Problem() {
             </div>
             <dl className="am-kv">
               <dt>Contest</dt><dd>{p.level}</dd>
-              <dt>Category</dt><dd>{p.category_name}</dd>
-              <dt>Technique</dt><dd><Link className="am-link" to={`/problems?technique=${p.technique}`}>{p.technique_name}</Link></dd>
+              {/* A mixed set is practice in recognising what a problem needs: its
+                  category and technique wait, with its topic, until it is answered. */}
+              {hideTopic ? (
+                <><dt>Topic</dt><dd className="am-muted">Hidden until you answer</dd></>
+              ) : (
+                <>
+                  <dt>Category</dt><dd>{p.category_name}</dd>
+                  <dt>Technique</dt><dd><Link className="am-link" to={`/problems?technique=${p.technique}`}>{p.technique_name}</Link></dd>
+                </>
+              )}
               <dt>Rating</dt>
               <dd title="The AoPS rating times 2: an AMC 10 #1 is a 2 and the hardest AIME problem a 12">
                 {p.rating != null ? ratingText(p.rating) : '—'}
@@ -696,7 +704,7 @@ export default function Problem() {
             </section>
           )}
 
-          {data.related.length > 0 && (
+          {data.related.length > 0 && !hideTopic && (
             <section>
               <h2 className="am-h2" style={{ marginBottom: 10 }}>Same topic</h2>
               <div className="am-rows">

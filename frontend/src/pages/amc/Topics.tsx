@@ -14,7 +14,7 @@ import { Link, useLocation, useSearchParams } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
 import { CategoryDot, Meter, PageHeader } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
-import { amc, CATEGORY_TONE, pct } from '@/services/amc';
+import { accuracyBand, amc, pct } from '@/services/amc';
 import '@/styles/amc.css';
 
 type View = 'topic' | 'strategy';
@@ -48,6 +48,30 @@ function useHashJump(ready: boolean) {
     );
     return () => timers.forEach((t) => window.clearTimeout(t));
   }, [ready, hash]);
+}
+
+/** What the cards' colours mean: first-try accuracy, blanks left out (services/amc.ts accuracyBand). */
+function AccuracyKey() {
+  const bands: [string, string][] = [['blue', '80–100%'], ['green', '65–80%'], ['orange', '40–65%'], ['red', 'Below 40%']];
+  return (
+    <p className="am-acc-key" aria-label="Card colours: how often you solve its problems first try">
+      Right first try:
+      {bands.map(([band, label]) => (
+        <span key={band} data-acc={band}>
+          <i aria-hidden="true" />{label}
+        </span>
+      ))}
+    </p>
+  );
+}
+
+/** The chip on a card: its first-try accuracy, or that nothing is answered yet. */
+function AccuracyChip({ share, answered }: { share: number | null | undefined; answered: number | undefined }) {
+  return (
+    <span className="am-acc-chip" title={answered ? `Right first try on ${pct(share)} of the ${answered} answered (blanks left out)` : 'Nothing answered yet'}>
+      {share == null ? 'Not tried' : `${pct(share)} first try`}
+    </span>
+  );
 }
 
 interface JumpGroup {
@@ -119,6 +143,7 @@ function TopicView({ query }: { query: string }) {
       <JumpMenu label="Jump to a topic" groupPrefix="cat-" itemPrefix="topic-"
                 groups={cats.map((c) => ({ id: c.id, name: c.name, dot: <CategoryDot category={c.id} />,
                                            count: `${c.solved}/${c.problems}`, items: c.topics }))} />
+      <AccuracyKey />
       {!cats.length && <p className="am-muted">Nothing matches "{query}".</p>}
       {cats.map((cat) => (
         <section key={cat.id} id={`cat-${cat.id}`} className="am-cat am-anchor">
@@ -129,7 +154,7 @@ function TopicView({ query }: { query: string }) {
           <div className="am-topic-grid">
             {cat.topics.map((t) => (
               <Link key={t.id} id={`topic-${t.id}`} to={`/topics/${t.id}`} className="am-topic-block am-topic-card am-anchor"
-                    style={{ ['--tone' as string]: `var(--am-${CATEGORY_TONE[cat.id]})` }}>
+                    data-acc={accuracyBand(t.first_try)}>
                 <div className="am-topic-card-head">
                   <span className="am-topic-block-name">{t.name}</span>
                   <span className="am-topic-card-count" title={`${t.problems} problems`}>{t.problems}</span>
@@ -137,7 +162,8 @@ function TopicView({ query }: { query: string }) {
                 <p className="am-topic-block-summary">{t.summary}</p>
                 <Meter value={t.problems ? t.solved / t.problems : 0} />
                 <div className="am-topic-block-foot">
-                  <span className="am-muted">{t.solved}/{t.problems} solved · {pct(t.accuracy)} first try</span>
+                  <span className="am-muted">{t.solved}/{t.problems} solved</span>
+                  <AccuracyChip share={t.first_try} answered={t.answered} />
                   <span className="am-topic-levels">
                     {t.levels.map((l) => <span key={l}>{l.replace('AMC ', '')}</span>)}
                   </span>
@@ -167,6 +193,7 @@ function StrategyView({ query }: { query: string }) {
                 groups={families.map((f) => ({ id: f.id, name: f.name,
                                                dot: <i className={`am-dot am-tone-${f.color}`} aria-hidden="true" />,
                                                count: `${f.solved}/${f.problems}`, items: f.techniques }))} />
+      <AccuracyKey />
       {!families.length && <p className="am-muted">Nothing matches "{query}".</p>}
       {families.map((f) => (
         <section key={f.id} id={`fam-${f.id}`} className="am-cat am-anchor">
@@ -177,15 +204,16 @@ function StrategyView({ query }: { query: string }) {
           <div className="am-topic-grid">
             {f.techniques.map((t) => (
               <article key={t.id} id={`tech-${t.id}`} className="am-topic-block am-anchor"
-                       style={{ ['--tone' as string]: `var(--am-${f.color})` }}>
+                       data-acc={accuracyBand(t.first_try)}>
                 <div className="am-topic-card-head">
                   <Link to={`/problems?technique=${t.id}`} className="am-topic-block-name">{t.name}</Link>
                   <span className="am-topic-card-count" title={`${t.pills.length} problems`}>{t.pills.length}</span>
                 </div>
                 <p className="am-topic-block-summary">{t.idea}</p>
                 <Meter value={t.pills.length ? t.solved / t.pills.length : 0} />
-                <span className="am-muted am-topic-card-stat">
+                <span className="am-muted am-topic-card-stat" style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
                   {t.pills.length ? `${t.solved}/${t.pills.length} solved` : 'No problems use this yet.'}
+                  {t.pills.length > 0 && <AccuracyChip share={t.first_try} answered={t.answered} />}
                 </span>
                 {t.topics.length > 0 && (
                   <div className="am-topic-block-foot">

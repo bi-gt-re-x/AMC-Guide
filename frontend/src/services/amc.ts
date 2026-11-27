@@ -122,6 +122,10 @@ export interface TopicStats {
   review: number;
   accuracy: number | null;
   mastery: number;
+  /** Problems whose first try had an answer in it (a solution shown first does not count). */
+  answered?: number;
+  /** Of those, the share right first time; null until one is answered. */
+  first_try?: number | null;
 }
 
 /** One problem as a pill: a short label, coloured by status. */
@@ -149,7 +153,11 @@ export interface StrategyFamily {
   blurb: string;
   problems: number;
   solved: number;
-  techniques: (StrategyGroup & { solved: number; topics: { id: string; name: string }[] })[];
+  techniques: (StrategyGroup & {
+    solved: number; topics: { id: string; name: string }[];
+    /** First-try accuracy, as on a topic (TopicStats.first_try). */
+    answered?: number; first_try?: number | null;
+  })[];
 }
 
 export interface Topic extends TopicStats {
@@ -1296,6 +1304,22 @@ export const CATEGORY_TONE: Record<CategoryId, string> = {
   geometry: 'rose',
   misc: 'slate',
 };
+
+/**
+ * The colour a topic or strategy card wears for how often its problems are
+ * right first time (blanks left out): 80-100% blue, 65-80% green, 40-65%
+ * orange, below 40% red, and none until something has been answered. Each
+ * band includes its lower edge, so 80% is blue and 65% green.
+ */
+export type AccuracyBand = 'blue' | 'green' | 'orange' | 'red' | 'none';
+
+export function accuracyBand(share: number | null | undefined): AccuracyBand {
+  if (share == null) return 'none';
+  if (share >= 0.8) return 'blue';
+  if (share >= 0.65) return 'green';
+  if (share >= 0.4) return 'orange';
+  return 'red';
+}
 
 export function pct(value: number | null | undefined): string {
   return value == null ? '—' : `${Math.round(value * 100)}%`;

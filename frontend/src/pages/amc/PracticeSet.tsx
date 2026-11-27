@@ -45,7 +45,8 @@ export default function PracticeSet() {
   const stored = useApi(() => amc.setReport(runId ?? ''), [runId], { enabled: Boolean(runId) });
   const report = runId && stored.data?.report.id === runId ? stored.data.report : null;
   const [starting, setStarting] = useState(false);
-  useDocumentTitle(data ? `${data.topic.name} · ${data.title}` : 'Practice set');
+  // A mixed set keeps its topic out of sight, the tab's title included.
+  useDocumentTitle(data ? (data.hide_topic ? data.title : `${data.topic.name} · ${data.title}`) : 'Practice set');
 
   if (loading && !data) return <Loading label="Picking eight problems" />;
   if (error || !data) return <ErrorState message={error ?? 'Could not pick a set.'} onRetry={reload} />;
@@ -103,9 +104,9 @@ export default function PracticeSet() {
   return (
     <div className={`amc-page ${swap}`.trim()}>
       <nav className="am-muted" style={{ fontSize: 13, marginBottom: 12 }}>
-        <Link to={`/topics/${data.topic.id}`} className="am-link">← {data.topic.name}</Link>
+        <Link to={`/topics/${data.topic.id}`} className="am-link">← {data.hide_topic ? 'Back to the topic' : data.topic.name}</Link>
       </nav>
-      <PageHeader kicker={`${data.level} · ${data.topic.name}`} title={data.title}
+      <PageHeader kicker={data.hide_topic ? data.level : `${data.level} · ${data.topic.name}`} title={data.title}
                   actions={going ? (
                     <>
                       <button type="button" className="am-btn am-btn-ghost" onClick={() => void startOver()}>Start over</button>

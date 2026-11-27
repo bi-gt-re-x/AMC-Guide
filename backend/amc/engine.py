@@ -159,6 +159,10 @@ def history(attempts):
             h = out[pid] = {'attempts': 0, 'first_correct': bool(row['correct']),
                             'first_at': row['at'], 'first_seconds': int(row.get('seconds') or 0),
                             'first_source': row.get('source') or '',
+                            # A first "try" with no answer in it (the solution
+                            # shown before answering): not a try at all, so
+                            # first-try accuracy leaves it out (`first_try`).
+                            'first_blank': row.get('source') == 'reveal' or not str(row.get('answer') or '').strip(),
                             'first_set_mode': row.get('set_mode') or '',
                             'solved': False, 'solved_at': '', 'last_correct': False, 'last_at': '',
                             'seconds': 0, 'retest': None}
@@ -207,9 +211,26 @@ def projected(hist, level, today=None):
     return smart.projected(hist, level, today)
 
 
+def first_try(pids, hist):
+    """(answered, right first time, share) over these problems: how often the
+    first answer given was right, counting only problems whose first try had
+    an answer in it (a solution shown before answering is not a try). The
+    share is None until one has been answered."""
+    answered = right = 0
+    for pid in pids:
+        h = hist.get(pid)
+        if h and not h.get('first_blank'):
+            answered += 1
+            right += 1 if h['first_correct'] else 0
+    return answered, right, (round(right / answered, 3) if answered else None)
+
+
 def topic_stats(hist, review_by_id):
-    """Per topic: problems, attempted, solved, first-try accuracy, in review."""
-    out = {t['id']: {'problems': 0, 'attempted': 0, 'solved': 0, 'first_right': 0, 'review': 0}
+    """Per topic: problems, attempted, solved, first-try accuracy, in review.
+    `first_try` is `first_try`'s share (blanks left out); `accuracy` is the
+    older measure every attempt counts toward, which the models read."""
+    out = {t['id']: {'problems': 0, 'attempted': 0, 'solved': 0, 'first_right': 0, 'review': 0,
+                     'answered': 0, 'answered_right': 0}
            for t in catalog.TOPICS}
     for p in bank_of.all_problems():
         for tid in [p['topic']] + p['also']:
@@ -220,11 +241,15 @@ def topic_stats(hist, review_by_id):
                 row['attempted'] += 1
                 row['solved'] += 1 if h['solved'] else 0
                 row['first_right'] += 1 if h['first_correct'] else 0
+                if not h.get('first_blank'):
+                    row['answered'] += 1
+                    row['answered_right'] += 1 if h['first_correct'] else 0
             rev = review_by_id.get(p['id'])
             if rev and rev['status'] in ('active', 'parked'):
                 row['review'] += 1
     for row in out.values():
         row['accuracy'] = round(row['first_right'] / row['attempted'], 3) if row['attempted'] else None
+        row['first_try'] = round(row['answered_right'] / row['answered'], 3) if row['answered'] else None
         # 0-1: the share of the topic's problems solved first time. Unseen
         # problems count as not yet in hand, so one lucky answer is not mastery.
         row['mastery'] = round(row['first_right'] / row['problems'], 3) if row['problems'] else 0
