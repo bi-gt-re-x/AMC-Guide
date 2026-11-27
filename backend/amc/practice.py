@@ -5,16 +5,23 @@ way of training it (backend/amc/planning.py `KINDS`).
              topic, worked solutions first: theory, then introductory
              problems, untimed.
 * accuracy — problems within the student's reach (about 60% or better for
-             them), ones they missed before first: untimed, check every answer.
-* timed    — problems they can usually do, untried first, at contest pace
-             (3 minutes each; 12 on the AIME).
+             them), aimed at the techniques and difficulty levels of the
+             topic where their accuracy per problem answered is lowest
+             (`miss_rates`), ones they missed there first: untimed, check
+             every answer.
+* timed    — at contest pace (3 minutes each; 12 on the AIME): half sprint
+             problems (quick to work and likely right), half heavy ones
+             (long to compute), each half stepping up (`work_rank`).
 * mixed    — the widest spread of difficulty the student can use, shown
              without the topic's name, to practise recognising it.
 * spaced   — problems they have answered before, the longest ago and the ones
              due for review first.
 * practice — the topic's difficulty mix (planning.difficulty_mix), level by level.
 * challenge — five problems above where the student is in the topic, on a
-             longer clock: the study plan's weekly stretch.
+             longer clock: the study plan's weekly stretch, never beyond reach.
+
+Every set is within the student's reach with one or two challenges at the end
+(backend/amc/pitch.py); the challenge set is all challenges.
 
 A set is eight problems unless asked for fewer or more (`size`): the study
 plan sizes each day's set to the minutes the student has that day.
@@ -36,9 +43,10 @@ A set is the same all day (seeded by account, topic, mode and date), so
 reloading the page does not reshuffle it.
 """
 import random
+import re
 from datetime import date
 
-from backend.amc import catalog, engine, planning, smart
+from backend.amc import catalog, engine, pitch, planning, smart
 from backend.amc import problems as pb
 
 SIZE = 8
@@ -96,10 +104,68 @@ def _balance(picked, candidates, size=SIZE):
 #: starts easy and stays in reach; a timed set ends nearer a coin flip.
 RAMPS = {'learn': (0.92, 0.65), 'accuracy': (0.9, 0.6), 'timed': (0.85, 0.55),
          # The widest spread, for recognising the topic at every difficulty, but
-         # still from where the student is, not the topic's hardest.
-         'mixed': (0.92, 0.35),
-         # A stretch: from a little under even odds to well beyond them.
-         'challenge': (0.5, 0.2)}
+         # still from where the student is, not the topic's hardest: in reach
+         # (the set's challenges are added by backend/amc/pitch.py).
+         'mixed': (0.92, 0.5),
+         # A stretch: from even odds to the edge of reach, never past it.
+         'challenge': (0.5, pitch.FLOOR)}
+
+#: A timed set's two halves: sprint problems (quick to work, and likely right:
+#: the points banked fast on a real paper) and heavy ones (long to compute:
+#: where a clock is lost). Each ramps on its own.
+SPRINT_RAMP = (0.9, 0.65)
+HEAVY_RAMP = (0.8, 0.55)
+#: How hard an accuracy drill leans toward a weak spot: a miss rate of 1
+#: outweighs being a quarter of a chance away from the step it would fill.
+WEAK_PULL = 0.25
+
+
+def _work(p):
+    """How much computing a problem takes, roughly: the numbers and length of
+    its worked solution (or, without one, of its statement, which says less)."""
+    steps = p.get('solution') or []
+    text = ' '.join(steps) if isinstance(steps, list) else str(steps)
+    if text:
+        return 'solution', len(re.findall(r'\d+', text)) + len(text) / 40 + 2 * len(steps)
+    statement = p.get('statement') or ''
+    return 'statement', len(re.findall(r'\d+', statement)) + len(statement) / 40
+
+
+def work_rank(rows):
+    """{id: 0..1}, how heavy each problem is to compute next to the others:
+    ranked within those scored from a solution and within those scored from a
+    statement, which are not on the same footing."""
+    groups = {}
+    for p in rows:
+        basis, score = _work(p)
+        groups.setdefault(basis, []).append((score, p['id']))
+    out = {}
+    for scored in groups.values():
+        scored.sort()
+        for i, (_, pid) in enumerate(scored):
+            out[pid] = i / max(1, len(scored) - 1)
+    return out
+
+
+def miss_rates(rows, hist):
+    """{id: 0..1}, how often this student misses problems like each one, per
+    problem answered: the first-try miss rate of its technique and of its
+    difficulty level within these rows, whichever is worse. Each is shrunk
+    toward the rows' own rate (two answers' worth), so one miss does not make
+    a weakness, and a technique not yet answered sits at the average."""
+    answered = [p for p in rows if p['id'] in hist and hist[p['id']].get('first_source') != 'reveal']
+    misses = sum(1 for p in answered if not hist[p['id']]['first_correct'])
+    base = (misses + 1) / (len(answered) + 2)
+    counts = {}
+    for p in answered:
+        for key in (('t', p['technique']), ('l', planning.level_of(p['rating']))):
+            seen, missed = counts.get(key, (0, 0))
+            counts[key] = (seen + 1, missed + (0 if hist[p['id']]['first_correct'] else 1))
+
+    def rate(key):
+        seen, missed = counts.get(key, (0, 0))
+        return (missed + 2 * base) / (seen + 2)
+    return {p['id']: max(rate(('t', p['technique'])), rate(('l', planning.level_of(p['rating'])))) for p in rows}
 
 
 def _ramp(rows, chance, first, last, n, cost):
@@ -167,14 +233,29 @@ def build(topic_id, mode, level, theta, topic_theta, mix, hist, review_by_id, us
     if mode == 'learn':
         order = _ramp(mine, chance, *RAMPS['learn'], n, lambda p: cost(p, solution=True))
     elif mode == 'accuracy':
-        # Missed and not yet put right first: those are the point. Then new
-        # problems within reach, getting harder.
-        missed = take([p for p in mine if seen(p) and not solved(p) and chance(p) >= 0.45],
-                      lambda p: -chance(p))[:n // 2]
+        # Aimed where this student's accuracy per problem answered is lowest:
+        # the techniques and difficulty levels of the topic they miss most
+        # often (`miss_rates`). Missed and not yet put right first, worst
+        # first: those are the point. Then new problems within reach, getting
+        # harder, pulled toward the same weak spots.
+        weak = miss_rates(mine, hist)
+        open_ = take([p for p in mine if seen(p) and not solved(p) and pitch.band(chance(p)) != 'beyond'],
+                     lambda p: (-round(weak[p['id']], 2), -chance(p)))
+        # Those a little past reach count as the set's challenges, so no more of them.
+        stretch = [p for p in open_ if pitch.band(chance(p)) == 'stretch'][:pitch.challenges_for(n)]
+        missed = [p for p in open_ if pitch.band(chance(p)) == 'in' or p in stretch][:n // 2]
         order = missed + _ramp([p for p in mine if p not in missed], chance, *RAMPS['accuracy'],
-                               n - len(missed), cost)
+                               n - len(missed), lambda p: cost(p) - WEAK_PULL * weak[p['id']])
     elif mode == 'timed':
-        order = _ramp(mine, chance, *RAMPS['timed'], n, cost)
+        # Half sprint problems, half heavy ones (`work_rank`), each half
+        # stepping up on its own; whatever the topic lacks of one, the other fills.
+        heft = work_rank(mine)
+        sprint = [p for p in mine if heft[p['id']] <= 1 / 3]
+        heavy = [p for p in mine if heft[p['id']] >= 2 / 3]
+        quick = _ramp(sprint, chance, *SPRINT_RAMP, (n + 1) // 2, cost)
+        order = quick + _ramp([p for p in heavy if p not in quick], chance, *HEAVY_RAMP, n - len(quick), cost)
+        if len(order) < n:
+            order += _ramp([p for p in mine if p not in order], chance, *RAMPS['timed'], n - len(order), cost)
     elif mode == 'spaced':
         def due_rank(p):
             rev = review_by_id.get(p['id'])
@@ -212,20 +293,38 @@ def build(topic_id, mode, level, theta, topic_theta, mix, hist, review_by_id, us
         if len(picked) == n:
             break
     if mode != 'spaced':
-        picked = _balance(picked, candidates, n)
+        # Never balanced in with something beyond reach.
+        picked = _balance(picked, [p for p in candidates if pitch.band(chance(p)) != 'beyond'], n)
+    # Within reach, with one or two challenges (backend/amc/pitch.py). A swap
+    # keeps a real problem for a real one, and in a spaced set one met before
+    # for one met before.
+    if mode == 'spaced':
+        like = lambda a, b: seen(a) == seen(b)
+    else:
+        like = lambda a, b: pb.is_official(a['id']) == pb.is_official(b['id'])
+    tier = lambda p: (0 if own(p) else 1) + (2 if p in other else 0)
+    picked = pitch.pitch(picked, candidates, chance, n, like, all_stretch=mode == 'challenge', tier=tier,
+                         strict=mode == 'spaced')
     # Every set easiest first, so it gets harder as it goes; real and mock
     # problems of the same rating mixed, not every mock first.
     picked = pb.mix_sources(sorted(picked, key=lambda p: (p['rating'], p['id'])), key=lambda p: p['rating'])
+    challenges = [p['id'] for p in picked if pitch.band(chance(p)) == 'stretch']
     seconds = seconds_for(mode, level)
     text = INSTRUCTIONS[mode]
     if seconds:
         text = text.format('{:g} minutes'.format(seconds / 60))
+    if mode != 'challenge' and challenges:
+        text += ' The last {} {} a stretch.'.format(
+            'one' if len(challenges) == 1 else len(challenges), 'is' if len(challenges) == 1 else 'are')
     topic = catalog.TOPIC_BY_ID[topic_id]
     return {'topic': {'id': topic_id, 'name': topic['name'], 'category': topic['category']},
             'mode': mode, 'title': TITLES[mode], 'instructions': text, 'seconds': seconds,
             'hide_topic': mode == 'mixed', 'level': level, 'size': n,
             'total_seconds': seconds * len(picked) if seconds else None,
-            'problems': [p['id'] for p in picked]}
+            'problems': [p['id'] for p in picked],
+            # The ones a little past the student's reach (backend/amc/pitch.py),
+            # and the level in this topic the set was pitched at.
+            'challenges': challenges, 'pitched_at': round(th, 2)}
 
 
 def for_user(topic_id, mode, attempts, hist, review_by_id, level, goal, user, today, size=None):

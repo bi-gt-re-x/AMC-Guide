@@ -22,6 +22,8 @@ for a technique the student has missed in that topic is moved up: the same
 idea again, in a problem not yet seen. The twelve go to the four weakest
 topics that have problems left, more of them to the topics missed most (at
 least two each), and the bank reaches further down the list when those run dry.
+Like every set, it is then kept within reach with one or two challenges
+(backend/amc/pitch.py).
 
 The draw is seeded by account and day, so the set holds still while it is
 worked through; "New set" asks for the next draw.
@@ -29,7 +31,7 @@ worked through; "New set" asks for the next draw.
 import random
 from datetime import date
 
-from backend.amc import catalog, engine, smart
+from backend.amc import catalog, engine, pitch, smart
 from backend.amc import problems as pb
 
 SIZE = 12
@@ -163,6 +165,15 @@ def bank(hist, review_by_id, target, include_mocks, username, today=None, draw=0
         q.sort(key=lambda row: (row[0], row[1]))
 
     order = [t for t in topics if queues.get(t['id'])]
+    # Every candidate in the order the set would reach it (weakest topic
+    # first, best fit first within one), for the reach pass below.
+    ranked, chance_of, topic_of, queued_in = [], {}, {}, {}
+    for t in order:
+        for _, pid, p, c in queues[t['id']]:
+            queued_in.setdefault(pid, {})[t['id']] = c
+            if pid not in chance_of:
+                ranked.append(p)
+                chance_of[pid], topic_of[pid] = c, t['id']
     picked, used = [], set()
 
     def take(t):
@@ -193,6 +204,26 @@ def bank(hist, review_by_id, target, include_mocks, username, today=None, draw=0
             if reach >= len(order):
                 break
             reach += 1
+    # Within reach, with one or two challenges (backend/amc/pitch.py): a swap
+    # keeps the topic (so each keeps its share) and an official problem for an
+    # official one where it can, and stays in the set's own topics before
+    # reaching for another.
+    chosen_ids = {t['id'] for t in chosen}
+    slot_topic = {row[0]['id']: row[1] for row in picked}
+    for row in picked:
+        chance_of[row[0]['id']] = row[2]
+    kept = pitch.pitch([row[0] for row in picked], ranked, lambda p: chance_of[p['id']], SIZE,
+                       # Alike: queued in the topic of the one it replaces (a
+                       # problem can be in several), and the same kind.
+                       like=lambda a, b: slot_topic.get(a['id'], topic_of[a['id']]) in queued_in.get(b['id'], {})
+                       and bool(a.get('official')) == bool(b.get('official')),
+                       tier=lambda p: 0 if chosen_ids & set(queued_in.get(p['id'], {})) else 1)
+    # A swap fills the slot it took: in that slot's topic when it is queued there.
+    rows = []
+    for old, new in zip(picked, kept):
+        tid = old[1] if old[1] in queued_in.get(new['id'], {}) else topic_of[new['id']]
+        rows.append((new, tid, queued_in.get(new['id'], {}).get(tid, chance_of[new['id']])))
+    picked = rows
     # Easiest first, so the set gets harder as it goes.
     picked.sort(key=lambda row: (row[0]['rating'], row[0]['id']))
     used_topics = {tid for _, tid, _ in picked}

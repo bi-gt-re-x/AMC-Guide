@@ -3,7 +3,7 @@ shape from the goal and current scores (planning.starting_point / SHAPES), and
 the student's own subject ratings (planning.subject_lean)."""
 from datetime import date, timedelta
 
-from backend.amc import engine, planning, practice
+from backend.amc import engine, pitch, planning, practice, smart
 from backend.amc import problems as pb
 from backend.amc.bank import PROBLEMS
 
@@ -50,10 +50,14 @@ def test_the_set_endpoint(client):
     assert all(p['topic'] == 'circles' or p['level_of'] for p in body['problems'])
     assert {m['id'] for m in body['modes']} == set(practice.MODES)
     assert not client.get('/api/amc/topics/nope/set').json()['success']
-    # The topic's own problems first: none only tagged with it while there are enough of its own.
-    own = [p for p in PROBLEMS if p['topic'] == 'circles']
-    if len(own) >= 8:
+    # The topic's own problems first: none only tagged with it while there are
+    # enough of its own within reach (nothing beyond reach is dealt, own or not).
+    reachable = [p for p in pb.all_problems() if p['topic'] == 'circles' and p['level'] == 'AMC 10'
+                 and pitch.band(smart.chance(body['pitched_at'], p['rating'])) != 'beyond']
+    if len(reachable) >= 8:
         assert all(p['topic'] == 'circles' for p in body['problems'])
+    else:
+        assert {p['id'] for p in reachable} <= {p['id'] for p in body['problems']}
 
 
 def test_the_starting_point_comes_from_scores_and_answers():
