@@ -137,7 +137,20 @@ function WeakTopics() {
   );
 }
 
-type Tab = 'due' | 'upcoming' | 'mastered';
+type Tab = 'due' | 'upcoming' | 'parked' | 'mastered';
+
+const TAB_LABEL: Record<Tab, string> = { due: 'Due now', upcoming: 'Upcoming', parked: 'On hold', mastered: 'Mastered' };
+
+/** Where a review stands: when it is due, mastered, or on hold until the level nears it. */
+function whenLine(item: ReviewItem): string {
+  if (item.review_status === 'mastered') return 'mastered';
+  if (item.review_status === 'parked') {
+    return item.reach?.returns_at != null
+      ? `on hold · back at level ${item.reach.returns_at} (now ${item.reach.level})`
+      : 'on hold';
+  }
+  return item.overdue ? `overdue · ${shortDate(item.due)}` : `due ${shortDate(item.due)}`;
+}
 
 /** Why a review sits where it does: how much of its topic has been missed. */
 function topicLine(item: ReviewItem): string {
@@ -156,8 +169,8 @@ function Rows({ items, empty }: { items: ReviewItem[]; empty: { title: string; b
             extra={
               <span className="am-muted am-review-when">
                 <ReviewStage stage={item.stage} />
-                {item.review_status === 'mastered' ? 'mastered' : item.overdue ? `overdue · ${shortDate(item.due)}` : `due ${shortDate(item.due)}`}
-                {item.review_status !== 'mastered' && topicLine(item) && <span>{topicLine(item)}</span>}
+                {whenLine(item)}
+                {item.review_status === 'active' && topicLine(item) && <span>{topicLine(item)}</span>}
               </span>
             }
           />
@@ -197,7 +210,11 @@ export default function Review() {
   if (error || !data) return <ErrorState message={error ?? 'Could not load the review log.'} onRetry={reload} />;
 
   const max = Math.max(1, ...data.forecast.map((f) => f.count));
-  const lists: Record<Tab, ReviewItem[]> = { due: data.due, upcoming: data.upcoming, mastered: data.mastered };
+  const lists: Record<Tab, ReviewItem[]> = {
+    due: data.due, upcoming: data.upcoming, parked: data.parked ?? [], mastered: data.mastered,
+  };
+  // The On hold tab only when something is on hold.
+  const tabs: Tab[] = lists.parked.length ? ['due', 'upcoming', 'parked', 'mastered'] : ['due', 'upcoming', 'mastered'];
 
   return (
     <div className="amc-page">
@@ -244,10 +261,10 @@ export default function Review() {
       <div className="am-grid am-grid-main">
         <div>
           <div className="am-tabs" role="tablist">
-            {(['due', 'upcoming', 'mastered'] as Tab[]).map((t) => (
+            {tabs.map((t) => (
               <button key={t} type="button" role="tab" aria-selected={tab === t}
                       className={`am-tab${tab === t ? ' is-on' : ''}`} onClick={() => setTab(t)}>
-                {t === 'due' ? 'Due now' : t === 'upcoming' ? 'Upcoming' : 'Mastered'}
+                {TAB_LABEL[t]}
                 <small>{lists[t].length}</small>
               </button>
             ))}
@@ -259,6 +276,8 @@ export default function Review() {
                 ? { title: 'All caught up', body: 'Nothing due today.' }
                 : tab === 'upcoming'
                   ? { title: 'Nothing scheduled', body: 'Missed problems show up here.' }
+                  : tab === 'parked'
+                  ? { title: 'Nothing on hold', body: 'Problems you mark “Too challenging?” wait here until your level is near them.' }
                   : { title: 'Nothing mastered yet', body: 'Problems you get right on all three reviews end up here.' }
             }
           />

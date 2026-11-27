@@ -146,7 +146,7 @@ def bank(hist, review_by_id, target, include_mocks, username, today=None, draw=0
             continue
         h = hist.get(p['id'])
         rev = review_by_id.get(p['id'])
-        if (h and h['solved']) or (rev and rev['status'] == 'active'):
+        if (h and h['solved']) or (rev and rev['status'] in ('active', 'parked')):
             continue
         pool['official' if official else 'mock'] += 1
         noise = rng.random() * 0.12

@@ -12,7 +12,7 @@ from fastapi import APIRouter, Depends, Query, Request
 from pydantic import BaseModel
 
 from backend.amc import catalog, coach, engine, insights, mockscore, planning, practice, results, store, weak
-from backend.amc import official, plan_view, setreport
+from backend.amc import official, plan_view, reach, setreport
 from backend.amc import problems as pb
 from backend.amc.scale import TOP
 from backend.api.guard import current_username
@@ -32,6 +32,13 @@ def _context(user):
     attempts = store.attempts(user)
     reviews = store.reviews(user)
     hist = engine.history(attempts)
+    # Problems put on hold as too challenging come back once the account's
+    # level is near them (backend/amc/reach.py). Free when nothing is on hold.
+    released = reach.releases(reviews, hist, _today())
+    if released:
+        store.write([s for row in released for s in store.review_upsert(user, row)])
+        back = {row['problem_id']: row for row in released}
+        reviews = [back.get(r['problem_id'], r) for r in reviews]
     review_by_id = {r['problem_id']: r for r in reviews}
     return attempts, reviews, hist, review_by_id
 
@@ -106,9 +113,11 @@ def _easiest_first(rows):
 
 def _review_view(row, hist, review_by_id, today):
     out = _summary(None, row['problem_id'], hist, review_by_id)
+    active = row['status'] == 'active'
     out.update(stage=int(row['stage']), due=row['due'], review_status=row['status'],
                note=row.get('note') or '', misses=int(row.get('misses') or 0),
-               overdue=row['due'] < today.isoformat(), is_due=row['due'] <= today.isoformat())
+               overdue=active and row['due'] < today.isoformat(), is_due=active and row['due'] <= today.isoformat(),
+               parked_at=row.get('parked_at') if row['status'] == 'parked' else None)
     return out
 
 
@@ -366,7 +375,10 @@ def get_problem(problem_id: str, request: Request, topic: str = '', in_list: str
                             key=lambda q: _source_rank(q['id']))
         order = [q['id'] for q in family]
     i = order.index(problem_id) if problem_id in order else -1
+    # Whether it is out of reach for now, which offers "Too challenging?".
+    theta, topic_theta = reach.levels(hist, _today())
     return ok(problem=engine.public(p, reveal=revealed),
+              reach=reach.view(p, theta, topic_theta),
               status=engine.status_of(problem_id, hist, review_by_id),
               attempts=[{'answer': a['answer'], 'correct': bool(a['correct']), 'at': a['at'],
                          'source': a['source'], 'seconds': a['seconds']} for a in mine],
@@ -544,6 +556,14 @@ def review_queue(username: str = Depends(current_username)):
                  key=lambda v: (-v['topic_weakness'], -v['misses'], v['due'], v['stage'], v['id']))
     upcoming = sorted([v for v in views if v['review_status'] == 'active' and not v['is_due']], key=lambda v: v['due'])
     mastered = sorted([v for v in views if v['review_status'] == 'mastered'], key=lambda v: v['id'])
+    # On hold as too challenging: where the account is on each, and the level
+    # it comes back at. Closest to coming back first.
+    parked = [v for v in views if v['review_status'] == 'parked']
+    if parked:
+        theta, topic_theta = reach.levels(hist, today)
+        for v in parked:
+            v['reach'] = reach.view(pb.get(v['id']), theta, topic_theta)
+        parked.sort(key=lambda v: ((v['reach']['returns_at'] or 0) - v['reach']['level'], v['id']))
     # How many come due on each of the next 14 days.
     forecast = []
     for k in range(14):
@@ -553,7 +573,7 @@ def review_queue(username: str = Depends(current_username)):
     by_topic = {}
     for v in due + upcoming:
         by_topic[v['topic_name']] = by_topic.get(v['topic_name'], 0) + 1
-    return ok(due=due, upcoming=upcoming, mastered=mastered, forecast=forecast,
+    return ok(due=due, upcoming=upcoming, mastered=mastered, parked=parked, forecast=forecast,
               by_topic=sorted(({'name': k, 'count': n} for k, n in by_topic.items()), key=lambda r: -r['count']),
               intervals=engine.INTERVALS)
 
@@ -585,6 +605,32 @@ def add_review(problem_id: str, username: str = Depends(current_username)):
     if row:
         store.write(store.review_upsert(username, row))
     return ok()
+
+
+@router.post('/api/amc/review/{problem_id}/park')
+def park_review(problem_id: str, username: str = Depends(current_username)):
+    """"Too challenging?": put the problem on hold in the review log until the
+    account's level is near its rating (backend/amc/reach.py). Only for a
+    problem that is out of reach now; one that is not would come straight back."""
+    p = pb.get(problem_id)
+    if not p:
+        return fail('No such problem.')
+    _, _, hist, review_by_id = _context(username)
+    theta, topic_theta = reach.levels(hist, _today())
+    where = reach.view(p, theta, topic_theta)
+    if not where['out_of_reach']:
+        return fail('This one is within reach of your level, so it stays on the review schedule.', reach=where)
+    existing = review_by_id.get(problem_id)
+    if existing and existing['status'] == 'parked':
+        return ok(reach=where, review=_review_view(existing, hist, review_by_id, _today()))
+    today = _today().isoformat()
+    row = {'problem_id': problem_id, 'stage': int((existing or {}).get('stage') or 0)
+           if (existing or {}).get('status') == 'active' else 0,
+           'due': today, 'status': store.PARKED, 'note': (existing or {}).get('note', ''),
+           'misses': int((existing or {}).get('misses') or 0), 'added_at': (existing or {}).get('added_at')}
+    store.write(store.review_upsert(username, row))
+    saved = store.review(username, problem_id)
+    return ok(reach=where, review=_review_view(saved, hist, {**review_by_id, problem_id: saved}, _today()))
 
 
 @router.delete('/api/amc/review/{problem_id}')

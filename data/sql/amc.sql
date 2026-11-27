@@ -78,6 +78,10 @@ CREATE TABLE IF NOT EXISTS amc_reviews (
     misses      INTEGER NOT NULL DEFAULT 1,
     added_at    TEXT NOT NULL,
     updated_at  TEXT NOT NULL,
+    -- Set when the problem was put on hold as out of reach ("Too
+    -- challenging?"): it is never due until the account's level comes near
+    -- its rating (backend/amc/reach.py). Read back as status 'parked'.
+    parked_at   TEXT,
     PRIMARY KEY (user_id, problem_id),
     CHECK (status IN ('active', 'mastered'))
 );

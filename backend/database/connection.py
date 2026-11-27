@@ -270,6 +270,10 @@ ADDED_COLUMNS = (
     # When the password was last reset: sessions signed in before it are
     # dropped (backend/tracking/auth.py `signed_in_user`).
     ('users', 'password_changed_at', 'TEXT'),
+    # A review put on hold as out of reach ("Too challenging?"), and when: the
+    # row stays 'active' underneath, so the status CHECK (which Postgres keeps
+    # by name and would not widen) never changes. backend/amc/reach.py.
+    ('amc_reviews', 'parked_at', 'TEXT'),
 )
 
 # Indexes on columns that ADDED_COLUMNS supplies. Their own list, applied after

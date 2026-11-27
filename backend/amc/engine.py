@@ -159,7 +159,7 @@ def history(attempts):
 def status_of(pid, hist, review_by_id):
     """'review' (in the error log), 'solved', 'missed' or 'new'."""
     rev = review_by_id.get(pid)
-    if rev and rev['status'] == 'active':
+    if rev and rev['status'] in ('active', 'parked'):
         return 'review'
     h = hist.get(pid)
     if not h:
@@ -203,7 +203,7 @@ def topic_stats(hist, review_by_id):
                 row['solved'] += 1 if h['solved'] else 0
                 row['first_right'] += 1 if h['first_correct'] else 0
             rev = review_by_id.get(p['id'])
-            if rev and rev['status'] == 'active':
+            if rev and rev['status'] in ('active', 'parked'):
                 row['review'] += 1
     for row in out.values():
         row['accuracy'] = round(row['first_right'] / row['attempted'], 3) if row['attempted'] else None
@@ -234,7 +234,14 @@ def after_answer(existing, problem_id, correct, today, manual=False):
     Wrong: into the log (or back to the start of it), due in 3 days.
     Right on a due review: up a stage; past the last stage, mastered.
     Right any other time: no change — reviewing early does not count.
+    On hold ("Too challenging?", backend/amc/reach.py): a miss is counted but
+    keeps the hold, and a right answer changes nothing; only the student's
+    level coming near releases it. "Review again" (manual) does release it.
     """
+    if existing and existing['status'] == 'parked' and not manual:
+        if correct:
+            return None
+        return {**existing, 'misses': int(existing.get('misses') or 0) + 1}
     if manual:
         if existing and existing['status'] == 'active':
             return None

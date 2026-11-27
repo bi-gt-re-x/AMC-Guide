@@ -75,7 +75,8 @@ export interface Problem {
 export interface ReviewItem extends ProblemSummary {
   stage: number;
   due: string;
-  review_status: 'active' | 'mastered';
+  /** 'parked': on hold as too challenging, until the account's level nears it. */
+  review_status: 'active' | 'mastered' | 'parked';
   note: string;
   misses: number;
   overdue: boolean;
@@ -83,6 +84,23 @@ export interface ReviewItem extends ProblemSummary {
   /** Its topic: problems missed first time, and tried, by this account. */
   topic_missed: number;
   topic_tried: number;
+  /** When it was put on hold, if it is. */
+  parked_at?: string | null;
+  /** Set on the queue's `parked` list: the level now and the one it returns at. */
+  reach?: Reach;
+}
+
+/**
+ * Where a problem sits against the account's level, on the 1-12 scale
+ * (backend/amc/reach.py). `out_of_reach` offers "Too challenging?"; a problem
+ * on hold comes back once `level` reaches `returns_at`.
+ */
+export interface Reach {
+  level: number;
+  rating: number | null;
+  near: number;
+  out_of_reach: boolean;
+  returns_at: number | null;
 }
 
 export interface Category {
@@ -640,6 +658,8 @@ export interface ProblemDetail {
   status: Status;
   attempts: { answer: string; correct: boolean; at: string; source: string; seconds: number }[];
   review: ReviewItem | null;
+  /** Whether it is out of reach of the account's level for now. */
+  reach: Reach;
   related: ProblemSummary[];
   /** The topic Previous and Next walk, when the problem was opened from one. */
   topic?: string | null;
@@ -761,6 +781,8 @@ export interface ReviewQueue {
   due: ReviewItem[];
   upcoming: ReviewItem[];
   mastered: ReviewItem[];
+  /** On hold as too challenging, closest to coming back first. */
+  parked: ReviewItem[];
   forecast: { date: string; count: number }[];
   by_topic: { name: string; count: number }[];
   intervals: number[];
@@ -1208,6 +1230,9 @@ export const amc = {
     get<WeakBank>('/api/amc/review/weak', { mocks: mocks ? 1 : 0, draw }),
   addReview: (id: string) => post<object>(`/api/amc/review/${encodeURIComponent(id)}`),
   removeReview: (id: string) => del<object>(`/api/amc/review/${encodeURIComponent(id)}`),
+  /** "Too challenging?": on hold in the review log until the level nears it. */
+  parkReview: (id: string) =>
+    post<{ reach: Reach; review: ReviewItem }>(`/api/amc/review/${encodeURIComponent(id)}/park`),
   noteReview: (id: string, note: string) => post<object>(`/api/amc/review/${encodeURIComponent(id)}/note`, { note }),
   topics: () => get<{ categories: (Category & { topics: Topic[] })[] }>('/api/amc/topics'),
   topic: (id: string) =>

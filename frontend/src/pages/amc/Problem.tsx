@@ -280,6 +280,30 @@ export default function Problem() {
     reload();
   }
 
+  /** "Too challenging?": on hold in the review log until the level nears it
+   *  (backend/amc/reach.py). Asked first, since it takes it off the schedule. */
+  async function parkReview() {
+    const at = data?.reach;
+    if (!at?.out_of_reach || at.returns_at == null) return;
+    const yes = await confirm({
+      title: 'Put this problem on hold?',
+      body: `It's rated ${ratingText(at.rating ?? 0)} and your level here is about ${at.level}. It stays in your `
+        + `review log but won't come due until your level reaches about ${at.returns_at}. Then it comes back on its own.`,
+      confirmLabel: 'Put on hold',
+      cancelLabel: 'Keep it',
+    });
+    if (!yes) return;
+    const reply = await amc.parkReview(problemId);
+    if (!reply.success) {
+      notify('Could not put it on hold', { body: reply.message, tone: 'bad' });
+      reload();
+      return;
+    }
+    announceAmcChanged();
+    notify('On hold', { body: `It comes back when your level reaches about ${at.returns_at}.`, tone: 'info' });
+    reload();
+  }
+
   async function saveNote() {
     const reply = await amc.noteReview(problemId, note);
     if (reply.success) {
@@ -384,7 +408,9 @@ export default function Problem() {
                         ? 'Mastered. It leaves your review log.'
                         : `Next review ${shortDate(result.review.due)}.`
                       : `Solved in ${clock(seconds)}.`
-                    : `The answer is ${p.format === 'choice' ? `(${p.answer})` : p.answer}. You'll see it again ${result.review ? shortDate(result.review.due) : 'later'}.`}
+                    : `The answer is ${p.format === 'choice' ? `(${p.answer})` : p.answer}. ${result.review?.status === 'parked'
+                      ? "It stays on hold until you're closer to its level."
+                      : `You'll see it again ${result.review ? shortDate(result.review.due) : 'later'}.`}`}
                 </span>
               </div>
             )}
@@ -502,7 +528,16 @@ export default function Problem() {
 
         <aside className="am-stack">
           <section className="am-card">
-            <div className="am-card-head"><h2>Details</h2></div>
+            <div className="am-card-head">
+              <h2>Details</h2>
+              {/* Only offered when the problem is out of reach of the account's level for now. */}
+              {data.reach?.out_of_reach && data.review?.review_status !== 'parked' && data.review?.review_status !== 'mastered' && (
+                <button type="button" className="am-btn am-btn-ghost am-btn-sm" onClick={() => void parkReview()}
+                        title={`Rated ${data.reach.rating} against your level of about ${data.reach.level}`}>
+                  Too challenging?
+                </button>
+              )}
+            </div>
             <dl className="am-kv">
               <dt>Contest</dt><dd>{p.level}</dd>
               <dt>Category</dt><dd>{p.category_name}</dd>
@@ -534,14 +569,16 @@ export default function Problem() {
                 <p className="am-muted" style={{ margin: '0 0 12px', fontSize: 13, lineHeight: 1.5 }}>
                   {data.review.review_status === 'mastered'
                     ? 'Mastered.'
-                    : `Stage ${data.review.stage} of 3 · next ${shortDate(data.review.due)} · missed ${data.review.misses}×`}
+                    : data.review.review_status === 'parked'
+                      ? `On hold: too challenging for now. It comes back when your level here reaches about ${data.reach.returns_at} (now ${data.reach.level}).`
+                      : `Stage ${data.review.stage} of 3 · next ${shortDate(data.review.due)} · missed ${data.review.misses}×`}
                 </p>
                 <div className="am-note-box">
                   <textarea className="am-input" placeholder="Why did you miss it?"
                             value={note} onChange={(e) => setNote(e.target.value)} aria-label="Review note" />
                   <div style={{ display: 'flex', justifyContent: 'space-between', gap: 8 }}>
                     <button type="button" className="am-btn am-btn-ghost am-btn-sm" onClick={() => void toggleReview()}>
-                      {data.review.review_status === 'active' ? 'Remove from log' : 'Review again'}
+                      {data.review.review_status === 'active' ? 'Remove from log' : data.review.review_status === 'parked' ? 'Bring it back now' : 'Review again'}
                     </button>
                     <button type="button" className="am-btn am-btn-sm" onClick={() => void saveNote()}>
                       {noteSaved ? 'Saved' : 'Save note'}

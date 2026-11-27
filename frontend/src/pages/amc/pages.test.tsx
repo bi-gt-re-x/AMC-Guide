@@ -322,6 +322,54 @@ describe('Reviewing a miss', () => {
   });
 });
 
+describe('Too challenging?', () => {
+  const far = { level: 4, rating: 9, near: 1, out_of_reach: true, returns_at: 8 };
+
+  it('is not offered on a problem within reach', async () => {
+    show('/problems/step-10-01', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    expect(screen.queryByRole('button', { name: 'Too challenging?' })).not.toBeInTheDocument();
+  });
+
+  it('asks first, then puts an out-of-reach problem on hold', async () => {
+    vi.spyOn(amc, 'problem').mockResolvedValue({ ...problem, reach: far, success: true } as any);
+    const park = vi.spyOn(amc, 'parkReview').mockResolvedValue({ success: true, reach: far } as any);
+    show('/problems/step-10-01', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    // Cancelling changes nothing.
+    fireEvent.click(await screen.findByRole('button', { name: 'Too challenging?' }));
+    expect(await screen.findByText('Put this problem on hold?')).toBeInTheDocument();
+    expect(screen.getByText(/reaches about 8/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Keep it' }));
+    await waitFor(() => expect(screen.queryByText('Put this problem on hold?')).not.toBeInTheDocument());
+    expect(park).not.toHaveBeenCalled();
+    // Confirming sends it.
+    fireEvent.click(screen.getByRole('button', { name: 'Too challenging?' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Put on hold' }));
+    await waitFor(() => expect(park).toHaveBeenCalledWith('step-10-01'));
+  });
+
+  it('says when a problem on hold comes back, and is not offered again', async () => {
+    const held = { ...problem.related[0], stage: 0, due: '2026-11-12', review_status: 'parked', note: '', misses: 1,
+                   overdue: false, is_due: false, topic_missed: 0, topic_tried: 0, parked_at: '2026-11-12T10:00:00' };
+    vi.spyOn(amc, 'problem').mockResolvedValue({ ...problem, reach: far, review: held, success: true } as any);
+    show('/problems/step-10-01', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    expect(await screen.findByText(/On hold: too challenging for now/)).toBeInTheDocument();
+    expect(screen.queryByRole('button', { name: 'Too challenging?' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Bring it back now' })).toBeInTheDocument();
+  });
+
+  it('lists what is on hold on the Review page, with the level it comes back at', async () => {
+    const held = { ...review.due[0]!, review_status: 'parked', is_due: false, overdue: false,
+                   reach: { ...far, level: 6.2 } };
+    vi.spyOn(amc, 'review').mockResolvedValue({ ...review, parked: [held], success: true } as any);
+    show('/review', '/review', <Review />);
+    fireEvent.click(await screen.findByRole('tab', { name: /On hold/ }));
+    expect(await screen.findByText(/back at level 8 \(now 6.2\)/)).toBeInTheDocument();
+  });
+});
+
 
 describe('A topic practice set', () => {
   const summary = (n: number) => ({

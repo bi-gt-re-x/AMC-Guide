@@ -107,26 +107,44 @@ def finish_set_run(user, run_id, time_up=False):
 
 
 # -- Reviews ----------------------------------------------------------------
+#: A review on hold ("Too challenging?", backend/amc/reach.py) is read back
+#: with this status. Stored, it is 'active' with `parked_at` set, so the
+#: table's status CHECK is untouched; everything that asks for 'active' (due
+#: counts, the queue, the weak-topics pool) leaves it out without being told.
+PARKED = 'parked'
+
+_REVIEW_COLUMNS = 'problem_id, stage, due, status, note, misses, added_at, updated_at, parked_at'
+
+
+def _review_row(row):
+    if row.get('parked_at'):
+        row['status'] = PARKED
+    return row
+
+
 def reviews(user):
-    return _read('SELECT problem_id, stage, due, status, note, misses, added_at, updated_at '
-                 'FROM amc_reviews WHERE user_id = ?', (user,))
+    return [_review_row(r) for r in _read('SELECT {} FROM amc_reviews WHERE user_id = ?'.format(_REVIEW_COLUMNS),
+                                          (user,))]
 
 
 def review(user, problem_id):
-    rows = _read('SELECT problem_id, stage, due, status, note, misses, added_at, updated_at '
-                 'FROM amc_reviews WHERE user_id = ? AND problem_id = ?', (user, problem_id))
-    return rows[0] if rows else None
+    rows = _read('SELECT {} FROM amc_reviews WHERE user_id = ? AND problem_id = ?'.format(_REVIEW_COLUMNS),
+                 (user, problem_id))
+    return _review_row(rows[0]) if rows else None
 
 
 def review_upsert(user, row):
-    """Insert or replace one account's review row (the full row is passed)."""
+    """Insert or replace one account's review row (the full row is passed).
+    A row with status PARKED is stored as on hold; any other clears the hold."""
     now = _now()
+    parked = row['status'] == PARKED
     return [
         ('DELETE FROM amc_reviews WHERE user_id = ? AND problem_id = ?', (user, row['problem_id'])),
-        ('INSERT INTO amc_reviews (user_id, problem_id, stage, due, status, note, misses, added_at, updated_at) '
-         'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-         (user, row['problem_id'], int(row['stage']), row['due'], row['status'], row.get('note') or '',
-          int(row.get('misses') or 0), row.get('added_at') or now, now)),
+        ('INSERT INTO amc_reviews (user_id, problem_id, stage, due, status, note, misses, added_at, updated_at, '
+         'parked_at) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+         (user, row['problem_id'], int(row['stage']), row['due'], 'active' if parked else row['status'],
+          row.get('note') or '', int(row.get('misses') or 0), row.get('added_at') or now, now,
+          (row.get('parked_at') or now) if parked else None)),
     ]
 
 
