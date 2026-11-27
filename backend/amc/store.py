@@ -76,6 +76,33 @@ def attempt_rows(user, problem_id, answer, correct, seconds, source, set_id='', 
              int(seconds or 0), source, _now(), set_id or ''))
 
 
+# -- The placement check ---------------------------------------------------
+def placement(user):
+    """The account's placement check (backend/amc/placement.py), or None."""
+    rows = _read('SELECT level, answers, next_id, started_at, finished_at, theta FROM amc_placements '
+                 'WHERE user_id = ?', (user,))
+    if not rows:
+        return None
+    row = rows[0]
+    answers = _json(row.get('answers'), [])
+    row['answers'] = answers if isinstance(answers, list) else []
+    row['next_id'] = row.get('next_id') or ''
+    row['finished_at'] = row.get('finished_at') or ''
+    return row
+
+
+def placement_rows(user, level, answers, next_id, started_at, finished=False, theta=None):
+    """Write the whole placement row (it is small)."""
+    return [('DELETE FROM amc_placements WHERE user_id = ?', (user,)),
+            ('INSERT INTO amc_placements (user_id, level, answers, next_id, started_at, finished_at, theta) '
+             'VALUES (?, ?, ?, ?, ?, ?, ?)',
+             (user, level, json.dumps(answers), next_id or '', started_at, _now() if finished else '', theta))]
+
+
+def now():
+    return _now()
+
+
 # -- Why a miss happened ----------------------------------------------------
 def miss_reasons(user):
     """Every reason the account has given for a miss, oldest first."""

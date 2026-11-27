@@ -35,18 +35,25 @@
  *   **The account menu** is now the only one: who is signed in, the level, the
  *   title in front of the name, the fifty pictures, and the way out.
  *
+ * On a phone (below 640px) the bar is the navigation too: there is no rail,
+ * so the mark sits at the left, the search folds to its magnifier and opens
+ * across the whole bar when tapped (with Cancel to fold it again), and a menu
+ * button at the right drops down every destination (components/PhoneMenu.tsx).
+ *
  * The account button is the nametag — picture, then "<title> <name>" — and it
  * is the same one the rail's foot wears (hooks/useNametag), so the two
  * corners of the screen never disagree about who is signed in.
  */
 import { useCallback, useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
 import { NotificationPanel } from './Notifications';
 import { NametagText } from './Nametag';
 import { SearchField } from './Search';
 import type { SearchFieldHandle } from './Search';
 import { OPEN_SEARCH } from '@/utils/searchBus';
-import { useAuth, useNotifications, useSettings } from '@/hooks';
+import { useAuth, useMediaQuery, useNotifications, useSettings } from '@/hooks';
+import { PhoneMenu } from './PhoneMenu';
+import { PHONE } from './Rail';
 import { useAmcSummary } from '@/hooks/useAmcSummary';
 import { earnedTitle } from '@/utils/easterEgg';
 import { useNametag } from '@/hooks/useNametag';
@@ -110,6 +117,7 @@ export function Topbar() {
   const tag = useNametag();
 
   const [open, setOpen] = useState<'search' | 'alerts' | 'account' | null>(null);
+  const phone = useMediaQuery(PHONE);
   const barRef = useRef<HTMLDivElement>(null);
   const searchRef = useRef<SearchFieldHandle>(null);
 
@@ -203,7 +211,13 @@ export function Topbar() {
   const currentAvatar = avatar.split('/').pop()?.replace('.svg', '') ?? '';
 
   return (
-    <header className="topbar" ref={barRef}>
+    <header className={`topbar${phone ? ' is-phone' : ''}${open === 'search' ? ' is-searching' : ''}`} ref={barRef}>
+      {phone && (
+        <NavLink className="topbar-brand" to="/dashboard" aria-label="AMC Guide: dashboard">
+          <img src="/static/images/logo.svg" alt="" width={28} height={28} />
+          <span>AMC Guide</span>
+        </NavLink>
+      )}
       <div className="topbar-actions">
         {/* ---- Search ---- */}
         <div className="topbar-slot topbar-search-slot">
@@ -213,6 +227,9 @@ export function Topbar() {
             onOpen={() => setOpen('search')}
             onClose={() => setOpen((was) => (was === 'search' ? null : was))}
           />
+          {phone && open === 'search' && (
+            <button type="button" className="topbar-search-cancel" onClick={() => setOpen(null)}>Cancel</button>
+          )}
         </div>
 
         {/* ---- Notifications ---- */}
@@ -356,6 +373,7 @@ export function Topbar() {
             </div>
           )}
         </div>
+        {phone && <PhoneMenu />}
       </div>
     </header>
   );

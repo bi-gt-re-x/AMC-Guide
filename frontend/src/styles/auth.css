@@ -467,6 +467,10 @@ body:has(.auth-page) .app-main {
 .auth-amc .auth-label .auth-input { margin-top: 6px; }
 .auth-amc .auth-primary:disabled { opacity: .5; cursor: default; }
 .auth-skip { justify-self: center; }
+/* The placement check as sign-up's last step: the app's problem styles
+   (styles/amc.css) inside the sign-up card. */
+.auth-place .am-statement { font-size: 16px; line-height: 1.6; }
+.auth-place .am-place-title { font-size: 22px; }
 
 /* Onboarding in three steps (components/Auth/AmcProfile.tsx). */
 .auth-progress { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin-bottom: 6px; }

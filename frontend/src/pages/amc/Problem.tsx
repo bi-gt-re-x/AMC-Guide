@@ -458,7 +458,7 @@ export default function Problem() {
 
       <div className="am-grid am-grid-main pg-stagger">
         <div className="am-stack">
-          <article className="am-card" style={{ padding: 28 }}>
+          <article className="am-card am-problem-card">
             <div className="am-problem-meta">
               <span className="am-tag">{source ? `${source.name} #${source.number}` : p.ai ? p.level : `${p.level} drill`}</span>
               {!hideTopic && <Link className="am-tag" to={`/topics/${p.topic}`}>{p.topic_name}</Link>}

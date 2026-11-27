@@ -73,6 +73,22 @@ CREATE TABLE IF NOT EXISTS amc_miss_reasons (
 
 CREATE INDEX IF NOT EXISTS amc_miss_reasons_user_idx ON amc_miss_reasons (user_id, at);
 
+-- The placement check at sign-up (backend/amc/placement.py): one row per
+-- account. `answers` is the JSON list of problems answered in order, each
+-- {id, answer ('' for "Not sure"), correct, seconds}; `next_id` the problem
+-- dealt and waiting. The answers are also amc_attempts rows, which is what the
+-- level and the study plan read; this row is the check itself.
+CREATE TABLE IF NOT EXISTS amc_placements (
+    user_id      TEXT PRIMARY KEY REFERENCES users (username) ON DELETE CASCADE,
+    level        TEXT NOT NULL,
+    answers      TEXT NOT NULL DEFAULT '[]',
+    next_id      TEXT DEFAULT '',
+    started_at   TEXT NOT NULL,
+    finished_at  TEXT DEFAULT '',
+    theta        REAL,
+    CHECK (level IN ('AMC 10', 'AMC 12', 'AIME'))
+);
+
 -- A day of the study plan the student marked complete: every item on that
 -- day's checklist ticked, then confirmed (the dashboard's "Mark the day
 -- complete"). Unticking an item that day removes the row again. Kept for good,

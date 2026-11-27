@@ -372,8 +372,10 @@ export default function TakeMock() {
 
   return (
     <div className="amc-page">
+      {/* On a phone the bar keeps the clock, the count and Hand in; the name is
+          in the tab's title, and Discard waits at the foot of the answer sheet. */}
       <div className="am-exam-top">
-        <strong>{c.name}</strong>
+        <strong className="am-exam-name">{c.name}</strong>
         <span className={`am-exam-clock${left < 300 ? ' is-low' : ''}${active ? '' : ' is-paused'}`}
               aria-live="off" aria-label={active ? 'Time left' : 'Time left, paused'}>
           {clock(Math.max(0, left))}
@@ -381,7 +383,7 @@ export default function TakeMock() {
         </span>
         <span className="am-muted" style={{ fontSize: 13 }}>{answered}/{problems.length} answered</span>
         <div style={{ display: 'flex', gap: 8 }}>
-          <button type="button" className="am-btn am-btn-ghost am-btn-sm" onClick={() => void abandon()}>Discard</button>
+          <button type="button" className="am-btn am-btn-ghost am-btn-sm am-exam-discard" onClick={() => void abandon()}>Discard</button>
           <button type="button" className="am-btn am-btn-sm" onClick={() => void leave()}>Leave</button>
           <button type="button" className="am-btn am-btn-primary am-btn-sm" disabled={busy} onClick={() => void handIn()}>
             Hand in
@@ -453,9 +455,16 @@ export default function TakeMock() {
               );
             })}
           </ol>
-          <p className="am-muted" style={{ fontSize: 12, lineHeight: 1.5, margin: '12px 0 0' }}>
+          <p className="am-muted am-wide-only" style={{ fontSize: 12, lineHeight: 1.5, margin: '12px 0 0' }}>
             Fill a bubble to answer, click it again to erase. ← → move{p?.choices ? ', A–E answer' : ''}. Amber = flagged.
           </p>
+          {/* A phone answers on the problem itself; the sheet is where each one stands. */}
+          <p className="am-muted am-phone-only" style={{ fontSize: 13, lineHeight: 1.5, margin: '12px 0 0' }}>
+            Tap a number to go to it. Amber = flagged.
+          </p>
+          <button type="button" className="am-btn am-btn-ghost am-phone-only am-exam-discard-foot" onClick={() => void abandon()}>
+            Discard this sitting
+          </button>
         </aside>
       </div>
     </div>

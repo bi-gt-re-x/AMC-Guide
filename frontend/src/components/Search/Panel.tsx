@@ -14,6 +14,7 @@
  */
 import { forwardRef, useCallback, useEffect, useImperativeHandle, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useMediaQuery } from '@/hooks';
 import { amc, type SearchResults } from '@/services/amc';
 import '@/styles/search.css';
 
@@ -73,6 +74,8 @@ export const SearchField = forwardRef<SearchFieldHandle, SearchFieldProps>(funct
 ) {
   const navigate = useNavigate();
   const inputRef = useRef<HTMLInputElement>(null);
+  // No keyboard shortcut to offer on a phone.
+  const touch = useMediaQuery('(max-width: 640px)');
   const [query, setQuery] = useState('');
   const [results, setResults] = useState<SearchResults | null>(null);
   const [cursor, setCursor] = useState(-1);
@@ -182,7 +185,7 @@ export const SearchField = forwardRef<SearchFieldHandle, SearchFieldProps>(funct
         ref={inputRef}
         type="text"
         className="topbar-search-input"
-        placeholder="Search problems, topics, contests…  ⌘K"
+        placeholder={touch ? 'Search problems, topics, contests…' : 'Search problems, topics, contests…  ⌘K'}
         aria-label="Search problems, topics, contests and pages"
         role="combobox"
         aria-expanded={showing}

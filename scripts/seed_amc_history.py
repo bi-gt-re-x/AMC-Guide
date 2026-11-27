@@ -41,7 +41,7 @@ from backend.amc import problems as pb  # noqa: E402
 from backend.database.connection import connect  # noqa: E402
 
 TABLES = ('amc_attempts', 'amc_reviews', 'amc_mocks', 'amc_plans', 'amc_sittings', 'amc_unlocks', 'amc_set_runs', 'amc_plan_days',
-          'amc_miss_reasons')
+          'amc_miss_reasons', 'amc_placements')
 DAYS = 56
 # The level on the 1-10 scale, start to finish, and how each category sits
 # against it.

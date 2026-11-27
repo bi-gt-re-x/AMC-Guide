@@ -30,7 +30,7 @@ from backend.tracking import auth  # noqa: E402
 USERNAME = 'amc-demo'
 PASSWORD = 'amc-demo-password'  # a local test value, not a real credential
 TABLES = ('amc_attempts', 'amc_reviews', 'amc_mocks', 'amc_plans', 'amc_sittings', 'amc_unlocks', 'amc_set_runs', 'amc_plan_days',
-          'amc_miss_reasons')
+          'amc_miss_reasons', 'amc_placements')
 
 
 def clear():

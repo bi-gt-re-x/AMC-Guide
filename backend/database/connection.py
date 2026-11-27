@@ -1121,6 +1121,18 @@ ADDED_TABLES = ('''
 ''', '''
     CREATE INDEX IF NOT EXISTS amc_miss_reasons_user_idx ON amc_miss_reasons (user_id, at)
 ''', '''
+    -- The placement check at sign-up. The DDL is data/sql/amc.sql's.
+    CREATE TABLE IF NOT EXISTS amc_placements (
+        user_id      TEXT PRIMARY KEY REFERENCES users (username) ON DELETE CASCADE,
+        level        TEXT NOT NULL,
+        answers      TEXT NOT NULL DEFAULT '[]',
+        next_id      TEXT DEFAULT '',
+        started_at   TEXT NOT NULL,
+        finished_at  TEXT DEFAULT '',
+        theta        REAL,
+        CHECK (level IN ('AMC 10', 'AMC 12', 'AIME'))
+    )
+''', '''
     -- Password reset links. The DDL is data/sql/resets.sql's.
     CREATE TABLE IF NOT EXISTS password_resets (
         token_hash  TEXT PRIMARY KEY,

@@ -15,7 +15,8 @@ from tests.conftest import make_account
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 ACCOUNT_TABLES = {'amc_attempts', 'amc_reviews', 'amc_mocks', 'amc_plans', 'amc_sittings', 'amc_unlocks',
-                  'amc_set_runs', 'amc_plan_days', 'amc_miss_reasons'}
+                  'amc_set_runs', 'amc_plan_days', 'amc_miss_reasons',
+                  'amc_placements'}
 
 
 def _load(name):
@@ -41,7 +42,7 @@ def _user_tables():
         found = set()
         for table in ('amc_attempts', 'amc_reviews', 'amc_mocks', 'amc_plans', 'amc_official', 'amc_ai',
                       'amc_generated', 'amc_posts', 'amc_sittings', 'amc_unlocks', 'amc_set_runs', 'amc_plan_days',
-                      'amc_miss_reasons'):
+                      'amc_miss_reasons', 'amc_placements'):
             try:
                 con.execute('SELECT user_id FROM {} LIMIT 0'.format(table)).fetchall()
             except Exception:

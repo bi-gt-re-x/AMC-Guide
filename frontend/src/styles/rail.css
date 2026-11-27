@@ -862,129 +862,15 @@ html[data-theme="dark"] .rail-rank-title { color: #F0F2F5; }
    bottom — a strip of destinations, which is what a phone expects anyway. The
    page pays for it in padding-bottom instead of padding-left. */
 @media (max-width: 640px) {
-    :root { --rail-w: 0px; --rail-h: 62px; }
-
-    .rail {
-        top: auto;
-        right: 0;
-        width: auto;
-        height: var(--rail-h);
-        flex-direction: row;
-        align-items: center;
-        gap: var(--space-2);
-        padding: 0 var(--space-2);
-        border-right: none;
-        border-top: 1px solid #EAEAEA;
-    }
-    html[data-theme="dark"] .rail { border-top-color: #30363D; }
-
-    /* The brand and the foot are the two things a phone can do without: the
-       wordmark's job is done by the dashboard tab, and the rank and XP bar are
-       on the dashboard itself. The top bar is still up there with the account
-       and the theme, so nothing here is the only way to anything. */
-    .rail-brand,
-    .rail-foot { display: none; }
-
-    /* Five equal targets, and no scrolling. It used to lay all ten out with
-       `overflow-x: auto`, which put Records and Settings past the right edge
-       of a 375px screen with nothing to show that they were there — a
-       horizontal scroll nobody looks for in a tab bar. Four tabs and More is
-       the shape a phone expects, and 1fr each is 75px on the narrowest phone
-       still sold, comfortably over the 44px a thumb needs. */
-    .rail-links {
-        flex-direction: row;
-        display: grid;
-        grid-auto-flow: column;
-        grid-auto-columns: 1fr;
-        gap: 0;
-        overflow: visible;
-    }
-    /* A tab bar does not scroll, so it has no edge to fade. */
-    .rail-links.more-up,
-    .rail-links.more-down {
-        -webkit-mask-image: none;
-                mask-image: none;
-    }
-    .rail-link {
-        flex-direction: column;
-        gap: var(--space-1);
-        min-height: 46px;
-        padding: var(--space-2) 2px;
-        justify-content: center;
-    }
-    /* The label comes back on a phone. It is hidden from 1100px down because a
-       74px rail has no room beside the icon; a tab bar has room under it, and
-       an icon-only bar is a quiz. */
-    .rail-link span {
-        display: block;
-        font-size: var(--text-2xs);
-        line-height: 1;
-        letter-spacing: -.01em;
-    }
-    .rail-link svg { width: 19px; height: 19px; }
-
-    /* ---- More, and what it opens ----
-       A sheet rather than a menu: it sits on the bar it came from, spans the
-       width, and is dismissed by tapping anywhere else. */
-    .rail-more {
-        border: 0;
-        background: none;
-        color: inherit;
-        font: inherit;
-        cursor: pointer;
-    }
-
-    .rail-sheet-scrim {
-        position: fixed;
-        inset: 0;
-        z-index: 60;
-        border: 0;
-        padding: 0;
-        background: rgba(16, 24, 40, .28);
-        cursor: default;
-    }
-    html[data-theme="dark"] .rail-sheet-scrim { background: rgba(0, 0, 0, .5); }
-
-    .rail-sheet {
-        position: fixed;
-        left: 8px;
-        right: 8px;
-        bottom: calc(var(--rail-h) + 8px);
-        z-index: 61;
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-        gap: var(--space-1);
-        padding: var(--space-2);
-        border: 1px solid #EAEAEA;
-        border-radius: var(--radius-lg);
-        background: var(--color-surface);
-        box-shadow: var(--shadow-lg);
-    }
-    html[data-theme="dark"] .rail-sheet {
-        border-color: #30363D;
-        background: #161d2c;
-        box-shadow: var(--shadow-lg);
-    }
-
-    .rail-sheet-link {
-        display: flex; align-items: center; gap: var(--space-2);
-        min-height: 46px;
-        padding: var(--space-2) var(--space-3);
-        border-radius: var(--radius-md);
-        color: inherit;
-        text-decoration: none;
-        font-size: var(--text-sm); font-weight: 500;
-    }
-    .rail-sheet-link svg { width: 18px; height: 18px; flex: none; opacity: .75; }
-    .rail-sheet-link.active { background: rgba(109, 90, 224, .12); }
-    .rail-sheet-link.active svg { opacity: 1; }
-
-    body.has-rail {
-        padding-left: 0;
-        padding-bottom: var(--rail-h);
-    }
-    /* Nothing is pinned at this size anyway, but be explicit: a viewport this
-       short with a strip taken out of it has nowhere to put a pinned page. */
+    /* No rail on a phone. It used to lie down as a bottom tab bar, which held
+       four of the eight destinations, hid the rest behind More and took 62px
+       off the bottom of every page. The top bar is the navigation now: the
+       mark at its left and a menu at its right that drops down every
+       destination (components/PhoneMenu.tsx, styles/topbar.css). The bar is a
+       little shorter too, so a phone's first screen is mostly page. */
+    :root { --rail-w: 0px; --rail-h: 0px; --topnav-h: 56px; }
+    body.has-rail { padding-left: 0; padding-bottom: 0; }
+    /* Nothing is pinned at this size: a phone's page scrolls as a whole. */
     body.pins-viewport { height: auto; overflow: visible; }
 }
 

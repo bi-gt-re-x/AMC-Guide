@@ -4,8 +4,9 @@
  * Same shape and the same classes it has always had (styles/rail.css, and the
  * paper look in styles/paper.css): the mark and wordmark at the top, a button
  * that folds it to an icon strip, the destinations in a section that folds
- * under its heading, and the account's nametag in the foot. On a phone it lies
- * down as a bottom bar with four tabs and a More sheet.
+ * under its heading, and the account's nametag in the foot. On a phone there
+ * is no rail: the top bar carries the mark and a menu that drops down with
+ * every destination (components/PhoneMenu.tsx), and the page gets the width.
  *
  * **The layout contract is a variable, not a shape.** Pages know that
  * `--rail-w` is taken from the left; `html.nav-collapsed` shrinks it, and every
@@ -55,11 +56,10 @@ interface Tab {
   section: SectionId;
   /** Path prefixes this entry also lights up for (detail pages). */
   under?: string[];
-  /** One of the four in the phone's bottom bar. */
-  phone?: boolean;
 }
 
-const PHONE = '(max-width: 640px)';
+/** Below this the rail gives way to the top bar's menu (components/PhoneMenu.tsx). */
+export const PHONE = '(max-width: 640px)';
 
 const stroke = {
   viewBox: '0 0 24 24',
@@ -85,12 +85,14 @@ const SIGNOUT_ICON = (
   </svg>
 );
 
+export const SETTINGS_TAB: Tab = { to: '/settings', label: 'Settings', icon: SETTINGS_ICON, section: 'prep' };
+export { SIGNOUT_ICON };
+
 export const TABS: Tab[] = [
   {
     to: '/dashboard',
     label: 'Dashboard',
     section: 'prep',
-    phone: true,
     icon: (
       <svg {...stroke}>
         <path d="M3 10.5 12 3l9 7.5" />
@@ -102,7 +104,6 @@ export const TABS: Tab[] = [
     to: '/review',
     label: 'Review',
     section: 'prep',
-    phone: true,
     icon: (
       <svg {...stroke}>
         <path d="M3 12a9 9 0 1 0 3-6.7" />
@@ -138,7 +139,6 @@ export const TABS: Tab[] = [
     to: '/problems',
     label: 'Problems',
     section: 'practice',
-    phone: true,
     under: ['/problems/'],
     icon: (
       <svg {...stroke}>
@@ -179,7 +179,6 @@ export const TABS: Tab[] = [
     to: '/contests',
     label: 'Past Contests',
     section: 'practice',
-    phone: true,
     under: ['/contests/', '/mocks/'],
     icon: (
       <svg {...stroke}>
@@ -199,7 +198,9 @@ function claim(tab: Tab, pathname: string): number {
   return Math.max(0, ...(tab.under ?? []).filter((prefix) => pathname.startsWith(prefix)).map((p) => p.length));
 }
 
-function onPage(tab: Tab, pathname: string): boolean {
+export type { Tab };
+
+export function onPage(tab: Tab, pathname: string): boolean {
   const mine = claim(tab, pathname);
   return mine > 0 && TABS.every((other) => other === tab || claim(other, pathname) <= mine);
 }
@@ -265,11 +266,7 @@ export function Rail() {
   }, [collapsed, update]);
 
   const phone = useMediaQuery(PHONE);
-  const shown = phone ? TABS.filter((tab) => tab.phone) : TABS;
-  const rest = phone ? TABS.filter((tab) => !tab.phone) : [];
-
-  const [moreOpen, setMoreOpen] = useState(false);
-  useEffect(() => setMoreOpen(false), [pathname]);
+  const shown = TABS;
 
   const [sections, setSections] = useState(readSections);
   const fold = useCallback((id: SectionId) => {
@@ -324,6 +321,9 @@ export function Rail() {
   const target = summary?.target ?? 'AMC 10';
   const projected = summary ? summary.projected[target] : null;
 
+  // A phone has no rail: its destinations are in the top bar's menu.
+  if (phone) return null;
+
   return (
     <nav className="rail" aria-label="Main">
       <div className="rail-brand">
@@ -351,58 +351,14 @@ export function Rail() {
       </div>
 
       <div ref={linksRef} className={`rail-links${more.up ? ' more-up' : ''}${more.down ? ' more-down' : ''}`}>
-        {phone ? (
-          shown.map(renderTab)
-        ) : (
-          <>
-            <Section id="prep" label="Prep" open={isOpen('prep')} onFold={fold}>
-              {shown.filter((tab) => tab.section === 'prep').map(renderTab)}
-            </Section>
-            <Section id="practice" label="Practice" open={isOpen('practice')} onFold={fold}>
-              {shown.filter((tab) => tab.section === 'practice').map(renderTab)}
-            </Section>
-          </>
-        )}
+        <Section id="prep" label="Prep" open={isOpen('prep')} onFold={fold}>
+          {shown.filter((tab) => tab.section === 'prep').map(renderTab)}
+        </Section>
+        <Section id="practice" label="Practice" open={isOpen('practice')} onFold={fold}>
+          {shown.filter((tab) => tab.section === 'practice').map(renderTab)}
+        </Section>
 
-        {phone && (
-          <button
-            type="button"
-            className={`rail-link rail-more${moreOpen ? ' is-open' : ''}${
-              rest.some((tab) => onPage(tab, pathname)) || pathname.startsWith('/settings') ? ' active' : ''
-            }`}
-            aria-expanded={moreOpen}
-            aria-haspopup="menu"
-            onClick={() => setMoreOpen((was) => !was)}
-          >
-            <svg {...stroke}>
-              <circle cx="5" cy="12" r="1.6" />
-              <circle cx="12" cy="12" r="1.6" />
-              <circle cx="19" cy="12" r="1.6" />
-            </svg>
-            <span>More</span>
-          </button>
-        )}
       </div>
-
-      {phone && moreOpen && (
-        <>
-          <button type="button" className="rail-sheet-scrim" aria-label="Close menu" onClick={() => setMoreOpen(false)} />
-          <div className="rail-sheet" role="menu">
-            {[...rest, { to: '/settings', label: 'Settings', icon: SETTINGS_ICON, section: 'prep' as const }].map((tab) => (
-              <NavLink
-                key={tab.to}
-                to={tab.to}
-                role="menuitem"
-                className={() => `rail-sheet-link${onPage(tab, pathname) ? ' active' : ''}`}
-                onClick={() => setMoreOpen(false)}
-              >
-                {tab.icon}
-                <span>{tab.label}</span>
-              </NavLink>
-            ))}
-          </div>
-        </>
-      )}
 
       <div className="rail-foot">
         {signedIn ? (
@@ -414,22 +370,18 @@ export function Rail() {
             <span className="rail-rank-num" aria-hidden="true">
               {solved}
             </span>
-            {!phone && (
-              <NavLink
-                to="/settings"
-                className={({ isActive }) => `rail-foot-settings${isActive ? ' active' : ''}`}
-                aria-label="Settings"
-                title="Settings"
-              >
-                {SETTINGS_ICON}
-              </NavLink>
-            )}
-            {!phone && (
-              <button type="button" className="rail-foot-signout" onClick={() => void signOut()}
-                      aria-label="Sign out" title="Sign out">
-                {SIGNOUT_ICON}
-              </button>
-            )}
+            <NavLink
+              to="/settings"
+              className={({ isActive }) => `rail-foot-settings${isActive ? ' active' : ''}`}
+              aria-label="Settings"
+              title="Settings"
+            >
+              {SETTINGS_ICON}
+            </NavLink>
+            <button type="button" className="rail-foot-signout" onClick={() => void signOut()}
+                    aria-label="Sign out" title="Sign out">
+              {SIGNOUT_ICON}
+            </button>
             <div className="rail-xp-row">
               <span>{solved} of {total || '—'} solved</span>
               <span>{projected != null ? `${target} ≈ ${projected}` : target}</span>

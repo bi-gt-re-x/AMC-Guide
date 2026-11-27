@@ -257,6 +257,20 @@ export default function Dashboard() {
         )}
       </PageHeader>
 
+      {/* For an account that skipped the placement check at sign-up: one line,
+          gone once it is taken, declined, or there is enough history anyway. */}
+      {data.placement?.offer && (
+        <section className="am-card am-place-offer" aria-label="Placement check">
+          <div>
+            <strong>Find your level</strong>
+            <span className="am-muted">
+              {data.placement.size} short problems, no timer. Your plan and practice sets then start from your answers.
+            </span>
+          </div>
+          <Link className="am-btn am-btn-primary am-btn-sm" to="/placement">Start</Link>
+        </section>
+      )}
+
       <dl className="am-stats">
         <div className="am-stat">
           <dt>Solved</dt>

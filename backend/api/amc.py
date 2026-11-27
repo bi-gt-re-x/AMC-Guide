@@ -12,7 +12,7 @@ from fastapi import APIRouter, Depends, Query, Request
 from pydantic import BaseModel
 
 from backend.amc import catalog, coach, engine, insights, misses, mockscore, planning, practice, results, store, weak
-from backend.amc import official, plan_view, reach, setreport
+from backend.amc import official, placement, plan_view, reach, setreport
 from backend.amc import problems as pb
 from backend.amc.scale import TOP
 from backend.api.guard import current_username
@@ -200,6 +200,8 @@ def dashboard(username: str = Depends(current_username)):
         performance=insights.recent_performance(attempts, mocks, today),
         plan=plan_view,
         last_mock=_mock_brief(mocks[0]) if mocks else None,
+        # The placement check, offered to a new account that skipped it.
+        placement={'offer': placement.offer(store.placement(username), attempts), 'size': placement.SIZE},
     )
 
 
@@ -470,6 +472,84 @@ def _reason_or_fail(reason, allowed):
     if reason and reason not in allowed:
         return None, fail('Pick one of the reasons.')
     return reason, None
+
+
+# ---------------------------------------------------------------------------
+# The placement check (backend/amc/placement.py)
+# ---------------------------------------------------------------------------
+class PlacementStart(BaseModel):
+    level: str = 'AMC 10'
+
+
+class PlacementAnswer(BaseModel):
+    problem_id: str
+    #: The answer, or '' for "Not sure".
+    answer: Union[str, int, None] = ''
+    seconds: Optional[int] = 0
+
+
+@router.get('/api/amc/placement')
+def placement_state(username: str = Depends(current_username)):
+    row = store.placement(username)
+    return ok(placement=placement.view(row), offer=placement.offer(row, store.attempts(username)),
+              size=placement.SIZE)
+
+
+@router.post('/api/amc/placement/start')
+def placement_start(body: PlacementStart, username: str = Depends(current_username)):
+    """Begin the check (or carry on with the one begun). One per account."""
+    row = store.placement(username)
+    if row:
+        return ok(placement=placement.view(row))
+    level = body.level if body.level in catalog.FORMATS else 'AMC 10'
+    seen = {a['problem_id'] for a in store.attempts(username)}
+    first = placement.next_problem(level, [], seen, seed=username)
+    if not first:
+        return fail('There are no problems to place you with.')
+    store.write(store.placement_rows(username, level, [], first, store.now()))
+    return ok(placement=placement.view(store.placement(username)))
+
+
+@router.post('/api/amc/placement/answer')
+def placement_answer(body: PlacementAnswer, username: str = Depends(current_username)):
+    """Answer the problem dealt (or leave it as "Not sure") and get the next.
+    The answer is an ordinary attempt; it is not put in the review log."""
+    row = store.placement(username)
+    if not row or row['finished_at']:
+        return fail('There is no placement check under way.')
+    if body.problem_id != row['next_id']:
+        # A second tab, or a double tap: say where the check really is.
+        return ok(placement=placement.view(row), stale=True)
+    p = pb.get(body.problem_id)
+    if not p:
+        return fail('No such problem.')
+    given = engine.normalize_answer(p, body.answer) if str(body.answer or '').strip() else ''
+    correct = bool(given) and given == str(p['answer'])
+    answers = row['answers'] + [{'id': p['id'], 'answer': given, 'correct': correct,
+                                 'seconds': max(0, int(body.seconds or 0))}]
+    seen = {a['problem_id'] for a in store.attempts(username)}
+    nxt = placement.next_problem(row['level'], answers, seen, seed=username)
+    done = nxt is None
+    theta = placement.estimate(row['level'], answers)[0] if done else None
+    store.write([store.attempt_rows(username, p['id'], given, correct, body.seconds, 'practice')]
+                + store.placement_rows(username, row['level'], answers, nxt or '', row['started_at'],
+                                       finished=done, theta=theta))
+    return ok(placement=placement.view(store.placement(username)))
+
+
+@router.post('/api/amc/placement/stop')
+def placement_stop(username: str = Depends(current_username)):
+    """Finish the check now, with what has been answered (it all still counts)."""
+    row = store.placement(username)
+    if not row:
+        # Never begun: remembered as declined, so it is not offered again.
+        store.write(store.placement_rows(username, 'AMC 10', [], '', store.now(), finished=True))
+        return ok(placement=placement.view(store.placement(username)))
+    if not row['finished_at']:
+        theta = placement.estimate(row['level'], row['answers'])[0] if row['answers'] else None
+        store.write(store.placement_rows(username, row['level'], row['answers'], '', row['started_at'],
+                                         finished=True, theta=theta))
+    return ok(placement=placement.view(store.placement(username)))
 
 
 @router.post('/api/amc/attempts/{attempt_id}/reason')

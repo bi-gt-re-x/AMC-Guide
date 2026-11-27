@@ -1,7 +1,7 @@
 /**
  * The rail: the AMC site's seven destinations in two folding sections, the
  * count of reviews due on Review, how much of the bank is solved in the foot,
- * and four tabs plus More on a phone.
+ * and, on a phone, nothing: the top bar's menu has the destinations there.
  */
 import { fireEvent, screen, within } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
@@ -90,16 +90,10 @@ describe('the rail', () => {
     expect(screen.getByRole('link', { name: /Dashboard/ })).toBeInTheDocument();
   });
 
-  it('shows four tabs and More on a phone', () => {
+  it('draws nothing on a phone, where the top bar has the menu', () => {
     setMatchMedia({ '(max-width: 640px)': true });
     renderWithProviders(<Rail />);
-    const links = within(nav()).getAllByRole('link').map((a) => a.getAttribute('href'));
-    expect(links).toEqual(expect.arrayContaining(['/dashboard', '/review', '/problems', '/contests']));
-    expect(links).not.toContain('/topics');
-    fireEvent.click(screen.getByRole('button', { name: /More/ }));
-    const sheet = within(screen.getByRole('menu'));
-    expect(sheet.getByRole('menuitem', { name: /Topics/ })).toHaveAttribute('href', '/topics');
-    expect(sheet.getByRole('menuitem', { name: /Settings/ })).toHaveAttribute('href', '/settings');
+    expect(screen.queryByRole('navigation', { name: 'Main' })).not.toBeInTheDocument();
   });
 });
 

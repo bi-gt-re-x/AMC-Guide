@@ -878,3 +878,17 @@ describe('Why did you miss it?', () => {
     expect(await screen.findByText('No reasons yet')).toBeInTheDocument();
   });
 });
+
+describe('The placement check on the dashboard', () => {
+  it('is offered to an account that skipped it, and not otherwise', async () => {
+    vi.spyOn(amc, 'dashboard').mockResolvedValue({ ...dashboard, placement: { offer: true, size: 12 } } as any);
+    show('/dashboard', '/dashboard', <Dashboard />);
+    expect(await screen.findByText('Find your level')).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Start' })).toHaveAttribute('href', '/placement');
+    cleanup();
+    vi.spyOn(amc, 'dashboard').mockResolvedValue({ ...dashboard, placement: { offer: false, size: 12 } } as any);
+    show('/dashboard', '/dashboard', <Dashboard />);
+    await settled(new RegExp(dashboard.weakest[0]!.name));
+    expect(screen.queryByText('Find your level')).not.toBeInTheDocument();
+  });
+});

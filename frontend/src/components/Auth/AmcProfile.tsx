@@ -11,10 +11,16 @@
  * "Skip" still lands on the dashboard. Theme and the rest live in Settings;
  * anything longer belongs in the study plan's details, where the AI coach
  * reads it.
+ *
+ * Once the plan is made, one more, optional step: the placement check
+ * (components/Amc/Placement.tsx), twelve short problems so the level and the
+ * plan start from the student's own answers. "Skip for now" there lands on
+ * the dashboard too, which offers the check again later.
  */
 import { useEffect, useState } from 'react';
 import { amc, type CategoryId, type Level, type PlanDetails, type SubjectStrength } from '@/services/amc';
 import { completeProfile } from '@/services/auth';
+import { Placement } from '@/components/Amc/Placement';
 
 const CONTESTS: { key: Level | 'unsure'; label: string; hint: string }[] = [
   { key: 'AMC 10', label: 'AMC 10', hint: 'Grade 10 and below' },
@@ -103,6 +109,8 @@ export function AmcProfile({ onDone, say }: { onDone: () => void; say: (text: st
   const [last, setLast] = useState('');
   const [busy, setBusy] = useState(false);
   const [defaults, setDefaults] = useState<{ dates: Record<Level, string>; goals: Record<Level, number> } | null>(null);
+  // After the plan: the placement check, offered once.
+  const [placing, setPlacing] = useState(false);
 
   useEffect(() => {
     void amc.plan().then((reply) => {
@@ -145,7 +153,11 @@ export function AmcProfile({ onDone, say }: { onDone: () => void; say: (text: st
           void amc.coach().catch(() => undefined);
         }
       }
-      onDone();
+      if (skip) onDone();
+      else {
+        say('', 'info');
+        setPlacing(true);
+      }
     } catch {
       say("Couldn't reach the server.");
     } finally {
@@ -154,6 +166,15 @@ export function AmcProfile({ onDone, say }: { onDone: () => void; say: (text: st
   }
 
   const canNext = [Boolean(contest), Boolean(aim), Boolean(hours)][step];
+
+  if (placing) {
+    return (
+      <div className="auth-amc auth-place">
+        <p className="auth-step-name">Last step · optional</p>
+        <Placement level={level} onDone={() => onDone()} />
+      </div>
+    );
+  }
 
   return (
     <form className="auth-amc" noValidate

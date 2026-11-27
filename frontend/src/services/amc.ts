@@ -479,6 +479,8 @@ export interface Dashboard {
     consistency: Consistency;
   };
   last_mock: MockBrief | null;
+  /** The placement check, offered to a new account that has not taken it. */
+  placement?: { offer: boolean; size: number };
 }
 
 export interface PerformanceWindow {
@@ -683,6 +685,34 @@ export interface ProblemDetail {
   next: string | null;
   /** Where it sits in the filtered list it was opened from, if it was. */
   position?: { at: number; of: number } | null;
+}
+
+/** The placement check at sign-up (backend/amc/placement.py). */
+export interface PlacementResult {
+  theta: number;
+  se: number;
+  /** On the 1-12 scale, to the half. */
+  level: number;
+  right: number;
+  answered: number;
+  blank: number;
+  /** The last problem number on a typical paper they'd more likely than not get right. */
+  reach: number;
+  contest: Level;
+  subjects: { id: CategoryId; name: string; right: number; total: number }[];
+  summary: string;
+  strongest: string | null;
+  weakest: string | null;
+}
+
+export interface PlacementState {
+  level: Level;
+  answered: number;
+  total: number;
+  /** The problem to answer now: no answer, no source, no rating. */
+  problem: Pick<Problem, 'id' | 'statement' | 'choices' | 'format' | 'topic_name' | 'category' | 'category_name'> | null;
+  done: boolean;
+  result: PlacementResult | null;
 }
 
 /** Why a miss happened (backend/amc/misses.py). */
@@ -1274,6 +1304,14 @@ export const amc = {
     get<ProblemDetail>(`/api/amc/problems/${encodeURIComponent(id)}`, walk),
   attempt: (id: string, answer: string, seconds: number, source: 'practice' | 'review' = 'practice', setId = '') =>
     post<AttemptReply>(`/api/amc/problems/${encodeURIComponent(id)}/attempt`, { answer, seconds, source, set_id: setId }),
+  placement: () => get<{ placement: PlacementState | null; offer: boolean; size: number }>('/api/amc/placement'),
+  startPlacement: (level: Level) => post<{ placement: PlacementState }>('/api/amc/placement/start', { level }),
+  /** Answer the problem dealt ('' for "Not sure"); replies with the next, or the result. */
+  answerPlacement: (problemId: string, answer: string, seconds: number) =>
+    post<{ placement: PlacementState; stale?: boolean }>('/api/amc/placement/answer',
+      { problem_id: problemId, answer, seconds }),
+  /** Finish now with what has been answered (or, never begun, decline it). */
+  stopPlacement: () => post<{ placement: PlacementState }>('/api/amc/placement/stop'),
   /** Why a wrong answer happened ('' takes it back); replies with the next step. */
   missReason: (attemptId: string, reason: MissReasonId | '') =>
     post<{ reason: MissReasonId | null; step: MissStep | null }>(

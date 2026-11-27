@@ -118,6 +118,7 @@ SPA_ROUTES = (
     '/mocks/{mock_id}',
     '/study-plan',
     '/search',
+    '/placement',
 )
 
 INDEX = os.path.join(DIST_DIR, 'index.html')

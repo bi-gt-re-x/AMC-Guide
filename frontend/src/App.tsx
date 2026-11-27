@@ -54,6 +54,7 @@ const MockResult = lazy(() => import('@/pages/amc/MockResult'));
 const StudyPlan = lazy(() => import('@/pages/amc/StudyPlan'));
 const Analytics = lazy(() => import('@/pages/amc/Analytics'));
 const Search = lazy(() => import('@/pages/amc/Search'));
+const PlacementPage = lazy(() => import('@/pages/amc/Placement'));
 
 /**
  * Every app page's code, fetched once the browser is idle after sign-in, so
@@ -327,6 +328,7 @@ export default function App() {
               <Route path="/study-plan" element={<StudyPlan />} />
               <Route path="/analytics" element={<Analytics />} />
               <Route path="/search" element={<Search />} />
+              <Route path="/placement" element={<PlacementPage />} />
               <Route path="/settings" element={<Settings />} />
               <Route path="/settings/:section" element={<Settings />} />
               {RETIRED_PATHS.map((path) => (

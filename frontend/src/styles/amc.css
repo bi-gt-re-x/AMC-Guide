@@ -563,6 +563,66 @@ html[data-theme="dark"] .am-choice.is-picked .am-choice-letter { background: var
 .am-miss-said { font-weight: 600; color: var(--am-ink); }
 @media (prefers-reduced-motion: reduce) { .am-miss { animation: none; } }
 
+/* ---- The placement check (components/Amc/Placement.tsx) ---------------- */
+.am-place { display: grid; gap: var(--space-3); }
+.am-place-title { margin: 0; font-family: var(--am-serif); font-weight: 400; font-size: 24px; color: var(--am-ink); }
+.am-place-lede { margin: 0; color: var(--am-body); font-size: 15px; line-height: 1.6; }
+.am-place-head { display: flex; justify-content: space-between; align-items: baseline; gap: var(--space-2); font-size: 13px; }
+.am-place-count { font-weight: 700; color: var(--am-ink); font-variant-numeric: tabular-nums; }
+.am-place-subject { color: var(--am-muted); }
+.am-place-bar { height: 4px; border-radius: 999px; background: var(--am-line); overflow: hidden; }
+.am-place-bar i { display: block; height: 100%; border-radius: inherit; background: var(--am-sage); transition: width .3s ease; }
+.am-place-problem { display: grid; gap: var(--space-3); animation: am-place-in .24s ease-out; }
+.am-place-problem .am-statement { margin: var(--space-1) 0 0; }
+@keyframes am-place-in { from { opacity: 0; transform: translateY(6px); } to { opacity: 1; transform: none; } }
+.am-place-actions { display: flex; flex-wrap: wrap; justify-content: flex-end; gap: var(--space-2); margin-top: var(--space-1); }
+.am-place-go { min-width: 120px; }
+.am-place-stop {
+    justify-self: center;
+    min-height: 36px;
+    padding: 0 var(--space-2);
+    border: 0;
+    background: none;
+    color: var(--am-muted);
+    font: inherit;
+    font-size: 13px;
+    cursor: pointer;
+}
+.am-place-stop:hover { color: var(--am-ink); }
+.am-place-level { display: flex; align-items: baseline; gap: 6px; margin: 0; }
+.am-place-level strong { font-family: var(--am-serif); font-weight: 400; font-size: 56px; line-height: 1; color: var(--am-ink); }
+.am-place-level span { color: var(--am-muted); font-size: 18px; }
+.am-place-subjects { display: grid; gap: 6px; margin: 0; padding: 0; list-style: none; }
+.am-place-subjects li { display: flex; justify-content: space-between; align-items: center; gap: var(--space-3); font-size: 14px; color: var(--am-body); }
+.am-place-dots { display: inline-flex; gap: 4px; }
+.am-place-dots i { width: 10px; height: 10px; border-radius: 50%; border: 1px solid var(--am-line); background: var(--am-card); }
+.am-place-dots i.is-right { border-color: var(--am-sage); background: var(--am-sage); }
+.am-place-note { margin: 0; color: var(--am-muted); font-size: 13px; line-height: 1.55; }
+.am-place-page { max-width: 760px; margin-inline: auto; }
+.am-place-card { padding: 28px; }
+/* The dashboard's offer: one line, under the greeting. */
+.am-place-offer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+    padding: var(--space-3) var(--space-4);
+    border-color: var(--am-sage);
+    background: var(--am-sage-soft);
+}
+.am-place-offer > div { display: grid; gap: 2px; min-width: 0; }
+.am-place-offer strong { color: var(--am-ink); }
+.am-place-offer .am-muted { font-size: 13px; }
+@media (max-width: 640px) {
+    .am-place-card { padding: var(--space-4); }
+    .am-place-actions { justify-content: stretch; }
+    .am-place-actions .am-btn { flex: 1 1 0; min-height: 44px; }
+    .am-place-offer .am-btn { width: 100%; }
+}
+@media (prefers-reduced-motion: reduce) { .am-place-problem { animation: none; } }
+
 /* ---- Why you miss (Analytics) ---------------------------------------------- */
 .am-why-headline { margin: 0 0 var(--space-3); font-family: var(--am-serif); font-size: 19px; line-height: 1.4; color: var(--am-ink); }
 .am-why-list { display: grid; gap: var(--space-3); margin: 0; padding: 0; list-style: none; }
@@ -1417,9 +1477,95 @@ a.am-topic-card:focus-visible { outline: 2px solid var(--tone, var(--am-sage)); 
 .am-cover-actions { display: grid; justify-items: center; gap: var(--space-3); }
 .am-cover-begin { min-width: 220px; min-height: 46px; font-size: 15px; }
 .am-exam-paper { padding: 28px; }
+.am-problem-card { padding: 28px; }
+/* Shown at one size only: a hint about keys means nothing on a phone, and a
+   phone's own controls are not needed beside a full answer sheet. */
+.am-phone-only { display: none; }
 @media (max-width: 640px) {
-    .am-exam-paper { padding: var(--space-4); }
+    .am-exam-paper, .am-problem-card { padding: var(--space-4); }
     .am-cover-facts dd { font-size: 20px; }
+    .am-wide-only { display: none; }
+    .am-phone-only { display: block; }
+
+    /* ---- Sitting a mock on a phone ----
+       The bar stays in sight under the top bar (it used to stick 4px from the
+       top, under it) with the clock, the count and Hand in on one line. */
+    .am-exam-top {
+        top: calc(var(--topnav-h, 56px) + 4px);
+        flex-wrap: nowrap;
+        gap: var(--space-2);
+    }
+    .am-exam-top .am-exam-name, .am-exam-top .am-exam-discard { display: none; }
+    .am-exam-top > div { gap: 6px !important; }
+    .am-exam-clock { font-size: 20px; }
+    /* The sheet is where each problem stands, not where it is answered: a
+       five-across grid of numbers, each showing its letter, filled or
+       flagged, a thumb's width apiece. Tapping one goes to it. */
+    .am-exam-side .am-bubbles {
+        grid-template-columns: repeat(5, minmax(0, 1fr));
+        gap: 6px;
+        max-height: none;
+        overflow: visible;
+    }
+    .am-exam-side .am-bubble-row {
+        position: relative;
+        display: grid;
+        place-items: center;
+        min-height: 48px;
+        padding: 0;
+        border: 1px solid var(--am-line);
+        border-radius: 10px;
+        background: var(--am-card);
+    }
+    .am-exam-side .am-bubble-row.is-current { border-color: var(--am-ink); background: var(--am-hover); }
+    .am-exam-side .am-bubble-row.is-flagged { border-color: var(--am-warn); box-shadow: inset 0 -3px 0 var(--am-warn); }
+    .am-exam-side .am-bubble-row.is-flagged .am-bubble-num { box-shadow: none; }
+    .am-exam-side .am-bubble-num {
+        position: absolute;
+        inset: 0;
+        width: auto;
+        height: auto;
+        padding: 6px 0 0;
+        display: block;
+        align-self: start;
+        text-align: center;
+        font-size: 13px;
+        color: var(--am-ink);
+        border-radius: 10px;
+    }
+    /* Only the letter chosen shows, under the number, and it is a label, not
+       a control: tapping the cell goes to the problem rather than erasing. */
+    .am-exam-side .am-bubble { display: none; }
+    .am-exam-side .am-bubble.is-filled {
+        display: grid;
+        width: 20px;
+        height: 20px;
+        margin-top: 18px;
+        font-size: 11px;
+        pointer-events: none;
+    }
+    .am-exam-side .am-bubble-int {
+        min-width: 0;
+        width: 100%;
+        height: 100%;
+        min-height: 46px;
+        padding-top: 18px;
+        border: 0;
+        background: transparent;
+        font-size: 11px;
+    }
+    .am-exam-discard-foot { width: 100%; margin-top: var(--space-3); }
+
+    /* ---- Thumb-sized controls ----
+       The small buttons and chips are 26-30px tall at the desk; a finger
+       wants about 40. */
+    .amc-page .am-btn-sm { min-height: 38px; padding: 0 var(--space-3); }
+    .amc-page .am-chip { min-height: 36px; }
+    .amc-page .am-choice-item { min-height: 40px; }
+    .amc-page .am-jump-menu-head, .amc-page .am-jump-menu-item { min-height: 40px; }
+    .amc-page .am-an-toggle { min-height: 36px; }
+    .amc-page .am-week-days-toggle { padding: 10px 0; }
+    .amc-page .am-miss-change { min-height: 36px; }
 }
 .am-bubbles { list-style: none; margin: 0; padding: 0; display: grid; gap: 4px; max-height: 60vh; overflow-y: auto; }
 .am-bubble-row { display: flex; align-items: center; gap: 4px; padding: 2px 4px; border-radius: 8px; }

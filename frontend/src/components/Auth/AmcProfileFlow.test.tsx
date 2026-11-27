@@ -3,11 +3,17 @@
  * the subject ratings are optional, and the plan is saved with them.
  */
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import { afterEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { AmcProfile } from './AmcProfile';
 import { amc } from '@/services/amc';
 import * as authService from '@/services/auth';
 
+beforeEach(() => {
+  // No check begun yet; declining one is accepted.
+  vi.spyOn(amc, 'placement').mockResolvedValue({ success: true, placement: null, offer: true, size: 12 } as any);
+  vi.spyOn(amc, 'stopPlacement').mockResolvedValue({ success: true, placement: {
+    level: 'AMC 10', answered: 0, total: 12, problem: null, done: true, result: null } } as any);
+});
 afterEach(() => vi.restoreAllMocks());
 
 describe('AmcProfile', () => {
@@ -40,9 +46,24 @@ describe('AmcProfile', () => {
     await waitFor(() => expect(screen.getByRole('button', { name: 'Make my plan' })).toBeEnabled());
     fireEvent.click(screen.getByRole('button', { name: 'Make my plan' }));
 
-    await waitFor(() => expect(done).toHaveBeenCalled());
+    // The plan is saved, and the placement check is offered as the last, optional step.
+    expect(await screen.findByText('Find your level')).toBeInTheDocument();
     const body = saved.mock.calls[0]![0] as any;
     expect(body.goal_score).toBe(120);
     expect(body.details.subjects).toEqual({ geometry: 'weak' });
+    expect(done).not.toHaveBeenCalled();
+    fireEvent.click(screen.getByRole('button', { name: 'Skip for now' }));
+    await waitFor(() => expect(done).toHaveBeenCalled());
+  });
+
+  it('skipping the questions skips the check too', async () => {
+    vi.spyOn(amc, 'plan').mockResolvedValue({ success: true, plan: null, ai: { available: false, label: '' },
+      defaults: { dates: {}, goals: {} } } as any);
+    vi.spyOn(authService, 'completeProfile').mockResolvedValue({ success: true } as any);
+    const done = vi.fn();
+    render(<AmcProfile onDone={done} say={() => undefined} />);
+    fireEvent.click(screen.getByRole('button', { name: 'Skip for now' }));
+    await waitFor(() => expect(done).toHaveBeenCalled());
+    expect(screen.queryByText('Find your level')).not.toBeInTheDocument();
   });
 });

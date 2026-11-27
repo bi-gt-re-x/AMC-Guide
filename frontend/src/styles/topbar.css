@@ -361,11 +361,203 @@ html[data-theme="dark"] .topbar-avatar-option.is-current {
 html[data-theme="dark"] .topbar-avatar-row { scrollbar-color: #3A424D transparent; }
 html[data-theme="dark"] .topbar-avatar-row::-webkit-scrollbar-thumb { background: #3A424D; }
 
-/* --- Narrow -------------------------------------------------------------- */
+/* --- Phone: the bar is the navigation ------------------------------------- */
+/* Below 640px there is no rail (components/Rail.tsx), so the bar carries the
+   mark at its left and the menu at its right (components/PhoneMenu.tsx). The
+   search folds to its magnifier and, tapped, opens across the whole bar. */
+.topbar-brand { display: none; }
+.topbar-search-cancel { display: none; }
+
 @media (max-width: 640px) {
-    .topbar { padding: 0 var(--space-3); }
+    .topbar {
+        left: 0;
+        gap: var(--space-2);
+        padding: 0 var(--space-2) 0 var(--space-3);
+    }
+    .topbar-brand {
+        display: inline-flex;
+        align-items: center;
+        gap: var(--space-2);
+        flex: none;
+        min-height: 44px;
+        color: #2C302E;
+        font-family: var(--font-serif, Georgia, serif);
+        font-size: 17px;
+        text-decoration: none;
+        white-space: nowrap;
+    }
+    html[data-theme="dark"] .topbar-brand { color: #F0F2F5; }
+    .topbar-brand img { width: 28px; height: 28px; }
+    .topbar-actions { justify-content: flex-end; gap: 2px; }
+    .topbar.is-phone .topbar-actions .topbar-btn { width: 40px; height: 40px; }
     /* The name goes, the avatar stays. A truncated username in a 90px box is
        not an identity, and the picture already is one. */
     .topbar-name, .topbar-caret { display: none; }
-    .topbar-account { padding: var(--space-1); }
+    /* No hairline and gap before the account: the paper look's 18px is a
+       tenth of a phone's bar. */
+    .topbar.is-phone .topbar-actions .topbar-account { margin-left: 0; padding: var(--space-1); }
+    .topbar.is-phone .topbar-actions .topbar-account::before { display: none; }
+
+    /* Search, folded: the field is its magnifier, a 40px target. Scoped to
+       the phone bar and one class deeper than the paper look's rules for the
+       field (styles/paper.css), which would otherwise draw it as a box. */
+    .topbar-search-slot { margin-right: 0; }
+    .topbar.is-phone .topbar-search-field { width: 40px; height: 40px; }
+    .topbar.is-phone .topbar-search-field .topbar-search-icon { left: 12px; width: 17px; height: 17px; }
+    .topbar.is-phone .topbar-search-field .topbar-search-input {
+        height: 40px;
+        padding: 0;
+        border-color: transparent;
+        background: transparent;
+        color: transparent;
+        cursor: pointer;
+    }
+    .topbar.is-phone .topbar-search-field .topbar-search-input::placeholder { color: transparent; }
+    /* …and open: across the bar, over the mark and the buttons, with Cancel. */
+    .topbar.is-phone.is-searching .topbar-search-field {
+        position: fixed;
+        top: calc((var(--topnav-h) - 40px) / 2);
+        left: var(--space-2);
+        right: 84px;
+        width: auto;
+        z-index: 2;
+    }
+    .topbar.is-phone.is-searching .topbar-search-field .topbar-search-input {
+        padding: 0 var(--space-3) 0 36px;
+        border-color: #EAEAEA;
+        background: var(--color-surface);
+        color: #2C302E;
+        font-size: 16px;   /* 16px or more, or iOS zooms the page on focus */
+        cursor: text;
+    }
+    .topbar.is-phone.is-searching .topbar-search-field .topbar-search-input::placeholder { color: #9297A3; }
+    html[data-theme="dark"] .topbar.is-phone.is-searching .topbar-search-field .topbar-search-input {
+        border-color: #30363D;
+        background: #0D1117;
+        color: #F0F2F5;
+    }
+    .topbar.is-searching .topbar-search-cancel {
+        position: fixed;
+        top: calc((var(--topnav-h) - 40px) / 2);
+        right: var(--space-2);
+        z-index: 2;
+        display: block;
+        width: 72px;
+        height: 40px;
+        border: 0;
+        border-radius: var(--radius-md);
+        background: none;
+        color: #2C302E;
+        font: inherit;
+        font-size: var(--text-sm);
+        font-weight: 600;
+        cursor: pointer;
+    }
+    html[data-theme="dark"] .topbar.is-searching .topbar-search-cancel { color: #F0F2F5; }
+    /* Under the field and Cancel both: the screen's width less its margins. */
+    .topbar.is-phone .topbar-search { width: calc(100vw - 2 * var(--space-2)); left: 0; max-height: calc(100vh - var(--topnav-h) - 24px); overflow-y: auto; }
+
+    /* The panels span the screen rather than hanging off a 40px button. */
+    .topbar-slot { position: static; }
+    .topbar-panel.topbar-alerts,
+    .topbar-panel.topbar-account-menu {
+        position: fixed;
+        top: calc(var(--topnav-h) + 6px);
+        left: var(--space-2);
+        right: var(--space-2);
+        width: auto;
+        max-height: calc(100vh - var(--topnav-h) - 24px);
+        overflow-y: auto;
+    }
+}
+
+/* ---- The menu (components/PhoneMenu.tsx) ---- */
+.phone-menu-scrim {
+    position: fixed;
+    inset: var(--topnav-h) 0 0 0;
+    z-index: 1;
+    border: 0;
+    padding: 0;
+    background: rgba(16, 24, 40, .28);
+    cursor: default;
+    animation: phoneMenuFade .16s ease-out;
+}
+html[data-theme="dark"] .phone-menu-scrim { background: rgba(0, 0, 0, .5); }
+.phone-menu {
+    position: fixed;
+    top: calc(var(--topnav-h) + 6px);
+    left: var(--space-2);
+    right: var(--space-2);
+    z-index: 2;
+    display: grid;
+    gap: var(--space-3);
+    max-height: calc(100vh - var(--topnav-h) - 18px);
+    overflow-y: auto;
+    padding: var(--space-3);
+    border: 1px solid #EAEAEA;
+    border-radius: var(--radius-lg);
+    background: var(--color-surface);
+    box-shadow: var(--shadow-lg);
+    animation: phoneMenuDrop .2s ease-out;
+}
+/* The bar's own ground in either theme (styles/paper-dark.css draws the dark
+   bar #1C1C19), so the menu reads as part of it. */
+html[data-theme="dark"] .phone-menu { border-color: #3A3A37; background: #1C1C19; }
+html[data-theme="dark"] .phone-menu-foot { border-top-color: #3A3A37; }
+.phone-menu-group h2 {
+    margin: 0 0 var(--space-1) var(--space-2);
+    color: #8C9096;
+    font-size: var(--text-2xs);
+    font-weight: 700;
+    letter-spacing: .12em;
+    text-transform: uppercase;
+}
+.phone-menu-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+.phone-menu-link {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 46px;
+    padding: var(--space-2) var(--space-3);
+    border: 0;
+    border-radius: var(--radius-md);
+    background: none;
+    color: #2C302E;
+    font: inherit;
+    font-size: var(--text-sm);
+    font-weight: 500;
+    text-align: left;
+    text-decoration: none;
+    cursor: pointer;
+}
+html[data-theme="dark"] .phone-menu-link { color: #E6EDF3; }
+.phone-menu-link svg { width: 18px; height: 18px; flex: none; opacity: .75; }
+.phone-menu-link:active { background: #F4F6F8; }
+html[data-theme="dark"] .phone-menu-link:active { background: #222a35; }
+.phone-menu-link.active { background: rgba(163, 138, 112, .14); font-weight: 600; }
+.phone-menu-link.active svg { opacity: 1; }
+.phone-menu-link:focus-visible { outline: 2px solid #2C302E; outline-offset: 1px; }
+.phone-menu-foot {
+    display: grid;
+    gap: var(--space-2);
+    padding-top: var(--space-3);
+    border-top: 1px solid #EAEAEA;
+}
+.phone-menu-progress {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    gap: 4px var(--space-2);
+    padding: 0 var(--space-2);
+    color: #6C757D;
+    font-size: var(--text-xs);
+}
+.phone-menu-bar { flex-basis: 100%; height: 5px; border-radius: 999px; background: #EFEDE8; overflow: hidden; }
+html[data-theme="dark"] .phone-menu-bar { background: #21262D; }
+.phone-menu-bar i { display: block; height: 100%; background: #A38A70; border-radius: inherit; }
+.phone-menu-actions { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+@keyframes phoneMenuDrop { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@keyframes phoneMenuFade { from { opacity: 0; } to { opacity: 1; } }
+@media (prefers-reduced-motion: reduce) {
+    .phone-menu, .phone-menu-scrim { animation: none; }
 }
