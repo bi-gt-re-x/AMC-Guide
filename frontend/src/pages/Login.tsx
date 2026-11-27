@@ -13,8 +13,9 @@
  *     fork). The panel is written back into the URL as the reader moves, so a
  *     refresh or the back button lands where they were.
  *   * `next` — where to go when it is done. Only a same-site path is honoured.
- *   * `verify` / `oauth` — what the server is reporting after the e-mail link
- *     or the Google hop (backend/routes/auth.py), said as the opening line.
+ *   * `verify` / `oauth` / `reset` — what the server is reporting after the
+ *     e-mail link, the Google hop or a password reset link
+ *     (backend/routes/auth.py), said as the opening line.
  *
  * A signed-in, finished account has nothing to do here and is sent on to
  * `next`; one that still owes its profile gets that panel.
@@ -41,7 +42,7 @@ function safeNext(raw: string | null): string {
   return raw && raw.startsWith('/') && !raw.startsWith('//') ? raw : '/';
 }
 
-const STEPS: AuthStep[] = ['choose', 'login', 'create', 'inbox', 'profile'];
+const STEPS: AuthStep[] = ['choose', 'login', 'create', 'inbox', 'profile', 'forgot', 'reset'];
 
 /** The tab's title on each panel, so it says where in the flow the reader is. */
 const TITLES: Record<AuthStep, string> = {
@@ -50,6 +51,8 @@ const TITLES: Record<AuthStep, string> = {
   create: 'Create account',
   inbox: 'Check your inbox',
   profile: 'Your contest',
+  forgot: 'Reset your password',
+  reset: 'New password',
 };
 
 const POINTS: [IconName, string][] = [
@@ -95,6 +98,7 @@ export default function Login() {
           // A report from the server is about the arrival, not the panel after.
           updated.delete('verify');
           updated.delete('oauth');
+          updated.delete('reset');
           return updated;
         },
         { replace: true },
@@ -109,11 +113,14 @@ export default function Login() {
    *  error the moment anything above re-rendered. */
   const verify = params.get('verify');
   const oauth = params.get('oauth');
+  const reset = params.get('reset');
   const bounced = params.has('next') && step === 'login';
   const notice = useMemo(
     () =>
       verify === 'invalid'
         ? { text: 'That verification link has already been used or expired.', kind: 'error' as const }
+        : reset === 'invalid'
+          ? { text: 'That reset link has expired or been used. Ask for a new one below.', kind: 'error' as const }
         : oauth === 'unconfigured'
           ? { text: "Google sign-in isn't configured on this server yet.", kind: 'error' as const }
           : oauth
@@ -121,7 +128,7 @@ export default function Login() {
             : bounced
               ? { text: 'You need an account to open that page.', kind: 'info' as const }
               : null,
-    [verify, oauth, bounced],
+    [verify, oauth, reset, bounced],
   );
 
   if (status === 'loading') return <Loading label="Checking your account" />;
@@ -130,7 +137,8 @@ export default function Login() {
   // comes after the profile is complete, so it is left alone too: without
   // this, a reload (or anything refreshing the account) on that step skipped
   // it and dropped the reader on the dashboard.
-  if (status === 'signed-in' && profileComplete && step !== 'inbox' && step !== 'profile') {
+  // A reset link opened while signed in still sets the password.
+  if (status === 'signed-in' && profileComplete && step !== 'inbox' && step !== 'profile' && step !== 'reset') {
     return <Navigate to={next} replace />;
   }
 

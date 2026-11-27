@@ -151,6 +151,18 @@ LIMITS = {
     '/api/auth/email_check': Policy(
         limit=30, seconds=600, charge=CALLS,
         message='Too many checks for now. Wait a few minutes and try again.'),
+    # Every call counts: the reply is the same whether or not the address has
+    # an account (so it is always a "success"), and each one can send a mail.
+    # Per address too, so one inbox is not flooded from many hosts.
+    '/api/auth/forgot': Policy(
+        limit=5, seconds=3600, charge=CALLS, by_identity='email',
+        message='Too many reset emails asked for. Check your inbox, then try again later.'),
+    # The token is 256 bits, so guessing is hopeless; this stops a loop
+    # trying anyway, and someone retyping a password the rules refuse is
+    # nowhere near it.
+    '/api/auth/reset': Policy(
+        limit=20, seconds=900,
+        message='Too many tries. Wait a few minutes, then try again.'),
     '/api/auth/resend': Policy(
         limit=5, seconds=3600,
         message='Too many emails requested. Check your inbox, then try again.',

@@ -57,6 +57,9 @@ export default defineConfig({
       '/static': api,
       '/auth': api,
       '/verify': api,
+      // The password reset link from the email (backend/routes/auth.py), a
+      // server route like /verify. Only /reset/<token>, nothing else /reset…
+      '^/reset/': api,
       '/careers': api,
       '/contact-support': api,
       '/engine': api,

@@ -26,6 +26,9 @@ CREATE TABLE IF NOT EXISTS users (
     verify_token      TEXT,
     verify_sent_at    TEXT,
     verified_at       TEXT,
+    -- When the password was last reset (backend/tracking/auth.py): a session
+    -- signed in before it is no longer this account's.
+    password_changed_at TEXT,
     profile_complete  BOOLEAN,
 
     -- Preferences chosen in the Complete Profile step.

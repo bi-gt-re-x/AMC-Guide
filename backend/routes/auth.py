@@ -47,6 +47,14 @@ class Resend(BaseModel):
     email: Optional[str] = None
 
 
+class Forgot(BaseModel):
+    email: Optional[str] = None
+
+
+class Reset(BaseModel):
+    password: Optional[str] = None
+
+
 class EmailCheck(BaseModel):
     email: Optional[str] = None
 
@@ -307,6 +315,75 @@ def resend(request: Request, body: Resend):
         else "That still didn't send. Try again in a few minutes."))
 
 
+# ---------------------------------------------------------------------------
+# Password reset (the rules are in backend/tracking/auth.py)
+# ---------------------------------------------------------------------------
+#: What asking for a reset says, whether or not the address has an account:
+#: anything else would make the form a way to learn who is signed up here.
+FORGOT_SENT = ('If an AMC Guide account uses {}, a link to reset its password is on its way. '
+               'It works for an hour. Check your spam folder if it does not arrive.')
+
+
+@router.post('/api/auth/forgot')
+def forgot(request: Request, body: Forgot):
+    """Mail a reset link to the account with this address, if there is one."""
+    email = str(body.email or '').strip()
+    if not auth.EMAIL_RE.match(email):
+        return fail('Enter the email you signed up with.', field='email')
+    users = db.users()
+    user = auth.find_user(users, email=email)
+    link = None
+    if user and user.get('email'):
+        token = auth.new_reset_token(user)
+        sent, link = auth.send_reset(user, token, request)
+        if sent:
+            link = None
+    # Only a development server hands the link back (there is no mail to
+    # send it by), and only for an address that has an account.
+    return ok(sent=True, message=FORGOT_SENT.format(email),
+              dev_link=link if link and settings.dev_mode() else None)
+
+
+@router.get('/reset/{token}')
+def reset_link(request: Request, token: str):
+    """The link from the email. Keeps the token in the (signed) session and
+    opens the new-password panel, so the token is never in the page's URL,
+    its history or a Referer."""
+    if not auth.reset_user(token):
+        request.session.pop('reset_token', None)
+        return _to_login(auth='forgot', reset='invalid')
+    request.session['reset_token'] = token
+    return _to_login(auth='reset')
+
+
+@router.get('/api/auth/reset')
+def reset_status(request: Request):
+    """Whether this browser holds a good reset link, and for which address."""
+    user = auth.reset_user(request.session.get('reset_token'))
+    return ok(valid=bool(user), email=user.get('email') if user else None)
+
+
+@router.post('/api/auth/reset')
+def reset_password(request: Request, body: Reset):
+    """Set the new password from the link this browser opened, and sign in."""
+    token = request.session.get('reset_token')
+    if not auth.reset_user(token):
+        request.session.pop('reset_token', None)
+        return fail('That reset link has expired or been used. Ask for a new one.', expired=True)
+    password = str(body.password or '')
+    problem = auth.password_problem(password)
+    if problem:
+        return fail(problem, field='password')
+    user = auth.consume_reset(token, password)
+    if not user:
+        return fail('That reset link has expired or been used. Ask for a new one.', expired=True)
+    request.session.pop('reset_token', None)
+    auth.sign_in(request, user)
+    return _with_theme(ok(user=auth.public_user(user), profile_complete=auth.profile_complete(user),
+                          message='Password changed. You are signed in.'),
+                       user.get('theme') if user.get('theme') in ('light', 'dark') else 'light')
+
+
 @router.get('/verify/{token}')
 def verify_link(request: Request, token: str):
     """The link from the e-mail. Confirms, signs in, opens Complete Profile."""
@@ -373,9 +450,9 @@ def verify_status(request: Request):
 def complete_profile(request: Request, body: CompleteProfile):
     """The last step: pick a username, a theme and a daily goal."""
     users = db.users()
-    user = auth.find_user(users,
-                          username=request.session.get('username')
-                          or request.session.get('pending_user'))
+    # Through `signed_in_user`, so a session a password reset has ended
+    # cannot rename the account.
+    user = auth.signed_in_user(request) or auth.find_user(users, username=request.session.get('pending_user'))
     if not user:
         return fail('Sign in again to finish setting up.')
     # No verification check. Picking a username, a theme and a daily goal is

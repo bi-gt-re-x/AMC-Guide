@@ -31,6 +31,8 @@ PUBLIC = {
     '/api/auth/providers',           # whether the Google button can work
     '/api/auth/verify_status',       # answers "nobody" rather than refusing
     '/api/auth/complete_profile',    # reads `pending_user`, pre-sign-in
+    '/api/auth/forgot',              # the locked-out reader; same reply for any address
+    '/api/auth/reset',               # keyed on the reset token held in the session
     '/api/avatar',                   # checks the session itself, returns 401
     '/api/set_theme',                # a visitor has a theme too
     # The skill library's written practice steps. The table they come from has

@@ -21,6 +21,13 @@
  *                             │
  *                         Dashboard
  *
+ * Off the log-in panel, "Forgot password?" asks for the email (`forgot`) and
+ * says a link is on its way whether or not there is an account. The link in
+ * the mail is a server route (`/reset/<token>`, backend/routes/auth.py) that
+ * keeps the token in the session and opens `reset`, where the new password is
+ * chosen against the same rules as sign-up. Setting it signs in and ends every
+ * other session of the account.
+ *
  * The server decides everything that matters — who exists, what is verified,
  * which account the session holds. This moves between panels and reports what
  * came back.
@@ -41,7 +48,7 @@ import { Icon } from '@/components/Icon';
 import { passwordOk, passwordRules } from './passwordRules';
 import { AmcProfile } from './AmcProfile';
 
-export type AuthStep = 'choose' | 'login' | 'create' | 'inbox' | 'profile';
+export type AuthStep = 'choose' | 'login' | 'create' | 'inbox' | 'profile' | 'forgot' | 'reset';
 
 const COPY: Record<AuthStep, [string, string]> = {
   choose: ['Welcome', 'Log in or create an account to continue.'],
@@ -49,6 +56,8 @@ const COPY: Record<AuthStep, [string, string]> = {
   create: ['Create account', "Start with your email. It's free."],
   inbox: ['Check your inbox', "Click the link we sent and you're in."],
   profile: ['Your contest', 'A few questions to set up your plan.'],
+  forgot: ['Reset your password', "Enter the email you signed up with and we'll send you a link."],
+  reset: ['Choose a new password', 'It replaces the old one, and signs you out everywhere else.'],
 };
 
 /** Good enough to catch a typo before asking the server. The server decides. */
@@ -118,6 +127,16 @@ export function AuthFlow({
      an account is sent to log in before the rest of the form is filled. */
   const [emailTaken, setEmailTaken] = useState(false);
 
+  /* Forgot password: what came back from asking, and the link a dev server
+     hands back with no mail to send it by. */
+  const [forgotSent, setForgotSent] = useState('');
+  const [forgotLink, setForgotLink] = useState<string | null>(null);
+  /* The new-password panel: whether this browser holds a working link
+     (null while asking), for which address, and the password being typed. */
+  const [resetFor, setResetFor] = useState<{ valid: boolean; email: string | null } | null>(null);
+  const [newPassword, setNewPassword] = useState('');
+  const [showNew, setShowNew] = useState(false);
+
   const card = useRef<HTMLDivElement>(null);
 
   const say = useCallback((text: string, kind: Message['kind'] = 'error') => {
@@ -154,6 +173,24 @@ export function AuthFlow({
     // Once, for the email the page opened with.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  // The new-password panel asks whether the link this browser opened still works.
+  useEffect(() => {
+    if (step !== 'reset') return;
+    let live = true;
+    setResetFor(null);
+    void authService
+      .resetStatus()
+      .then((result) => {
+        if (live) setResetFor(result.success ? { valid: result.valid, email: result.email } : { valid: false, email: null });
+      })
+      .catch(() => {
+        if (live) setResetFor({ valid: false, email: null });
+      });
+    return () => {
+      live = false;
+    };
+  }, [step]);
 
   // The page opens with whatever the URL had to say.
   useEffect(() => setMessage(notice ?? null), [notice]);
@@ -316,8 +353,57 @@ export function AuthFlow({
     }
   }
 
+  async function doForgot(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    const typed = String(new FormData(event.currentTarget).get('email') ?? '').trim();
+    if (!EMAIL_SHAPE.test(typed)) {
+      say('Enter the email you signed up with.');
+      return;
+    }
+    say('Sending…', 'info');
+    try {
+      const result = await authService.forgotPassword(typed);
+      if (!result.success) {
+        say(result.message || "That didn't work.");
+        return;
+      }
+      say('');
+      setForgotSent(result.message);
+      setForgotLink(result.dev_link);
+    } catch {
+      say("Couldn't reach the server.");
+    }
+  }
+
+  async function doReset(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+    if (!passwordOk(newPassword)) {
+      say("Your new password doesn't meet every rule under it yet.");
+      return;
+    }
+    say('Saving your new password…', 'info');
+    try {
+      const result = await authService.resetPassword(newPassword);
+      if (!result.success) {
+        if (result.expired) setResetFor({ valid: false, email: null });
+        say(result.message || "That didn't work.");
+        return;
+      }
+      setNewPassword('');
+      setTheme(result.user.theme || 'light');
+      if (!result.profile_complete) {
+        await toProfile();
+        return;
+      }
+      await finish();
+    } catch {
+      say("Couldn't reach the server.");
+    }
+  }
+
   const strength = strengthOf(password);
   const rules = passwordRules(password);
+  const newRules = passwordRules(newPassword);
 
   /** Whether the address already has an account. Also shows the note. */
   async function checkEmail(address: string): Promise<boolean> {
@@ -384,9 +470,14 @@ export function AuthFlow({
             autoComplete="username"
             required
           />
-          <label className="auth-label" htmlFor="loginPassword">
-            Password
-          </label>
+          <div className="auth-label-row">
+            <label className="auth-label" htmlFor="loginPassword">
+              Password
+            </label>
+            <button type="button" className="auth-reveal" onClick={() => { setForgotSent(''); go('forgot'); }}>
+              Forgot password?
+            </button>
+          </div>
           <input
             className="auth-input"
             type="password"
@@ -578,6 +669,108 @@ export function AuthFlow({
         <button type="button" className="auth-link" onClick={() => void doResend()}>
           Send it again
         </button>
+      </section>
+
+      {/* Forgot password: the email, then "a link is on its way". */}
+      <section className={`auth-step${step === 'forgot' ? '' : ' hidden'}`} data-step="forgot">
+        <form id="forgotForm" noValidate hidden={Boolean(forgotSent)} onSubmit={(e) => void doForgot(e)}>
+          <label className="auth-label" htmlFor="forgotEmail">
+            Email
+          </label>
+          <input
+            className="auth-input"
+            type="email"
+            id="forgotEmail"
+            name="email"
+            autoComplete="email"
+            inputMode="email"
+            required
+          />
+          <button type="submit" className="auth-primary">
+            Send the link
+          </button>
+        </form>
+        {forgotSent && (
+          <>
+            <div className="auth-inbox-mark"><Icon name="mail" /></div>
+            <p className="auth-inbox-text" role="status">{forgotSent}</p>
+            <div className="auth-devlink" hidden={!forgotLink}>
+              <p>No mail server is set up yet, so here's the link:</p>
+              <a href={forgotLink ?? '#'} className="auth-primary">
+                Reset password
+              </a>
+            </div>
+            <button type="button" className="auth-link" onClick={() => setForgotSent('')}>
+              Use a different email
+            </button>
+          </>
+        )}
+        <p className="auth-switch">
+          Remembered it?{' '}
+          <button type="button" className="auth-link" onClick={() => go('login')}>
+            Log in
+          </button>
+        </p>
+      </section>
+
+      {/* A new password, from the link in the email. */}
+      <section className={`auth-step${step === 'reset' ? '' : ' hidden'}`} data-step="reset">
+        {resetFor === null ? (
+          <p className="auth-sub">Checking your link…</p>
+        ) : !resetFor.valid ? (
+          <>
+            <p className="auth-inbox-text">That reset link has expired or been used. Links work once, for an hour.</p>
+            <button type="button" className="auth-primary" onClick={() => { setForgotSent(''); go('forgot'); }}>
+              Send a new link
+            </button>
+          </>
+        ) : (
+          <form id="resetForm" noValidate onSubmit={(e) => void doReset(e)}>
+            {resetFor.email && (
+              <p className="auth-as"><span>{resetFor.email}</span></p>
+            )}
+            {/* For password managers: which account this password is for. */}
+            <input type="text" name="username" autoComplete="username" value={resetFor.email ?? ''} readOnly hidden />
+            <div className="auth-label-row">
+              <label className="auth-label" htmlFor="resetPassword">
+                New password
+              </label>
+              <button
+                type="button"
+                className="auth-reveal"
+                aria-pressed={showNew}
+                aria-controls="resetPassword"
+                onClick={() => setShowNew((was) => !was)}
+              >
+                {showNew ? 'Hide' : 'Show'}
+              </button>
+            </div>
+            <input
+              className="auth-input"
+              type={showNew ? 'text' : 'password'}
+              id="resetPassword"
+              autoComplete="new-password"
+              required
+              aria-describedby="resetRules"
+              value={newPassword}
+              onChange={(event) => setNewPassword(event.target.value)}
+            />
+            <ul className="auth-rules" id="resetRules" aria-label="Your password needs">
+              {newRules.map((rule) => (
+                <li key={rule.key} className={rule.met ? 'is-met' : ''}>
+                  <span className="auth-rule-mark" aria-hidden="true">
+                    {rule.met ? <Icon name="check" /> : null}
+                  </span>
+                  {rule.label}
+                  <span className="sr-only">{rule.met ? ' (done)' : ' (not yet)'}</span>
+                </li>
+              ))}
+            </ul>
+            <button type="submit" className="auth-primary" disabled={!passwordOk(newPassword)}>
+              Save and log in
+            </button>
+          </form>
+        )}
       </section>
 
       {/* The last step: the student's contest, and their plan made from it.

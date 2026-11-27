@@ -24,6 +24,9 @@ vi.mock('@/services', async (importOriginal) => {
       signup: vi.fn(),
       checkEmail: vi.fn(async () => ({ success: true, valid: true, available: true })),
       verifyStatus: vi.fn(async () => ({ success: true, verified: false, signed_in: true })),
+      forgotPassword: vi.fn(),
+      resetStatus: vi.fn(),
+      resetPassword: vi.fn(),
     },
   };
 });
@@ -167,5 +170,56 @@ describe('the login page', () => {
     fireEvent.blur(email);
     expect(await screen.findByText(/already has an AMC Guide account/)).toBeInTheDocument();
     expect(screen.getByRole('button', { name: 'Log in instead' })).toBeInTheDocument();
+  });
+});
+
+describe('forgot password', () => {
+  it('is offered on the log-in panel and asks for the email', async () => {
+    vi.mocked(authService.forgotPassword).mockResolvedValue({
+      success: true, sent: true, dev_link: null,
+      message: 'If an AMC Guide account uses me@example.test, a link to reset its password is on its way.',
+    } as never);
+    open('/login?auth=login', { status: 'signed-out', profileComplete: false });
+    fireEvent.click(screen.getByRole('button', { name: 'Forgot password?' }));
+    await waitFor(() => expect(heading()).toBe('Reset your password'));
+    const form = document.getElementById('forgotForm')!;
+    fireEvent.change(form.querySelector('[name=email]')!, { target: { value: 'me@example.test' } });
+    fireEvent.submit(form);
+    expect(await screen.findByText(/a link to reset its password is on its way/)).toBeInTheDocument();
+    expect(authService.forgotPassword).toHaveBeenCalledWith('me@example.test');
+    expect(form).toHaveAttribute('hidden');
+  });
+
+  it('says when the link has expired and offers a new one', async () => {
+    vi.mocked(authService.resetStatus).mockResolvedValue({ success: true, valid: false, email: null } as never);
+    open('/login?auth=reset', { status: 'signed-out', profileComplete: false });
+    expect(await screen.findByText(/expired or been used/)).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Send a new link' }));
+    await waitFor(() => expect(heading()).toBe('Reset your password'));
+  });
+
+  it('sets the new password against the sign-up rules, then signs in', async () => {
+    const refresh = vi.fn(async () => {});
+    vi.mocked(authService.resetStatus).mockResolvedValue({ success: true, valid: true, email: 'me@example.test' } as never);
+    vi.mocked(authService.resetPassword).mockResolvedValue({
+      success: true, message: 'Password changed.', profile_complete: true, user: { username: 'me', theme: 'light' },
+    } as never);
+    open('/login?auth=reset&next=/dashboard', { status: 'signed-out', profileComplete: false, refresh });
+    expect(await screen.findByText('me@example.test')).toBeInTheDocument();
+    const save = screen.getByRole('button', { name: 'Save and log in' });
+    fireEvent.change(document.getElementById('resetPassword')!, { target: { value: 'short' } });
+    expect(save).toBeDisabled();
+    fireEvent.change(document.getElementById('resetPassword')!, { target: { value: 'A-long-new-password-2' } });
+    expect(save).not.toBeDisabled();
+    fireEvent.click(save);
+    await waitFor(() => expect(authService.resetPassword).toHaveBeenCalledWith('A-long-new-password-2'));
+    expect(await screen.findByText('The dashboard')).toBeInTheDocument();
+    expect(refresh).toHaveBeenCalled();
+  });
+
+  it('keeps a signed-in reader on the new-password panel', () => {
+    vi.mocked(authService.resetStatus).mockResolvedValue({ success: true, valid: true, email: 'me@example.test' } as never);
+    open('/login?auth=reset', { status: 'signed-in', profileComplete: true });
+    expect(heading()).toBe('Choose a new password');
   });
 });

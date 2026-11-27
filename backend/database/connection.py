@@ -267,6 +267,9 @@ ADDED_COLUMNS = (
     ('amc_posts', 'problems', 'TEXT'),
     # The set an answer was given in (amc_set_runs). See data/sql/amc.sql.
     ('amc_attempts', 'set_id', "TEXT DEFAULT ''"),
+    # When the password was last reset: sessions signed in before it are
+    # dropped (backend/tracking/auth.py `signed_in_user`).
+    ('users', 'password_changed_at', 'TEXT'),
 )
 
 # Indexes on columns that ADDED_COLUMNS supplies. Their own list, applied after
@@ -1093,6 +1096,17 @@ ADDED_TABLES = ('''
     )
 ''', '''
     CREATE INDEX IF NOT EXISTS amc_set_runs_user_idx ON amc_set_runs (user_id, started_at)
+''', '''
+    -- Password reset links. The DDL is data/sql/resets.sql's.
+    CREATE TABLE IF NOT EXISTS password_resets (
+        token_hash  TEXT PRIMARY KEY,
+        user_id     TEXT NOT NULL REFERENCES users (username) ON DELETE CASCADE,
+        created_at  TEXT NOT NULL,
+        expires_at  TEXT NOT NULL,
+        used_at     TEXT
+    )
+''', '''
+    CREATE INDEX IF NOT EXISTS password_resets_user_idx ON password_resets (user_id)
 ''', '''
     -- Study plan days marked complete. The DDL is data/sql/amc.sql's.
     CREATE TABLE IF NOT EXISTS amc_plan_days (

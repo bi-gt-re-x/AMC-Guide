@@ -91,6 +91,35 @@ export async function login(
   return result;
 }
 
+// --------------------------------------------------------------------------
+// Forgot the password
+// --------------------------------------------------------------------------
+/**
+ * Ask for a reset link. The answer is the same whether or not the address has
+ * an account (backend/routes/auth.py `forgot`); `dev_link` is only set by a
+ * development server with no mail, for an address that has one.
+ */
+export function forgotPassword(email: string): Promise<ApiResult<{ sent: boolean; message: string; dev_link: string | null }>> {
+  return post('/api/auth/forgot', { email });
+}
+
+/** Whether this browser opened a reset link that still works, and for which address. */
+export function resetStatus(): Promise<ApiResult<{ valid: boolean; email: string | null }>> {
+  return get('/api/auth/reset');
+}
+
+/**
+ * Set the new password from the link this browser opened. The token is in the
+ * session, never in the page, so only the password is sent. Signs in.
+ */
+export async function resetPassword(
+  password: string,
+): Promise<ApiResult<LoginResult & { message: string }> & { field?: string; expired?: boolean }> {
+  const result = await post<LoginResult & { message: string }>('/api/auth/reset', { password });
+  if (result.success) rememberUsername(result.user.username);
+  return result;
+}
+
 export async function logout(): Promise<ApiResult<{ message: string }>> {
   const result = await post<{ message: string }>('/api/logout');
   forgetUsername();

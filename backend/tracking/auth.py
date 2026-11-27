@@ -41,6 +41,7 @@ The session lives in a signed cookie, managed by Starlette's SessionMiddleware
 functions that touch it take the request rather than reaching for a global —
 which is also what makes them testable without a live server.
 """
+import hashlib
 import json
 import os
 import re
@@ -49,7 +50,7 @@ import smtplib
 import ssl
 import urllib.parse
 import urllib.request
-from datetime import date, datetime
+from datetime import date, datetime, timedelta
 from email.message import EmailMessage
 from html import escape
 
@@ -284,6 +285,8 @@ def public_user(user):
 def sign_in(request, user):
     """Put the account in the session and hand back its public shape."""
     request.session['username'] = user['username']
+    # When, so a password reset after this can end the session (`signed_in_user`).
+    request.session['signed_in_at'] = datetime.now().isoformat(timespec='microseconds')
     request.session.pop('pending_user', None)
     return public_user(user)
 
@@ -300,6 +303,14 @@ def signed_in_user(request):
     user = find_user(db.users(), username=username)
     if not user:
         request.session.pop('username', None)
+        return None
+    # The password was reset after this session signed in (or the session is
+    # older than sign-in times, and so older than the reset): it is someone
+    # else's now, or an old device's, and it ends here.
+    changed = user.get('password_changed_at')
+    if changed and (request.session.get('signed_in_at') or '') < changed:
+        request.session.pop('username', None)
+        request.session.pop('signed_in_at', None)
         return None
     return user
 
@@ -453,6 +464,136 @@ def consume_verify_token(token):
     user['verified_at'] = datetime.now().isoformat()
     db.save_user(user)
     return user
+
+
+# --------------------------------------------------------------------------
+# Password reset
+# --------------------------------------------------------------------------
+# "Forgot your password?" mails a link, `/reset/<token>`, to the account's
+# address. The link is the credential, so:
+#
+# * Only a SHA-256 of the token is stored (data/sql/resets.sql), never the token.
+# * It is good for RESET_TTL and once. Using it, or asking for a newer one,
+#   marks every earlier link of the account's used.
+# * Asking says the same thing whether or not an account has that address
+#   (backend/routes/auth.py `forgot`), so the form is not a way to find out
+#   who has an account here.
+# * Setting the new password ends every other session of the account
+#   (`password_changed_at`, read by `signed_in_user`), so someone who had the
+#   old one is signed out wherever they are.
+#
+# A Google account (no password) can set one this way too: the link only
+# reaches whoever reads that inbox, which is what Google's sign-in proves.
+RESET_TTL = timedelta(hours=1)
+
+
+def _token_hash(token):
+    return hashlib.sha256(str(token).encode()).hexdigest()
+
+
+def _reset_sql(statements):
+    con = db.connect()
+    try:
+        with con:
+            for sql, params in statements:
+                con.execute(sql, params)
+    finally:
+        con.close()
+
+
+def new_reset_token(user, now=None):
+    """A fresh reset link's token for `user`; every earlier one is spent."""
+    now = now or datetime.now()
+    token = secrets.token_urlsafe(32)
+    stamp = now.isoformat(timespec='seconds')
+    _reset_sql([
+        ("UPDATE password_resets SET used_at = ? WHERE user_id = ? AND used_at IS NULL",
+         (stamp, user['username'])),
+        ('INSERT INTO password_resets (token_hash, user_id, created_at, expires_at, used_at) '
+         'VALUES (?, ?, ?, ?, NULL)',
+         (_token_hash(token), user['username'], stamp, (now + RESET_TTL).isoformat(timespec='seconds'))),
+    ])
+    return token
+
+
+def reset_user(token, now=None):
+    """The account a reset token is still good for, or None (unknown, used or expired)."""
+    if not token or len(str(token)) > 200:
+        return None
+    now = (now or datetime.now()).isoformat(timespec='seconds')
+    con = db.connect()
+    try:
+        row = con.execute('SELECT user_id FROM password_resets WHERE token_hash = ? AND used_at IS NULL '
+                          'AND expires_at > ?', (_token_hash(token), now)).fetchone()
+    finally:
+        con.close()
+    return find_user(db.users(), username=row[0]) if row else None
+
+
+def consume_reset(token, password, now=None):
+    """Set the account's new password from a good token, and spend every link
+    it has. Returns the user, or None when the token is no good."""
+    user = reset_user(token, now)
+    if not user:
+        return None
+    now = now or datetime.now()
+    user['password_hash'] = hash_password(password)
+    user['password_changed_at'] = now.isoformat(timespec='microseconds')
+    if not user.get('provider'):
+        user['provider'] = 'local'
+    # Following a link sent to the address proves the address, as the
+    # verification link would.
+    if not is_verified(user):
+        user['email_verified'] = True
+        user['verified_at'] = now.isoformat()
+    db.save_user(user)
+    _reset_sql([("UPDATE password_resets SET used_at = ? WHERE user_id = ? AND used_at IS NULL",
+                 (now.isoformat(timespec='seconds'), user['username']))])
+    return user
+
+
+def send_reset(user, token, request=None):
+    """Mail the reset link. Returns (sent, link), as `send_verification` does."""
+    link = '{}/reset/{}'.format(base_url(request), token)
+    name = user.get('name') or user.get('username') or 'there'
+    minutes = int(RESET_TTL.total_seconds() // 60)
+    body = (
+        "Hi {},\n\n"
+        "Someone asked to reset the password for your AMC Guide account. To choose a new one, "
+        "open this link within {} minutes:\n\n"
+        "{}\n\n"
+        "If it wasn't you, ignore this email. Your password stays as it is.\n\n"
+        "AMC Guide\n"
+    ).format(name, minutes, link)
+    try:
+        sent = _send_mail(user['email'], 'Reset your AMC Guide password', body, reset_html(name, link, minutes))
+    except Exception as exc:                  # noqa: BLE001 - report, don't crash the request
+        print('[auth] reset e-mail failed: {}'.format(exc))
+        sent = False
+    if not sent:
+        print('[auth] DEV MODE - password reset link for {}: {}'.format(user['email'], link))
+    return sent, link
+
+
+def reset_html(name, link, minutes):
+    """The reset email's HTML half, styled like the confirmation email."""
+    name, link = escape(str(name)), escape(link, quote=True)
+    return (
+        '<div style="font-family:-apple-system,Segoe UI,Helvetica,Arial,sans-serif;'
+        'max-width:480px;margin:0 auto;padding:24px;color:#1f2933;line-height:1.5">'
+        '<h1 style="font-size:20px;margin:0 0 16px">Reset your password</h1>'
+        '<p style="margin:0 0 16px">Hi {name}, someone asked to reset the password for your AMC Guide '
+        'account. The link works once, for {minutes} minutes.</p>'
+        '<p style="margin:0 0 24px"><a href="{link}" style="display:inline-block;'
+        'background:#2f6fde;color:#ffffff;text-decoration:none;font-weight:600;'
+        'padding:12px 20px;border-radius:8px">Choose a new password</a></p>'
+        '<p style="margin:0 0 8px;font-size:13px;color:#52606d">Button not working? '
+        'Paste this into your browser:</p>'
+        '<p style="margin:0 0 24px;font-size:13px;word-break:break-all">'
+        '<a href="{link}" style="color:#2f6fde">{link}</a></p>'
+        '<p style="margin:0;font-size:13px;color:#52606d">Didn\'t ask for this? Ignore this email; '
+        'your password stays as it is.</p></div>'
+    ).format(name=name, link=link, minutes=minutes)
 
 
 # --------------------------------------------------------------------------
