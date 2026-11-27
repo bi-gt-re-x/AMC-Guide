@@ -19,6 +19,7 @@ import { Link, useNavigate, useParams, useSearchParams } from 'react-router-dom'
 import { useNotice, ErrorState, Loading } from '@/components';
 import { AIHelp } from '@/components/Amc/AIHelp';
 import { MathText } from '@/components/Amc/MathText';
+import { MissReason } from '@/components/Amc/MissReason';
 import {
   AnswerInput,
   clock,
@@ -32,7 +33,9 @@ import {
   useStopwatch,
 } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle, usePageSwap } from '@/hooks';
-import { amc, announceAmcChanged, shortDate, type AttemptReply, type Problem as ProblemData } from '@/services/amc';
+import {
+  amc, announceAmcChanged, shortDate, type AttemptReply, type MissState, type Problem as ProblemData,
+} from '@/services/amc';
 import { activePracticeSet, practiceSetHome, readPracticeSet, updatePracticeSet } from './practiceSetStore';
 import { readWeakRun, readWeakSet, setWeakRun } from './weakSet';
 import { readReviewRun, readReviewSet, setReviewRun } from './reviewSet';
@@ -415,6 +418,18 @@ export default function Problem() {
   const last = data.attempts[data.attempts.length - 1];
   const given = result?.given ?? (seenBefore ? last?.answer : undefined);
   const showKey = result != null || revealed != null || seenBefore;
+  // The miss on show, asked why: the answer just checked, or (reopened, or a
+  // set picked up again) the last answer as the account has it. Never while a
+  // fresh try is under way, and not once a right answer has replaced it.
+  const missNow: MissState | null = (() => {
+    if (revealed || (result && result.correct)) return null;
+    if (result && result.attempt_id) {
+      const stored = data.miss && data.miss.attempt_id === result.attempt_id ? data.miss : null;
+      return stored ?? { attempt_id: result.attempt_id, reason: null, choices: result.reasons ?? [], step: null };
+    }
+    if (result) return data.miss ?? null;
+    return seenBefore && last && !last.correct ? data.miss ?? null : null;
+  })();
 
   return (
     <div className={`amc-page ${swap}`.trim()}>
@@ -529,6 +544,12 @@ export default function Problem() {
                   </button>
                 </span>
               </div>
+            )}
+
+            {/* A miss: why it happened, and the next step that reason calls for. */}
+            {missNow && (
+              <MissReason key={missNow.attempt_id} choices={missNow.choices} reason={missNow.reason}
+                          step={missNow.step} save={(reason) => amc.missReason(missNow.attempt_id, reason)} />
             )}
 
             {/* Keyed to the problem: its hints and explanation belong to this one only. */}

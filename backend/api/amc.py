@@ -11,7 +11,7 @@ from typing import Dict, List, Optional, Union
 from fastapi import APIRouter, Depends, Query, Request
 from pydantic import BaseModel
 
-from backend.amc import catalog, coach, engine, insights, mockscore, planning, practice, results, store, weak
+from backend.amc import catalog, coach, engine, insights, misses, mockscore, planning, practice, results, store, weak
 from backend.amc import official, plan_view, reach, setreport
 from backend.amc import problems as pb
 from backend.amc.scale import TOP
@@ -207,7 +207,9 @@ def dashboard(username: str = Depends(current_username)):
 def analytics(username: str = Depends(current_username)):
     attempts, reviews, hist, review_by_id = _context(username)
     return ok(**insights.analytics(attempts, hist, review_by_id, reviews, store.mocks(username),
-                                   store.plan(username), _today()))
+                                   store.plan(username), _today()),
+              # Why the misses happened, as the student said (backend/amc/misses.py).
+              misses=misses.profile(store.miss_reasons(username), attempts, _today()))
 
 
 def _mock_brief(row):
@@ -377,15 +379,25 @@ def get_problem(problem_id: str, request: Request, topic: str = '', in_list: str
     i = order.index(problem_id) if problem_id in order else -1
     # The level here, and where "Too challenging?" would hold it until.
     theta, topic_theta = reach.levels(hist, _today())
+    # The last answer, if it was a miss: why (if the student has said) and what
+    # to do next, so the page shows it again after a refresh.
+    last = mine[-1] if mine else None
+    miss = None
+    if last and not last['correct'] and last['source'] in ('practice', 'review', 'mock'):
+        reason = last.get('miss_reason') or ''
+        miss = {'attempt_id': last['id'], 'reason': reason or None, 'choices': misses.choices(),
+                'step': misses.next_step(reason, p, hist, review_by_id, _today()) if reason else None}
     return ok(problem=engine.public(p, reveal=revealed),
               reach=reach.view(p, theta, topic_theta,
                                rev.get('parked_level') if rev and rev['status'] == 'parked' else None),
               status=engine.status_of(problem_id, hist, review_by_id),
               # `set_id`: the set run it was given in, so a set reopened (or
               # the page refreshed) part way shows what was answered in it.
-              attempts=[{'answer': a['answer'], 'correct': bool(a['correct']), 'at': a['at'],
-                         'source': a['source'], 'seconds': a['seconds'], 'set_id': a.get('set_id') or ''}
+              attempts=[{'id': a['id'], 'answer': a['answer'], 'correct': bool(a['correct']), 'at': a['at'],
+                         'source': a['source'], 'seconds': a['seconds'], 'set_id': a.get('set_id') or '',
+                         'miss_reason': a.get('miss_reason') or None}
                         for a in mine],
+              miss=miss,
               review=_review_view(rev, hist, review_by_id, _today()) if rev else None,
               related=related,
               topic=topic if in_topic else None,
@@ -429,7 +441,8 @@ def attempt(problem_id: str, body: AttemptBody, username: str = Depends(current_
     correct = given == str(p['answer'])
     today = _today()
     set_id = _set_for(username, body.set_id, problem_id)
-    statements = [store.attempt_rows(username, problem_id, given, correct, body.seconds, source, set_id)]
+    attempt_id = store.new_id()
+    statements = [store.attempt_rows(username, problem_id, given, correct, body.seconds, source, set_id, attempt_id)]
     existing = store.review(username, problem_id)
     new_review = engine.after_answer(existing, problem_id, correct, today)
     if new_review:
@@ -438,7 +451,95 @@ def attempt(problem_id: str, body: AttemptBody, username: str = Depends(current_
     rev = store.review(username, problem_id)
     return ok(correct=correct, given=given, problem=engine.public(p, reveal=True),
               review={'stage': int(rev['stage']), 'due': rev['due'], 'status': rev['status']} if rev else None,
-              moved=bool(new_review), set_id=set_id)
+              moved=bool(new_review), set_id=set_id,
+              # A miss is asked why (POST /api/amc/attempts/{id}/reason).
+              attempt_id=attempt_id, reasons=None if correct else misses.choices())
+
+
+class ReasonBody(BaseModel):
+    #: One of backend/amc/misses.py IDS, or '' to take the reason back.
+    reason: Optional[str] = ''
+
+
+class MockReasonBody(ReasonBody):
+    number: int
+
+
+def _reason_or_fail(reason, allowed):
+    reason = (reason or '').strip()
+    if reason and reason not in allowed:
+        return None, fail('Pick one of the reasons.')
+    return reason, None
+
+
+@router.post('/api/amc/attempts/{attempt_id}/reason')
+def miss_reason(attempt_id: str, body: ReasonBody, username: str = Depends(current_username)):
+    """Why this wrong answer happened, and what to do next (backend/amc/misses.py)."""
+    row = store.attempt(username, attempt_id)
+    if not row:
+        return fail('No such answer.')
+    if row['correct'] or row['source'] not in ('practice', 'review', 'mock'):
+        return fail('Only a wrong answer has a reason to give.')
+    p = pb.get(row['problem_id'])
+    if not p:
+        return fail('No such problem.')
+    reason, bad = _reason_or_fail(body.reason, misses.IDS)
+    if bad:
+        return bad
+    number, level = misses.position(row['problem_id'])
+    store.write(store.miss_reason_rows(username, attempt_id, row['problem_id'], reason, row['source'], number, level))
+    if not reason:
+        return ok(reason=None, step=None)
+    _, _, hist, review_by_id = _context(username)
+    return ok(reason=reason, step=misses.next_step(reason, p, hist, review_by_id, _today()))
+
+
+@router.post('/api/amc/mocks/{mock_id}/reason')
+def mock_miss_reason(mock_id: str, body: MockReasonBody, username: str = Depends(current_username)):
+    """Why a sitting's wrong answer or blank happened. A wrong answer's reason
+    goes on its attempt (so the study plan reads it with the rest); a blank,
+    which has no attempt, is kept against the sitting."""
+    row = store.mock(username, mock_id)
+    if not row or row['kind'] != 'mock':
+        return fail('No such mock.')
+    graded = _graded_rows(row)
+    if graded is None:
+        return fail('That contest is no longer available.')
+    hit = next((r for r in graded['rows'] if r['number'] == body.number), None)
+    if not hit or hit['result'] == 'correct':
+        return fail('Only a wrong answer or a blank has a reason to give.')
+    blank = hit['result'] == 'blank'
+    reason, bad = _reason_or_fail(body.reason, misses.BLANK_REASONS if blank else misses.IDS)
+    if bad:
+        return bad
+    ref = _mock_ref(row, hit)
+    store.write(store.miss_reason_rows(username, ref, hit['problem_id'], reason, 'mock', hit['number'],
+                                       graded['level']))
+    if not reason:
+        return ok(reason=None, step=None)
+    _, _, hist, review_by_id = _context(username)
+    return ok(reason=reason, step=misses.next_step(reason, pb.get(hit['problem_id']), hist, review_by_id, _today()))
+
+
+def _mock_ref(row, graded_row):
+    """Where a sitting's miss keeps its reason: the attempt it was written as
+    (sittings since attempt ids were kept), or the sitting and number."""
+    ids = row['answers'].get('_attempts')
+    if graded_row['result'] == 'wrong' and isinstance(ids, dict) and ids.get(str(graded_row['number'])):
+        return ids[str(graded_row['number'])]
+    return 'mock:{}:{}'.format(row['id'], graded_row['number'])
+
+
+def _graded_rows(row):
+    """A stored sitting graded against the problems it was sat on: {'rows', 'level', 'mock'}, or None."""
+    mock = _gradable(row['contest_id'])
+    if not mock:
+        return None
+    asked = row['answers'].get('_ids')
+    if isinstance(asked, list) and asked and all(pb.get(pid) for pid in asked):
+        mock = {**mock, 'problems': asked}
+    graded = engine.score_mock(mock, row['answers'])
+    return {**graded, 'level': mock['level'], 'mock': mock}
 
 
 @router.post('/api/amc/problems/{problem_id}/reveal')
@@ -1061,11 +1162,14 @@ def submit(contest_id: str, body: SubmitBody, username: str = Depends(current_us
     reviews = {r['problem_id']: r for r in store.reviews(username)}
     statements = []
     answers = {}
+    attempt_ids = {}
     for row in graded['rows']:
         answers[str(row['number'])] = row['given']
         correct = row['result'] == 'correct'
         if row['result'] != 'blank':
-            statements.append(store.attempt_rows(username, row['problem_id'], row['given'], correct, 0, 'mock'))
+            attempt_ids[str(row['number'])] = store.new_id()
+            statements.append(store.attempt_rows(username, row['problem_id'], row['given'], correct, 0, 'mock',
+                                                 attempt_id=attempt_ids[str(row['number'])]))
         # A blank is still a problem you could not do: it goes to review
         # without counting as an attempt.
         new_review = engine.after_answer(reviews.get(row['problem_id']), row['problem_id'], correct, today)
@@ -1075,6 +1179,8 @@ def submit(contest_id: str, body: SubmitBody, username: str = Depends(current_us
     # Which problems this sitting was, in order, so a mock that is later
     # reordered or revised is still graded against what was actually asked.
     answers['_ids'] = list(mock['problems'])
+    # Each answer's attempt, so a miss's reason given on the report lands on it.
+    answers['_attempts'] = attempt_ids
     mock_id, insert = store.mock_row(username, contest_id, 'mock', answers, graded['score'], graded['correct'],
                                      graded['wrong'], graded['blank'], body.seconds)
     statements.append(insert)
@@ -1089,20 +1195,22 @@ def mock_result(mock_id: str, username: str = Depends(current_username)):
     row = store.mock(username, mock_id)
     if not row or row['kind'] != 'mock':
         return fail('No such mock.')
-    mock = _gradable(row['contest_id'])
-    if not mock:
+    graded = _graded_rows(row)
+    if graded is None:
         return fail('That contest is no longer available.')
-    asked = row['answers'].get('_ids')
-    if isinstance(asked, list) and asked and all(pb.get(pid) for pid in asked):
-        mock = {**mock, 'problems': asked}
-    graded = engine.score_mock(mock, row['answers'])
+    mock = graded['mock']
     report = engine.mock_report(mock, graded)
+    given = {(r['ref'], r['problem_id']): r['reason'] for r in store.miss_reasons(username)}
     problems = []
     for r in graded['rows']:
         p = pb.get(r['problem_id'])
+        missed = r['result'] != 'correct'
         problems.append({**r, 'rating': p.get('rating'), 'statement': p['statement'], 'topic_name': catalog.TOPIC_BY_ID[p['topic']]['name'],
                          'solution': p['solution'], 'insight': p['insight'], 'trap': p['trap'],
-                         'choices': p['choices'], 'diagram': p.get('diagram') or ''})
+                         'choices': p['choices'], 'diagram': p.get('diagram') or '',
+                         # Why it was missed, and the reasons that fit (a blank's are fewer).
+                         'miss_reason': given.get((_mock_ref(row, r), r['problem_id'])) if missed else None,
+                         'reasons': misses.choices(blank=r['result'] == 'blank') if missed else None})
     others = [m for m in store.mocks(username) if m['contest_id'] == row['contest_id'] and m['kind'] == 'mock']
     return ok(result={**_mock_brief(row), **catalog.FORMATS[mock['level']]},
               contest={'id': mock['id'], 'name': mock['name'], 'level': mock['level'],

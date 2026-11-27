@@ -105,7 +105,7 @@ def _graded(m):
     if not all(pb.get(pid) for pid in ids):
         return None
     return engine.score_mock({'level': level, 'problems': ids},
-                             {k: v for k, v in m['answers'].items() if k != '_ids'})
+                             {k: v for k, v in m['answers'].items() if not k.startswith('_')})
 
 
 def mistakes(mocks, level=None, today=None):

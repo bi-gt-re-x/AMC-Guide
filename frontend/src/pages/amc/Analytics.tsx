@@ -6,6 +6,10 @@
  *   Performance          week by week: how often you solve, in which
  *                        categories, how accurately, how hard the problems
  *                        were, and your best test score that week.
+ *   Why you miss         the reasons given after each miss (careless, method,
+ *                        misread, time, guess), most common first, where on
+ *                        the paper, and the training each calls for
+ *                        (backend/amc/misses.py).
  *   Your sets            every practice, review and weak-topics set as it went
  *                        (backend/amc/setreport.py), and accuracy by kind of
  *                        set: which training is landing. Each opens its report.
@@ -28,7 +32,9 @@ import { Coach } from '@/components/Amc/Insights';
 import { PrioritiesCard, Takeaways, WeaknessLines } from '@/components/Amc/Study';
 import { CategoryDot, Empty, Meter, PageHeader, ratingText } from '@/components/Amc/bits';
 import { useApi, useDocumentTitle } from '@/hooks';
-import { amc, pct, shortDate, type Analytics as AnalyticsData, type CategoryId, type SetBrief } from '@/services/amc';
+import {
+  amc, pct, shortDate, type Analytics as AnalyticsData, type CategoryId, type MissProfile, type SetBrief,
+} from '@/services/amc';
 import '@/styles/amc.css';
 
 function tone(accuracy: number | null): 'good' | 'warn' | 'bad' {
@@ -126,6 +132,59 @@ function MockLosses({ lost }: { lost?: AnalyticsData['mock_mistakes'] }) {
         <p className="am-muted am-an-weak-note">No points lost in your recent sittings.</p>
       )}
     </>
+  );
+}
+
+/**
+ * Why you miss: the reasons picked after each wrong answer, over the last
+ * three months. The most common one leads, with where on the paper it
+ * happens; each reason has the training it calls for, in its worst topic.
+ */
+function WhyYouMiss({ misses }: { misses?: MissProfile }) {
+  if (!misses) return null;
+  const most = misses.reasons[0]?.count ?? 1;
+  return (
+    <section className="am-card am-why">
+      <div className="am-card-head">
+        <h2>Why you miss</h2>
+        <span className="am-muted" style={{ fontSize: 12 }}>
+          {misses.total ? `${misses.total} tagged in the last ${misses.window_days} days` : 'from the reasons you give'}
+        </span>
+      </div>
+      {misses.total ? (
+        <>
+          <p className="am-why-headline">
+            {misses.headline ?? 'Tag a few more misses and the pattern shows here.'}
+          </p>
+          <ol className="am-why-list">
+            {misses.reasons.map((r) => (
+              <li key={r.id}>
+                <div className="am-why-row">
+                  <span className="am-why-name">{r.label}</span>
+                  <span className="am-muted">
+                    {r.count} · {pct(r.share)}{r.band ? ` · mostly ${r.band}` : ''}{r.topic ? ` · most in ${r.topic.name}` : ''}
+                  </span>
+                </div>
+                <Meter value={r.count / most} tone={r.id === misses.top ? 'bad' : 'warn'} />
+                {r.action && <Link className="am-link am-why-go" to={r.action.to}>{r.action.label}</Link>}
+              </li>
+            ))}
+          </ol>
+        </>
+      ) : (
+        <Empty title="No reasons yet">
+          After a wrong answer, pick why you missed it: a careless slip, a method you didn't know, a misreading,
+          running out of time, or a guess. Each one sends you to different practice, and after a few the pattern
+          shows here.
+        </Empty>
+      )}
+      {misses.untagged > 0 && (
+        <p className="am-muted am-why-untagged">
+          {misses.untagged} miss{misses.untagged === 1 ? '' : 'es'} from the last 30 days {misses.untagged === 1 ? 'has' : 'have'} no
+          reason yet. Open one from <Link className="am-link" to="/review">Review</Link> or a mock report to say why.
+        </p>
+      )}
+    </section>
   );
 }
 
@@ -236,6 +295,8 @@ export default function Analytics() {
               </Empty>
             )}
           </section>
+
+          <WhyYouMiss misses={data.misses} />
 
           <SetsSection />
 

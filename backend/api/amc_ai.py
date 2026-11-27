@@ -11,7 +11,7 @@ from typing import Optional
 from fastapi import APIRouter, Depends
 from pydantic import BaseModel
 
-from backend.amc import ai, catalog, create, engine, planning, smart, store
+from backend.amc import ai, catalog, create, engine, misses, planning, smart, store
 from backend.amc import problems as pb
 from backend.api.guard import current_username
 from backend.api.reply import fail, ok
@@ -126,7 +126,11 @@ def diagnose(body: DiagnoseBody, username: str = Depends(current_username)):
     stats = smart.analyze(attempts, hist, review_by_id, store.mocks(username), plan)
     try:
         study = planning.analyze(attempts, hist, stats['level'], goal=stats['goal'])
-        found = ai.ask(username, DIAGNOSE_SYSTEM, smart.ai_brief(stats, plan) + '\n' + planning.brief(study),
+        # Why the misses happened, in the student's own words (backend/amc/misses.py).
+        told = misses.profile(store.miss_reasons(username), attempts)
+        said = '\nWhy the misses happened, as the student tagged them: {}'.format(
+            '; '.join('{} {}'.format(r['count'], r['label'].lower()) for r in told['reasons'])) if told['reasons'] else ''
+        found = ai.ask(username, DIAGNOSE_SYSTEM, smart.ai_brief(stats, plan) + '\n' + planning.brief(study) + said,
                        DIAGNOSE_SCHEMA,
                        instruction='Read these results and tell the student what to do this week.')
     except ai.AIUnavailable as exc:

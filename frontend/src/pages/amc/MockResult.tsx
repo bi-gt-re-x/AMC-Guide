@@ -2,12 +2,14 @@
  * A graded mock: the score, where the points went (by topic and by stretch of
  * the paper), and every problem with your answer, the key and the solution.
  */
+import { useState } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
 import { MathText } from '@/components/Amc/MathText';
 import { DiagramNote, Difficulty, Meter, PageHeader, Solution, StandingNote } from '@/components/Amc/bits';
+import { MissReason } from '@/components/Amc/MissReason';
 import { useApi, useDocumentTitle, usePageSwap } from '@/hooks';
-import { amc, shortDate } from '@/services/amc';
+import { amc, shortDate, type MissReasonId } from '@/services/amc';
 import { clock } from '@/components/Amc/bits';
 import '@/styles/amc.css';
 
@@ -15,6 +17,8 @@ export default function MockResult() {
   const { mockId = '' } = useParams();
   const { data, error, loading, refreshing, reload } = useApi(() => amc.mock(mockId), [mockId]);
   const swap = usePageSwap(mockId, loading || refreshing);
+  // Reasons given on this visit, by problem number (null: taken back), so the count above the list keeps up.
+  const [told, setTold] = useState<Record<number, MissReasonId | null>>({});
   useDocumentTitle(data ? `${data.contest.name} report` : 'Mock report');
   if (loading && !data) return <Loading label="Grading" />;
   if (error || !data) return <ErrorState message={error ?? 'Could not load this report.'} onRetry={reload} />;
@@ -24,6 +28,8 @@ export default function MockResult() {
   const fmt = (v: string | number) => (aime ? String(v).padStart(3, '0') : String(v));
   const worst = report.topics.filter((t) => t.lost > 0).slice(0, 6);
   const maxLost = Math.max(1, ...report.bands.map((b) => b.lost));
+  const missed = rows.filter((r) => r.reasons).length;
+  const untold = rows.filter((r) => r.reasons && !(r.number in told ? told[r.number] : r.miss_reason)).length;
 
   return (
     <div className={`amc-page ${swap}`.trim()}>
@@ -80,7 +86,14 @@ export default function MockResult() {
       </div>
 
       <section className="am-card">
-        <div className="am-card-head"><h2>Problem by problem</h2></div>
+        <div className="am-card-head">
+          <h2>Problem by problem</h2>
+          {missed > 0 && (
+            <span className="am-muted" style={{ fontSize: 12 }}>
+              {untold ? `Say why for ${untold} of ${missed} misses: it shapes what you practice next` : 'Every miss has a reason'}
+            </span>
+          )}
+        </div>
         {rows.map((r) => (
           <div key={r.number} className="am-result-row">
             <span className="am-result-num">{r.number}</span>
@@ -91,6 +104,14 @@ export default function MockResult() {
               </div>
               <MathText text={r.statement} as="p" className="am-statement" />
               {r.diagram && <DiagramNote diagram={r.diagram} />}
+              {r.reasons && (
+                <MissReason compact choices={r.reasons} reason={r.miss_reason ?? null} step={null}
+                            save={async (reason) => {
+                              const reply = await amc.mockMissReason(mockId, r.number, reason);
+                              if (reply.success) setTold((was) => ({ ...was, [r.number]: reply.reason }));
+                              return reply;
+                            }} />
+              )}
               {r.solution && (
                 <details>
                   <summary>Solution</summary>

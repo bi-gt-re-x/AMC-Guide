@@ -43,22 +43,59 @@ def attempts(user):
     """Every answer, oldest first, with the kind and mode of the set it was
     given in ('' for a problem answered on its own): a mixed set hides the
     topic and a timed one runs on a clock, which the analysis reads."""
-    rows = _read('SELECT a.problem_id, a.answer, a.correct, a.seconds, a.source, a.at, a.set_id, '
-                 'r.kind AS set_kind, r.mode AS set_mode '
+    rows = _read('SELECT a.id, a.problem_id, a.answer, a.correct, a.seconds, a.source, a.at, a.set_id, '
+                 'r.kind AS set_kind, r.mode AS set_mode, m.reason AS miss_reason '
                  'FROM amc_attempts a LEFT JOIN amc_set_runs r ON r.id = a.set_id AND r.user_id = a.user_id '
+                 'LEFT JOIN amc_miss_reasons m ON m.user_id = a.user_id AND m.ref = a.id AND m.problem_id = a.problem_id '
                  'WHERE a.user_id = ? ORDER BY a.at, a.rowid', (user,))
     for row in rows:
         row['set_id'] = row.get('set_id') or ''
         row['set_kind'] = row.get('set_kind') or ''
         row['set_mode'] = row.get('set_mode') or ''
+        row['miss_reason'] = row.get('miss_reason') or ''
     return rows
 
 
-def attempt_rows(user, problem_id, answer, correct, seconds, source, set_id=''):
+def attempt(user, attempt_id):
+    """One of the account's answers by id, or None."""
+    rows = _read('SELECT id, problem_id, answer, correct, seconds, source, at, set_id FROM amc_attempts '
+                 'WHERE user_id = ? AND id = ?', (user, attempt_id))
+    return rows[0] if rows else None
+
+
+def new_id():
+    return uuid.uuid4().hex
+
+
+def attempt_rows(user, problem_id, answer, correct, seconds, source, set_id='', attempt_id=None):
+    """The INSERT for one answer. Pass `attempt_id` (from `new_id`) to know the
+    row's id before it is written."""
     return ('INSERT INTO amc_attempts (id, user_id, problem_id, answer, correct, seconds, source, at, set_id) '
             'VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)',
-            (uuid.uuid4().hex, user, problem_id, str(answer), 1 if correct else 0,
+            (attempt_id or uuid.uuid4().hex, user, problem_id, str(answer), 1 if correct else 0,
              int(seconds or 0), source, _now(), set_id or ''))
+
+
+# -- Why a miss happened ----------------------------------------------------
+def miss_reasons(user):
+    """Every reason the account has given for a miss, oldest first."""
+    rows = _read('SELECT ref, problem_id, reason, source, number, level, at FROM amc_miss_reasons '
+                 'WHERE user_id = ? ORDER BY at', (user,))
+    for row in rows:
+        row['number'] = int(row.get('number') or 0)
+        row['level'] = row.get('level') or ''
+    return rows
+
+
+def miss_reason_rows(user, ref, problem_id, reason, source, number, level):
+    """Set (or, with `reason` falsy, clear) the reason for one miss."""
+    statements = [('DELETE FROM amc_miss_reasons WHERE user_id = ? AND ref = ? AND problem_id = ?',
+                   (user, ref, problem_id))]
+    if reason:
+        statements.append(('INSERT INTO amc_miss_reasons (user_id, ref, problem_id, reason, source, number, level, at) '
+                           'VALUES (?, ?, ?, ?, ?, ?, ?, ?)',
+                           (user, ref, problem_id, reason, source, int(number or 0), level or '', _now())))
+    return statements
 
 
 # -- Sets walked one problem after another ------------------------------------
@@ -187,7 +224,10 @@ def mock_row(user, contest_id, kind, answers, score, correct, wrong, blank, seco
 
 
 def mock_delete(user, mock_id):
-    _write([('DELETE FROM amc_mocks WHERE user_id = ? AND id = ?', (user, mock_id))])
+    # A blank's reason is keyed to the sitting, so it goes with it. (A wrong
+    # answer's is keyed to its attempt, which stays, as the attempts do.)
+    _write([('DELETE FROM amc_mocks WHERE user_id = ? AND id = ?', (user, mock_id)),
+            ('DELETE FROM amc_miss_reasons WHERE user_id = ? AND ref LIKE ?', (user, 'mock:{}:%'.format(mock_id)))])
 
 
 # -- Plan -------------------------------------------------------------------

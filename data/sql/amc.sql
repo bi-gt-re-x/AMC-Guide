@@ -50,6 +50,29 @@ CREATE TABLE IF NOT EXISTS amc_set_runs (
 
 CREATE INDEX IF NOT EXISTS amc_set_runs_user_idx ON amc_set_runs (user_id, started_at);
 
+-- Why a miss happened, in the student's own words: picked after a wrong answer
+-- (or a blank in a sitting) from five reasons. `ref` is the amc_attempts row
+-- the miss was, or for a sitting's blank (no attempt) 'mock:<mock id>:<number>'.
+-- `number` is where the problem sits on its paper (0 when it has none) and
+-- `level` the paper's contest, so the reasons can be read by stretch of the
+-- paper. Read by backend/amc/misses.py and, joined to the attempts, by the
+-- weakness kinds in backend/amc/planning.py.
+CREATE TABLE IF NOT EXISTS amc_miss_reasons (
+    user_id     TEXT NOT NULL REFERENCES users (username) ON DELETE CASCADE,
+    ref         TEXT NOT NULL,
+    problem_id  TEXT NOT NULL,
+    reason      TEXT NOT NULL,
+    source      TEXT NOT NULL DEFAULT 'practice',
+    number      INTEGER NOT NULL DEFAULT 0,
+    level       TEXT DEFAULT '',
+    at          TEXT NOT NULL,
+    PRIMARY KEY (user_id, ref, problem_id),
+    CHECK (reason IN ('careless', 'method', 'misread', 'time', 'guess')),
+    CHECK (source IN ('practice', 'review', 'mock'))
+);
+
+CREATE INDEX IF NOT EXISTS amc_miss_reasons_user_idx ON amc_miss_reasons (user_id, at);
+
 -- A day of the study plan the student marked complete: every item on that
 -- day's checklist ticked, then confirmed (the dashboard's "Mark the day
 -- complete"). Unticking an item that day removes the row again. Kept for good,

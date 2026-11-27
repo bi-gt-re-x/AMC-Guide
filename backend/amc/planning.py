@@ -335,7 +335,31 @@ def classify(level, theta, problems, topic_theta=None):
     if relapses >= 2:
         out['retention'] = {'count': relapses, 'score': min(1.0, relapses / max(3, len(firsts)) * 2),
                             'evidence': '{} solved once and missed again later'.format(relapses)}
+    # What the student said about the misses (backend/amc/misses.py): a reason
+    # given is direct evidence of the kind it names. Two of the same say it on
+    # their own; any adds weight to what the answers already show.
+    from backend.amc.misses import KIND as REASON_KIND
+    told = {}
+    for p, t in firsts:
+        for a in t:
+            kind = REASON_KIND.get(a.get('miss_reason') or '')
+            if kind:
+                told[kind] = told.get(kind, 0) + 1
+    for kind, n in told.items():
+        said = TOLD[kind].format(n=n, s='' if n == 1 else 'es')
+        if kind in out:
+            out[kind]['count'] += n
+            out[kind]['score'] = min(1.0, out[kind]['score'] + 0.15 * n)
+            out[kind]['evidence'] += '; ' + said
+        elif n >= 2:
+            out[kind] = {'count': n, 'score': min(1.0, n / max(4, len(firsts)) * 2), 'evidence': said}
     return out
+
+
+#: How a weakness kind's evidence reads when it comes from the reasons given.
+TOLD = {'execution': 'you put {n} miss{s} down to a slip or misreading',
+        'conceptual': 'you said {n} miss{s} came from not knowing the method, or guessing',
+        'speed': 'you ran out of time on {n} miss{s}'}
 
 
 #: The share of the points a topic lost in recent timed sittings (per sitting)

@@ -745,3 +745,136 @@ describe('A topic practice set', () => {
     expect(screen.queryByRole('link', { name: problem.problem.topic_name })).not.toBeInTheDocument();
   });
 });
+
+describe('Why did you miss it?', () => {
+  const CHOICES = [
+    { id: 'careless', label: 'Careless slip', means: 'I knew how, but slipped.' },
+    { id: 'method', label: 'Didn’t know the method', means: 'I didn’t see how to start.' },
+    { id: 'misread', label: 'Misread it', means: 'I answered a different question.' },
+    { id: 'time', label: 'Ran out of time', means: 'I could have got it with more time.' },
+    { id: 'guess', label: 'Guessed', means: 'I picked without working it out.' },
+  ];
+  const CARELESS = {
+    reason: 'careless', label: 'Careless slip', title: 'Win back the slip', body: 'A slip is the cheapest point there is.',
+    idea: null, problems: [], action: { label: 'Accuracy drill: Circles', to: '/practice/circles?mode=accuracy' }, more: null,
+  };
+  const METHOD = {
+    reason: 'method', label: 'Didn’t know the method', title: 'Learn the idea, then use it twice',
+    body: 'Read the worked solution below, then try two problems that use casework too.',
+    idea: { technique: 'casework', name: 'Casework', text: 'Split into disjoint cases that cover everything, then add.' },
+    problems: [{ id: 'step-10-05', short: 'S10·5', rating: 3, topic_name: 'Circles', source: 'Step Mock AMC 10 #5',
+                 preview: 'How many ways', why: 'Uses casework' }],
+    action: null, more: { label: 'Every casework problem', to: '/problems?technique=casework&sort=difficulty' },
+  };
+  const choice = (letter: string) => document.querySelectorAll('.am-choice')['ABCDE'.indexOf(letter)]!;
+  const fresh = { ...problem, success: true, attempts: [], miss: null };
+
+  it('asks after a wrong answer, and the reason picked decides the next step', async () => {
+    vi.spyOn(amc, 'problem').mockResolvedValue(fresh as any);
+    vi.spyOn(amc, 'attempt').mockResolvedValue({
+      success: true, correct: false, given: 'B', problem: problem.problem, review: null, moved: true, set_id: '',
+      attempt_id: 'att-1', reasons: CHOICES,
+    } as any);
+    const tag = vi.spyOn(amc, 'missReason').mockImplementation((_id: string, reason: string) =>
+      Promise.resolve({ success: true, reason, step: reason === 'method' ? METHOD : CARELESS } as any));
+    show('/problems/step-10-01', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    fireEvent.click(choice('B'));
+    fireEvent.click(screen.getByRole('button', { name: 'Check answer' }));
+    expect(await screen.findByText('Why did you miss it?')).toBeInTheDocument();
+    expect(screen.getAllByRole('button', { pressed: false }).filter((b) => b.classList.contains('am-chip'))).toHaveLength(5);
+
+    fireEvent.click(screen.getByRole('button', { name: 'Careless slip' }));
+    expect(await screen.findByText('Win back the slip')).toBeInTheDocument();
+    expect(tag).toHaveBeenCalledWith('att-1', 'careless');
+    expect(screen.getByRole('link', { name: 'Accuracy drill: Circles' })).toHaveAttribute('href', '/practice/circles?mode=accuracy');
+
+    // Changed: the method gets its idea and problems that use it.
+    fireEvent.click(screen.getByRole('button', { name: 'Change reason' }));
+    fireEvent.click(await screen.findByRole('button', { name: 'Didn’t know the method' }));
+    expect(await screen.findByText('Learn the idea, then use it twice')).toBeInTheDocument();
+    expect(tag).toHaveBeenLastCalledWith('att-1', 'method');
+    expect(screen.getByText(/Split into disjoint cases/)).toBeInTheDocument();
+    expect(document.querySelector('a[href="/problems/step-10-05"]')).not.toBeNull();
+    expect(screen.getByText('Uses casework')).toBeInTheDocument();
+  });
+
+  it('is not asked after a right answer', async () => {
+    vi.spyOn(amc, 'problem').mockResolvedValue(fresh as any);
+    vi.spyOn(amc, 'attempt').mockResolvedValue({
+      success: true, correct: true, given: 'D', problem: problem.problem, review: null, moved: false, set_id: '',
+      attempt_id: 'att-2', reasons: null,
+    } as any);
+    show('/problems/step-10-01', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    fireEvent.click(choice('D'));
+    fireEvent.click(screen.getByRole('button', { name: 'Check answer' }));
+    expect(await screen.findByText('Correct.')).toBeInTheDocument();
+    expect(screen.queryByText('Why did you miss it?')).not.toBeInTheDocument();
+  });
+
+  it('shows the next step again when a missed problem is reopened', async () => {
+    vi.spyOn(amc, 'problem').mockResolvedValue({
+      ...problem, success: true,
+      attempts: [{ id: 'att-3', answer: 'B', correct: false, at: '2026-11-12T10:00:00', seconds: 60, source: 'practice',
+                   miss_reason: 'careless' }],
+      miss: { attempt_id: 'att-3', reason: 'careless', choices: CHOICES, step: CARELESS },
+    } as any);
+    show('/problems/step-10-01', '/problems/:problemId', <Problem />);
+    expect(await screen.findByText('Win back the slip')).toBeInTheDocument();
+    expect(screen.getByText(/Next step · Careless slip/)).toBeInTheDocument();
+  });
+
+  it('asks for each wrong answer and blank on a mock report, and counts the ones left', async () => {
+    const wrong = mock.rows.find((r) => r.result === 'wrong')!;
+    vi.spyOn(amc, 'mock').mockResolvedValue({
+      ...mock, success: true,
+      rows: mock.rows.map((r) => (r.result === 'correct' ? { ...r, reasons: null, miss_reason: null }
+        : { ...r, reasons: r.result === 'blank' ? CHOICES.filter((c) => c.id === 'method' || c.id === 'time') : CHOICES,
+            miss_reason: null })),
+    } as any);
+    const tag = vi.spyOn(amc, 'mockMissReason').mockResolvedValue({
+      success: true, reason: 'time', step: { ...CARELESS, reason: 'time', title: 'Practice under the clock',
+                                            action: { label: 'Timed set: Circles', to: '/practice/circles?mode=timed' } },
+    } as any);
+    show(`/mocks/${mock.result.id}`, '/mocks/:mockId', <MockResult />);
+    await settled(new RegExp(mock.contest.name));
+    const missed = mock.rows.filter((r) => r.result !== 'correct').length;
+    expect(screen.getByText(`Say why for ${missed} of ${missed} misses: it shapes what you practice next`)).toBeInTheDocument();
+    fireEvent.click(screen.getAllByRole('button', { name: 'Ran out of time' })[0]!);
+    await waitFor(() => expect(tag).toHaveBeenCalledWith(mock.result.id, wrong.number, 'time'));
+    expect(await screen.findByRole('link', { name: 'Timed set: Circles →' })).toHaveAttribute('href', '/practice/circles?mode=timed');
+    const left = missed - 1;
+    expect(screen.getByText(left ? `Say why for ${left} of ${missed} misses: it shapes what you practice next`
+      : 'Every miss has a reason')).toBeInTheDocument();
+  });
+
+  it('Analytics: the most common reason leads, with its training', async () => {
+    vi.spyOn(amc, 'analytics').mockResolvedValue({
+      ...analytics,
+      misses: {
+        total: 4, untagged: 2, window_days: 90, top: 'careless', choices: CHOICES,
+        headline: 'Your most common reason is careless slips: 3 of your last 4 tagged misses, mostly on #1–10.',
+        reasons: [
+          { id: 'careless', label: 'Careless slip', phrase: 'careless slips', count: 3, share: 0.75, band: '#1–10',
+            topic: { id: 'circles', name: 'Circles' }, action: { label: 'Accuracy drill: Circles', to: '/practice/circles?mode=accuracy' } },
+          { id: 'time', label: 'Ran out of time', phrase: 'running out of time', count: 1, share: 0.25, band: null,
+            topic: null, action: null },
+        ],
+      },
+    } as any);
+    show('/analytics', '/analytics', <Analytics />);
+    expect(await screen.findByText(/Your most common reason is careless slips/)).toBeInTheDocument();
+    expect(screen.getByRole('link', { name: 'Accuracy drill: Circles' })).toHaveAttribute('href', '/practice/circles?mode=accuracy');
+    expect(screen.getByText(/2 misses from the last 30 days have no/)).toBeInTheDocument();
+  });
+
+  it('Analytics: says how it works before any reason is given', async () => {
+    vi.spyOn(amc, 'analytics').mockResolvedValue({
+      ...analytics,
+      misses: { total: 0, untagged: 0, window_days: 90, top: null, choices: CHOICES, headline: null, reasons: [] },
+    } as any);
+    show('/analytics', '/analytics', <Analytics />);
+    expect(await screen.findByText('No reasons yet')).toBeInTheDocument();
+  });
+});

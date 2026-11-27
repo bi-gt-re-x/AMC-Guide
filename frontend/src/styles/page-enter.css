@@ -166,20 +166,12 @@
     }
 }
 
-/* The spinner waits a beat before it shows: most pages load faster than that,
-   and a spinner flashed for a frame between two pages reads as a flicker. */
-.page-state-loading {
-    animation: pg-wait .24s ease .16s backwards;
-}
-@keyframes pg-wait {
-    from { opacity: 0; }
-    to { opacity: 1; }
-}
+/* The spinner already waits a beat before it shows (styles/page-state.css),
+   so a spinner flashed for a frame between two pages never reads as a flicker. */
 
 @media (prefers-reduced-motion: reduce) {
     .app-main > .amc-page > *,
-    .app-main > .amc-page > .pg-stagger > *,
-    .page-state-loading {
+    .app-main > .amc-page > .pg-stagger > * {
         animation: none;
     }
     /* Still dimmed while the next one loads, so it is clear which is showing; just not moved. */

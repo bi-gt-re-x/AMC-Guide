@@ -577,6 +577,8 @@ export interface MockMistakes {
 }
 
 export interface Analytics {
+  /** Why the misses happen, as tagged (backend/amc/misses.py). */
+  misses?: MissProfile;
   /** Topics by expected score gain, and the kinds of weakness (backend/amc/planning.py). */
   priorities: StudyPriority[];
   /** Where timed sittings lose points: the top of the Weaknesses card. */
@@ -665,7 +667,12 @@ export interface ProblemDetail {
   problem: Problem;
   status: Status;
   /** `set_id`: the stored set (amc_set_runs.id) it was answered in, '' for none. */
-  attempts: { answer: string; correct: boolean; at: string; source: string; seconds: number; set_id?: string }[];
+  attempts: {
+    id?: string; answer: string; correct: boolean; at: string; source: string; seconds: number; set_id?: string;
+    miss_reason?: MissReasonId | null;
+  }[];
+  /** The last answer, when it was a miss: why and what next. */
+  miss?: MissState | null;
   review: ReviewItem | null;
   /** Whether it is out of reach of the account's level for now. */
   reach: Reach;
@@ -678,6 +685,60 @@ export interface ProblemDetail {
   position?: { at: number; of: number } | null;
 }
 
+/** Why a miss happened (backend/amc/misses.py). */
+export type MissReasonId = 'careless' | 'method' | 'misread' | 'time' | 'guess';
+
+export interface MissChoice { id: MissReasonId; label: string; means: string }
+
+/** A problem suggested after a miss. */
+export interface MissProblem {
+  id: string;
+  short: string;
+  rating: number | null;
+  topic_name: string;
+  source: string;
+  preview: string;
+  /** Why this one: "Uses casework", "A related idea: …". */
+  why?: string;
+}
+
+/** What to do after a miss put down to a reason. */
+export interface MissStep {
+  reason: MissReasonId;
+  label: string;
+  title: string;
+  body: string;
+  /** The technique's idea, when the method was the gap. */
+  idea: { technique: string; name: string; text: string } | null;
+  problems: MissProblem[];
+  /** A practice set to go to. */
+  action: { label: string; to: string } | null;
+  more: { label: string; to: string } | null;
+}
+
+/** The last answer's miss, on the problem page: why, if said, and the next step. */
+export interface MissState {
+  attempt_id: string;
+  reason: MissReasonId | null;
+  choices: MissChoice[];
+  step: MissStep | null;
+}
+
+/** Why the misses happen, from the reasons given (Analytics). */
+export interface MissProfile {
+  total: number;
+  /** Wrong answers in the last 30 days with no reason yet. */
+  untagged: number;
+  window_days: number;
+  headline: string | null;
+  top: MissReasonId | null;
+  reasons: {
+    id: MissReasonId; label: string; phrase: string; count: number; share: number;
+    band: string | null; topic: { id: string; name: string } | null; action: { label: string; to: string } | null;
+  }[];
+  choices: MissChoice[];
+}
+
 export interface AttemptReply {
   correct: boolean;
   given: string;
@@ -688,6 +749,10 @@ export interface AttemptReply {
   set_id?: string;
   /** Seconds it took (kept by the page, so a set reopened shows the time it was answered in). */
   seconds?: number;
+  /** The answer's id, to say why it was missed. */
+  attempt_id?: string;
+  /** The reasons to choose from, on a miss; null when right. */
+  reasons?: MissChoice[] | null;
 }
 
 /** A set walked one problem after another, as stored (backend/amc/setreport.py). */
@@ -936,6 +1001,9 @@ export interface MockRow {
   trap: string | null;
   choices: string[] | null;
   diagram: string;
+  /** Why it was missed, if said; and the reasons that fit (fewer for a blank). Null when right. */
+  miss_reason?: MissReasonId | null;
+  reasons?: MissChoice[] | null;
 }
 
 export interface MockResult {
@@ -1206,6 +1274,14 @@ export const amc = {
     get<ProblemDetail>(`/api/amc/problems/${encodeURIComponent(id)}`, walk),
   attempt: (id: string, answer: string, seconds: number, source: 'practice' | 'review' = 'practice', setId = '') =>
     post<AttemptReply>(`/api/amc/problems/${encodeURIComponent(id)}/attempt`, { answer, seconds, source, set_id: setId }),
+  /** Why a wrong answer happened ('' takes it back); replies with the next step. */
+  missReason: (attemptId: string, reason: MissReasonId | '') =>
+    post<{ reason: MissReasonId | null; step: MissStep | null }>(
+      `/api/amc/attempts/${encodeURIComponent(attemptId)}/reason`, { reason }),
+  /** The same for a mock's wrong answer or blank, by its number on the paper. */
+  mockMissReason: (mockId: string, number: number, reason: MissReasonId | '') =>
+    post<{ reason: MissReasonId | null; step: MissStep | null }>(
+      `/api/amc/mocks/${encodeURIComponent(mockId)}/reason`, { number, reason }),
   reveal: (id: string, setId = '') =>
     post<{ problem: Problem }>(`/api/amc/problems/${encodeURIComponent(id)}/reveal`, { set_id: setId }),
   /** Record a set as it is dealt; its answers then carry the id it returns. */

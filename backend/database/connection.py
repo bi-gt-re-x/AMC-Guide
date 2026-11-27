@@ -1104,6 +1104,23 @@ ADDED_TABLES = ('''
 ''', '''
     CREATE INDEX IF NOT EXISTS amc_set_runs_user_idx ON amc_set_runs (user_id, started_at)
 ''', '''
+    -- Why each miss happened, in the student's words. The DDL is data/sql/amc.sql's.
+    CREATE TABLE IF NOT EXISTS amc_miss_reasons (
+        user_id     TEXT NOT NULL REFERENCES users (username) ON DELETE CASCADE,
+        ref         TEXT NOT NULL,
+        problem_id  TEXT NOT NULL,
+        reason      TEXT NOT NULL,
+        source      TEXT NOT NULL DEFAULT 'practice',
+        number      INTEGER NOT NULL DEFAULT 0,
+        level       TEXT DEFAULT '',
+        at          TEXT NOT NULL,
+        PRIMARY KEY (user_id, ref, problem_id),
+        CHECK (reason IN ('careless', 'method', 'misread', 'time', 'guess')),
+        CHECK (source IN ('practice', 'review', 'mock'))
+    )
+''', '''
+    CREATE INDEX IF NOT EXISTS amc_miss_reasons_user_idx ON amc_miss_reasons (user_id, at)
+''', '''
     -- Password reset links. The DDL is data/sql/resets.sql's.
     CREATE TABLE IF NOT EXISTS password_resets (
         token_hash  TEXT PRIMARY KEY,
