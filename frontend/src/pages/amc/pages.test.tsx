@@ -430,6 +430,59 @@ describe('Too challenging?', () => {
     await waitFor(() => expect(park).toHaveBeenCalledWith('step-10-01'));
   });
 
+  /** The problem page with the address shown, and the pages a skip can land on. */
+  function walkFrom(path: string) {
+    render(
+      <AuthContext.Provider value={SIGNED_IN}>
+        <NoticesProvider>
+          <MemoryRouter initialEntries={[path]}>
+            <Routes>
+              <Route path="/problems/:problemId" element={<><Problem /><WhereAmI /></>} />
+              <Route path="/practice/:topicId" element={<WhereAmI />} />
+              <Route path="/review" element={<WhereAmI />} />
+            </Routes>
+          </MemoryRouter>
+        </NoticesProvider>
+      </AuthContext.Provider>,
+    );
+  }
+
+  async function holdIt(say: RegExp) {
+    vi.spyOn(amc, 'parkReview').mockResolvedValue({ success: true, reach: far } as any);
+    fireEvent.click(await screen.findByRole('button', { name: 'Too challenging?' }));
+    expect(await screen.findByText(say)).toBeInTheDocument();
+    fireEvent.click(await screen.findByRole('button', { name: 'Put on hold' }));
+  }
+
+  it('goes straight on to the next problem in the set once confirmed', async () => {
+    writePracticeSet({ ids: ['step-10-01', 'step-10-02'], topic: 'circles', mode: 'practice', title: 'Practice set',
+                       seconds: null, hideTopic: false, size: null, deadline: null, runId: 'run-1' });
+    vi.spyOn(amc, 'problem').mockResolvedValue({ ...problem, reach: far, success: true } as any);
+    walkFrom('/problems/step-10-01?set=1');
+    await settled(/What is the value of/);
+    await holdIt(/go straight on to the next problem/);
+    await waitFor(() => expect(screen.getByTestId('where')).toHaveTextContent('/problems/step-10-02?set=1'));
+  });
+
+  it('finishes the set when it was the last one', async () => {
+    writePracticeSet({ ids: ['step-10-00', 'step-10-01'], topic: 'circles', mode: 'practice', title: 'Practice set',
+                       seconds: null, hideTopic: false, size: null, deadline: null, runId: 'run-1' });
+    vi.spyOn(amc, 'problem').mockResolvedValue({ ...problem, reach: far, success: true } as any);
+    walkFrom('/problems/step-10-01?set=1');
+    await settled(/What is the value of/);
+    await holdIt(/the set finishes/);
+    await waitFor(() => expect(screen.getByTestId('where')).toHaveTextContent('/practice/circles?mode=practice&done=1&run=run-1'));
+    expect(amc.finishSet).toHaveBeenCalledWith('run-1', false);
+  });
+
+  it('goes on to the next problem in the list it was opened from', async () => {
+    vi.spyOn(amc, 'problem').mockResolvedValue({ ...problem, reach: far, next: 'step-10-02', success: true } as any);
+    walkFrom('/problems/step-10-01?topic=exponents');
+    await settled(/What is the value of/);
+    await holdIt(/go straight on to the next problem/);
+    await waitFor(() => expect(screen.getByTestId('where')).toHaveTextContent('/problems/step-10-02?topic=exponents'));
+  });
+
   it('says when a problem on hold comes back, and is not offered again', async () => {
     const held = { ...problem.related[0], stage: 0, due: '2026-11-12', review_status: 'parked', note: '', misses: 1,
                    overdue: false, is_due: false, topic_missed: 0, topic_tried: 0, parked_at: '2026-11-12T10:00:00' };

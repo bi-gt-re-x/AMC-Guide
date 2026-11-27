@@ -123,6 +123,14 @@ def public(problem, reveal=False):
 #: solution just read is still in mind.
 RETEST_DAYS = 7
 
+#: A problem solved fewer than this many days ago is not dealt again if
+#: anything else will do: its answer is still remembered, so it would be a
+#: free point rather than practice (backend/amc/practice.py, the review set's
+#: order). Fewer than, not "or fewer": the review schedule's own second step
+#: is ten days (INTERVALS), and a review answered right at three days must not
+#: be pushed back on the very day it falls due.
+RECENT_SOLVE_DAYS = 10
+
 
 def _day_gap(later, earlier):
     try:
@@ -131,10 +139,18 @@ def _day_gap(later, earlier):
         return 0
 
 
+def solved_recently(h, today):
+    """Whether this problem's history (`history`'s row, or None) has a right
+    answer fewer than RECENT_SOLVE_DAYS before `today`."""
+    at = (h or {}).get('solved_at')
+    return bool(at) and _day_gap(today.isoformat(), at) < RECENT_SOLVE_DAYS
+
+
 def history(attempts):
-    """Per problem: attempts, first result, latest result, ever solved, and
-    `retest`: the latest answer given RETEST_DAYS or more after the try before
-    it ({'at', 'correct'}, or None), the evidence of what has been kept."""
+    """Per problem: attempts, first result, latest result, ever solved (and
+    `solved_at`, when it was last answered right), and `retest`: the latest
+    answer given RETEST_DAYS or more after the try before it ({'at',
+    'correct'}, or None), the evidence of what has been kept."""
     out = {}
     for row in attempts:
         pid = row['problem_id']
@@ -144,12 +160,14 @@ def history(attempts):
                             'first_at': row['at'], 'first_seconds': int(row.get('seconds') or 0),
                             'first_source': row.get('source') or '',
                             'first_set_mode': row.get('set_mode') or '',
-                            'solved': False, 'last_correct': False, 'last_at': '',
+                            'solved': False, 'solved_at': '', 'last_correct': False, 'last_at': '',
                             'seconds': 0, 'retest': None}
         elif row.get('source') != 'reveal' and _day_gap(row['at'], h['last_at']) >= RETEST_DAYS:
             h['retest'] = {'at': row['at'], 'correct': bool(row['correct'])}
         h['attempts'] += 1
         h['solved'] = h['solved'] or bool(row['correct'])
+        if row['correct']:
+            h['solved_at'] = row['at']
         h['last_correct'] = bool(row['correct'])
         h['last_at'] = row['at']
         h['seconds'] += int(row.get('seconds') or 0)

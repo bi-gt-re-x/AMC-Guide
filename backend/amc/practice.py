@@ -213,6 +213,12 @@ def build(topic_id, mode, level, theta, topic_theta, mix, hist, review_by_id, us
     # The student's own contest first; the topic's other problems only to fill.
     mine = [p for p in pool if p['level'] == level] or pool
     other = [p for p in pool if p not in mine]
+    # Solved in the last ten days (engine.RECENT_SOLVE_DAYS): the answer is
+    # still remembered, so it is held back from every mode, a spaced set's
+    # "met before" included, and dealt only if the set cannot be filled otherwise.
+    held = [p for p in pool if engine.solved_recently(hist.get(p['id']), today)]
+    mine = [p for p in mine if p not in held]
+    other = [p for p in other if p not in held]
     chance = lambda p: smart.chance(th, p['rating'])
     seen = lambda p: p['id'] in hist
     solved = lambda p: bool(hist.get(p['id'], {}).get('solved'))
@@ -285,7 +291,7 @@ def build(topic_id, mode, level, theta, topic_theta, mix, hist, review_by_id, us
     rest = take([p for p in mine if p not in order], near)
     ranked = ([p for p in order if own(p)] + [p for p in rest if own(p)]
               + [p for p in order if not own(p)] + [p for p in rest if not own(p)])
-    candidates = ranked + take(other, near)
+    candidates = ranked + take(other, near) + take(held, near)
     picked = []
     for p in candidates:
         if p['id'] not in {q['id'] for q in picked}:
@@ -302,7 +308,7 @@ def build(topic_id, mode, level, theta, topic_theta, mix, hist, review_by_id, us
         like = lambda a, b: seen(a) == seen(b)
     else:
         like = lambda a, b: pb.is_official(a['id']) == pb.is_official(b['id'])
-    tier = lambda p: (0 if own(p) else 1) + (2 if p in other else 0)
+    tier = lambda p: (0 if own(p) else 1) + (2 if p in other else 0) + (4 if p in held else 0)
     picked = pitch.pitch(picked, candidates, chance, n, like, all_stretch=mode == 'challenge', tier=tier,
                          strict=mode == 'spaced')
     # Every set easiest first, so it gets harder as it goes; real and mock

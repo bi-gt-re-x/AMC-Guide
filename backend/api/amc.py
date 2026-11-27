@@ -550,14 +550,18 @@ def review_queue(username: str = Depends(current_username)):
     # Weakest first: what is due goes in order of how much of its topic the
     # student has missed (backend/amc/weak.py's measure), then how often this
     # problem itself was missed, then oldest due. "Start review" walks it so.
+    # One solved in the last ten days (engine.RECENT_SOLVE_DAYS) goes last,
+    # whatever its topic: its answer is still remembered, so a set of twelve
+    # takes everything else due first.
     tstats = engine.topic_stats(hist, review_by_id)
     for v in views:
         s = tstats[v['topic']]
         missed = s['attempted'] - s['first_right']
         v.update(topic_missed=missed, topic_tried=s['attempted'],
-                 topic_weakness=round((missed + 1) / (s['attempted'] + 2), 3) if s['attempted'] else 0)
+                 topic_weakness=round((missed + 1) / (s['attempted'] + 2), 3) if s['attempted'] else 0,
+                 solved_recently=engine.solved_recently(hist.get(v['id']), today))
     due = sorted([v for v in views if v['review_status'] == 'active' and v['is_due']],
-                 key=lambda v: (-v['topic_weakness'], -v['misses'], v['due'], v['stage'], v['id']))
+                 key=lambda v: (v['solved_recently'], -v['topic_weakness'], -v['misses'], v['due'], v['stage'], v['id']))
     upcoming = sorted([v for v in views if v['review_status'] == 'active' and not v['is_due']], key=lambda v: v['due'])
     mastered = sorted([v for v in views if v['review_status'] == 'mastered'], key=lambda v: v['id'])
     # On hold as too challenging: where the account is on each, and the level

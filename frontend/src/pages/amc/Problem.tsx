@@ -329,10 +329,17 @@ export default function Problem() {
   async function parkReview() {
     const at = data?.reach;
     if (!at || at.returns_at == null) return;
+    // Where confirming goes on to (skipAhead): said in the question, so the move is no surprise.
+    const onward = (inSet && setAt >= 0 && !setNext) || (weak && weakAt >= 0 && !weakNext)
+      ? ' This was the last one, so the set finishes.'
+      : (inSet && setAt >= 0) || (weak && weakAt >= 0) || reviewing || data?.next
+        ? " You'll go straight on to the next problem."
+        : '';
     const yes = await confirm({
       title: 'Put this problem on hold?',
       body: `It's rated ${ratingText(at.rating ?? 0)} and your level here is about ${at.level}. It stays in your `
-        + `review log but won't come due until your level reaches about ${at.returns_at}. Then it comes back on its own.`,
+        + `review log but won't come due until your level reaches about ${at.returns_at}. Then it comes back on its own.`
+        + onward,
       confirmLabel: 'Put on hold',
       cancelLabel: 'Keep it',
     });
@@ -345,7 +352,54 @@ export default function Problem() {
     }
     announceAmcChanged();
     notify('On hold', { body: `It comes back when your level reaches about ${at.returns_at}.`, tone: 'info' });
+    await skipAhead();
+  }
+
+  /** The practice set's next problem, or, after its last, the set finished and its report. */
+  async function nextInPracticeSet() {
+    if (setNext) {
+      navigate(`/problems/${setNext}?set=1`);
+      return;
+    }
+    setBusy(true);
+    const run = await finishPracticeSet(false);
+    setBusy(false);
+    navigate(`${setHome}&done=1${run ? `&run=${run}` : ''}`);
+  }
+
+  /** The weak-topics set's next problem, or, after its last, the set closed and its report. */
+  async function nextInWeakSet() {
+    if (weakNext) {
+      navigate(`/problems/${weakNext}?weak=1`);
+      return;
+    }
+    const run = weakAt >= 0 ? readWeakRun() : null;
+    setBusy(true);
+    if (run) await amc.closeSet(run);
+    endDrafts();
+    setWeakRun(null);
+    setBusy(false);
+    announceAmcChanged();
+    navigate(`/review?done=1${run ? `&run=${run}` : ''}`);
+  }
+
+  /**
+   * On past a problem put on hold: wherever "Next" goes from here. The next in
+   * the set being walked (or, after its last, the set's report, as finishing
+   * it would), the next due review, or the next problem in the list it was
+   * opened from. With nowhere to go (a problem opened on its own), it stays,
+   * showing that it is on hold.
+   */
+  async function skipAhead() {
+    if (inSet && setAt >= 0) return nextInPracticeSet();
+    if (weak && weakAt >= 0) return nextInWeakSet();
+    if (reviewing) return nextDue();
+    if (data?.next) {
+      navigate(walkHref(data.next));
+      return undefined;
+    }
     reload();
+    return undefined;
   }
 
   async function saveNote() {
@@ -498,17 +552,7 @@ export default function Problem() {
                   {practiceSet?.title ?? 'Practice set'}{setAt >= 0 ? ` · ${setAt + 1} of ${setIds.length}` : ''}
                 </span>
                 <button type="button" className="am-btn am-btn-primary" disabled={busy}
-                        onClick={() => {
-                          if (setNext) {
-                            navigate(`/problems/${setNext}?set=1`);
-                            return;
-                          }
-                          setBusy(true);
-                          void finishPracticeSet(false).then((run) => {
-                            setBusy(false);
-                            navigate(`${setHome}&done=1${run ? `&run=${run}` : ''}`);
-                          });
-                        }}>
+                        onClick={() => void nextInPracticeSet()}>
                   {setNext ? 'Next problem →' : 'Finish the set'}
                 </button>
               </div>
@@ -520,21 +564,7 @@ export default function Problem() {
                   {weakAt >= 0 ? `Weak topics · ${weakAt + 1} of ${weakSet.length}` : 'Weak topics'}
                 </span>
                 <button type="button" className="am-btn am-btn-primary" disabled={busy}
-                        onClick={() => {
-                          if (weakNext) {
-                            navigate(`/problems/${weakNext}?weak=1`);
-                            return;
-                          }
-                          const run = weakAt >= 0 ? readWeakRun() : null;
-                          setBusy(true);
-                          void (run ? amc.closeSet(run) : Promise.resolve(false)).then(() => {
-                            endDrafts();
-                            setWeakRun(null);
-                            setBusy(false);
-                            announceAmcChanged();
-                            navigate(`/review?done=1${run ? `&run=${run}` : ''}`);
-                          });
-                        }}>
+                        onClick={() => void nextInWeakSet()}>
                   {weakNext ? 'Next weak-topic problem →' : 'Finish the set'}
                 </button>
               </div>
