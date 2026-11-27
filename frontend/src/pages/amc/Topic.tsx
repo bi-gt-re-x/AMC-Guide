@@ -7,7 +7,7 @@ import { ErrorState, Loading } from '@/components';
 import { MathText } from '@/components/Amc/MathText';
 import { Difficulty, Empty, Meter, PageHeader, problemHref } from '@/components/Amc/bits';
 import { StrategyList } from '@/components/Amc/StrategyList';
-import { useApi, useDocumentTitle } from '@/hooks';
+import { useApi, useDocumentTitle, usePageSwap } from '@/hooks';
 import { amc, pct, type NextPick } from '@/services/amc';
 import '@/styles/amc.css';
 
@@ -35,7 +35,8 @@ const SETS = [
 
 export default function Topic() {
   const { topicId = '' } = useParams();
-  const { data, error, loading, reload } = useApi(() => amc.topic(topicId), [topicId]);
+  const { data, error, loading, refreshing, reload } = useApi(() => amc.topic(topicId), [topicId]);
+  const swap = usePageSwap(topicId, loading || refreshing);
   useDocumentTitle(data?.topic.name ?? 'Topic');
   if (loading && !data) return <Loading label="Loading topic" />;
   if (error || !data) return <ErrorState message={error ?? 'Could not load this topic.'} onRetry={reload} />;
@@ -44,7 +45,7 @@ export default function Topic() {
   const missed = problems.filter((p) => p.status === 'missed' || p.status === 'review').length;
 
   return (
-    <div className="amc-page">
+    <div className={`amc-page ${swap}`.trim()}>
       <nav className="am-muted" style={{ fontSize: 13, marginBottom: 12 }}>
         <Link to="/topics" className="am-link">← Topics</Link>
       </nav>

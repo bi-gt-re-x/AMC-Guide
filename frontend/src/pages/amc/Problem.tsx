@@ -31,7 +31,7 @@ import {
   StatusPill,
   useStopwatch,
 } from '@/components/Amc/bits';
-import { useApi, useDocumentTitle } from '@/hooks';
+import { useApi, useDocumentTitle, usePageSwap } from '@/hooks';
 import { amc, announceAmcChanged, shortDate, type AttemptReply, type Problem as ProblemData } from '@/services/amc';
 import { activePracticeSet, practiceSetHome, readPracticeSet, updatePracticeSet } from './practiceSetStore';
 import { readWeakRun, readWeakSet, setWeakRun } from './weakSet';
@@ -111,7 +111,9 @@ export default function Problem() {
   const setPrev = setAt > 0 ? setIds[setAt - 1] : undefined;
   const weakPrev = weakAt > 0 ? weakSet[weakAt - 1] : undefined;
   const navigate = useNavigate();
-  const { data, error, loading, reload } = useApi(() => amc.problem(problemId, walk), [problemId, walkQuery]);
+  const { data, error, loading, refreshing, reload } = useApi(() => amc.problem(problemId, walk), [problemId, walkQuery]);
+  // One problem to the next: the last one dims, then this one arrives (hooks/usePageSwap).
+  const swap = usePageSwap(problemId, loading || refreshing);
   const { notify, confirm } = useNotice();
   useDocumentTitle(data ? data.problem.sources[0] ? `${data.problem.sources[0].name} #${data.problem.sources[0].number}` : 'Problem' : 'Problem');
 
@@ -361,7 +363,7 @@ export default function Problem() {
   const showKey = result != null || revealed != null || seenBefore;
 
   return (
-    <div className="amc-page">
+    <div className={`amc-page ${swap}`.trim()}>
       <nav className="am-muted" style={{ fontSize: 13, marginBottom: 12, display: 'flex', gap: 6, flexWrap: 'wrap' }}>
         {inSet ? (
           <Link to={setHome} className="am-link">← {practiceSet?.title ?? 'Practice set'}</Link>
@@ -385,7 +387,7 @@ export default function Problem() {
         {reviewing && reviewAt >= 0 && <span>· Review set, {reviewAt + 1} of {reviewSet.length}</span>}
       </nav>
 
-      <div className="am-grid am-grid-main">
+      <div className="am-grid am-grid-main pg-stagger">
         <div className="am-stack">
           <article className="am-card" style={{ padding: 28 }}>
             <div className="am-problem-meta">

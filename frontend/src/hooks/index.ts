@@ -4,6 +4,7 @@ export { useAuth } from './useAuth';
 export { timerTitle, useDocumentTitle } from './useDocumentTitle';
 export { useNotifications } from './useNotifications';
 export { usePageEntrance } from './usePageEntrance';
+export { usePageSwap } from './usePageSwap';
 export { usePinnedViewport } from './usePinnedViewport';
 export { useMediaQuery } from './useMediaQuery';
 export { useSettings } from './useSettings';

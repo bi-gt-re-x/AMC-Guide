@@ -99,3 +99,92 @@
         animation: none;
     }
 }
+
+/* ## Every AMC page, and the way from one to the next
+ *
+ * The AMC pages show a spinner until their data lands and only then mount
+ * their `.amc-page`, so its bands are new elements exactly when there is
+ * something to show. The same cascade plays on them then, as a plain mount
+ * animation: nothing to add or remove, and a re-render (a tab, a filter, an
+ * answer) does not replay it, since an element already on the page does not
+ * start its animation again. Filled `backwards` only, so once a band has
+ * arrived nothing of the animation is left holding its opacity or transform.
+ *
+ * A page that stays mounted while its subject changes (one problem to the
+ * next, one topic, contest, set or mock to another: hooks/usePageSwap) dims
+ * what it showed while the next loads (`pg-leave`), so the old problem is
+ * never shown as if it were the new one, then plays the cascade again
+ * (`pg-swap`, under a second name, since only a new animation name restarts
+ * an animation on an element that already ran one). */
+.app-main > .amc-page > * {
+    animation: pg-arrive .44s cubic-bezier(.22, 1, .36, 1) backwards;
+}
+.app-main > .amc-page > :nth-child(1) { animation-delay: 0s; }
+.app-main > .amc-page > :nth-child(2) { animation-delay: .06s; }
+.app-main > .amc-page > :nth-child(3) { animation-delay: .12s; }
+.app-main > .amc-page > :nth-child(4) { animation-delay: .18s; }
+.app-main > .amc-page > :nth-child(5) { animation-delay: .24s; }
+.app-main > .amc-page > :nth-child(n+6) { animation-delay: .3s; }
+/* A band of peers (a problem and its sidebar) hands the cascade on, as above. */
+.app-main > .amc-page > .pg-stagger {
+    animation: none;
+}
+.app-main > .amc-page > .pg-stagger > * {
+    animation: pg-arrive .44s cubic-bezier(.22, 1, .36, 1) backwards;
+}
+.app-main > .amc-page > .pg-stagger > :nth-child(1) { animation-delay: .06s; }
+.app-main > .amc-page > .pg-stagger > :nth-child(2) { animation-delay: .14s; }
+.app-main > .amc-page > .pg-stagger > :nth-child(n+3) { animation-delay: .22s; }
+
+/* On the way out: dimmed and lifted a little while the next subject loads. */
+.app-main > .amc-page.pg-leave > *,
+.app-main > .amc-page.pg-leave > .pg-stagger > * {
+    animation: none;
+}
+.app-main > .amc-page.pg-leave > * {
+    opacity: .28;
+    transform: translateY(-4px);
+    transition: opacity .18s ease, transform .18s ease;
+    pointer-events: none;
+}
+/* And in again, the same cascade under its second name. */
+.app-main > .amc-page.pg-swap > *,
+.app-main > .amc-page.pg-swap > .pg-stagger > * {
+    animation-name: pg-arrive-again;
+}
+.app-main > .amc-page.pg-swap > .pg-stagger {
+    animation: none;
+}
+@keyframes pg-arrive-again {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: none;
+    }
+}
+
+/* The spinner waits a beat before it shows: most pages load faster than that,
+   and a spinner flashed for a frame between two pages reads as a flicker. */
+.page-state-loading {
+    animation: pg-wait .24s ease .16s backwards;
+}
+@keyframes pg-wait {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .app-main > .amc-page > *,
+    .app-main > .amc-page > .pg-stagger > *,
+    .page-state-loading {
+        animation: none;
+    }
+    /* Still dimmed while the next one loads, so it is clear which is showing; just not moved. */
+    .app-main > .amc-page.pg-leave > * {
+        transform: none;
+        transition: none;
+    }
+}

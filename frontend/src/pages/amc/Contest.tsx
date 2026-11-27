@@ -23,7 +23,7 @@ import { useNotice, ErrorState, Loading } from '@/components';
 import { CategoryDot, DiagramNote, Difficulty, PageHeader, Solution, StatusPill, PaperResultsCard, StandingNote } from '@/components/Amc/bits';
 import { MathText } from '@/components/Amc/MathText';
 import { Importer } from '@/components/Amc/Importer';
-import { useApi, useDocumentTitle } from '@/hooks';
+import { useApi, useDocumentTitle, usePageSwap } from '@/hooks';
 import { amc, announceAmcChanged, shortDate, type ContestProgress, type KeyRow, type MockBrief } from '@/services/amc';
 import '@/styles/amc.css';
 
@@ -142,7 +142,8 @@ function Locked({ count, minutes, takeTo, onUnlock }: {
 
 export default function Contest() {
   const { contestId = '' } = useParams();
-  const { data, error, loading, reload } = useApi(() => amc.contest(contestId), [contestId]);
+  const { data, error, loading, refreshing, reload } = useApi(() => amc.contest(contestId), [contestId]);
+  const swap = usePageSwap(contestId, loading || refreshing);
   const { notify, confirm } = useNotice();
   useDocumentTitle(data?.contest.name ?? 'Contest');
   const [score, setScore] = useState('');
@@ -282,7 +283,7 @@ export default function Contest() {
       </section>
     );
     return (
-      <div className="amc-page">
+      <div className={`amc-page ${swap}`.trim()}>
         {back}
         <PageHeader kicker={`${c.year} · ${c.level}`} title={c.name}>
           <p>
@@ -353,7 +354,7 @@ export default function Contest() {
     </section>
   );
   return (
-    <div className="amc-page">
+    <div className={`amc-page ${swap}`.trim()}>
       {back}
       <PageHeader
         kicker={official ? `${c.year} · ${c.level} · Official` : `${c.level} · ${c.family === 'summit' ? 'AMC Guide Mock' : 'Step Mock'}`}

@@ -21,7 +21,7 @@ import { ErrorState, Loading, useNotice } from '@/components';
 import { CategoryDot, clock, PageHeader, StatusPill } from '@/components/Amc/bits';
 import { SetReport } from '@/components/Amc/SetReport';
 import { MixBar } from '@/components/Amc/Study';
-import { useApi, useDocumentTitle } from '@/hooks';
+import { useApi, useDocumentTitle, usePageSwap } from '@/hooks';
 import { amc, type SetResult } from '@/services/amc';
 import { activePracticeSet, writePracticeSet } from './practiceSetStore';
 import '@/styles/amc.css';
@@ -35,7 +35,8 @@ export default function PracticeSet() {
   const size = Number(params.get('n')) || null;
   const navigate = useNavigate();
   const { confirm } = useNotice();
-  const { data, error, loading, reload } = useApi(() => amc.topicSet(topicId, mode, size), [topicId, mode, size]);
+  const { data, error, loading, refreshing, reload } = useApi(() => amc.topicSet(topicId, mode, size), [topicId, mode, size]);
+  const swap = usePageSwap(`${topicId}|${mode}|${size}`, loading || refreshing);
   // This set, left part way (and not just finished): offered to be continued.
   const open = done ? null : activePracticeSet();
   const going = open && open.topic === topicId && open.mode === mode ? open : null;
@@ -100,7 +101,7 @@ export default function PracticeSet() {
   }
 
   return (
-    <div className="amc-page">
+    <div className={`amc-page ${swap}`.trim()}>
       <nav className="am-muted" style={{ fontSize: 13, marginBottom: 12 }}>
         <Link to={`/topics/${data.topic.id}`} className="am-link">← {data.topic.name}</Link>
       </nav>

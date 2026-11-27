@@ -6,14 +6,15 @@ import { Link, useParams } from 'react-router-dom';
 import { ErrorState, Loading } from '@/components';
 import { MathText } from '@/components/Amc/MathText';
 import { DiagramNote, Difficulty, Meter, PageHeader, Solution, StandingNote } from '@/components/Amc/bits';
-import { useApi, useDocumentTitle } from '@/hooks';
+import { useApi, useDocumentTitle, usePageSwap } from '@/hooks';
 import { amc, shortDate } from '@/services/amc';
 import { clock } from '@/components/Amc/bits';
 import '@/styles/amc.css';
 
 export default function MockResult() {
   const { mockId = '' } = useParams();
-  const { data, error, loading, reload } = useApi(() => amc.mock(mockId), [mockId]);
+  const { data, error, loading, refreshing, reload } = useApi(() => amc.mock(mockId), [mockId]);
+  const swap = usePageSwap(mockId, loading || refreshing);
   useDocumentTitle(data ? `${data.contest.name} report` : 'Mock report');
   if (loading && !data) return <Loading label="Grading" />;
   if (error || !data) return <ErrorState message={error ?? 'Could not load this report.'} onRetry={reload} />;
@@ -25,7 +26,7 @@ export default function MockResult() {
   const maxLost = Math.max(1, ...report.bands.map((b) => b.lost));
 
   return (
-    <div className="amc-page">
+    <div className={`amc-page ${swap}`.trim()}>
       <nav className="am-muted" style={{ fontSize: 13, marginBottom: 12 }}>
         <Link to={`/contests/${contest.id}`} className="am-link">← {contest.name}</Link>
       </nav>
