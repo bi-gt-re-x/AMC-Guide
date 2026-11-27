@@ -31,7 +31,12 @@ def test_every_set_is_eight_from_the_one_topic_and_each_mode_picks_its_own(clien
         sets[mode] = s
     ratings = {m: [pb.get(i)['rating'] for i in s['problems']] for m, s in sets.items()}
     # Learn: the easiest; mixed: the widest spread; spaced: problems met before.
-    assert sum(ratings['learn']) / 8 <= min(sum(ratings[m]) / 8 for m in ('timed', 'mixed', 'practice'))
+    # (Practice brings back problems met before, which here are the easiest in the
+    # topic by construction, so it is compared on its new problems only.)
+    mean = lambda xs: sum(xs) / len(xs)
+    new = lambda m: [r for i, r in zip(sets[m]['problems'], ratings[m]) if i not in hist]
+    assert mean(ratings['learn']) <= min(mean(ratings[m]) for m in ('timed', 'mixed'))
+    assert mean(new('learn')) <= mean(new('practice'))
     assert max(ratings['mixed']) - min(ratings['mixed']) >= max(ratings['timed']) - min(ratings['timed'])
     own_seen = {i for i in hist if pb.get(i)['topic'] == topic}
     assert own_seen <= set(sets['spaced']['problems'])

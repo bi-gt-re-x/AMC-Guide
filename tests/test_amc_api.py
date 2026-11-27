@@ -131,7 +131,7 @@ def test_contest_pages(client, today):
     past = client.get('/api/amc/contests/2021-fall-amc-10b').json()
     assert past['contest']['kind'] == 'past' and past['contest']['problems_url'].endswith('2021_Fall_AMC_10B_Problems')
     listing = client.get('/api/amc/contests').json()
-    assert [m['count'] for m in listing['mocks']] == [25, 25, 15] + [25] * 10 + [15] * 5
+    assert [m['count'] for m in listing['mocks']] == [25, 25, 15] + [25] * 14 + [15] * 7
     assert [m['id'] for m in listing['mocks'] if m['family'] == 'summit'][:2] == ['mock-10-1', 'mock-10-2']
     summit = client.get('/api/amc/contests/mock-12-3').json()
     assert [p['number'] for p in summit['problems']] == list(range(1, 26))
@@ -267,10 +267,10 @@ def test_problem_filters_by_mock_number_and_kind(client, today):
     assert [r['number'] for r in rows] == list(range(1, 16))
     sevens = client.get('/api/amc/problems', params={'number': '7', 'source': 'summit'}).json()
     # #7 of each AMC 10 and AIME set and of each AMC 12 set (none of the shared ones sit at #7).
-    assert len(sevens['problems']) == 15
+    assert len(sevens['problems']) == 21
     body = client.get('/api/amc/problems').json()
-    assert body['kinds'] == {'summit': 285, 'step': 65, 'official': 0, 'ai': 0}
-    assert len(body['mocks']) == 18 and body['families'][0]['techniques']
+    assert body['kinds'] == {'summit': 399, 'step': 65, 'official': 0, 'ai': 0}
+    assert len(body['mocks']) == 24 and body['families'][0]['techniques']
 
 
 def test_weak_topics_bank_is_twelve_unsolved_problems_spread_over_weak_topics(client, today):

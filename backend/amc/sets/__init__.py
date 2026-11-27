@@ -1,4 +1,4 @@
-r"""The AMC Guide Mock sets: five AMC 10s, five AMC 12s and five AIMEs, written for
+r"""The AMC Guide Mock sets: seven AMC 10s, seven AMC 12s and seven AIMEs, written for
 this site in the shape of the real papers.
 
 Each set is a full paper in real problem order: problem n is written for the
@@ -36,7 +36,7 @@ FAMILIES = [
     ('AMC 12', 'mock12', 'mock-12', 'AMC Guide Mock AMC 12'),
     ('AIME', 'mockaime', 'mock-aime', 'AMC Guide Mock AIME'),
 ]
-SET_COUNT = 5
+SET_COUNT = 7
 
 
 def P(number, topic, also, technique, statement, choices, correct, steps, insight, trap):

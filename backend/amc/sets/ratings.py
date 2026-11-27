@@ -18,6 +18,12 @@ order. An AMC 12 set lists only its own problems (the ones not shared with its
 AMC 10, in order); a shared problem keeps the rating of its AMC 10 original,
 since difficulty belongs to the problem and not to where it is printed.
 tests/test_amc_sets.py checks that every list is complete.
+
+Sets 6 and 7 were written later and rated the same way: each problem against
+the problems of sets 1-5 it most resembles (a two-chain decomposition like
+10-3-22's run of consecutive numbers, an expected wait like 10-4-21's), not by
+the slot it fills. So they sit on the same scale and, like the first five, run
+a little easier than a real paper toward the end.
 """
 
 AOPS = {
@@ -32,6 +38,10 @@ AOPS = {
                  2.5, 2, 1.5, 2.5, 2, 2.5, 3, 3, 3, 3.5],
     'mock10-5': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 1.5, 2, 1.5, 2,
                  2, 2, 2, 2, 2, 2, 2.5, 2.5, 3, 3.5],
+    'mock10-6': [1, 1, 1, 1, 1.5, 1.5, 1.5, 1, 1.5, 1, 1.5, 1.5, 2, 1.5, 2,
+                 2, 2, 1.5, 2, 2.5, 2.5, 2.5, 3, 2.5, 3],
+    'mock10-7': [1, 1, 1, 1, 1, 1, 1.5, 1, 1.5, 2, 1.5, 2, 1.5, 1.5, 1.5,
+                 1.5, 2, 2.5, 2, 2, 2.5, 2.5, 2.5, 2.5, 3],
     # ------------------------------------- AMC 12, own problems only, in order
     # (#1-8, 10, 12, 14, 16, 19, 22, 23, 24, 25; the rest are shared)
     'mock12-1': [1, 1, 1, 1, 1.5, 1, 1, 1, 1.5, 1.5, 1.5, 2, 2, 3, 3, 3, 4],
@@ -39,10 +49,14 @@ AOPS = {
     'mock12-3': [1, 1, 1, 1, 1.5, 1, 1, 1, 1.5, 1.5, 2, 1.5, 2, 2.5, 3, 2.5, 3.5],
     'mock12-4': [1, 1, 1, 1, 1, 1, 1, 1.5, 1, 1, 2, 2, 1.5, 2.5, 3, 2.5, 4],
     'mock12-5': [1, 1, 1, 1, 1, 1, 1.5, 1, 1.5, 2, 1, 2.5, 2.5, 3, 3, 3, 3.5],
+    'mock12-6': [1, 1, 1, 1, 1, 1, 1, 1, 1.5, 2, 2, 2.5, 3, 2.5, 3, 3, 3.5],
+    'mock12-7': [1, 1, 1, 1, 1, 1, 1, 1, 1, 1.5, 2, 2, 2.5, 2.5, 3, 3, 3.5],
     # -------------------------------------------------------------- AIME, #1-15
     'mockaime-1': [1.5, 1.5, 1.5, 2.5, 1.5, 2.5, 2.5, 3, 3, 3, 3.5, 3.5, 4, 4, 5],
     'mockaime-2': [1.5, 1.5, 2, 2, 1.5, 3, 2, 2.5, 2.5, 3, 3.5, 4, 4, 4, 4.5],
     'mockaime-3': [1.5, 2, 2.5, 1.5, 2.5, 2, 2, 2.5, 3, 3.5, 3.5, 3, 4, 3.5, 5],
     'mockaime-4': [1.5, 2, 1.5, 2.5, 2, 2.5, 2.5, 2, 2.5, 3, 2.5, 3.5, 3.5, 3.5, 4.5],
     'mockaime-5': [1, 2, 1, 2.5, 2, 2.5, 2, 3.5, 2.5, 3, 2.5, 3.5, 2.5, 3.5, 4.5],
+    'mockaime-6': [2, 2, 2.5, 2, 2, 2, 2.5, 3, 2.5, 2.5, 3.5, 3, 3.5, 4, 5],
+    'mockaime-7': [2, 2, 2, 2, 2.5, 2.5, 2, 3, 2.5, 3, 3.5, 3, 3, 3, 3.5],
 }

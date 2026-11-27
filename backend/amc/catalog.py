@@ -474,7 +474,7 @@ MOCKS = [
 for _m in MOCKS:
     _m.update(family='step', set=None)
 
-# Fifteen AMC Guide Mock sets in real problem order (backend/amc/sets/).
+# Twenty-one AMC Guide Mock sets in real problem order (backend/amc/sets/).
 from backend.amc.sets import MOCKS as _SET_MOCKS  # noqa: E402
 
 for _m in _SET_MOCKS:

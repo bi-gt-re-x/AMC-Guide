@@ -75,9 +75,9 @@ const STEPS = [
 ];
 
 const MOCKS = [
-  { name: 'AMC 10', problems: 25, time: '75 min', sets: 5, note: 'Algebra, counting, number theory and geometry, from about 2 to 8 on the scale.', tone: 'sage' },
-  { name: 'AMC 12', problems: 25, time: '75 min', sets: 5, note: 'Shares eight problems with its AMC 10, then adds logs, trig and complex numbers.', tone: 'clay' },
-  { name: 'AIME', problems: 15, time: '3 hours', sets: 5, note: 'Answers from 000 to 999. Problems rated 5 to 12.', tone: 'slate' },
+  { name: 'AMC 10', problems: 25, time: '75 min', sets: 7, note: 'Algebra, counting, number theory and geometry, from about 2 to 8 on the scale.', tone: 'sage' },
+  { name: 'AMC 12', problems: 25, time: '75 min', sets: 7, note: 'Shares eight problems with its AMC 10, then adds logs, trig and complex numbers.', tone: 'clay' },
+  { name: 'AIME', problems: 15, time: '3 hours', sets: 7, note: 'Answers from 000 to 999. Problems rated 5 to 12.', tone: 'slate' },
 ];
 
 const COACH = [
@@ -774,7 +774,7 @@ export default function Landing() {
         <section id="mocks" className="lp-mocks lp-wrap">
           <Reveal className="lp-section-head">
             <p className="lp-kicker">Mock contests</p>
-            <h2 className="lp-h2">Fifteen original<br />mock papers.</h2>
+            <h2 className="lp-h2">Twenty-one original<br />mock papers.</h2>
           </Reveal>
           <div className="lp-mock-grid">
             {MOCKS.map((m, i) => (

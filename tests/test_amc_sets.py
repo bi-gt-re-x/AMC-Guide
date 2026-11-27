@@ -14,7 +14,7 @@ import re
 
 from backend.amc import catalog
 from backend.amc.bank import BY_ID
-from backend.amc.sets import MOCKS, PROBLEMS
+from backend.amc.sets import MOCKS, PROBLEMS, SET_COUNT
 
 
 def value(tex):
@@ -836,22 +836,369 @@ def _aime_5():
     return c
 
 
+def _a10_6():
+    c = {}
+    c[1] = (3**2 - 2**2) * (3**2 + 2**2) - 3**4
+    c[2] = (F(360, 24) - F(360, 30)) * 60
+    c[3] = F(50 - 40, 40) * 100 - F(50 - 40, 50) * 100
+    c[4] = sum(1 for n in range(1, 200) if n % 4 == 0 and n % 6)
+    s3 = math.sqrt(3)
+    c[5] = (s3 / 4 * 2**2) / (6 * s3 / 4 * 1**2)        # hexagon side 1, triangle side 2
+    # sorted list a1..a9 with a5 = 10 and sum 90; larger entries only shrink a9, so small ranges suffice
+    from itertools import combinations_with_replacement as cwr
+    c[6] = max(90 - sum(lo) - 10 - sum(hi) for lo in cwr(range(1, 11), 4) for hi in cwr(range(10, 16), 3)
+               if 90 - sum(lo) - 10 - sum(hi) >= hi[-1])
+    c[7] = next(n for n in range(1, 1000) if all(n % d == d - 1 for d in range(2, 7)))
+    for x2 in range(-100, 101):
+        x = F(x2, 10)
+        if x * (7 - x) == 10:
+            c[8] = x ** 3 + (7 - x) ** 3
+    c[9] = F(sum(1 for a, b in product(range(1, 7), repeat=2) if a >= 2 * b), 36)
+    c[10] = triangle_area((1, 1), (7, 1), (4, 4))
+    f10 = math.factorial(10)
+    c[11] = sum(1 for d in range(1, f10 + 1, 2) if f10 % d == 0)
+    ang = lambda k: (math.cos(2 * math.pi * k / 5), math.sin(2 * math.pi * k / 5))
+    A, B, C, D = ang(0), ang(1), ang(2), ang(3)
+    # P = A + s(C - A) = B + t(D - B)
+    a1, b1, a2, b2 = C[0] - A[0], -(D[0] - B[0]), C[1] - A[1], -(D[1] - B[1])
+    det = a1 * b2 - b1 * a2
+    s_ = ((B[0] - A[0]) * b2 - b1 * (B[1] - A[1])) / det
+    P_ = (A[0] + s_ * a1, A[1] + s_ * a2)
+    u, v = (A[0] - P_[0], A[1] - P_[1]), (B[0] - P_[0], B[1] - P_[1])
+    c[12] = round(math.degrees(math.acos((u[0] * v[0] + u[1] * v[1]) / math.hypot(*u) / math.hypot(*v))), 9)
+    c[13] = sum(1 for s in combinations(range(10), 4) if sum(1 for k in range(5) if 2 * k in s and 2 * k + 1 in s) == 1)
+    # f(x) = ax^2 + bx + c through three points: solve with exact differences
+    a = F(18 - 2 * 9 + 4, 2)
+    b = 9 - 4 - 3 * a
+    c0 = 4 - a - b
+    c[14] = a * 16 + b * 4 + c0
+    c[15] = sum(1 for x in range(1, 500) for y in range(1, 500) if x * y - 3 * x - 4 * y == 0)
+    # bisector of angle C(0,0) between A(3,0) and B(0,4): intersect y = x with AB
+    t = F(12, 7)
+    assert t / 3 + t / 4 == 1
+    c[16] = float(t) * math.sqrt(2)
+    c[17] = F(sum(1 for t3 in combinations(range(1, 10), 3) if sum(t3) % 3 == 0), math.comb(9, 3))
+    seq = [1, 3]
+    while len(seq) < 100:
+        seq.append(seq[-1] - seq[-2])
+    c[18] = sum(seq)
+    n, k = 3**16 - 1, 0
+    while n % 2 == 0:
+        n, k = n // 2, k + 1
+    c[19] = 2**k
+
+    def pairings(xs):
+        if not xs:
+            yield []
+            return
+        for i in range(1, len(xs)):
+            for rest in pairings(xs[1:i] + xs[i + 1:]):
+                yield [(xs[0], xs[i])] + rest
+    c[20] = sum(1 for pr in pairings(list(range(8))) if (0, 1) not in pr and (2, 3) not in pr)
+    c[21] = sum(1 for a in range(1, 19) for b in range(1, 19) for cc in [20 - a - b]
+                if cc >= 1 and a < b + cc and b < a + cc and cc < a + b)
+    # three positive roots need a = rs + st + tr > 0; then the signs alternate, so every real root is
+    # positive, and all three roots are real iff the discriminant is >= 0
+    disc = lambda a: 18 * (-12) * a * (-64) - 4 * (-12) ** 3 * (-64) + 144 * a * a - 4 * a ** 3 - 27 * 64 * 64
+    good = [a for a in range(1, 500) if disc(a) >= 0]
+    assert good == [48] and max(disc(48 + k / 100) for k in range(-300, 301) if k) < 0
+    c[22] = good[0]
+    c[23] = sum(1 for m in range(1 << 12) if not any(m >> i & 1 and m >> (i + 2) & 1 for i in range(10)))
+    c[24] = sum(1 for g in product((0, 1), repeat=9)
+                if all(sum(g[3 * r:3 * r + 3]) % 2 for r in range(3)) and all(sum(g[k::3]) % 2 for k in range(3)))
+    # coordinates: B(0,0), C(14,0), A(5,12), D(5,0); P, Q are the feet from D to AB and AC
+    def foot(p, a, b):
+        dx, dy = b[0] - a[0], b[1] - a[1]
+        t = F((p[0] - a[0]) * dx + (p[1] - a[1]) * dy, dx * dx + dy * dy)
+        return (a[0] + t * dx, a[1] + t * dy)
+    Pf, Qf = foot((5, 0), (5, 12), (0, 0)), foot((5, 0), (5, 12), (14, 0))
+    pq2 = (Pf[0] - Qf[0]) ** 2 + (Pf[1] - Qf[1]) ** 2
+    assert pq2 == F(672, 65) ** 2
+    c[25] = F(672, 65)
+    return c
+
+
+def _a12_6():
+    c = {}
+    c[1] = F(2**2026 + 2**2024, 2**2025 - 2**2023)
+    c[2] = 12 * F(30, 60) + 18 * F(20, 60)
+    c[3] = sum(1 for x in range(-100, 100) if abs(x - 3) < 5)
+    c[4] = round(math.prod(math.log(k + 1) / math.log(k) for k in range(2, 64)), 9)
+    c[5] = math.sin(math.radians(15)) * math.cos(math.radians(15))
+    z = (1 + 1j) ** 2 / (1 - 1j)
+    assert abs(z - (-1 + 1j)) < 1e-12
+    c[6] = '$-1 + i$'
+    c[7] = next(g for g in range(-100, 100) if 3 * g - 2 == 6 * 5 + 7)
+    c[8] = sum(r for r in range(-20, 21) if 3 + 3 * r + 3 * r * r == 21)
+    # R(x) = ax + b through (1, 3) and (2, 5)
+    c[10] = (5 - 3) * 10 + (3 - (5 - 3))
+    sols = [(a, b) for a in range(2, 28) for b in range(2, a) if a * b == 27
+            and math.isclose(math.log(b, a) + math.log(a, b), 2.5)]
+    assert sols == [(9, 3)]
+    c[12] = 9 + 3
+    c[14] = sum(1 for a in range(2, 101) for b in range(2, 101) if any(a ** k == b for k in range(1, 8)))
+    r = 2 - math.sqrt(3)
+    assert math.isclose((1 - r) * math.sqrt(3), 1 + r)
+    c[16] = r
+    # expected hitting time of the opposite corner, solved exactly on all 8 vertices
+    verts = list(product((0, 1), repeat=3))
+    target = (1, 1, 1)
+    # E_v - (1/3) sum of E over v's neighbours = 1 for v != target, E_target = 0: exact Gauss-Jordan
+    idx = {v: i for i, v in enumerate(verts)}
+    rows = []
+    for v in verts:
+        row = [F(0)] * 9
+        row[idx[v]] = F(1)
+        if v != target:
+            for i in range(3):
+                row[idx[tuple(x ^ (i == j) for j, x in enumerate(v))]] -= F(1, 3)
+            row[8] = F(1)
+        rows.append(row)
+    for col in range(8):
+        piv = next(r for r in range(col, 8) if rows[r][col] != 0)
+        rows[col], rows[piv] = rows[piv], rows[col]
+        rows[col] = [x / rows[col][col] for x in rows[col]]
+        for r in range(8):
+            if r != col and rows[r][col] != 0:
+                rows[r] = [x - rows[r][col] * y for x, y in zip(rows[r], rows[col])]
+    c[19] = rows[idx[(0, 0, 0)]][8]
+    c[22] = sum(1 for q in permutations(range(8))
+                if all(q[k] == max(q[:k + 1]) or q[k] == min(q[:k + 1]) for k in range(1, 8)))
+    c[23] = pow(2, 2 ** 2026, 1000)
+    # Routh: intersect the cevians with exact coordinates
+    A, B, C = (F(0), F(0)), (F(1), F(0)), (F(0), F(1))
+    lerp = lambda p, q, t: (p[0] + t * (q[0] - p[0]), p[1] + t * (q[1] - p[1]))
+    D, E_, F_ = lerp(B, C, F(3, 4)), lerp(C, A, F(3, 4)), lerp(A, B, F(3, 4))
+
+    def meet(p, q, r, s):
+        a1, b1, a2, b2 = q[0] - p[0], -(s[0] - r[0]), q[1] - p[1], -(s[1] - r[1])
+        t = ((r[0] - p[0]) * b2 - b1 * (r[1] - p[1])) / (a1 * b2 - b1 * a2)
+        return lerp(p, q, t)
+    X, Y, Z = meet(A, D, B, E_), meet(B, E_, C, F_), meet(C, F_, A, D)
+    area = lambda p, q, r: abs((q[0] - p[0]) * (r[1] - p[1]) - (r[0] - p[0]) * (q[1] - p[1])) / 2
+    c[24] = area(X, Y, Z) / area(A, B, C)
+    a = 1.0
+    for _ in range(99):
+        a = a + 1 / a
+    c[25] = math.floor(a)
+    return c
+
+
+def _aime_6():
+    c = {}
+    c[1] = sum(map(int, str(int('9' * 20) * int('4' * 20))))
+    c[2] = sum(n for n in range(1, 10000) if math.isqrt(n * n + 20 * n + 15) ** 2 == n * n + 20 * n + 15)
+    s = F(21 * 8, 21 + 8)
+    assert math.isclose(math.sqrt(24 * 14 * 7 * 3), 84)
+    c[3] = s.numerator + s.denominator
+    f = F(sum(1 for a, b in combinations(range(1, 21), 2) if math.isqrt(a * b) ** 2 == a * b), 190)
+    c[4] = f.numerator + f.denominator
+    c[5] = next(n for n in range(1, 10 ** 4) if ndivisors(n) == 30)
+    f = F(sum(1 for t in product(range(1, 7), repeat=4) if list(t) == sorted(t)), 6 ** 4)
+    c[6] = f.numerator + f.denominator
+    c[7] = sum(1 for a in range(1, 18) for b in range(a + 1, 18) for cc in range(1, 18) if 20 - a - b - cc >= 1)
+    w = complex(math.cos(2 * math.pi / 7), math.sin(2 * math.pi / 7))
+    prod = math.prod(w ** k + 3 for k in range(1, 7))
+    assert abs(prod.imag) < 1e-6
+    c[8] = round(prod.real)
+    # D(0,0), B(-16,0), C(5,0), A(0,12); incenter = (aA + bB + cC)/(a + b + c)
+    def incenter(P1, P2, P3):
+        a, b, cc = math.dist(P2, P3), math.dist(P1, P3), math.dist(P1, P2)
+        return ((a * P1[0] + b * P2[0] + cc * P3[0]) / (a + b + cc), (a * P1[1] + b * P2[1] + cc * P3[1]) / (a + b + cc))
+    A, B, C, D = (0, 12), (-16, 0), (5, 0), (0, 0)
+    assert math.dist(A, B) == 20 and math.dist(A, C) == 13 and math.dist(B, C) == 21
+    c[9] = round(math.dist(incenter(A, B, D), incenter(A, C, D)) ** 2, 9)
+    c[10] = sum(1 for t in product('ABC', repeat=12)
+                if all(t[i + 1] == 'B' for i in range(11) if t[i] == 'A') and t[-1] != 'A') % 1000
+    sigma = lambda n: sum(d for d in range(1, n + 1) if n % d == 0)
+    c[11] = sum(1 for n in range(1, 1001) if sigma(n) % 2)
+    # B(0,0), C(14,0); A from AB = 6, AC = 10
+    ax = F(36 - 100 + 196, 28)
+    A = (float(ax), math.sqrt(36 - ax * ax))
+    assert math.isclose(math.degrees(math.acos((6 * 6 + 10 * 10 - 14 * 14) / 120)), 120)
+    # M: the circumcircle point on the bisector, found as the far end of the chord from A
+    ux = (0 - A[0]) / 6 + (14 - A[0]) / 10
+    uy = (0 - A[1]) / 6 + (0 - A[1]) / 10
+    ox = 7
+    oy = (A[0] ** 2 + A[1] ** 2 - 14 * A[0]) / (2 * A[1])
+    t = -2 * ((A[0] - ox) * ux + (A[1] - oy) * uy) / (ux * ux + uy * uy)
+    M = (A[0] + t * ux, A[1] + t * uy)
+    area = triangle_area((0, 0), (14, 0), M)
+    assert math.isclose(area, 49 * math.sqrt(3))
+    c[12] = 49 + 3
+    c[13] = sum(1 for a in range(1, 100) for b in range(a + 1, 100) for cc in [100 - a - b] if cc > b and a + b > cc)
+    walks = {(0, 0): 1}
+    for _ in range(10):
+        nxt = {}
+        for (x, y), k in walks.items():
+            for dx, dy in ((1, 0), (-1, 0), (0, 1), (0, -1)):
+                nxt[(x + dx, y + dy)] = nxt.get((x + dx, y + dy), 0) + k
+        walks = nxt
+    c[14] = walks[(0, 0)] % 1000
+    c[15] = sum(1 for m in range(1, 101) for n in range(1, 101) if (m * m + n * n + 1) % (m * n) == 0)
+    return c
+
+
+def _a10_7():
+    c = {}
+    c[1] = 1 + 2 * 3 - 4 // 2 + 5 ** 2
+    c[2] = F(12, 48) * 120
+    c[3] = next(n for n in range(3, 50) if 180 * (n - 2) == 1440)
+    c[4] = next(n for n in range(1, 10 ** 4) if sum(map(int, str(n))) == 20)
+    c[5] = next(b for b in range(3, 100, 3) if F(2 * b // 3 + 10, b) == F(4, 3))
+    c[6] = 25 * math.pi - 48 if math.hypot(6, 8) == 10 else None
+    c[7] = sum(1 for n in range(1, 25) if 24 % n == 0 and n + 24 // n <= 14)
+    x = math.log(5, 3)
+    c[8] = round(9 ** (x + 1), 9)
+    flips = list(product((0, 1), repeat=3))
+    c[9] = F(sum(1 for t in flips if sum(t) >= 2), sum(1 for t in flips if sum(t) >= 1))
+    c[10] = sum(1 for cc in range(4, 17) if max(7, 10, cc) ** 2 * 2 > 49 + 100 + cc * cc)
+    c[11] = sum(1 for n in range(1, 1000) if math.lcm(n, 12) == 60)
+    f = lambda t: t * t - 4 * t + 7
+    c[12] = min(f(f(k / 1000)) for k in range(-5000, 9000))
+    c[13] = sum(1 for s in combinations(range(10), 4) if all(b - a > 1 for a, b in zip(s, s[1:])))
+    c[14] = sum(r for r in range(1, 50) if (1 - r) ** 2 + (2 - r) ** 2 == r * r)
+    c[15] = F(sum(1 for a, b, cc in product(range(1, 7), repeat=3) if b - a == cc - b), 216)
+    s3 = math.sqrt(3)
+    c[16] = triangle_area((1, s3), (2, -2), (0, -2))
+    c[17] = sum(1 for n in range(10000, 100000) if str(n) == str(n)[::-1] and n % 3 == 0)
+    c[18] = sum({h for a in range(1, 100) for b in range(a, 100) for h in [math.isqrt(a * a + b * b)]
+                 if h * h == a * a + b * b and a * b == 2 * (a + b + h)})
+    # lens: integrate the overlap of two radius-2 discs centred 2 apart
+    n = 20000
+    lens = 0.0
+    for k in range(n):
+        xk = 0 + (k + 0.5) * 2 / n                 # the lens spans x in [0, 2]
+        half = min(math.sqrt(max(0, 4 - xk * xk)), math.sqrt(max(0, 4 - (xk - 2) ** 2)))
+        lens += 2 * half * 2 / n
+    assert abs(lens - (8 * math.pi / 3 - 2 * s3)) < 1e-4
+    c[19] = 8 * math.pi / 3 - 2 * s3
+    c[20] = F(sum(1 for t in product(range(3), repeat=5) if len(set(t)) == 3), 3 ** 5)
+    c[21] = sum(1 for n in range(1, 121 * 11 + 1) if (n * n + 3 * n + 5) % 121 == 0)   # a full period mod 121
+    c[22] = sum(1 for t in product('HT', repeat=8) if 'HH' in ''.join(t) and 'HHH' not in ''.join(t))
+    c[23] = 6 - 4 * math.sqrt(2) if math.isclose(math.sqrt(2) * (2 - (6 - 4 * math.sqrt(2))), 2 + 6 - 4 * math.sqrt(2)) else None
+    c[24] = sum(1 for s in combinations(range(12), 4) if all((b - a) % 12 not in (1, 11) for a, b in combinations(s, 2)))
+
+    def seatings():
+        count = 0
+        for q in permutations(range(1, 8)):
+            seat = (0,) + q
+            count += all(seat[i] // 2 != seat[(i + 1) % 8] // 2 for i in range(8))
+        return count
+    c[25] = seatings()
+    return c
+
+
+def _a12_7():
+    c = {}
+    c[1] = math.prod(1 + F(1, k) for k in range(2, 10))
+    c[2] = 5 * 87 - 4 * 85
+    c[3] = round(8 ** (2 / 3) * 27 ** (-1 / 3), 12)
+    c[4] = sum(1 for k in range(-3000, 3001) if (lambda x: x ** 4 - 5 * x * x + 4)(k / 1000) == 0)
+    c[5] = next(x for x in range(3, 100) if x * (x - 2) == 8)
+    c[6] = 10 * F(3, 5) + math.isqrt(100 - 36)
+    z = (2 + 3j) * (1 - 2j)
+    c[7] = round(z.real + z.imag)
+    c[8] = triangle_area((0, 1), (0, 7), (2, 5))
+    P = [1]
+    for x in range(3):
+        P.append(P[-1] + 6 * x + 4)
+    c[10] = P[3]
+    c[12] = sum(F(n, 3 ** n) for n in range(1, 120)).limit_denominator(100)
+    # cos 3x - cos x = -2 sin 2x sin x, which is 0 exactly at the multiples of pi/2
+    g = lambda x: math.cos(3 * x) - math.cos(x)
+    assert all(abs(g(x) + 2 * math.sin(2 * x) * math.sin(x)) < 1e-12 for x in (k / 7 for k in range(44)))
+    c[14] = len({k for k in range(4)})
+    roots6 = [complex(math.cos(math.pi * k / 3), math.sin(math.pi * k / 3)) for k in range(6)]
+    c[16] = sum(1 for r in roots6 if any(abs((r + 1) - w) < 1e-9 for w in roots6))
+    # P on the ellipse with PF1 . PF2 = 0
+    best = None
+    for k in range(400000):
+        t = 2 * math.pi * k / 400000
+        px, py = 5 * math.cos(t), 3 * math.sin(t)
+        if abs((px - 4) * (px + 4) + py * py) < 1e-3:
+            best = triangle_area((px, py), (4, 0), (-4, 0))
+            break
+    assert best is not None and abs(best - 9) < 1e-2
+    c[19] = 9
+    s = 7
+    c[22] = math.sqrt((s - 2) * (s - 3) * (s - 4) * (s - 5))
+    c[23] = F(sum(sum(1 for k in range(6) if q[k] == max(q[:k + 1])) for q in permutations(range(6))), 720)
+    c[24] = 1 / math.sqrt(1 / 9 + 1 / 16 + 1 / 144)
+    best = 0
+    for k in range(1, 200000):
+        cx = -10 + 40 * k / 200000                  # C = (cx, cy) on AC = 2 BC
+        # 3x^2 - 80x + 400 + 3y^2 = 0
+        cy2 = (80 * cx - 400 - 3 * cx * cx) / 3
+        if cy2 > 0:
+            best = max(best, 5 * math.sqrt(cy2))
+    assert abs(best - 100 / 3) < 1e-6
+    c[25] = F(100, 3)
+    return c
+
+
+def _aime_7():
+    c = {}
+    c[1] = sum(1 for n in range(1, 1000) if all(int(d) % 2 for d in str(n)) and sum(map(int, str(n))) == 15)
+    c[2] = sum({a * b for a in range(1, 500) for b in range(a, 500) if a * b == 3 * 2 * (a + b)})
+    f = F(sum(1 for q in permutations(range(5)) if all(q[i] != i for i in range(5))), 120)
+    c[3] = f.numerator + f.denominator
+    c[4] = next(x for x in range(2, 10 ** 4) if math.isclose(math.log2(math.log(x, 4)), math.log(math.log2(x), 4)))
+    c[5] = sum(1 for a in range(1, 31) for b in range(a, 31) if 30 - a - b >= b)
+    # A(-10,0), B(10,0), D(-4,h), C(4,h); AC . BD = 0
+    h = next(h for h in range(1, 100) if (4 + 10) * (-4 - 10) + h * h == 0)
+    c[6] = (20 + 8) * h // 2
+    c[7] = sum(n for n in range(1, 1000) if (n * n + 7 * n + 200) % (n + 2) == 0)
+    # expected rolls until 66: E (fresh) and G (just rolled a 6), solved exactly by Cramer's rule
+    #   (1 - 5/6) E - (1/6) G = 1,   -(5/6) E + G = 1
+    a, b, cc, d = F(1, 6), F(-1, 6), F(-5, 6), F(1)
+    c[8] = (1 * d - b * 1) / (a * d - b * cc)
+    c[9] = sum(1 for t in product((-1, 0, 1), repeat=7) if sum(t) == 0)
+    k = F(101, 4)
+    # y^2 - (2k - 1)y + k^2 - 25 has a double root, at a positive y
+    assert (2 * k - 1) ** 2 == 4 * (k * k - 25) and (2 * k - 1) / 2 > 0
+    c[10] = k.numerator + k.denominator
+    f = lambda x: x ** 3 - 3 * x
+    g = lambda x: f(f(f(f(f(x)))))
+    xs = {round(2 * math.cos((2 * j + 1) * math.pi / 486), 12) for j in range(243)}
+    assert len(xs) == 243 and all(abs(g(x)) < 1e-6 for x in xs)
+    c[11] = len(xs)                                   # g has degree 243, so no more roots
+    S = [2, 4]
+    for _ in range(5):
+        S.append(4 * S[-1] - S[-2])
+    assert 0 < (2 - math.sqrt(3)) ** 6 < 1 and abs((2 + math.sqrt(3)) ** 6 - (S[6] - (2 - math.sqrt(3)) ** 6)) < 1e-6
+    c[12] = (S[6] - 1) % 1000
+    f = F(sum(1 for t in product((1, -1), repeat=8) if sum(t) % 6 == 0), 256)
+    c[13] = f.numerator + f.denominator
+    pts = list(product(range(4), repeat=2))
+    c[14] = sum(1 for a, b, cc in combinations(pts, 3)
+                if (b[0] - a[0]) * (cc[1] - a[1]) != (cc[0] - a[0]) * (b[1] - a[1]))
+    c[15] = sum(1 for a, b, cc in product(range(1, 28), repeat=3) if (a * a + b * b + cc * cc) % 9 == 0) % 1000
+    return c
+
+
 CHECKS = {
     ('AMC 10', 1): _a10_1,
     ('AMC 10', 2): _a10_2,
     ('AMC 10', 3): _a10_3,
     ('AMC 10', 4): _a10_4,
     ('AMC 10', 5): _a10_5,
+    ('AMC 10', 6): _a10_6,
+    ('AMC 10', 7): _a10_7,
     ('AMC 12', 1): _a12_1,
     ('AMC 12', 2): _a12_2,
     ('AMC 12', 3): _a12_3,
     ('AMC 12', 4): _a12_4,
     ('AMC 12', 5): _a12_5,
+    ('AMC 12', 6): _a12_6,
+    ('AMC 12', 7): _a12_7,
     ('AIME', 1): _aime_1,
     ('AIME', 2): _aime_2,
     ('AIME', 3): _aime_3,
     ('AIME', 4): _aime_4,
     ('AIME', 5): _aime_5,
+    ('AIME', 6): _aime_6,
+    ('AIME', 7): _aime_7,
 }
 
 
@@ -906,7 +1253,7 @@ def test_sets_are_real_papers():
 
 
 def test_amc12_sets_share_eight_problems_with_their_amc10():
-    for n in range(1, 6):
+    for n in range(1, SET_COUNT + 1):
         ten = next(m for m in MOCKS if m['level'] == 'AMC 10' and m['set'] == n)
         twelve = next(m for m in MOCKS if m['level'] == 'AMC 12' and m['set'] == n)
         assert len(set(ten['problems']) & set(twelve['problems'])) == 8
