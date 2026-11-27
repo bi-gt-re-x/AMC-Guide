@@ -178,3 +178,19 @@ def test_attempts_read_back_with_their_set(client, today):
     rows = [a for a in store.attempts('tester') if a['set_id'] == set_id]
     assert len(rows) == 1 and rows[0]['set_kind'] == 'practice' and rows[0]['set_mode'] == 'mixed'
     assert client.get('/api/amc/sets').json()['sets'][0]['title'] == practice.TITLES['mixed']
+
+
+def test_the_problem_page_says_which_set_each_answer_was_given_in(client, today):
+    """So a set reopened, or a page refreshed, part way shows what was answered
+    in that set (pages/amc/Problem.tsx), and a new set starts fresh."""
+    _, ids = _topic_ids(2)
+    first = _deal(client, ids)
+    _answer(client, ids[0], _wrong(ids[0]), first, seconds=95)
+    later = _deal(client, ids)
+    _answer(client, ids[0], str(BY_ID[ids[0]]['answer']), later)
+    client.post('/api/amc/problems/{}/reveal'.format(ids[1]), json={'set_id': later})
+    client.post('/api/amc/problems/{}/attempt'.format(ids[1]), json={'answer': 'A'})
+    seen = client.get('/api/amc/problems/' + ids[0]).json()['attempts']
+    assert [(a['set_id'], a['correct'], a['seconds']) for a in seen] == [(first, False, 95), (later, True, 60)]
+    other = client.get('/api/amc/problems/' + ids[1]).json()['attempts']
+    assert [(a['set_id'], a['source']) for a in other] == [(later, 'reveal'), ('', 'practice')]

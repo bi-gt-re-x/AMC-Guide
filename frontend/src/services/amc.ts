@@ -656,7 +656,8 @@ export interface ProblemList {
 export interface ProblemDetail {
   problem: Problem;
   status: Status;
-  attempts: { answer: string; correct: boolean; at: string; source: string; seconds: number }[];
+  /** `set_id`: the stored set (amc_set_runs.id) it was answered in, '' for none. */
+  attempts: { answer: string; correct: boolean; at: string; source: string; seconds: number; set_id?: string }[];
   review: ReviewItem | null;
   /** Whether it is out of reach of the account's level for now. */
   reach: Reach;
@@ -677,6 +678,8 @@ export interface AttemptReply {
   moved: boolean;
   /** The set the answer was counted in ('' when it was not: no set, or one already over). */
   set_id?: string;
+  /** Seconds it took (kept by the page, so a set reopened shows the time it was answered in). */
+  seconds?: number;
 }
 
 /** A set walked one problem after another, as stored (backend/amc/setreport.py). */

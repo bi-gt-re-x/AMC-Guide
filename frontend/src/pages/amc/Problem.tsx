@@ -36,6 +36,7 @@ import { amc, announceAmcChanged, shortDate, type AttemptReply, type Problem as 
 import { activePracticeSet, practiceSetHome, readPracticeSet, updatePracticeSet } from './practiceSetStore';
 import { readWeakRun, readWeakSet, setWeakRun } from './weakSet';
 import { readReviewRun, readReviewSet, setReviewRun } from './reviewSet';
+import { clearDrafts, readDraft, setKey, writeDraft } from './setDrafts';
 import '@/styles/amc.css';
 
 const STAGES = 3;
@@ -83,6 +84,18 @@ export default function Problem() {
   const setAt = setIds.indexOf(problemId);
   const setNext = setAt >= 0 ? setIds[setAt + 1] : undefined;
   const setHome = practiceSet ? practiceSetHome(practiceSet) : '/topics';
+  // The set this problem is being walked in, if any: its stored id (what its
+  // answers are saved under on the account) and the key its unchecked picks
+  // are kept under in this tab (pages/amc/setDrafts.ts). Read on every render,
+  // since a set's stored id can arrive with its first answer.
+  const walking = inSet && setAt >= 0 ? { kind: 'practice', run: practiceSet?.runId ?? null, ids: setIds }
+    : reviewing && reviewAt >= 0 ? { kind: 'review', run: readReviewRun(), ids: reviewSet }
+      : weak && weakAt >= 0 ? { kind: 'weak', run: readWeakRun(), ids: weakSet } : null;
+  const draftKey = walking ? setKey(walking.kind, walking.run, walking.ids) : null;
+  /** The set is over: what was picked in it goes too. */
+  const endDrafts = () => {
+    if (walking) clearDrafts(setKey(walking.kind, walking.run, walking.ids), setKey(walking.kind, null, walking.ids));
+  };
   // Previous and Next walk the list the problem was opened from, and only
   // that list: a topic (`?topic=`), the Problems page's filters (`?list=1&…`),
   // or, opened from neither, the problem's own paper. The walk's parameters
@@ -111,14 +124,39 @@ export default function Problem() {
   const [note, setNote] = useState('');
   const [noteSaved, setNoteSaved] = useState(false);
 
-  // A fresh slate per problem.
+  // A fresh slate per problem: blank, or inside a set, the answer picked on
+  // it and not yet checked (kept through a refresh).
   useEffect(() => {
-    setAnswer('');
+    setAnswer(draftKey ? readDraft(draftKey, problemId) : '');
     setResult(null);
     setRevealed(null);
     setMessage('');
     setRetry(false);
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- per problem
   }, [problemId]);
+  // Inside a set, a problem already answered in it shows that answer again,
+  // as it was when checked: after a refresh, or on going back to it. The
+  // answer is the account's own record (the attempt stored with the set's
+  // id), not this tab's. A new set, or the problem opened on its own, starts fresh.
+  const fresh = data && data.problem.id === problemId ? data : null;
+  const inRun = walking?.run && fresh
+    ? [...fresh.attempts].reverse().find((a) => a.set_id === walking.run)
+    : undefined;
+  useEffect(() => {
+    if (!fresh || !inRun || result || revealed) return;
+    if (inRun.source === 'reveal') {
+      setRevealed(fresh.problem);
+      return;
+    }
+    const review = fresh.review
+      ? { stage: fresh.review.stage, due: fresh.review.due, status: fresh.review.review_status }
+      : null;
+    setResult({
+      correct: inRun.correct, given: inRun.answer, problem: fresh.problem, review,
+      moved: inRun.source === 'review' && review != null, set_id: inRun.set_id, seconds: inRun.seconds,
+    });
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- when the problem's record arrives
+  }, [fresh, inRun?.at]);
   useEffect(() => {
     setNote(data?.review?.note ?? '');
   }, [data?.review?.note]);
@@ -194,6 +232,7 @@ export default function Problem() {
     const run = await setRun();
     if (run) await amc.closeSet(run, timeIsUp);
     updatePracticeSet({ finished: true });
+    endDrafts();
     announceAmcChanged();
     return run;
   }
@@ -212,7 +251,8 @@ export default function Problem() {
       const run = await setRun();
       const reply = await amc.attempt(problemId, answer, seconds, reviewing ? 'review' : 'practice', run);
       if (reply.success) {
-        setResult(reply);
+        if (draftKey) writeDraft(draftKey, problemId, '');
+        setResult({ ...reply, seconds });
         markAnswered();
         announceAmcChanged();
         reload();
@@ -237,6 +277,7 @@ export default function Problem() {
       const run = await setRun();
       const reply = await amc.reveal(problemId, run);
       if (reply.success) {
+        if (draftKey) writeDraft(draftKey, problemId, '');
         setRevealed(reply.problem);
         markAnswered();
         announceAmcChanged();
@@ -257,6 +298,7 @@ export default function Problem() {
       }
       const run = readReviewRun();
       if (run) await amc.closeSet(run);
+      endDrafts();
       setReviewRun(null);
       announceAmcChanged();
       navigate(`/review?done=1${run ? `&run=${run}` : ''}`);
@@ -362,7 +404,10 @@ export default function Problem() {
             <AnswerInput
               choices={p.choices}
               value={showKey && !answer ? given ?? '' : answer}
-              onChange={setAnswer}
+              onChange={(value) => {
+                setAnswer(value);
+                if (draftKey && !locked) writeDraft(draftKey, problemId, value);
+              }}
               locked={locked}
               correct={showKey ? p.answer : undefined}
               given={showKey ? given : undefined}
@@ -407,7 +452,7 @@ export default function Problem() {
                       ? result.review.status === 'mastered'
                         ? 'Mastered. It leaves your review log.'
                         : `Next review ${shortDate(result.review.due)}.`
-                      : `Solved in ${clock(seconds)}.`
+                      : `Solved in ${clock(result.seconds ?? seconds)}.`
                     : `The answer is ${p.format === 'choice' ? `(${p.answer})` : p.answer}. ${result.review?.status === 'parked'
                       ? "It stays on hold until you're closer to its level."
                       : `You'll see it again ${result.review ? shortDate(result.review.due) : 'later'}.`}`}
@@ -481,6 +526,7 @@ export default function Problem() {
                           const run = weakAt >= 0 ? readWeakRun() : null;
                           setBusy(true);
                           void (run ? amc.closeSet(run) : Promise.resolve(false)).then(() => {
+                            endDrafts();
                             setWeakRun(null);
                             setBusy(false);
                             announceAmcChanged();

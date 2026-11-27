@@ -29,6 +29,8 @@ ALLOWED = {
     'pages/amc/weakSet.ts': 'per-tab: the weak-topics set being walked on the Review page',
     'pages/amc/practiceSetStore.ts': 'per-tab: the topic practice set being walked from its page',
     'pages/amc/reviewSet.ts': 'per-tab: the review set of ten being walked on the problem page',
+    'pages/amc/setDrafts.ts': 'per-tab: an answer picked in a set but not yet checked; checked ones are '
+                              'stored with the set (amc_attempts.set_id) and shown again from there',
     'pages/amc/Review.tsx': 'a view setting: whether the weak-topics set draws from the mocks',
 }
 

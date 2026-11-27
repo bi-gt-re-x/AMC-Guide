@@ -381,8 +381,11 @@ def get_problem(problem_id: str, request: Request, topic: str = '', in_list: str
               reach=reach.view(p, theta, topic_theta,
                                rev.get('parked_level') if rev and rev['status'] == 'parked' else None),
               status=engine.status_of(problem_id, hist, review_by_id),
+              # `set_id`: the set run it was given in, so a set reopened (or
+              # the page refreshed) part way shows what was answered in it.
               attempts=[{'answer': a['answer'], 'correct': bool(a['correct']), 'at': a['at'],
-                         'source': a['source'], 'seconds': a['seconds']} for a in mine],
+                         'source': a['source'], 'seconds': a['seconds'], 'set_id': a.get('set_id') or ''}
+                        for a in mine],
               review=_review_view(rev, hist, review_by_id, _today()) if rev else None,
               related=related,
               topic=topic if in_topic else None,

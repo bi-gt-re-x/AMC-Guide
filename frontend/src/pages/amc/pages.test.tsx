@@ -6,7 +6,7 @@
  * keep them small), so a page that reads a field the server no longer sends,
  * or crashes on a shape it really gets, fails here rather than in the browser.
  */
-import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import { cleanup, fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { MemoryRouter, Route, Routes, useLocation } from 'react-router-dom';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { NoticesProvider } from '@/components';
@@ -37,6 +37,7 @@ import PracticeSet from './PracticeSet';
 import Problems from './Problems';
 import { activePracticeSet, isActiveSetLink, writePracticeSet } from './practiceSetStore';
 import Review from './Review';
+import { writeReviewSet } from './reviewSet';
 import Search from './Search';
 import StudyPlan from './StudyPlan';
 import Topic from './Topic';
@@ -319,6 +320,85 @@ describe('Reviewing a miss', () => {
     show('/problems/step-10-01', '/problems/:problemId', <Problem />);
     await settled(/What is the value of/);
     expect(await screen.findByText(/B ✗/)).toBeInTheDocument();
+  });
+});
+
+describe('A set keeps its answers through a refresh', () => {
+  const walk = (runId: string | null) =>
+    writePracticeSet({ ids: ['step-10-01', 'step-10-02'], topic: 'circles', mode: 'practice', title: 'Practice set',
+                       seconds: null, hideTopic: false, size: null, deadline: null, runId });
+  /** A choice by its letter (the math in its name is beyond jsdom's name lookup). */
+  const choice = (letter: string) => document.querySelectorAll('.am-choice')['ABCDE'.indexOf(letter)]!;
+  const withAttempt = (setId: string, answer = 'B', correct = false) => ({
+    ...problem, success: true,
+    attempts: [{ answer, correct, at: '2026-11-12T10:00:00', seconds: 95, source: 'practice', set_id: setId }],
+  });
+
+  it('shows the answer given in this set again, checked, after a refresh', async () => {
+    walk('run-7');
+    vi.spyOn(amc, 'problem').mockResolvedValue(withAttempt('run-7') as any);
+    show('/problems/step-10-01?set=1', '/problems/:problemId', <Problem />);
+    expect(await screen.findByText('Not quite.')).toBeInTheDocument();
+    expect(choice('B')).toHaveClass('is-wrong');
+    expect(screen.queryByRole('button', { name: 'Check answer' })).not.toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Next problem →' })).toBeInTheDocument();
+  });
+
+  it('shows a right answer with the time it took', async () => {
+    walk('run-7');
+    vi.spyOn(amc, 'problem').mockResolvedValue(withAttempt('run-7', 'D', true) as any);
+    show('/problems/step-10-01?set=1', '/problems/:problemId', <Problem />);
+    expect(await screen.findByText('Correct.')).toBeInTheDocument();
+    expect(screen.getByText(/Solved in 1:35/)).toBeInTheDocument();
+  });
+
+  it('shows a solution revealed in this set as revealed', async () => {
+    walk('run-7');
+    vi.spyOn(amc, 'problem').mockResolvedValue({
+      ...withAttempt('run-7', '', false), attempts: [{ answer: '', correct: false, at: '2026-11-12T10:00:00',
+                                                       seconds: 0, source: 'reveal', set_id: 'run-7' }],
+    } as any);
+    show('/problems/step-10-01?set=1', '/problems/:problemId', <Problem />);
+    expect(await screen.findByText(/Revealed\./)).toBeInTheDocument();
+  });
+
+  it('starts fresh in a new set, or with an answer from another set', async () => {
+    walk('run-8');
+    vi.spyOn(amc, 'problem').mockResolvedValue(withAttempt('run-7') as any);
+    show('/problems/step-10-01?set=1', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    expect(screen.getByRole('button', { name: 'Check answer' })).toBeInTheDocument();
+    expect(screen.queryByText('Not quite.')).not.toBeInTheDocument();
+  });
+
+  it('keeps a pick not yet checked through a refresh, and drops it once checked', async () => {
+    walk('run-7');
+    vi.spyOn(amc, 'problem').mockResolvedValue({ ...problem, attempts: [], success: true } as any);
+    show('/problems/step-10-01?set=1', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    fireEvent.click(choice('C'));
+    cleanup();
+    // The refresh: the same tab, a new page.
+    show('/problems/step-10-01?set=1', '/problems/:problemId', <Problem />);
+    await settled(/What is the value of/);
+    expect(choice('C')).toHaveAttribute('aria-checked', 'true');
+    vi.spyOn(amc, 'attempt').mockResolvedValue({
+      success: true, correct: false, given: 'C', problem: { ...problem.problem, answer: 'D' }, review: null, moved: false,
+    } as any);
+    fireEvent.click(screen.getByRole('button', { name: 'Check answer' }));
+    await screen.findByText('Not quite.');
+    expect(JSON.parse(sessionStorage.getItem('amc-set-drafts') ?? '{}')).toEqual({});
+  });
+
+  it('keeps a review set\'s answers too', async () => {
+    writeReviewSet(['step-10-01', 'step-10-02'], 'run-r');
+    vi.spyOn(amc, 'problem').mockResolvedValue({
+      ...withAttempt('run-r', 'D', true),
+      attempts: [{ answer: 'D', correct: true, at: '2026-11-12T10:00:00', seconds: 40, source: 'review', set_id: 'run-r' }],
+    } as any);
+    show('/problems/step-10-01?review=1', '/problems/:problemId', <Problem />);
+    expect(await screen.findByText('Correct.')).toBeInTheDocument();
+    expect(screen.getByRole('button', { name: 'Next in the set →' })).toBeInTheDocument();
   });
 });
 
